@@ -5,4 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface LoginDAO {
 
+	void join(String hash);
+
+	String loadPw(String id);
+
 }
