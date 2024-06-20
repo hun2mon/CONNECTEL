@@ -40,6 +40,19 @@
 <script
 	src="/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
 <style>
+.sidebar{
+	width: 260px;
+}
+
+.content{
+    margin-top: 96px;
+    margin-left: 20px;
+    width: 90%;
+    }
+
+.parent{
+	display: flex;
+}
 </style>
 </head>
 <body>

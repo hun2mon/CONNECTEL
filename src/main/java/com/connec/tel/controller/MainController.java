@@ -15,13 +15,15 @@ public class MainController {
 	@Autowired MainService mainService;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@RequestMapping(value = "/")
+	// 메인 페이지 이동
+	@RequestMapping(value = "/main")
 	public String main() {
 		logger.info("main 요청");
 		
 		return "main/main";
 	}
 	
+	// 페이지 이동
 	@RequestMapping(value = "/{folder}/{jsp}" + ".go")
 	public String move(@PathVariable String folder, @PathVariable String jsp) {
 		return folder + "/" + jsp;

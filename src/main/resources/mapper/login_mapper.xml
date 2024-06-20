@@ -5,5 +5,9 @@
 
 <mapper namespace="com.connec.tel.dao.LoginDAO">
 	
+	<select id="login" resultType="emp">
+		SELECT * FROM emp WHERE email=#{param1}
+	</select>
+	
 	
 </mapper>
