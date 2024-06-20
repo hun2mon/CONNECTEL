@@ -28,8 +28,7 @@
 <!-- apps -->
 <script src="/dist/js/app-style-switcher.js"></script>
 <script src="/dist/js/feather.min.js"></script>
-<script
-	src="/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+
 <script src="/dist/js/sidebarmenu.js"></script>
 <!--Custom JavaScript -->
 <script src="/dist/js/custom.min.js"></script>
@@ -40,6 +39,20 @@
 <script
 	src="/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
 <style>
+.sidebar{
+	width: 260px;
+}
+
+.content{
+    margin-top: 96px;
+    margin-left: 20px;
+    width: 90%;
+    }
+
+.parent{
+	display: flex;
+}
+
 </style>
 </head>
 <body>

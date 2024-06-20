@@ -5,5 +5,22 @@
 
 <mapper namespace="com.connec.tel.dao.MainDAO">
 	
+
+    <select id="getThisWeek" resultType="main">
+        SELECT * FROM calendar
+        WHERE DATE(cal_start) BETWEEN #{param1} AND #{param2}
+    </select>
+
+    <select id="getToday" resultType="main">
+        SELECT * FROM calendar
+        WHERE DATE(cal_start) = #{param1}
+    </select>
+
+    <select id="getTomorrow" resultType="main">
+        SELECT * FROM calendar
+        WHERE DATE(cal_start) = #{param1}
+    </select>
+
+	
 	
 </mapper>
