@@ -4,14 +4,9 @@
 >
 
 <mapper namespace="com.connec.tel.dao.LoginDAO">
-
-	<insert id="join" parameterType="String">
-		insert into emp(emp_no, dept_code, rank_code, name, gender, email, password, phone, birth, post_no, address, detail_address, bank_name, account_no, join_date, authority, register,regist_date)
-			values('SH12341234', '11', '1', '김정훈', '남','wjdgns97@gmail.com', #{hash}, '01045932857', '1999-08-20', 12345, '구디시', '101호', '농협', '351-1000-3987-63', now(), 3, 'system',now())
-	</insert>
 	
-	<select id="loadPw" resultType="String">
-		SELECT password FROM emp WHERE email=#{param1}
+	<select id="login" resultType="emp">
+		SELECT * FROM emp WHERE email=#{param1}
 	</select>
 	
 	

@@ -29,11 +29,5 @@ public class LoginController {
 		logger.info("pw : {}", pw);
 		return loginService.login(id,pw, session);
 	}
-	
-	@PostMapping(value = "/join.do")
-	public String join(String pw) {
-		loginService.join(pw);
-		return "/";
-	}
 
 }

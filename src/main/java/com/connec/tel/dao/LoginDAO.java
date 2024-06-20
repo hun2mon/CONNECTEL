@@ -1,12 +1,14 @@
 package com.connec.tel.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+
+import com.connec.tel.dto.EmpDTO;
 
 @Mapper
 public interface LoginDAO {
 
-	void join(String hash);
-
-	String loadPw(String id);
+	EmpDTO login(String id);
 
 }

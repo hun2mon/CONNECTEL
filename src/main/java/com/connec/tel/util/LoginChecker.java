@@ -48,7 +48,6 @@ Logger logger = LoggerFactory.getLogger(getClass());
 		HttpSession session = req.getSession();
 		String emp_no = (String) session.getAttribute("emp_no");
 		
-		mav.addObject("emp_no", emp_no);
 		
 	}
 	

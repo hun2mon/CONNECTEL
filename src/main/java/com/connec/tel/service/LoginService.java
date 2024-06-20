@@ -1,5 +1,7 @@
 package com.connec.tel.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.connec.tel.dao.LoginDAO;
+import com.connec.tel.dto.EmpDTO;
 
 @Service
 public class LoginService {
@@ -22,13 +25,14 @@ public class LoginService {
 	public ModelAndView login(String id, String pw, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
 		
-		String loadPw = loginDAO.loadPw(id);
+		EmpDTO dto = loginDAO.login(id);
+		
 		String page = "redirect:/main";
 		
-		if (loadPw != null) {
-			if (encoder.matches(pw, loadPw)) {
+		if (dto != null) {
+			if (encoder.matches(pw, dto.getPassword())) {
 				logger.info("일치");
-				session.setAttribute("emp_no", "1");		
+				session.setAttribute("loginInfo", dto);		
 			} else {
 				logger.info("불일치");
 				page = "redirect:/";
@@ -37,15 +41,5 @@ public class LoginService {
 		mav.setViewName(page);
 		return mav;
 	}
-
-
-	public void join(String pw) {
-		
-		String hash = encoder.encode(pw);
-		logger.info("hash: {}", hash);
-		
-		loginDAO.join(hash);
-		
-	}
-
+	
 }
