@@ -4,6 +4,11 @@
 >
 
 <mapper namespace="com.connec.tel.dao.FaqDAO">
+
+<select id="list" resultType="faqDTO" parameterType="map">
+	SELECT faq_no,faq_subject FROM FAQ
+</select>
+
 	
 	
 </mapper>
