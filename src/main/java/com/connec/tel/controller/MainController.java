@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,16 +22,16 @@ public class MainController {
 	@Autowired MainService mainService;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@RequestMapping(value = "/")
-	public String main(Model model) {	
-		// 오늘 일정 출력
-		List<MainDTO> today = mainService.getToday();
-		model.addAttribute("events",today);
 
-		
+	// 메인 페이지 이동
+	@RequestMapping(value = "/main")
+	public String main() {
+		logger.info("main 요청");
 		
 		return "main/main";
 	}
+	
+	
     @GetMapping("/filterEventsByCategory")
     @ResponseBody
     public List<MainDTO> filterEventsByCategory(@RequestParam("category") String category) {
@@ -52,6 +51,7 @@ public class MainController {
     }
 	
 	
+	// 페이지 이동
 	@RequestMapping(value = "/{folder}/{jsp}" + ".go")
 	public String move(@PathVariable String folder, @PathVariable String jsp) {
 		return folder + "/" + jsp;

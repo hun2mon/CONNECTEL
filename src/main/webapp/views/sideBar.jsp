@@ -52,7 +52,6 @@
 .parent{
 	display: flex;
 }
-
 </style>
 </head>
 <body>

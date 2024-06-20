@@ -1,7 +1,9 @@
 package com.connec.tel.dto;
 
 import java.sql.Date;
+import org.apache.ibatis.type.Alias;
 
+@Alias("emp")
 public class EmpDTO {
 	
 	private String emp_no;
