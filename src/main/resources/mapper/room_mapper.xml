@@ -4,6 +4,9 @@
 >
 
 <mapper namespace="com.connec.tel.dao.RoomDAO">
-	
+	<select id="liveRoomManageAjax" resultType="com.connec.tel.dto.RoomDTO">
+		SELECT room_no,room_status,s.res_no ,s.stay_check_in 
+			FROM room r LEFT JOIN stay s using(room_no);
+	</select>
 	
 </mapper>

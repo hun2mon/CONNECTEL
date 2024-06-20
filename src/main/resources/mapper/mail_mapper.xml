@@ -5,5 +5,4 @@
 
 <mapper namespace="com.connec.tel.dao.MailDAO">
 	
-	
 </mapper>
