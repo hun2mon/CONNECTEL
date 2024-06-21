@@ -5,5 +5,24 @@
 
 <mapper namespace="com.connec.tel.dao.CalendarDAO">
 	
+	<select id="getEvents" resultType="com.connec.tel.dto.CalendarDTO">
+	    SELECT cal_no, cal_content, cal_start, cal_end
+	    FROM calendar
+	</select>
+    
+    <insert id="createEvent">
+        INSERT INTO calendar (emp_no, cal_content, cal_start, cal_end) VALUES (1001,#{cal_content}, #{cal_start}, #{cal_end})
+    </insert>
+    
+    <delete id="deleteEvent">
+        DELETE FROM calendar WHERE cal_no = #{cal_no}
+    </delete>
+    
+    <update id="shareEvent" parameterType="com.connec.tel.dto.CalendarDTO">
+	    UPDATE calendar
+	    SET  where cal_content = #{cal_content}
+	</update>
+	
+
 	
 </mapper>

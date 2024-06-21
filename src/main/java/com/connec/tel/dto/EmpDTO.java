@@ -1,12 +1,11 @@
 package com.connec.tel.dto;
 
 import java.sql.Date;
-
 import org.apache.ibatis.type.Alias;
 
 @Alias("emp")
 public class EmpDTO {
-	
+	// 직원정보
 	private String emp_no;
 	private int dept_code;
 	private int rank_code;
@@ -28,8 +27,55 @@ public class EmpDTO {
 	private Date update_date;
 	private String register;
 	private String dept_name;
+	// 사진 정보
+	private int pho_no;
+	private String ori_pho_name;
+	private String pho_name;
+	private String ref_idx;
+	private String pho_division;
+	// 재직상태
+	private String status_division;
 	
 	
+	
+	
+	public String getStatus_division() {
+		return status_division;
+	}
+	public void setStatus_division(String status_division) {
+		this.status_division = status_division;
+	}
+	public String getRef_idx() {
+		return ref_idx;
+	}
+	public void setRef_idx(String ref_idx) {
+		this.ref_idx = ref_idx;
+	}
+	public int getPho_no() {
+		return pho_no;
+	}
+	public void setPho_no(int pho_no) {
+		this.pho_no = pho_no;
+	}
+	public String getOri_pho_name() {
+		return ori_pho_name;
+	}
+	public void setOri_pho_name(String ori_pho_name) {
+		this.ori_pho_name = ori_pho_name;
+	}
+	public String getPho_name() {
+		return pho_name;
+	}
+	public void setPho_name(String pho_name) {
+		this.pho_name = pho_name;
+	}
+
+	public String getPho_division() {
+		return pho_division;
+	}
+	public void setPho_division(String pho_division) {
+		this.pho_division = pho_division;
+	}
 	public String getEmp_no() {
 		return emp_no;
 	}

@@ -4,6 +4,95 @@
 >
 
 <mapper namespace="com.connec.tel.dao.EmpDAO">
+
+	<insert id="empRegist" parameterType="map">
+		INSERT INTO emp(emp_no,
+		dept_code, rank_code, name, gender, email, password,
+		phone, birth,
+		post_no, address, detail_address,
+		bank_name, account_no, join_date,
+		authority,register)
+		VALUES (#{emp_no}, #{dept_code}, #{rank_code},
+		#{name}, #{gender}, #{email},
+		#{password},
+		#{phone}, #{birth},
+		#{post_no}, #{address}, #{detail_address},
+		#{bank_name}, #{account_no},
+		#{join_date}, #{authority},#{register})
+	</insert>
+
+	<insert id="fileWrite">
+		INSERT INTO photo(ref_idx, ori_pho_name, pho_name,
+		pho_division)
+		VALUES(#{param1}, #{param2}, #{param3}, #{param4})
+	</insert>
+
+	<select id="empList" resultType="emp">
+		SELECT * FROM emp
+		<choose>
+			<when test="param3 != null and param3 == 1">
+			</when>
+			<when test="param3 != null and param3 == 2">
+				<!-- 인사팀 카테고리 선택시 -->
+				Where dept_code = 11
+			</when>
+			<when test="param3 != null and param3 == 3">
+				<!-- 시설팀 카테고리 선택시 -->
+				AND dept_code = 22
+			</when>
+			<when test="param3 != null and param3 == 4">
+				<!-- 서비스 카테고리 선택시 -->
+				AND dept_code = 33
+			</when>
+		</choose>
+		ORDER BY emp_no DESC LIMIT #{param1},#{param2};
+	</select>
+
+	<select id="empAllCount" resultType="int">
+		SELECT CEIL (COUNT(emp_no)/#{param1}) AS pages FROM emp Where
+		<choose>
+			<when test="param2 != null and param2 == 1">
+				<!-- 전체 카테고리 선택시 -->
+				(
+				dept_code = 11
+				OR dept_code = 22
+				OR dept_code = 33
+				)
+			</when>
+			<when test="param2 != null and param2 == 2">
+				<!-- 인사팀 카테고리 선택시 -->
+				dept_code = 11
+			</when>
+			<when test="param2 != null and param2 == 3">
+				<!-- 시설팀 카테고리 선택시 -->
+				dept_code = 22
+			</when>
+			<when test="param2 != null and param2 == 4">
+				<!-- 고객팀 카테고리 선택시 -->
+				dept_code = 33
+			</when>
+		</choose>
+	</select>
+
+	<select id="empDetail" resultType="emp">
+		SELECT * FROM emp e
+		JOIN emp_status es ON es.emp_no = e.emp_no
+		WHERE e.emp_no = #{param1}
+	</select>
+
+	<insert id="empStatus">
+		INSERT INTO emp_status(emp_no,register,status_start)
+		VALUES(#{param1},#{param2},#{param3})
+	</insert>
+
+	<select id="UserPhotoLoad" resultType="emp">
+		SELECT pho_name FROM photo
+				WHERE pho_division = "P" AND ref_idx = #{param1} LIMIT 1
+	</select>
 	
-	
+	<update id="resetPw">
+		UPDATE emp SET pw = #{param1} 
+	</update>
+
+
 </mapper>
