@@ -27,6 +27,7 @@ public class EmpDTO {
 	private String updater;
 	private Date update_date;
 	private String register;
+	private String dept_name;
 	
 	
 	public String getEmp_no() {
@@ -148,6 +149,12 @@ public class EmpDTO {
 	}
 	public void setRegister(String register) {
 		this.register = register;
+	}
+	public String getDept_name() {
+		return dept_name;
+	}
+	public void setDept_name(String dept_name) {
+		this.dept_name = dept_name;
 	}
 
 }

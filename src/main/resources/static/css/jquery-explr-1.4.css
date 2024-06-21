@@ -1,0 +1,133 @@
+/*
+ * Explr.js v1.4
+ * Explorer-like tree jQuery plugin
+ * https://github.com/faisalman/explr-js
+ *
+ * Copyright © 2010-2011 Faisal Salman <f@faisalman.com>
+ * Dual licensed under GPLv2 & MIT
+ */
+
+.explr-tree * {
+	margin: 0;
+	padding: 0;
+}
+
+.explr-tree, 
+.explr-tree ol,
+.explr-tree ul {
+	display: block;
+	font-size: 12px;
+	letter-spacing: normal;
+	line-height: 18px;
+	list-style: none;
+	margin: 0;
+	padding-bottom: 0;
+	padding-left: 20px;
+	padding-top: 5px;
+	position: relative;
+}
+
+.explr-tree {
+/*	border: 1px solid #999;*/
+	overflow: auto;
+}
+
+.explr-tree li {
+	background:16px 2px no-repeat;
+	display: block;
+	position: relative;
+	white-space: nowrap;
+}
+
+.explr-tree li a {
+	color: #555;
+	display: block;
+	font-size: 12px;
+	margin-left: 30px;
+	padding: 3px 0 5px 8px;
+	text-decoration: none;
+}
+
+.explr-tree li a:hover {
+	color: #ff0084;
+	text-decoration: underline;
+}
+
+.explr-line {
+	border-left: 1px dotted #999;
+	border-bottom: 1px dotted #999;
+	height: 22px;
+	position: absolute;
+	margin-left: 0;
+	margin-top: -12px;
+	width: 12px;
+}
+
+.explr-tree ol>li:first-child>.explr-line,
+.explr-tree ul>li:first-child>.explr-line {
+	margin-top: -8px;
+	height: 18px;
+}
+
+.explr-line-fix {
+	border-left: 1px dotted #999;
+}
+
+.explr-plus {
+	background: url("img/pc.de/plus.png") 0 0 no-repeat;
+	height: 16px;
+	margin-left: -8px;
+	margin-top: 2px;
+	position: absolute;
+	width: 40px;
+	z-index: 1;
+}
+
+.explr-minus { background-image: url("img/pc.de/busy.png"); }
+
+
+/* Menu icons: */
+.explr-tree .icon-config > li, .explr-tree li.config { background-image: url("img/pc.de/config.png"); }
+.explr-tree .icon-customers > li, .explr-tree li.customers { background-image: url("img/pc.de/customers.png"); }
+.explr-tree .icon-user > li, .explr-tree li.user { background-image: url("img/pc.de/user.png"); }
+.explr-tree .icon-card2 > li, .explr-tree li.card2 { background-image: url("img/pc.de/my-account.png"); }
+
+
+/* IE Hack Fixes: */
+
+.explr-ie, 
+.explr-ie ol,
+.explr-ie ul {
+	margin-left: 4px;
+	padding-left: 16px;
+	position: static;
+}
+
+.explr-ie ol,
+.explr-ie ul {
+	overflow: hidden;
+}
+
+.explr-ie {
+	padding-top: 20px;
+}
+
+.explr-ie .explr-line, 
+.explr-ie .explr-plus {
+	top: 0;
+	left: 4px;
+}
+
+.explr-ie li {
+	height: auto !important;
+	height: 24px;
+	*padding-top: 12px;
+	_padding-top: 0;
+}
+
+.explr-ie li a {
+	*position: absolute;
+	_position: static;
+	*top: 0;
+	_top: auto;
+}

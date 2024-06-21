@@ -3949,7 +3949,6 @@ dd, h1, h2, h3, h4, h5, h6, label {
 	.icon-user-female, .icon-user-follow, .icon-user-following,
 	.icon-user-unfollow, .icon-vector, .icon-volume-1, .icon-volume-2,
 	.icon-volume-off, .icon-wallet, .icon-wrench {
-	font-family: simple-line-icons;
 	speak: none;
 	font-style: normal;
 	font-weight: 400;

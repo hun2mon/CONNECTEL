@@ -74,7 +74,7 @@
 					<!-- ============================================================== -->
 					<div class="navbar-brand">
 						<!-- Logo icon -->
-						<a href="/"> <b class="logo-icon"> <!-- Dark Logo icon -->
+						<a href="/main"> <b class="logo-icon"> <!-- Dark Logo icon -->
 								<img src="/assets/images/CONNECTEL-logo.png" alt="homepage"
 								class="dark-logo" width="200px" />
 						</b>
@@ -199,7 +199,7 @@
 								class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
 								<a class="dropdown-item" href="/profile/profile.go"><i
 									data-feather="user" class="svg-icon mr-2 ml-1"></i> My Profile</a>
-								<a class="dropdown-item" href="javascript:void(0)"><i
+								<a class="dropdown-item" href="/logout.do"><i
 									data-feather="power" class="svg-icon mr-2 ml-1"></i> Logout</a>
 							</div></li>
 						<!-- ============================================================== -->
@@ -222,7 +222,7 @@
 				<nav class="sidebar-nav">
 					<ul id="sidebarnav">
 						<li class="sidebar-item"><a class="sidebar-link sidebar-link"
-							href="/" aria-expanded="false"><i
+							href="/main" aria-expanded="false"><i
 								data-feather="home" class="feather-icon"></i><span
 								class="hide-menu">대시보드</span></a></li>
 

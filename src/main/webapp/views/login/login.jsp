@@ -54,8 +54,8 @@
                                     </div>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-sm-2">
-									<input type="checkbox" class="custom-control-input" id="saveId">
-									<label class="custom-control-label" for="checkbox1">아이디 저장</label>
+									<input type="checkbox" id="saveId">
+									<label for="checkbox1">아이디 저장</label>
                                 </div>
                                 <div class="col-lg-12 text-center">
                                    	<input type="button" class="btn btn-block btn-dark" onclick="loginCheck()" value="로그인">
@@ -79,6 +79,58 @@
 <script>
 	$(".preloader ").fadeOut();
 	
+	$(document).ready(function(){
+		var key = getCookie("idChk"); //user1
+		if(key!=""){
+			$("#uname").val(key); 
+		}
+		 
+		if($("#uname").val() != ""){ 
+			$("#saveId").attr("checked", true); 
+		}
+		 
+		$("#saveId").change(function(){ 
+			if($("#saveId").is(":checked")){ 
+				setCookie("idChk", $("#uname").val(), 7); 
+			}else{ 
+				deleteCookie("idChk");
+			}
+		});
+		 
+		$("#uname").keyup(function(){ 
+			if($("#saveId").is(":checked")){
+				setCookie("idChk", $("#uname").val(), 7); 
+			}
+		});
+	});
+	function setCookie(cookieName, value, exdays){
+	    var exdate = new Date();
+	    exdate.setDate(exdate.getDate() + exdays);
+	    var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString());
+	    document.cookie = cookieName + "=" + cookieValue;
+	}
+	 
+	function deleteCookie(cookieName){
+		var expireDate = new Date();
+		expireDate.setDate(expireDate.getDate() - 1);
+		document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
+	}
+		 
+	function getCookie(cookieName) {
+		cookieName = cookieName + '=';
+		var cookieData = document.cookie;
+		var start = cookieData.indexOf(cookieName);
+		var cookieValue = '';
+		if(start != -1){
+			start += cookieName.length;
+			var end = cookieData.indexOf(';', start);
+			if(end == -1)end = cookieData.length;
+			cookieValue = cookieData.substring(start, end);
+		}
+		return unescape(cookieValue);
+	}
+	
+	
 	function loginCheck() {
 		if ($('#uname').val() == '') {
 			alert('아이디를 입력해 주세요.');
@@ -88,60 +140,6 @@
 			$('form').submit();
 		}
 	}
-	
-	$(document).ready(function(){
-		  
-	     
-	    var key = getCookie("key");
-	    $("#uname").val(key); 
-	      
-	    if($("#uname").val() != ""){
-	        $("#saveId").attr("checked", true); 
-	    }
-	      
-	    $("#saveId").change(function(){ 
-	        if($("#saveId").is(":checked")){ 
-	            setCookie("key", $("#uname").val(), 7); 
-	        }else{ 
-	            deleteCookie("key");
-	        }
-	    });
-	      
-	    
-	    $("#uname").keyup(function(){ 
-	        if($("#saveId").is(":checked")){ 
-	            setCookie("key", $("#uname").val(), 7); 
-	        }
-	    });
-	});
-	  
-	function setCookie(cookieName, value, exdays){
-	    var exdate = new Date();
-	    exdate.setDate(exdate.getDate() + exdays);
-	    var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString());
-	    document.cookie = cookieName + "=" + cookieValue;
-	}
-	  
-	function deleteCookie(cookieName){
-	    var expireDate = new Date();
-	    expireDate.setDate(expireDate.getDate() - 1);
-	    document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
-	}
-	  
-	function getCookie(cookieName) {
-	    cookieName = cookieName + '=';
-	    var cookieData = document.cookie;
-	    var start = cookieData.indexOf(cookieName);
-	    var cookieValue = '';
-	    if(start != -1){
-	        start += cookieName.length;
-	        var end = cookieData.indexOf(';', start);
-	        if(end == -1)end = cookieData.length;
-	        cookieValue = cookieData.substring(start, end);
-	    }
-	    return unescape(cookieValue);
-	}
-	
 	
 </script>
 </html>

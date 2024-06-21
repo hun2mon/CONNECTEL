@@ -29,26 +29,12 @@ Logger logger = LoggerFactory.getLogger(getClass());
 		
 		HttpSession session = req.getSession();
 		
-		if (session.getAttribute("emp_no") == null) {
+		if (session.getAttribute("loginInfo") == null) {
 			pass = false;
 			resp.sendRedirect("/"); //context 경로가 있다면 같이 넣어줘야 한다. /15_TotalBoard_/
 		}
 		
 		return pass;
-	}
-
-	
-	// 컨트롤러에 접근 한 후 뷰에 보내지기 전에 들른다.
-	// view에 보내고 싶은 내용이 있다면 ModelAndView 에 넣어주면 된다.
-	@Override
-	public void postHandle(HttpServletRequest req, HttpServletResponse resp, Object handler,
-			ModelAndView mav) throws Exception {
-		logger.info("=========POST HANDLER==========");
-		
-		HttpSession session = req.getSession();
-		String emp_no = (String) session.getAttribute("emp_no");
-		
-		
 	}
 	
 	
