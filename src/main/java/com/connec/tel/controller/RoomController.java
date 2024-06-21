@@ -3,6 +3,8 @@ package com.connec.tel.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +47,22 @@ public class RoomController {
 		return roomService.liveRoomManageAjax();
 	}
 
+	@PostMapping(value = "/room/reservationList.ajax")
+	@ResponseBody
+	public Map<String, Object> reservationList(@RequestParam Map<String, Object> param){
+		logger.info("reservationListAjax 요청!!!");
+		logger.info("name = " + param.get("name"));
+		
+		return roomService.reservationList(param);
+	}
+	
+	@PostMapping(value = "/room/checkIn.ajax")
+	@ResponseBody
+	public Map<String, Object> chekIn(@RequestParam Map<String, Object> param,
+									HttpSession session){
+		logger.info("param : {}",param);
+		
+		return roomService.checkIn(param,session);
+	}
+	
 }

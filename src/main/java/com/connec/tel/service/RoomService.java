@@ -1,8 +1,13 @@
 package com.connec.tel.service;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.connec.tel.dao.RoomDAO;
+import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.dto.RoomDTO;
 
 @Service
@@ -28,5 +34,66 @@ public class RoomService {
 		
 		return map;
 	}
+
+	public Map<String, Object> reservationList(Map<String, Object> param) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (!param.get("name").equals("")) {
+			List<RoomDTO> list = roomDAO.reservationSearchList(param);	
+			map.put("list", list);
+		}else {			
+			List<RoomDTO> list = roomDAO.reservationList();			
+			map.put("list", list);
+		}
+		
+		return map;
+	}
+
+	public Map<String, Object> checkIn(Map<String, Object> param, HttpSession session) {
+		
+		String checkIn = (String) param.get("check_in");		
+		logger.info("checkIn : " +checkIn);
+		
+		String check_in = formatCheckDate(checkIn);	
+		logger.info("[service]check_in : "+check_in);
+		
+		String regist_date = check_in.substring(0, 10);
+		logger.info("regist_date : " + regist_date);
+		
+		EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
+		String emp_no = emp.getEmp_no();
+		
+		logger.info("emp_no : " + emp_no);
+		
+		String room_no = (String) param.get("room_no");
+		// param에 check_in 넣고 그전에 regist_date 변환해서 넣고, emp_no 넣고 그다음에는 room 상태 바꾸기
+		
+		param.put("check_in",check_in);
+		param.put("regist_date", regist_date);
+		param.put("emp_no",emp_no);
+		roomDAO.checkIn(param);
+		
+		roomDAO.roomCheckIn(room_no);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("msg", "체크인 성공");
+		return map;
+	}
+
+	private String formatCheckDate(String checkDate) {
+		 SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy. M. d. a h:mm:ss");
+	        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        String formattedDate = null;
+	        try {
+	            Date date = (Date) inputFormat.parse(checkDate);
+	            formattedDate = outputFormat.format(date);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+
+	        }
+	        return formattedDate;
+	    }
+	}
 	
-}
+

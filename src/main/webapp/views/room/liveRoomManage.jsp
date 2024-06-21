@@ -5,8 +5,10 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
-  body {
+   body {
         margin: 0;
         padding: 0;
         display: flex;
@@ -58,24 +60,66 @@
     }
 
     .room {
-   		flex: 1 1 calc(10% - 4px);
-        display: inline-block;
-        aspect-ratio: 1;
-        width: 80px;
-        height: 80px;
+        flex: 1 1 calc(10% - 4px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: calc(10% - 4px);
+        height: 100px;
         border: 1px solid black;
         margin: 2px;
         text-align: center;
-        line-height: 80px;
+        cursor: pointer;
+    }
+
+    .room-number {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .room-status {
+        font-size: 12px;
     }
 
     .occupied {
-        background-color: red;
+        background-color: #01caf1;
+        color: white;
     }
 
     .available {
-        background-color: green;
+        background-color: #22ca80;
+        color: white;
     }
+
+    .checkout {
+        background-color: #e93a26;
+        color: white;
+    }
+
+    .unavailable {
+        background-color: gray;
+        color: white;
+    }
+    
+    #reservationNumber{
+    	width: 90%;
+    }
+    
+    .search{
+    		text-align: right; /* 컨테이너 내의 내용을 오른쪽 정렬 */
+            height: 40px; /* 필요에 따라 높이를 조정 */
+            display: flex;
+            justify-content: flex-end;
+            align-items: center; /* 필요에 따라 수직 정렬 */
+    }
+
+	.res-row:hover {
+    background-color: #9eefcc;
+    cursor: pointer;
+	}
+
+	
 </style>
 </head>
 <body>
@@ -84,36 +128,13 @@
 </div>
 
 <div class="content-body">
-    <div class="container-fluid">               
+    <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-body">                              
-                        <div class="email-right-box ml-0 ml-sm-4 ml-sm-0">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="right-box-padding">                                             
-                                        <div class="read-content">
-                                            <!-- 3층부터 7층까지의 객실 UI 생성 -->
-                                            <%
-                                                for (int floor = 3; floor <= 7; floor++) {
-                                                    out.print("<div class='floor' id='floor-" + floor + "'>");
-                                                    out.print("<h2>" + floor + "층</h2>");
-                                                    for (int row = 0; row < 2; row++) {
-                                                        out.print("<div class='room-row'>");
-                                                        for (int room = 1 + row * 10; room <= 10 + row * 10; room++) {
-                                                            int roomNumber = floor * 100 + room;
-                                                            out.print("<div class='room available' id='room-" + roomNumber + "'>" + roomNumber + "</div>");
-                                                        }
-                                                        out.print("</div>");
-                                                    }
-                                                    out.print("</div>");
-                                                }
-                                            %>
-                                        </div>
-                                    </div>                                             
-                                </div>
-                            </div>
+                    <div class="card-body">
+                        <div class="read-content" id="roomContainer">
+                            <!-- Room elements will be generated here by JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -121,28 +142,323 @@
         </div>
     </div>
 </div>
+
+<!--Check-In Modal -->
+<div id="success-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="success-header-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-success">
+                <h4 class="modal-title" id="success-header-modalLabel">Room Check-In</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h5 id="roomNumberHeader" class="mt-0"></h5>
+                <input type="text" id="reservationNumber" placeholder="예약번호 입력">
+                <button type="button" class="btn btn-success" onclick="openReservationModal()"><i class=" icon-magnifier"></i></button>
+                <div id="modal-room-info">
+                    <!-- Room details will be displayed here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-sm btn-success" onclick="checkIn()">
+				    <i class="fas fa-check"></i> 체크인
+				</button>
+				<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+				    <i class="fas fa-times"></i> Close
+				</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 예약검색 모달 -->
+<div class="modal fade" id="scrollable-modal" tabindex="-1" role="dialog"
+    aria-labelledby="scrollableModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scrollableModalTitle">예약 검색</h5>
+                 
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="reservationList">
+                <div class="card">                            
+                      <div class="table-responsive">
+	                      	<div class="search">
+	                        	<input type="text"  placeholder="예약자명 검색" id="searchInput">
+	                        	<button type="button" class="btn waves-effect waves-light btn-primary" onclick="handleSearch()"><i class=" icon-magnifier">검색</i></button>
+	                        </div>
+	                          <table class="table">
+	                              <thead class="thead-light">
+	                                  <tr>
+	                                      <th scope="col">예약번호</th>
+	                                      <th scope="col">예약자명</th>
+	                                      <th scope="col">전화번호</th>
+	                                      <th scope="col">체크인날짜</th>
+	                                  </tr>
+	                              </thead>
+	                              <tbody id="resList">
+	                            
+	                              </tbody>
+	                          </table>
+                      </div>
+                  </div>
+            </div>           
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+       <div class="modal-content">
+           <div class="modal-header modal-colored-header bg-primary">
+               <h4 class="modal-title" id="myCenterModalLabel">해당 객실에 체크인 하시겠습니까?</h4>
+               <button type="button" class="close" data-dismiss="modal"
+                   aria-hidden="true">×</button>
+           </div>
+           <div class="modal-body">
+ 
+                     <p id="currentTime"></p>
+                     <p id="reservationNumberInfo"></p>
+                     
+                     
+           </div>
+           <div class="modal-footer">
+            	<button type="button" class="btn btn-sm waves-effect waves-light btn-primary" onclick="lastCheck()">
+				    <i class="fas fa-check"></i> 체크인
+				</button>
+				<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+				    <i class="fas fa-times"></i> Close
+				</button>
+            </div>
+       </div><!-- /.modal-content -->
+   </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </body>
 <script>
-	$(document).ready(function(){ // html 문서가 모두 읽히면 되면(준비되면) 다음 내용을 실행 해라    
-	    listCall();   
-	 });
+$(document).ready(function(){
+    listCall();   
+});
+
+function listCall() {
+    $.ajax({
+        type: 'GET',
+        url: '/room/liveRoomManage.ajax',
+        dataType: 'json',
+        success: function(data) {
+            console.log(data.list);
+            drawList(data.list);
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
+
+function drawList(roomList) {
+    var roomContainer = $('#roomContainer');
+    roomContainer.empty(); // 기존 내용을 지웁니다
+    
+    var floors = {};
+    for (let i = 0; i < roomList.length; i++) {
+        var room = roomList[i];
+        var floor = Math.floor(room.room_no / 100);
+        if (!floors[floor]) {
+            floors[floor] = [];
+        }
+        floors[floor].push(room);
+    }
+
+    for (var floor in floors) {
+        var floorElement = $('<div></div>').addClass('floor');
+        var floorHeader = $('<h2></h2>').text(floor + '층 - ');
+
+        // 각 층의 방 유형 설정 (예시로 설정)
+        var roomType = "";
+        if (floor == 3 || floor == 4) {
+            roomType = '스탠다드룸';
+        } else if (floor == 5) {
+            roomType = '슈페리어룸';
+        } else if (floor == 6) {
+            roomType = '디럭스룸';
+        } else if (floor == 7) {
+            roomType = '스위트룸';
+        }
+        floorHeader.append(roomType);
+        floorElement.append(floorHeader);
+
+        var roomRow = $('<div></div>').addClass('room-row');
+
+        // 각 층의 방 번호를 고정된 순서로 생성
+        for (var i = 1; i <= 20; i++) { // 예: 각 층에 20개의 방이 있다고 가정
+            var roomNumber = floor * 100 + i;
+            var roomElement = $('<div></div>').addClass('room');
+            roomElement.attr('id', 'room-' + roomNumber);
+
+            var roomNumberDiv = $('<div></div>').addClass('room-number').text(roomNumber);
+            var roomStatusDiv = $('<div></div>').addClass('room-status');
+            
+            var room = floors[floor].find(room => room.room_no === roomNumber);
+            if (room) {
+                var roomStatus = room.room_status;
+                
+                // 방 상태에 따라 클래스 및 텍스트 설정
+                if (roomStatus === 'I') {
+                    roomElement.addClass('occupied');
+                    roomStatusDiv.text('체크인');
+                } else if (roomStatus === 'A') {
+                    roomElement.addClass('available');
+                    roomStatusDiv.text('체크인가능');
+                    
+                    (function(num, status) {
+                        roomElement.on('click', function() {
+                            openRoomModal(num, status); // 모달 열기 함수 호출
+                        });
+                    })(roomNumber, roomStatus);
+                    
+                } else if (roomStatus === 'O') {
+                    roomElement.addClass('checkout');
+                    roomStatusDiv.text('체크아웃');
+                } else if (roomStatus === 'N') {
+                    roomElement.addClass('unavailable');
+                    roomStatusDiv.text('이용 불가');
+                }
+            }
+
+            roomElement.append(roomNumberDiv);
+            roomElement.append(roomStatusDiv);
+
+            roomRow.append(roomElement);
+        }
+
+        floorElement.append(roomRow);
+        roomContainer.append(floorElement);
+    }
+}
+
+function openRoomModal(roomNumber, roomStatus) {
+    // 모달 열기
+    $('#success-header-modal').modal('show');
+    
+    // 모달 헤더에 방 번호 설정
+    $('#roomNumberHeader').text('Room ' + roomNumber);
+
+    // 모달 내용 초기화
+    $('#modal-room-info').empty();
+    $('#reservationNumber').val(''); // 예약번호 입력창 초기화
+}
+
+function openReservationModal() {
+	$('#scrollable-modal').modal('show');
 	
-	function listCall() {
-		$.ajax({
-			type:'get',
-			url:'/room/liveRoomManage.ajax',
-			data:{},
-			dataType:'json',
-			success:function(data){
-				console.log(data.list);
-				
-			},
-			error:function(e){
-				console.log(e);
-			}
-		})
+	reservationList();
+	
+		
+}
+
+function reservationList(searchTerm = ''){
+	
+	var name = searchTerm ? searchTerm :'';
+	console.log('name = '+name);
+	
+	 $.ajax({
+		type: 'POST',
+	    url: '/room/reservationList.ajax',	
+	    data:{
+	    	name : name
+	    },
+	    dataType: 'json',
+	    success: function(data) {
+	        console.log(data.list);
+	        drawReservationList(data.list);
+	        
+	    },
+	    error: function(e) {
+	        console.log(e);
+	    }
+	}); 
+}
+
+
+
+function drawReservationList(list){
+	var content = '';
+	if (list.length === 0) {
+		content +='<tr>';
+		content += '<td colspan="4">예약내역이 없습니다.</td>';
+        content += '</tr>'; 
+	}else{
+		for (var item of list) {
+			content += '<tr  class="res-row" data-reservation-no="'+ item.res_no +'">';
+			content += '<th scope="row">' + item.res_no + '</th>';
+			content += '<td>'+item.cos_name+'</td>';
+			content += '<td>'+item.cos_phone+'</td>';
+			content += '<td>'+item.in_date+'</td>';
+			content += '</tr>';
+		}
 	}
+	$('#resList').html(content);
 	
+	$('.res-row').on('dblclick', function() {
+	    var reservationNumber = $(this).data('reservation-no');
+	    $('#reservationNumber').val(reservationNumber);
+	    $('#scrollable-modal').modal('hide'); // 예약 검색 모달 닫기
+	  });
+}
+
+function handleSearch() {
+    var searchTerm = document.getElementById('searchInput').value;
+    reservationList(searchTerm);
+}
+
+function checkIn() {
+		
 	
+		$('#centermodal').modal('show');
+
+        var resNum = $('#reservationNumber').val();
+        console.log('체크인 예약번호:', resNum);
+        
+        var now = new Date();
+        var currentTime = now.toLocaleString();
+        
+        $('#currentTime').text('현재 시간: ' + currentTime);
+        $('#reservationNumberInfo').text('예약번호: ' + resNum);
+
+}
+
+function lastCheck() {
+	
+	 var check_in = $('#currentTime').text().replace('현재 시간: ', '');
+	 
+	 var res_no = $('#reservationNumberInfo').text().replace('예약번호: ', '');
+	 
+	 var room_no = $('#roomNumberHeader').text().replace('Room ', '');
+	 
+	$.ajax({
+		type:'post',
+		url:'/room/checkIn.ajax',
+		data:{
+			check_in : check_in,
+			res_no : res_no,
+			room_no : room_no
+		},
+		dataType:'json',
+		success:function(data){
+			console.log(data.msg);
+			$('#success-header-modal').modal('hide');
+			$('#centermodal').modal('hide');			
+			listCall();
+		},
+		error:function(e){
+			console.log(e)
+		}
+	});
+	 	
+}
+
 </script>
 </html>
