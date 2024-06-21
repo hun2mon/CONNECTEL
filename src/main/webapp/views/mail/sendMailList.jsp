@@ -10,7 +10,9 @@
 </style>
 </head>
 <body>
-<jsp:include page="../sideBar.jsp"></jsp:include>
+<div class="sidebar-container">
+    <jsp:include page="../sideBar.jsp"></jsp:include>
+</div>
 
 </body>
 <script>

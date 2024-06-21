@@ -4,6 +4,31 @@
 >
 
 <mapper namespace="com.connec.tel.dao.RoomDAO">
+	<select id="liveRoomManageAjax" resultType="com.connec.tel.dto.RoomDTO">
+		SELECT room_no,room_status,s.res_no ,s.stay_check_in 
+			FROM room r LEFT JOIN stay s using(room_no);
+	</select>
+	
+	<select id="reservationList" resultType="com.connec.tel.dto.RoomDTO">
+		SELECT res_no,cos_name,cos_phone,
+					cos_email,in_date,out_date,res_date,res_price
+		FROM reservation WHERE Date(in_date) = CURRENT_DATE();
+	</select>
+	
+	<select id="reservationSearchList" resultType="com.connec.tel.dto.RoomDTO" parameterType="map">
+		SELECT res_no,cos_name,cos_phone,
+					cos_email,in_date,out_date,res_date,res_price
+		FROM reservation WHERE Date(in_date) = CURRENT_DATE() AND cos_name = #{name};	
+	</select>
+	
+	<insert id="checkIn" parameterType="map">
+		INSERT INTO stay(res_no,room_no,stay_check_in,register,regist_date)
+			VALUES(#{res_no},#{room_no},#{check_in},#{emp_no},#{regist_date})
+	</insert>
+	
+	<update id="roomCheckIn" parameterType="String">
+		UPDATE room SET room_status = 'I' WHERE room_no = #{room_no} 
+	</update>
 	
 	
 </mapper>

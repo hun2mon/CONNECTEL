@@ -50,6 +50,14 @@
     .read-content-body p {
         margin-bottom: 10px; /* 문단 간격 설정 */
     }
+    
+       .form-group {
+            display: flex;
+            gap: 10px; /* 인풋 간의 간격 조정 */
+        }
+        .form-control {
+            flex: 1; /* 인풋의 크기를 균등하게 */
+        }
 </style>
 </head>
 <body>
@@ -72,16 +80,16 @@
                                                 <div class="read-content">
                                                     <div class="media pt-3">                                                 
                                                         <div class="media-body">                                                        
-                                                        	<form action="/room/roomManageWrite.go" method="post" enctype="multipart/form-data">								                                
+                                                        	<form action="#" method="post" enctype="multipart/form-data">								                                
 								                                <div class="form-group">
-								                                    <input type="text" class="form-control bg-transparent" name="room" placeholder="객실호수 : ">
+								                                    <input type="text" class="form-control bg-transparent" name="room" readonly="readonly" placeholder="객실호수">
+								                                    <input type="text" class="form-control bg-transparent" name="room" readonly="readonly" placeholder="작성자">
+								                                      <input type="text" class="form-control bg-transparent" name="room" readonly="readonly" placeholder="날짜">
+								                                    <input type="text" class="form-control bg-transparent" name="room" readonly="readonly" placeholder="상태">
 								                                </div>
 								                                <div class="form-group">
-								                                    <textarea id="email-compose-editor" class="textarea_editor form-control bg-transparent" rows="15" name="content" placeholder="특이사항을 입력해주세요."></textarea>
-								                                </div>
-								                                <div class="fallback w-100">
-								                                    <input type="file" class="dropify" multiple="multiple" name="multipartFiles" />
-								                                </div>
+								                                    <textarea id="email-compose-editor" class="textarea_editor form-control bg-transparent" rows="15" name="content" readonly="readonly"></textarea>
+								                                </div>								                               
 								                                <div class="text-right mt-4 mb-5">
 								                                    <button class="btn btn-primary btn-sl-sm mr-3" type="submit"><span class="mr-2"><i class="fas fa-share-square"></i></span>등록 </button>								                        
 								                                </div>
