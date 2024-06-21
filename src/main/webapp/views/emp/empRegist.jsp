@@ -68,19 +68,43 @@
             }
         }
         #postBtn{
-        	width: auto;
+        	width: 30px;
         }
+        .upload{
+        	text-align : center;
+        	margin-left : 130px;
+        }
+	    .input-container {
+	      position: relative;
+	      display: inline-block;
+	    }
+	    .input-container input {
+	      padding-right: 40px; /* 이미지의 크기만큼 여유 공간 추가 */
+	    }
+	    .input-container img {
+	      position: absolute;
+	      right: 10px; /* 입력 필드의 오른쪽 끝에서 10px 떨어진 위치 */
+	      top: 50%;
+	      transform: translateY(-50%);
+	      cursor: pointer;
+	    }        
+        
     </style>
 </head>
 <body>
-<form action="empRegist.do" method="post" onsubmit="return validateForm()">
+<form action="/empRegist.do" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
     <div class="parent">
         <div class="sidebar">
             <jsp:include page="../sideBar.jsp"></jsp:include>
         </div>
         <div class="content">
+			<input type="hidden" name="pho_division" value="P">       
             <div class="photo">
                 <div>중앙에 위치한 사진 또는 콘텐츠</div>
+            </div>
+            <br>
+            <div class = "upload">
+				<input type="file" name="photos" id="imgUpload"/>               
             </div>
             <br><br>
             <div class="form-group">
@@ -94,22 +118,22 @@
             </div>
             <div class="form-group">
                 <span class="subject">생년월일</span>
-                <input type="date" class="form-control" id="dob" name="dob" required>
+                <input type="date" class="form-control" id="birth" name="birth" required>
                 <span class="subject">이메일</span>
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <span class="subject">우편번호</span>
-                <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" required>
-                <input type="button" id = "postBtn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+                <input type="text"  name = "post_no" class="form-control" id="sample6_postcode" placeholder="우편번호" required>
+				<img id="postBtn" src="/scss/icons/search.png" alt="우편번호 찾기" onclick="sample6_execDaumPostcode()" style="cursor: pointer;">
                 <span class="subject">전화번호</span>
                 <input type="text" class="form-control" id="phone" name="phone" required>
             </div>
             <div class="form-group">
                 <span class="subject">주소</span>
-                <input class="form-control" type="text" id="sample6_address" placeholder="주소" required>
+                <input class="form-control" name = "address" type="text" id="sample6_address" placeholder="주소" required>
                 <span class="subject">부서</span>
-                <select class="form-control" id="department" name="department" required>
+                <select class="form-control" id="dept_code" name="dept_code" required>
                     <option value="">대기상태</option>            
                     <option value="11">인사팀</option>
                     <option value="22">시설팀</option>
@@ -118,9 +142,9 @@
             </div>  
             <div class="form-group">
                 <span class="subject">상세주소</span>
-                <input class="form-control" type="text" id="sample6_extraAddress" placeholder="상세주소" required>
+                <input class="form-control" name = "detail_address" type="text" id="sample6_extraAddress" placeholder="상세주소" required>
                 <span class="subject">직급</span>
-                <select class="form-control" id="position" name="position" required>
+                <select class="form-control" id="rank_code" name="rank_code" required>
                     <option value="">대기상태</option>
                     <option value="6">사원</option>
                     <option value="5">대리</option>
@@ -132,7 +156,7 @@
             </div>  
             <div class="form-group">
                 <span class="subject">은행</span>
-                <select class="form-control" id="bank" name="bank" required>
+                <select class="form-control" id="bank_name" name="bank_name" required>
                     <option value=""></option>
                     <option value="하나은행">하나은행</option>
                     <option value="신한은행">신한은행</option>
@@ -143,7 +167,7 @@
                     <option value="기업은행">기업은행</option>                    
                 </select>
                 <span class="subject">권한</span>
-                <select class="form-control" id="permission" name="permission" required>
+                <select class="form-control" id="authority" name="authority" required>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -151,7 +175,7 @@
             </div> 
             <div class="form-group">
                 <span class="subject">계좌번호</span>
-                <input type="text" class="form-control" id="account" name="account" required>
+                <input type="text" class="form-control" id="account_no" name="account_no" required>
                 <span class="subject">입사일</span>
                 <input type="date" class="form-control" id="join_date" name="join_date" required>
             </div> 
@@ -199,20 +223,49 @@ function sample6_execDaumPostcode() {
     }).open();
 }
 
+$('#imgUpload').change(function (){
+	var count = $(this)[0].files.length;
+	var files = this.files;
+	var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+	/* console.log(count); */
+	if (count > 1) {
+		alert("이미지 파일 첨부는 1개까지 가능합니다.");
+		$('#imgPreview').attr('src', 'resources/img/basic_user.png');
+		this.value = '';
+	}
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (!allowedExtensions.exec(file.name)) {
+            alert("이미지 파일 첨부만 가능합니다.");
+            this.value = '';
+            $('#imgPreview').attr('src', 'resources/img/basic_user.png');
+            return;
+        }
+    }
+	
+    if (file) {
+    var reader = new FileReader();
+        reader.onload = function (){
+            $('#imgPreview').attr('src', reader.result);
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
 function validateForm() {
     var name = document.getElementById('name').value;
     var gender = document.querySelector('input[name="gender"]:checked');
-    var dob = document.getElementById('dob').value;
+    var dob = document.getElementById('birth').value;
     var email = document.getElementById('email').value;
     var postcode = document.getElementById('sample6_postcode').value;
     var phone = document.getElementById('phone').value;
     var address = document.getElementById('sample6_address').value;
-    var department = document.getElementById('department').value;
+    var department = document.getElementById('dept_code').value;
     var detailAddress = document.getElementById('sample6_detailAddress').value;
-    var position = document.getElementById('position').value;
-    var bank = document.getElementById('bank').value;
-    var permission = document.getElementById('permission').value;
-    var account = document.getElementById('account').value;
+    var position = document.getElementById('rank_code').value;
+    var bank = document.getElementById('bank_name').value;
+    var permission = document.getElementById('authority').value;
+    var account = document.getElementById('account_no').value;
     var joinDate = document.getElementById('join_date').value;
 
     if (name == "" || !gender || dob == "" || email == "" || postcode == "" || phone == "" || address == "" ||
