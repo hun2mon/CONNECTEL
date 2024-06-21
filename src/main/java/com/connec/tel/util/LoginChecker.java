@@ -36,20 +36,6 @@ Logger logger = LoggerFactory.getLogger(getClass());
 		
 		return pass;
 	}
-<<<<<<< HEAD
-=======
-
-	
-	// 컨트롤러에 접근 한 후 뷰에 보내지기 전에 들른다.
-	// view에 보내고 싶은 내용이 있다면 ModelAndView 에 넣어주면 된다.
-	@Override
-	public void postHandle(HttpServletRequest req, HttpServletResponse resp, Object handler,
-			ModelAndView mav) throws Exception {
-		logger.info("=========POST HANDLER==========");
-		
-		
-	}
->>>>>>> origin/master
 	
 	
 
