@@ -65,4 +65,26 @@ public class RoomController {
 		return roomService.checkIn(param,session);
 	}
 	
+	@PostMapping(value = "/room/checkInInfo.ajax")
+	@ResponseBody
+	public Map<String, Object> checkInInfo(@RequestParam String room_no){
+		
+		logger.info("checkInInfo.axax 요청!!!");
+		logger.info("param : " + room_no);
+		
+		return roomService.checkInInfo(room_no);
+	}
+	
+	@PostMapping(value = "/room/checkOut.ajax")
+	@ResponseBody
+	public Map<String, Object> checkOut(@RequestParam String room_no,
+			@RequestParam String res_no,HttpSession session){
+		
+		logger.info("checkOut.axax 요청!!!");
+		logger.info("param : " + room_no);
+		logger.info("param : " + res_no);
+		
+		
+		return roomService.checkOut(room_no,res_no,session);
+	}
 }

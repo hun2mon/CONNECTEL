@@ -94,6 +94,30 @@ public class RoomService {
 	        }
 	        return formattedDate;
 	    }
+
+	public Map<String, Object> checkInInfo(String room_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		RoomDTO dto = roomDAO.checkInInfo(room_no);
+		
+		map.put("res_no", dto.getRes_no());
+		map.put("stay_check_in",dto.getStay_check_in());
+		
+		return map;
 	}
+
+	public Map<String, Object> checkOut(String room_no, String res_no, HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
+		String emp_no = emp.getEmp_no();
+		
+		roomDAO.checkOut(room_no,res_no,emp_no);
+		roomDAO.roomCheckOut(room_no);
+		return map;
+	}
+	
+	
+}
 	
 

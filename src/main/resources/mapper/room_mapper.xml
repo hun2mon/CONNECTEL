@@ -30,5 +30,22 @@
 		UPDATE room SET room_status = 'I' WHERE room_no = #{room_no} 
 	</update>
 	
+	<select id="checkInInfo" resultType="com.connec.tel.dto.RoomDTO">
+		SELECT res_no,stay_check_in  FROM stay 
+			WHERE room_no = #{room_no} ORDER BY stay_check_in DESC;
+	</select>
+	
+	<update id="checkOut" parameterType="String">
+		UPDATE stay 
+		SET stay_check_out = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
+			   updater = #{emp_no},
+			   update_date = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul')
+		WHERE room_no = #{room_no}
+  		AND res_no = #{res_no}
+	</update>
+	
+	<update id="roomCheckOut" parameterType="String">
+		UPDATE room SET room_status = 'O' WHERE room_no = #{room_no} 
+	</update>
 	
 </mapper>

@@ -20,4 +20,10 @@ public interface RoomDAO {
 
 	void roomCheckIn(String room_no);
 
+	RoomDTO checkInInfo(String room_no);
+
+	void checkOut(String room_no, String res_no, String emp_no);
+
+	void roomCheckOut(String room_no);
+
 }

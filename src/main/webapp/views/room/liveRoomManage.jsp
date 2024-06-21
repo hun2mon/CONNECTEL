@@ -119,7 +119,6 @@
     cursor: pointer;
 	}
 
-	
 </style>
 </head>
 <body>
@@ -143,7 +142,7 @@
     </div>
 </div>
 
-<!--Check-In Modal -->
+<!--체크인 모달-->
 <div id="success-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="success-header-modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -154,7 +153,7 @@
             <div class="modal-body">
                 <h5 id="roomNumberHeader" class="mt-0"></h5>
                 <input type="text" id="reservationNumber" placeholder="예약번호 입력">
-                <button type="button" class="btn btn-success" onclick="openReservationModal()"><i class=" icon-magnifier"></i></button>
+                <button type="button" class="btn btn-success" onclick="openReservationModal()"><i class="fas fa-caret-down"></i></button>
                 <div id="modal-room-info">
                     <!-- Room details will be displayed here -->
                 </div>
@@ -211,6 +210,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- 체크인 alert 모달 -->
 <div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered">
        <div class="modal-content">
@@ -223,8 +223,7 @@
  
                      <p id="currentTime"></p>
                      <p id="reservationNumberInfo"></p>
-                     
-                     
+             
            </div>
            <div class="modal-footer">
             	<button type="button" class="btn btn-sm waves-effect waves-light btn-primary" onclick="lastCheck()">
@@ -236,6 +235,31 @@
             </div>
        </div><!-- /.modal-content -->
    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- 체크아웃 모달 -->
+<div id="danger-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-danger">
+                <h4 class="modal-title" id="danger-header-modalLabel">Room Check-Out</h4>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+            
+                <h4 id="checkOutHeader" class="mt-0"></h4>
+				<h5 id="res_no" class="mt-0"></h5>
+				<h5 id="check_in_date" class="mt-0"></h5>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light"
+                    data-dismiss="modal"><i class="fas fa-times"></i>Close</button>
+                <button type="button" class="btn btn-danger" onclick="checkOut()"><i class="fas fa-sign-in-alt"></i>체크아웃</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 </body>
 <script>
@@ -309,13 +333,21 @@ function drawList(roomList) {
                 if (roomStatus === 'I') {
                     roomElement.addClass('occupied');
                     roomStatusDiv.text('체크인');
+                    
+                    (function(num) {
+                        roomElement.on('click', function() {
+                            openCheckOutModal(num); // 모달 열기 함수 호출
+                        });
+                    })(roomNumber);
+                    
+                    
                 } else if (roomStatus === 'A') {
                     roomElement.addClass('available');
                     roomStatusDiv.text('체크인가능');
                     
-                    (function(num, status) {
+                    (function(num) {
                         roomElement.on('click', function() {
-                            openRoomModal(num, status); // 모달 열기 함수 호출
+                            openCheckInModal(num); // 모달 열기 함수 호출
                         });
                     })(roomNumber, roomStatus);
                     
@@ -339,7 +371,7 @@ function drawList(roomList) {
     }
 }
 
-function openRoomModal(roomNumber, roomStatus) {
+function openCheckInModal(roomNumber) {
     // 모달 열기
     $('#success-header-modal').modal('show');
     
@@ -351,11 +383,58 @@ function openRoomModal(roomNumber, roomStatus) {
     $('#reservationNumber').val(''); // 예약번호 입력창 초기화
 }
 
+function openCheckOutModal(roomNumber) {
+    // 모달 열기
+    $('#danger-header-modal').modal('show');
+    
+    // 모달 헤더에 방 번호 설정
+    $('#checkOutHeader').text('Room ' + roomNumber);
+    
+    $.ajax({
+    	type:'POST',
+    	url:'/room/checkInInfo.ajax',
+    	data:{
+    		room_no:roomNumber
+    	},
+    	dataType:'JSON',
+    	success:function(data){
+    		console.log(data);
+    		$('#res_no').text('예약번호 : ' + data.res_no);
+    		
+    		var formattedCheckInDate = formatDate(data.stay_check_in);
+    		$('#check_in_date').text('체크인 : ' + formattedCheckInDate);
+    	},
+    	error:function(e){
+    		console.log(e);
+    	}
+    })
+    
+    
+}
+
+
+function formatDate(dateString) {
+
+    var date = new Date(dateString);
+
+    var year = date.getUTCFullYear();
+    var month = String(date.getUTCMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더함
+    var day = String(date.getUTCDate()).padStart(2, '0');
+    var hours = String(date.getUTCHours()).padStart(2, '0');
+    var minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    var seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+
+    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+}
+
+
+
+
 function openReservationModal() {
 	$('#scrollable-modal').modal('show');
-	
+	$('#searchInput').val('');
 	reservationList();
-	
 		
 }
 
@@ -458,6 +537,32 @@ function lastCheck() {
 		}
 	});
 	 	
+}
+
+function checkOut() {
+	var room_no = $('#checkOutHeader').text().replace('Room ','');
+	var res_no = $('#res_no').text().replace('예약번호 : ','');
+	
+	console.log('room_no : '+ room_no);
+	console.log('res_no : '+ res_no);
+	
+	$.ajax({
+		type:'post',
+		url:'/room/checkOut.ajax',
+		data:{
+			room_no : room_no,
+			res_no : res_no,
+		},
+		dataType:'json',
+		success:function(data){				
+			listCall();
+			$('#danger-header-modal').modal('hide');	
+		},
+		error:function(e){
+			console.log(e)
+		}
+	})
+		
 }
 
 </script>
