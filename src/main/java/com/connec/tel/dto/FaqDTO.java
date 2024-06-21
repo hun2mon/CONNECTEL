@@ -8,6 +8,7 @@ public class FaqDTO {
 	private String FAQ_subject;
 	private String FAQ_content;
 	private String register;
+	private String FAQ_category;
 	public int getFAQ_no() {
 		return FAQ_no;
 	}
@@ -32,6 +33,12 @@ public class FaqDTO {
 	public void setRegister(String register) {
 		this.register = register;
 	}
-	
-	
+	public String getFAQ_category() {
+		return FAQ_category;
+	}
+	public void setFAQ_category(String fAQ_category) {
+		FAQ_category = fAQ_category;
+	}
+
 }
+

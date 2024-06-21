@@ -6,9 +6,28 @@
 <mapper namespace="com.connec.tel.dao.FaqDAO">
 
 <select id="list" resultType="faqDTO" parameterType="map">
-	SELECT faq_no,faq_subject FROM FAQ
+    SELECT FAQ_no, FAQ_subject 
+    FROM FAQ
 </select>
 
+<select id="allCount" resultType="Integer">
+	SELECT CEIL(COUNT(FAQ_no)/#{param1}) AS pages FROM FAQ
+</select>
+
+<insert id="write" parameterType="map">
+    INSERT INTO FAQ(FAQ_subject, register, FAQ_content, FAQ_category, regist_date)
+    VALUES(#{subject}, #{emp_no}, #{content}, #{category}, now())
+</insert>
 	
+<select id="detail" resultType="faqDTO">
+		SELECT * FROM FAQ WHERE faq_no = #{param1}	
+</select>
+
+<delete id="deleteFAQs">
+        DELETE FROM FAQ WHERE faq_no IN
+        <foreach collection="faqNos" item="faqNo" open="(" separator="," close=")">
+            #{faqNo}
+        </foreach>
+    </delete>
 	
 </mapper>

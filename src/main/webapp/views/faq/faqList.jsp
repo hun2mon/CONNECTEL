@@ -3,11 +3,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>FAQ</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="../jquery.twbsPagination.js" type="text/javascript"></script>
-<style>
 
+<style>
 body {
     display: flex;
     margin: 0;
@@ -119,7 +118,21 @@ button#deletebutton:hover {
     padding: 20px;
 }
 
+/* FAQ 리스트 스타일 */
+.faq-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
 
+.faq-list_no, .faq-list_subject {
+    margin: 0 10px;
+}
+
+.faq-list_no, .faq-list_subject, .freecheckbox {
+    align-self: center;
+}
 
 </style>
 </head>
@@ -129,10 +142,9 @@ button#deletebutton:hover {
     <jsp:include page="../sideBar.jsp"></jsp:include>
 </div>
 
-
 <!-- 검색 라인 -->
 <div class="commonstext">
- <div class="faq-title">
+    <div class="faq-title">
         <h2>- FAQ -</h2>
     </div>
     <span class="search-container">
@@ -140,117 +152,136 @@ button#deletebutton:hover {
         <button id="freebutton">검색</button>
     </span>
     <span class="nav-right">
-        <button id="writebutton">글쓰기</button>
+        <button id="writebutton" onclick="faqwrite()">글쓰기</button>
         <button id="deletebutton" style="margin-left:10px;">삭제</button>
     </span>
     
     <hr>
-
-    <!-- 탭 -->
-    <div class="tab">
-        <button class="tablinks" onclick="openTab(event, '전체')" id="defaultOpen">전체</button>
-        <button class="tablinks" onclick="openTab(event, '객실')">객실</button>
-        <button class="tablinks" onclick="openTab(event, '예약')">예약 및 환불</button>
-        <button class="tablinks" onclick="openTab(event, '부대시설')">부대시설</button>
-        <button class="tablinks" onclick="openTab(event, '기타')">기타</button>
+    <div class="faqContent">
+        <!-- 탭 -->
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, '전체')" id="defaultOpen">전체</button>
+            <button class="tablinks" onclick="openTab(event, '객실')">객실</button>
+            <button class="tablinks" onclick="openTab(event, '예약')">예약 및 환불</button>
+            <button class="tablinks" onclick="openTab(event, '부대시설')">부대시설</button>
+            <button class="tablinks" onclick="openTab(event, '기타')">기타</button>
+        </div>
     </div>
-
-    <!-- 탭 내용 -->
-    <div id="전체" class="tabcontent">
+    <!-- 리스트 라인 -->
+    <div id="faqList">
     </div>
-    <div id="객실" class="tabcontent">
+    
+    <div class="pagination">                           
+        <nav aria-label="Page navigation" style="text-align:center">
+            <ul class="pagination" id="pagination"></ul>
+        </nav>               
     </div>
-    <div id="예약" class="tabcontent">
-    </div>
-    <div id="부대시설" class="tabcontent">
-    </div>
-    <div id="기타" class="tabcontent">
-    </div>
+    <hr>
 </div>
-
 <hr>
-
-<div id="faqList">
-
-</div>
-</body>
-
 <script>
-// -------------------------탭 기능 구현----------------------------
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
+// JavaScript 코드는 body 태그 하단에 위치시키는 것이 좋습니다.
+$(document).ready(function(){
+    // 페이지가 로드되면 FAQ 리스트를 초기화하고, 첫 번째 페이지를 호출합니다.
+    listCall(1);
     
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
+ 
+    // 페이지 이동 시 호출될 함수
+    function listCall(page) {
+        var cnt = 10; // 페이지당 항목 수, 필요에 따라 변경 가능
+        $.ajax({
+            type: 'GET',
+            url: '/faq/faqList.ajax',
+            data: {
+                'page': page,
+                'cnt': cnt
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('AJAX 요청 성공');
+                console.log(data.list);
+                drawFaqList(data.list); // FAQ 리스트 그리기 함수 호출
+                initializePagination(data.totalPages); // 페이징 초기화
+            },
+            error: function(error) {
+                console.log('FAQ 리스트 출력 실패:', error);
+            }
+        });
     }
-    
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+
+    // FAQ 리스트를 그리는 함수
+    function drawFaqList(data) {
+        var content = '';  
+        for (var i = 0; i < data.length; i++) {
+            content += '<div class="faq-list">';
+            content += '<div class="faq-list_no">' + data[i].faq_no + '</div>';
+            content += '<div class="faq-list_subject"><a href="faqDetail.go?faq_no=' + data[i].faq_no + '">' + data[i].faq_subject + '</a></div>';
+            content += '<input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].faq_no + '">';
+            content += '</div>';
+        }
+        $('#faqList').html(content); // 기존 데이터를 초기화하고 새로운 데이터로 대체
     }
+
+    // 페이징을 초기화하는 함수
+    function initializePagination(totalPages) {
+        $('#pagination').twbsPagination({
+            totalPages: totalPages, // 전체 페이지 수
+            visiblePages: 5, // 보여줄 페이지 수
+            onPageClick: function(event, page) { 
+                console.log('페이지 클릭 이벤트 발생:', page);
+                listCall(page); // 페이지 클릭 시 해당 페이지의 데이터를 호출하는 함수 호출
+            }
+        });
+    }
+
     
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-    
-    // AJAX 호출을 통해 탭 내용을 동적으로 로드
-    listCall(tabName);
-}
+   //삭제하기
+    // FAQ 삭제 버튼 클릭 이벤트 처리
+    $('#deletebutton').click(function() {
+        var checkedItems = $('.freecheckbox:checked'); // 선택된 체크박스들을 가져옴
+        var faqNos = []; // 삭제할 FAQ 번호들을 담을 배열
 
-// 기본 탭 설정
-document.getElementById("defaultOpen").click();
+        // 선택된 체크박스들의 FAQ 번호를 배열에 추가
+        checkedItems.each(function() {
+            var faqNo = $(this).attr('id').split('_')[1]; // 체크박스 ID에서 FAQ 번호 추출
+            faqNos.push(parseInt(faqNo)); // FAQ 번호를 정수로 변환하여 배열에 추가
+        });
 
-// ------------------------- 여기까지 탭 -----------------------------
-
-
-
-// ------------------------ 아작스 랑 페이징  -----------------------------
-// AJAX로 탭 내용을 가져오는 함수
-var showPage = 1; // 현재 페이지를 저장할 변수
-
-listCall(1);
-
-$('#pagePerNum').on('change', function() {
-    $('#pagination').twbsPagination('destroy');
-    listCall(showPage);
+        // 최소한 하나의 체크박스가 선택되었는지 확인
+        if (faqNos.length > 0) {
+            // 삭제할 FAQ 번호들을 서버로 전송하여 삭제 요청
+            $.ajax({
+                type: 'POST',
+                url: '/faq/deleteFaq.ajax',
+                contentType: 'application/json',
+                data: JSON.stringify(faqNos), // JSON 형식으로 데이터 전송
+                success: function(response) {
+                    console.log('삭제 성공:', response);
+                    alert('삭제에 성공하였습니다.');
+                    listCall(1); // 삭제 후 리스트 다시 호출
+                },
+                error: function(error) {
+                    console.log('삭제 실패:', error);
+                    alert('삭제 중 오류가 발생했습니다.'); // 오류 메시지 표시
+                }
+            });
+        } else {
+            alert('삭제할 FAQ를 선택해주세요.');
+        }
+    });
 });
 
 
-function listCall(page) {
-    $.ajax({
-        type: 'GET',
-        url: '/faq/faqList.ajax',
-        data: {
-        },
-        dataType: 'json',
-        success: function(data) {
-            // 서버로부터 받은 데이터로 탭 내용을 업데이트
-            console.log(data.list);
-            drawFaqList(data.list); // FAQ 목록을 화면에 출력하는 함수 호출
-            
-        },
-        error: function(error) {
-            console.log('FAQ 리스트 출력 실패:', error);
-        }
-    });
+
+
+
+
+
+//작성 폼으로가기
+function faqwrite() {
+    window.location.href = '/faqwrite.go';
 }
-
-// FAQ 목록을 화면에 출력하는 함수
-function drawFaqList(data) {
-	
-	for(item of data){
-    var content = '';
-        content += '<div class="faq-list">';
-        content += '<div class="faq-list_no">' + item.faq_no + '</div>';
-        content += '<div class="faq-list_subject"' + item.faq_subject + '</div>';
-        content += '<input type="checkbox" class="freecheckbox" id="customCheck2">';
-        content += '</div>';
-
-    }
-    $('#faqList').append(content);
-}
-
-
-
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
+</body>
 </html>
