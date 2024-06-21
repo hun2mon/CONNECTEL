@@ -161,10 +161,7 @@
             <div class="modal-footer">
             	<button type="button" class="btn btn-sm btn-success" onclick="checkIn()">
 				    <i class="fas fa-check"></i> 체크인
-				</button>
-				<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
-				    <i class="fas fa-times"></i> Close
-				</button>
+				</button>				
             </div>
         </div>
     </div>
@@ -229,9 +226,6 @@
             	<button type="button" class="btn btn-sm waves-effect waves-light btn-primary" onclick="lastCheck()">
 				    <i class="fas fa-check"></i> 체크인
 				</button>
-				<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
-				    <i class="fas fa-times"></i> Close
-				</button>
             </div>
        </div><!-- /.modal-content -->
    </div><!-- /.modal-dialog -->
@@ -254,9 +248,7 @@
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light"
-                    data-dismiss="modal"><i class="fas fa-times"></i>Close</button>
-                <button type="button" class="btn btn-danger" onclick="checkOut()"><i class="fas fa-sign-in-alt"></i>체크아웃</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="checkOut()"><i class="fas fa-sign-in-alt"></i>체크아웃</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -26,4 +26,12 @@ public interface RoomDAO {
 
 	void roomCheckOut(String room_no);
 
+	List<RoomDTO> roomStateList(String search, int start, int cntt);
+
+	void updateNotAvailable(String room_no);
+
+	void updateAvailable(String room_no);
+
+	int totalPage(String search, int cntt);
+
 }

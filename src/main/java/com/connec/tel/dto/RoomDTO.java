@@ -15,9 +15,17 @@ public class RoomDTO {
 	private Date out_date;
 	private Date res_date;
 	private int res_price;
+	private int type_code;
 	
 	
 	
+	
+	public int getType_code() {
+		return type_code;
+	}
+	public void setType_code(int type_code) {
+		this.type_code = type_code;
+	}
 	public String getCos_name() {
 		return cos_name;
 	}

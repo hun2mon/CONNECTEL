@@ -48,4 +48,36 @@
 		UPDATE room SET room_status = 'O' WHERE room_no = #{room_no} 
 	</update>
 	
+	<select id="roomStateList" resultType="com.connec.tel.dto.RoomDTO">
+		<if test="param1 == ''">
+			SELECT room_no, type_code, room_status FROM room LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT room_no, type_code, room_status FROM room WHERE room_no LIKE #{param1} LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	<update id="updateNotAvailable">
+		UPDATE room SET room_status = 'N'  WHERE room_no = #{room_no}
+	</update>
+	
+	<update id="updateAvailable">
+		UPDATE room SET room_status = 'A'  WHERE room_no = #{room_no}
+	</update>
+	
+	<select id="totalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(room_no)/#{param2}) AS pages FROM room
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(room_no)/#{param2}) AS pages FROM room WHERE room_no LIKE #{param1}
+		</if>
+	
+	</select>
+	
+	
+	
 </mapper>

@@ -116,6 +116,48 @@ public class RoomService {
 		roomDAO.roomCheckOut(room_no);
 		return map;
 	}
+
+	public Map<String, Object> roomStateList(String search, String page, String cnt) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = roomDAO.totalPage(search, cntt);
+		
+		List<RoomDTO> list = roomDAO.roomStateList(search, start, cntt);
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
+		return map;
+	}
+
+	public Map<String, Object> updateNotAvailable(String room_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		roomDAO.updateNotAvailable(room_no);
+		
+		map.put("msg","성공");
+		
+		return map;
+	}
+
+	public Map<String, Object> updateAvailable(String room_no) {
+Map<String, Object> map = new HashMap<String, Object>();
+		
+		roomDAO.updateAvailable(room_no);
+		
+		map.put("msg","성공");
+		
+		return map;
+	}
+
+
 	
 	
 }

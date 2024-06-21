@@ -87,4 +87,39 @@ public class RoomController {
 		
 		return roomService.checkOut(room_no,res_no,session);
 	}
+	
+	@PostMapping(value = "/room/roomStateList.ajax")
+	@ResponseBody
+	public Map<String, Object> roomStateList(String search, String page, String cnt){
+		
+		logger.info("RoomStateList.axax 요청!!!");
+		logger.info("search : {}", search);
+		logger.info("search : {}", page);
+		logger.info("search : {}",  cnt);
+
+		return roomService.roomStateList(search, page, cnt);
+	}
+	
+	@PostMapping(value = "/room/updateNotAvailable.ajax")
+	@ResponseBody
+	public Map<String, Object> updateNotAvailable(@RequestParam String room_no){
+		
+		logger.info("updateNotAvailable.axax 요청!!!");
+		logger.info("room_no : " +room_no);
+		
+		
+		return roomService.updateNotAvailable(room_no);
+	}
+	
+	@PostMapping(value = "/room/updateAvailable.ajax")
+	@ResponseBody
+	public Map<String, Object> updateAvailable(@RequestParam String room_no){
+		
+		logger.info("updateAvailable.axax 요청!!!");
+		logger.info("room_no : " +room_no);
+		
+		
+		return roomService.updateAvailable(room_no);
+	}
+	
 }
