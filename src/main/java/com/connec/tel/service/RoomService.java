@@ -2,6 +2,10 @@ package com.connec.tel.service;
 
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -148,7 +152,7 @@ public class RoomService {
 	}
 
 	public Map<String, Object> updateAvailable(String room_no) {
-Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		roomDAO.updateAvailable(room_no);
 		
@@ -157,9 +161,90 @@ Map<String, Object> map = new HashMap<String, Object>();
 		return map;
 	}
 
+	public Map<String, Object> roomPirceList(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<RoomDTO> list = roomDAO.roomPirceList(param);
+		
+		map.put("list", list);
+		
+		return map;
+	}
 
-	
-	
+	public Map<String, Object> updateRoomPirceList(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		
+		
+		
+		roomDAO.updateRoomPirceList(param);
+		map.put("msg", "객실타입 가격 변경");
+		return map;
+	}
+
+	public Map<String, Object> insertRoomPirceList(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		roomDAO.insertRoomPirceList(param);
+		map.put("msg", "객실타입 가격 변경");
+		
+		String yearMonth = (String) param.get("year_month");		
+		int year = Integer.parseInt(yearMonth.substring(0, 4));
+		int month = Integer.parseInt(yearMonth.substring(5, 7));		
+		List<String> daysAndWeekdays = getDaysOfMonth(year, month);
+		
+		String division = (String) param.get("dd_division");
+		
+		
+		for (String days : daysAndWeekdays) {
+			int startIndex = days.indexOf('(');
+			int endIndex = days.indexOf(')');
+			String day = days.substring(startIndex + 1, endIndex); // 요일
+			String ddate = days.substring(0, startIndex); //2024-06-01
+			
+			if (division.equals("C")) {
+				if (day.equals("SUNDAY")) {
+					logger.info("일요일 : " + ddate);
+				}
+			}else if (division.equals("B")) {
+				if (day.equals("FRIDAY") || day.equals("SATURDAY")) {
+					logger.info("금~토요일 : " + ddate);
+				}
+			}else  {
+				if (!day.equals("SUNDAY") && !day.equals("FRIDAY") && !day.equals("SATURDAY")) {
+					logger.info("월~목요일 : " + ddate);
+				}
+			
+			}
+						
+        }
+		
+		return map;
+	}
+
+
+	private List<String> getDaysOfMonth(int year, int month) {
+		List<String> daysAndWeekdays = new ArrayList<>();
+        LocalDate date = LocalDate.of(year, month, 1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        
+        while (date.getMonthValue() == month) {
+            String formattedDate = date.format(formatter);
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+            String dayOfWeekStr = dayOfWeek.toString();
+            daysAndWeekdays.add(formattedDate + " (" + dayOfWeekStr + ")");
+            date = date.plusDays(1);
+        }
+        
+		return daysAndWeekdays;
+	}
+
+	public int row(String yearMonth, String division) {
+		
+		return roomDAO.row(yearMonth,division);
+	}
+
+
 }
 	
 

@@ -78,6 +78,30 @@
 	
 	</select>
 	
+	<select id="roomPirceList" resultType="com.connec.tel.dto.RoomDTO" parameterType="map">
+		SELECT yearAndmonth, dd_division, standard, superior, delux, suite
+			FROM default_room_price WHERE yearAndmonth = #{year_month}
+	</select>
 	
+	<select id="row" resultType="int">
+		SELECT COUNT(*) as cnt FROM default_room_price 
+			WHERE  yearAndmonth = #{yearMonth} AND dd_division = #{division}
+	</select>
+	
+	
+	<update id="updateRoomPirceList" parameterType="Map">
+		UPDATE default_room_price 
+		SET ${column} = #{value},
+					updater = #{emp_no},
+					update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		WHERE  yearAndmonth = #{year_month} AND dd_division = #{dd_division}	
+										
+	</update>
+	
+	<insert id="insertRoomPirceList" parameterType="Map">
+		INSERT INTO default_room_price(yearAndmonth,dd_division,
+										${column},register,regist_date)
+				VALUES(#{year_month},#{dd_division},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))						
+	</insert>
 	
 </mapper>

@@ -34,4 +34,12 @@ public interface RoomDAO {
 
 	int totalPage(String search, int cntt);
 
+	List<RoomDTO> roomPirceList(Map<String, Object> param);
+
+	void updateRoomPirceList(Map<String, Object> param);
+
+	void insertRoomPirceList(Map<String, Object> param);
+
+	int row(String yearMonth, String division);
+
 }
