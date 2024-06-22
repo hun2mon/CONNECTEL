@@ -27,10 +27,6 @@ public class CommonController {
 	@ResponseBody
 	public Map<String, Object> listCall(String search, String page, String cnt){
 		
-		logger.info("search : {}", search);
-		logger.info("search : {}", page);
-		logger.info("search : {}",  cnt);
-		
 		return commonService.listCall(search, page, cnt); 
 	}
 	

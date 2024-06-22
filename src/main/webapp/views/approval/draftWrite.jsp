@@ -65,6 +65,18 @@ form {
 .botBtn{
 	width: 150px;
 }
+
+.table_title{
+	width: 10px;
+}
+
+th{
+	width: 100px;
+}
+
+.top_div{
+	width: 800px;
+}
 </style>
 </head>
 <body>
@@ -76,6 +88,44 @@ form {
 		</div>
 		<div class="content">
 			<div class="container-fluid">
+			<input type="button" class="appBtn" value="결재선 지정" onclick="popup()">
+				<div class="row top_div">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-bordered app_line">
+										<tbody>
+											<tr>
+												<th scope="col" rowspan="3" class="table_title">신청자</th>
+												<th scope="col" class="emp_name">사원<br>김정훈</th>
+												<th scope="col" rowspan="3" class="table_title">결재자</th>
+												<th scope="col" class="emp_name"></th>
+												<th scope="col" class="emp_name"></th>
+												<th scope="col" class="emp_name"></th>
+												<th scope="col" class="emp_name"></th>
+											</tr>
+											<tr>
+												<td>김정훈</td>
+												<td><input type="hidden" value="SH12341234" name="emp_no"></td>
+												<td><input type="hidden" value="SH12341234" name="emp_no"></td>
+												<td><input type="hidden" value="SH12341234" name="emp_no"></td>
+												<td><input type="hidden" value="SH12341234" name="emp_no"></td>
+											</tr>
+											<tr>
+												<td>2024/06/22</td>
+												<td><input type="hidden" value="SH43214321" name="emp_no"></td>
+												<td><input type="hidden" value="SH43214321" name="emp_no"></td>
+												<td><input type="hidden" value="SH43214321" name="emp_no"></td>
+												<td><input type="hidden" value="SH43214321" name="emp_no"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-12">
 						<div class="card">
@@ -137,53 +187,6 @@ form {
 						</div>
 					</div>
 				</div>
-				<input type="button" class="appBtn" value="결재선 지정">
-				<div class="row">
-					<div class="col-12">
-						<div class="card">
-							<div class="card-body">
-								<div class="table-responsive">
-									<table class="table table-bordered">
-										<thead>
-											<tr>
-												<th scope="col">순서</th>
-												<th scope="col">부서</th>
-												<th scope="col">결재자</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<th scope="row">1</th>
-												<td>Mark</td>
-												<td><input type="hidden" value="SH12341234" name="emp_no">Otto</td>
-											</tr>
-											<tr>
-												<th scope="row">2</th>
-												<td>Jacob</td>
-												<td><input type="hidden" value="SH43214321" name="emp_no">Thornton</td>
-											</tr>
-											<tr>
-												<th scope="row">3</th>
-												<td>Jacob</td>
-												<td><input type="hidden" value="SH00000000" name="emp_no">Thornton</td>
-											</tr>
-											<tr>
-												<th scope="row">4</th>
-												<td>Jacob</td>
-												<td><input type="hidden" value="SH11111111" name="emp_no">Thornton</td>
-											</tr>
-											<tr>
-												<th scope="row">5</th>
-												<td>Jacob</td>
-												<td><input type="hidden" value="SH22222222" name="emp_no">Thornton</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 				<div id="div_editor"></div>
 				<input type="hidden" name="content">
 				<br>
@@ -235,5 +238,12 @@ form {
 		$('.form').submit();
 		
 	}
+	
+    function popup(){
+        var url = "/approval/appChart.go";
+        var name = "popup test";
+        var option = "width = 1200, height = 500, top = 100, left = 200, location = no"
+        window.open(url, name, option);
+    }
 </script>
 </html>

@@ -6,7 +6,11 @@
 <mapper namespace="com.connec.tel.dao.LoginDAO">
 	
 	<select id="login" resultType="emp">
-		SELECT * FROM emp WHERE email=#{param1}
+		SELECT
+		 *,
+		 (SELECT code_name FROM common_code cc WHERE e.dept_code = cc.code_no) AS dept_name,
+		   (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no) AS rank_name
+		FROM emp e WHERE email=#{param1}
 	</select>
 	
 	

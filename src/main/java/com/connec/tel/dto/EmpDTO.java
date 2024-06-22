@@ -27,6 +27,9 @@ public class EmpDTO {
 	private Date update_date;
 	private String register;
 	private String dept_name;
+	private String eName;
+	private String rank_name;
+	private int app_procedure;
 	// 사진 정보
 	private int pho_no;
 	private String ori_pho_name;
@@ -201,6 +204,24 @@ public class EmpDTO {
 	}
 	public void setDept_name(String dept_name) {
 		this.dept_name = dept_name;
+	}
+	public String geteName() {
+		return eName;
+	}
+	public void seteName(String eName) {
+		this.eName = eName;
+	}
+	public String getRank_name() {
+		return rank_name;
+	}
+	public void setRank_name(String rank_name) {
+		this.rank_name = rank_name;
+	}
+	public int getApp_procedure() {
+		return app_procedure;
+	}
+	public void setApp_procedure(int app_procedure) {
+		this.app_procedure = app_procedure;
 	}
 
 }

@@ -4,6 +4,28 @@
 >
 
 <mapper namespace="com.connec.tel.dao.ApprovalDAO">
+
+	<insert id="appLineName" useGeneratedKeys="true" keyColumn="app_line_no" keyProperty="app_line_no">
+		INSERT INTO approval_line_save (emp_no, app_line_name) values (#{emp_no}, #{app_line_name})
+	</insert>
+	
+	<insert id="appLineSave">
+		INSERT INTO approval_line(app_line_no,emp_no,app_procedure)values(#{param1},#{param2},#{param3})
+	</insert>
+	
+	<select id="lineCall" resultType="app">
+		SELECT app_line_no, app_line_name FROM approval_line_save WHERE emp_no=#{param1}
+	</select>
+	
+	<select id="saveListCall" resultType="emp">
+		SELECT 
+			e.emp_no,
+			(SELECT code_name FROM common_code cc WHERE e.dept_code = cc.code_no) AS dept_name,
+			 (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no) AS rank_name,
+			 e.name as eName,
+			 al.app_procedure 
+		FROM approval_line al JOIN emp e ON al.emp_no = e.emp_no where al.app_line_no=#{param1}; 
+	</select>
 	
 	
 </mapper>

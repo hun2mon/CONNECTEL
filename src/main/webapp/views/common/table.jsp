@@ -101,7 +101,7 @@ form {
 var showPage = 1;
 var num;
 
-$(document).ready(function(){ // html 문서가 모두 읽히면 되면(준비되면) 다음 내용을 실행 해라
+$(document).ready(function(){
 	listCall(showPage);
 });
 
@@ -124,19 +124,15 @@ function listCall(showPage) {
 		},
 		dataType:'JSON',
 		success:function(data){
-			var startPage = data.currPage > data.totalPages ? data.totalPages : data.currPage;
 			drawList(data.list);
-			console.log(data);
 			
 			var totalPages = data.totalPages;
 			
 			$('#pagination').twbsPagination({
-            	startPage:startPage, // 시작페이지
+            	startPage:1, // 시작페이지
             	totalPages:totalPages, // 총 페이지 수
             	visiblePages:5, // 보여줄 페이지 수 1,2,3,4,5
             	onPageClick:function(evt,pg){ // 페이지 클릭시 실행 함수
-            		console.log(pg); // 클릭한 페이지 번호
-            		num = pg;
             		listCall(pg);
             	}
             })
@@ -150,14 +146,20 @@ function listCall(showPage) {
 function drawList(list) {
 	var content = '';
 	
-for(item of list){
-	content += '<tr>';
-	content += '<td>' + item.dept_name + '</td>';
-	content += '<td>' + item.name + '</td>';
-	content += '</tr>';
-}
+	if (list.length == 0) {
+		content = '<td colspan="2">검색 결과가 없습니다.</td>';
+		$('#pagination').twbsPagination('destroy');
+	} else {
+		for(item of list){
+			content += '<tr>';
+			content += '<td>' + item.dept_name + '</td>';
+			content += '<td>' + item.name + '</td>';
+			content += '</tr>';
+		}		
+	}
+	
 
-$('.table_content').html(content);
+	$('.table_content').html(content);
 }
 
 </script>

@@ -16,7 +16,6 @@
 			<jsp:include page="../sideBar.jsp"></jsp:include>
 		</div>
 		<div class="content">
-		
 			<ul id="tree">
 				<li class="card2">
 				</li>
