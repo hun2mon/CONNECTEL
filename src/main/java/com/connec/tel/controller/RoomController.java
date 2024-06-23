@@ -154,5 +154,21 @@ public class RoomController {
 		 
 
 	}
+	
+	@PostMapping(value = "/room/roomPriceCalendarList.ajax")
+	@ResponseBody
+	public Map<String, Object> roomPriceCalendarList(
+			@RequestParam String year_month){
+		logger.info("roomPriceCalendarList 요청!!!");
+		logger.info("year_month : " + year_month);
+		
+		
+		
+		return roomService.roomPriceCalendarList(year_month);
+	}
+	
+	
+	
+	
 
 }

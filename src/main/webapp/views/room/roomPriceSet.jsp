@@ -265,25 +265,29 @@ function drawList(list) {
 		$(this).css({"background-color":"white"});
 	});
     
-    $('input[type="text"]').focusout(function(e){
-		
-    	
-		$(this).css({"background-color":"lightgray"});
-		console.log(e.target.defaultValue,' -> ',e.target.value);
-		
-		var ddDivision = $(this).attr('class').split(' ')[0];
+
+    $('input[type="text"]').focusout(handleChange);
+    $('input[type="text"]').keydown(function(e) {
+        if (e.key === 'Enter') {
+            handleChange.call(this, e);
+        }
+    });
+
+    function handleChange(e) {
+        $(this).css({"background-color": "lightgray"});
+        console.log(e.target.defaultValue, ' -> ', e.target.value);
+
+        var ddDivision = $(this).attr('class').split(' ')[0];
         var column = $(this).attr('class').split(' ')[1];
         var value = $(this).val();
         var pk = ddDivision + '-' + column;
-	
-        console.log('서버에 변경 요청',$(this));
-        
-	
-		if (e.target.defaultValue != e.target.value) {
-			 reqUpdate(column, value, ddDivision);
-		}
-		
-	});
+
+        console.log('서버에 변경 요청', $(this));
+
+        if (e.target.defaultValue != e.target.value) {
+            reqUpdate(column, value, ddDivision);
+        }
+    }
    
 }
 
@@ -309,9 +313,7 @@ function reqUpdate(col, val, ddDivision) {
             data: data,
             dataType: 'json',
             success: function(data) {
-                if (data.msg) {
-                    alert(data.msg);
-                }
+                
                 listCall();
             },
             error: function(e) {

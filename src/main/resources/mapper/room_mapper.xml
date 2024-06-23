@@ -104,4 +104,61 @@
 				VALUES(#{year_month},#{dd_division},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))						
 	</insert>
 	
+	<select id="roomPriceRow" resultType="int">
+		SELECT COUNT(*) as cnt FROM room_price WHERE date = #{ddate}
+	</select>
+	
+	<update id="updateRoomPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<insert id="sundayPrice" parameterType="map">
+		INSERT INTO room_price(date,${column},register,regist_date)
+				VALUES (#{ddate},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))
+	</insert>
+	
+	<insert id="weekendPrice" parameterType="map">
+		INSERT INTO room_price(date,${column},register,regist_date)
+				VALUES (#{ddate},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))
+	</insert>
+	
+	<insert id="weekdayPrice" parameterType="map">
+		INSERT INTO room_price(date,${column},register,regist_date)
+				VALUES (#{ddate},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))
+	</insert>
+	
+	<update id="updateSundayPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<update id="updateWeekendPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<update id="updateWeekdayPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<select id="roomPriceCalendarList" resultType="com.connec.tel.dto.RoomDTO">
+			SELECT date,standard,superior,delux,suite
+			FROM room_price
+			WHERE DATE_FORMAT(date, '%Y-%m') = #{year_month}
+	</select>
+	
 </mapper>

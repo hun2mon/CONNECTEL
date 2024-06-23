@@ -174,11 +174,48 @@ public class RoomService {
 	public Map<String, Object> updateRoomPirceList(Map<String, Object> param) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		
-		
-		
 		roomDAO.updateRoomPirceList(param);
 		map.put("msg", "객실타입 가격 변경");
+		
+		String yearMonth = (String) param.get("year_month");		
+		int year = Integer.parseInt(yearMonth.substring(0, 4));
+		int month = Integer.parseInt(yearMonth.substring(5, 7));		
+		List<String> daysAndWeekdays = getDaysOfMonth(year, month);
+
+		String division = (String) param.get("dd_division");
+		
+		for (String days : daysAndWeekdays) {
+			int startIndex = days.indexOf('(');
+			int endIndex = days.indexOf(')');
+			String day = days.substring(startIndex + 1, endIndex); // 요일
+			String ddate = days.substring(0, startIndex); //2024-06-01
+			param.put("ddate", ddate);
+			
+			
+			/*
+			 * if (roomDAO.roomPriceRow(ddate)>0) { roomDAO.updateRoomPrice(param); }
+			 */
+			
+			if (division.equals("C")) {
+				if (day.equals("SUNDAY")) {
+					logger.info("일요일 : " + ddate);
+					roomDAO.updateSundayPrice(param);
+				}
+			}else if (division.equals("B")) {
+				if (day.equals("FRIDAY") || day.equals("SATURDAY")) {
+					logger.info("금~토요일 : " + ddate);
+					roomDAO.updateWeekendPrice(param);
+				}
+			}else  {
+				if (!day.equals("SUNDAY") && !day.equals("FRIDAY") && !day.equals("SATURDAY")) {
+					logger.info("월~목요일 : " + ddate);
+					roomDAO.updateWeekdayPrice(param);
+				}
+			
+			}
+			
+		}
+		
 		return map;
 	}
 
@@ -201,18 +238,22 @@ public class RoomService {
 			int endIndex = days.indexOf(')');
 			String day = days.substring(startIndex + 1, endIndex); // 요일
 			String ddate = days.substring(0, startIndex); //2024-06-01
+			param.put("ddate", ddate);
 			
 			if (division.equals("C")) {
 				if (day.equals("SUNDAY")) {
 					logger.info("일요일 : " + ddate);
+					roomDAO.sundayPrice(param);
 				}
 			}else if (division.equals("B")) {
 				if (day.equals("FRIDAY") || day.equals("SATURDAY")) {
 					logger.info("금~토요일 : " + ddate);
+					roomDAO.weekendPrice(param);
 				}
 			}else  {
 				if (!day.equals("SUNDAY") && !day.equals("FRIDAY") && !day.equals("SATURDAY")) {
 					logger.info("월~목요일 : " + ddate);
+					roomDAO.weekdayPrice(param);
 				}
 			
 			}
@@ -242,6 +283,15 @@ public class RoomService {
 	public int row(String yearMonth, String division) {
 		
 		return roomDAO.row(yearMonth,division);
+	}
+
+	public Map<String, Object> roomPriceCalendarList(String year_month) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<RoomDTO> list = roomDAO.roomPriceCalendarList(year_month);
+		
+		map.put("list", list);
+		return map;
 	}
 
 

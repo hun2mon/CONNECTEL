@@ -42,4 +42,22 @@ public interface RoomDAO {
 
 	int row(String yearMonth, String division);
 
+	void sundayPrice(Map<String, Object> param);
+
+	int roomPriceRow(String ddate);
+
+	void updateRoomPrice(Map<String, Object> param);
+
+	void weekendPrice(Map<String, Object> param);
+
+	void weekdayPrice(Map<String, Object> param);
+
+	void updateSundayPrice(Map<String, Object> param);
+
+	void updateWeekendPrice(Map<String, Object> param);
+
+	void updateWeekdayPrice(Map<String, Object> param);
+
+	List<RoomDTO> roomPriceCalendarList(String year_month);
+
 }

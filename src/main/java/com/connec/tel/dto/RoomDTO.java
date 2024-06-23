@@ -22,10 +22,17 @@ public class RoomDTO {
 	private int superior;
 	private int delux;
 	private int suite;
+	private String date;
 	
 	
 	
 	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public char getDd_division() {
 		return dd_division;
 	}
