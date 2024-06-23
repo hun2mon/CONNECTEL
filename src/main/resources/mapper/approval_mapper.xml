@@ -27,5 +27,9 @@
 		FROM approval_line al JOIN emp e ON al.emp_no = e.emp_no where al.app_line_no=#{param1}; 
 	</select>
 	
+	<delete id="saveLineDel">
+		DELETE FROM approval_line_save WHERE app_line_no=#{param1};
+	</delete>
+	
 	
 </mapper>

@@ -20,4 +20,6 @@ public interface ApprovalDAO {
 
 	List<EmpDTO> saveListCall(int app_line_no);
 
+	int saveLineDel(int app_line_no);
+
 }

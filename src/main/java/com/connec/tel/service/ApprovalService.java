@@ -57,5 +57,13 @@ public class ApprovalService {
 		map.put("list", list);
 		return map;
 	}
+	public Map<String, Object> savaLineDel(int app_line_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		int row = appDAO.saveLineDel(app_line_no);
+		if (row>0) {
+			map.put("msg", "삭제되었습니다.");
+		}
+		return map;
+	}
 	
 }

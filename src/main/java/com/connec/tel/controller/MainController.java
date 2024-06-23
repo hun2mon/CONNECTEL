@@ -60,7 +60,7 @@ public class MainController {
 	public String move(@PathVariable String folder, @PathVariable String jsp, HttpSession session, Model model) {
 		EmpDTO loginDTO = (EmpDTO) session.getAttribute("loginInfo");
 		
-		if (jsp.equals("appChart")) {
+		if (jsp.equals("appChart") || jsp.equals("draftWrite")) {
 			model.addAttribute("emp_no", loginDTO.getEmp_no());
 			model.addAttribute("name", loginDTO.getName());
 			model.addAttribute("dept_name", loginDTO.getDept_name());

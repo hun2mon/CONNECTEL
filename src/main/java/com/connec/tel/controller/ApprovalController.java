@@ -60,4 +60,11 @@ public class ApprovalController {
 		logger.info("app_line_no : {}", app_line_no);
 		return appService.saveListCall(app_line_no);
 	}
+	
+	@GetMapping(value = "/approval/savaLineDel.ajax")
+	@ResponseBody
+	public Map<String, Object> saveListDel(int app_line_no) {
+		logger.info("app_line_no : {}", app_line_no);
+		return appService.savaLineDel(app_line_no);
+	}
 }

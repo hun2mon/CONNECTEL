@@ -136,7 +136,7 @@
 					<div>
 						<button type="button"
 							class="btn waves-effect waves-light btn-sm btn-success"
-							data-toggle="modal" data-target="#danger-header-modal">모두
+							data-toggle="modal" data-target=".allDel">모두
 							삭제</button>
 						<button type="button"
 							class="btn waves-effect waves-light btn-sm btn-success"
@@ -165,9 +165,10 @@
 						<div class="bottom_div">
 							<input type="text" class="form-control appLineName" value="Name">
 							<button type="button"
-								class="btn waves-effect waves-light btn-sm btn-success" onclick="appLineSave()">결재선 저장</button>
+								class="btn waves-effect waves-light btn-sm btn-success"
+								onclick="appLineSave()">결재선 저장</button>
 							<button type="button"
-								class="btn waves-effect waves-light btn-sm btn-success btn_submit">확인</button>
+								class="btn waves-effect waves-light btn-sm btn-success btn_submit" onclick="sendData()">확인</button>
 							<button type="button"
 								class="btn waves-effect waves-light btn-sm btn-success btn_cancel">취소</button>
 						</div>
@@ -180,7 +181,7 @@
 
 
 		<!-- 전체삭제 모달 -->
-		<div id="danger-header-modal" class="modal fade" tabindex="-1"
+		<div id="danger-header-modal" class="modal fade allDel" tabindex="-1"
 			role="dialog" aria-labelledby="danger-header-modalLabel"
 			aria-hidden="true">
 			<div class="modal-dialog">
@@ -206,61 +207,64 @@
 		</div>
 		<!-- /.modal -->
 	</div>
-	
-		<!--결재자 인원초과 모달 -->	
-		<div id="info-alert-modal" class="modal fade over" tabindex="-1" role="dialog" aria-hidden="true">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-body p-4">
-						<div class="text-center">
-							<i class="dripicons-information h1 text-info"></i>
-							<p class="mt-3">결재자 인원이 초과하였습니다.</p>
-							<button type="button" class="btn btn-info my-2"
-								data-dismiss="modal">닫기</button>
-						</div>
+
+	<!--결재자 인원초과 모달 -->
+	<div id="info-alert-modal" class="modal fade over" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-information h1 text-info"></i>
+						<p class="mt-3">결재자 인원이 초과하였습니다.</p>
+						<button type="button" class="btn btn-info my-2"
+							data-dismiss="modal">닫기</button>
 					</div>
 				</div>
-				<!-- /.modal-content -->
 			</div>
-			<!-- /.modal-dialog -->
+			<!-- /.modal-content -->
 		</div>
-		
-		<!--동일 결재자 모달 -->	
-		<div id="info-alert-modal" class="modal fade same" tabindex="-1" role="dialog" aria-hidden="true">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-body p-4">
-						<div class="text-center">
-							<i class="dripicons-information h1 text-info"></i>
-							<p class="mt-3">이미 등록된 결재자 입니다.</p>
-							<button type="button" class="btn btn-info my-2"
-								data-dismiss="modal">닫기</button>
-						</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<!--동일 결재자 모달 -->
+	<div id="info-alert-modal" class="modal fade same" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-information h1 text-info"></i>
+						<p class="mt-3">이미 등록된 결재자 입니다.</p>
+						<button type="button" class="btn btn-info my-2"
+							data-dismiss="modal">닫기</button>
 					</div>
 				</div>
-				<!-- /.modal-content -->
 			</div>
-			<!-- /.modal-dialog -->
+			<!-- /.modal-content -->
 		</div>
-		
-		<!--결재선 저장 모달 -->	
-		<div id="info-alert-modal" class="modal fade appLineSave" tabindex="-1" role="dialog" aria-hidden="true">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-body p-4">
-						<div class="text-center">
-							<i class="dripicons-information h1 text-info"></i>
-							<p class="mt-3">결재선 저장이 완료되었습니다..</p>
-							<button type="button" class="btn btn-info my-2"
-								data-dismiss="modal">닫기</button>
-						</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<!--결재선 저장 모달 -->
+	<div id="info-alert-modal" class="modal fade appLineSave" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-information h1 text-info"></i>
+						<p class="mt-3">결재선 저장이 완료되었습니다..</p>
+						<button type="button" class="btn btn-info my-2"
+							data-dismiss="modal">닫기</button>
 					</div>
 				</div>
-				<!-- /.modal-content -->
 			</div>
-			<!-- /.modal-dialog -->
+			<!-- /.modal-content -->
 		</div>
-	
+		<!-- /.modal-dialog -->
+	</div>
+
 </body>
 <script src="/dist/js/custom.min.js"></script>
 <script src="/assets/extra-libs/prism/prism.js"></script>
@@ -353,9 +357,27 @@ function drawLine(list) {
 	for(item of list){
 		content += '<tr>';
 		content += '<th scope="col"><a href="javascript:saveListCall('+item.app_line_no+')">'+item.app_line_name+'</a></th>';
+		content += '<th scope="col"><button type="button" class="btn btn-secondary" onclick="saveLineDel('+item.app_line_no+')"><i class="ti-trash"></i></button></th>';
 		content += '</tr>';
 	}
 	$('.appLineTable').html(content);
+}
+
+function saveLineDel(app_line_no) {
+	$.ajax({
+		url:'/approval/savaLineDel.ajax',
+		method:'get',
+		data:{
+			"app_line_no":app_line_no
+		},
+		dataType:'JSON',
+		success:function(data){
+			lineCall();
+		},
+		error:function(e){
+			console.log(e);
+		}
+	})
 }
 
 function saveListCall(app_line_no) {
@@ -389,8 +411,8 @@ function plusApp(index){
 	if (num > 4) {
               $('.over').modal('show');
 	} else {
-		for(test of approver){
-			if (team[index].emp_no == test) {
+		for(emp of approver){
+			if (team[index].emp_no == emp) {
 				$('.same').modal('show');
 				return;
 			}
@@ -485,7 +507,11 @@ function appLineSave() {
 			console.log(e);
 		}
 	})
-	
+}
+
+function sendData() {
+	 window.opener.drawAppList(appVal);
+	 window.close();
 }
 
 
