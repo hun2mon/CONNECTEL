@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.connec.tel.dto.FaqDTO;
 
@@ -11,18 +12,25 @@ import com.connec.tel.dto.FaqDTO;
 @Mapper
 public interface FaqDAO {
 
+	List<FaqDTO> list(int pagePerCnt, int currPage, String category);
 
-	List<FaqDTO> list(int pagePerCnt, int currPage);
+	Object allCount(int pagePerCnt, String category);
+    int write(Map<String, String> param);    
+    int searchCount(@Param("textval") String textval);
+    int deleteFaqs(List<Integer> faqNos);
 
-	Object allCount(int pagePerCnt);
+	List<FaqDTO> faqsearch(String textval);
 
-	int write(Map<String, String> param);
+	FaqDTO faqDetail(String faq_no);
 
-	FaqDTO detail(String faq_no);
+	FaqDTO faqupdate(String faq_no);
 
+	FaqDTO getFaqById(String faq_no);
 
-	void deleteFAQs(List<Integer> faqNos);
-
-
+	public void updateFaq(@Param("faqDTO") FaqDTO faqDTO, 
+            @Param("faq_subject") String faqSubject,
+            @Param("faq_content") String faqContent,
+            @Param("faq_category") String faqCategory, 
+            @Param("faq_no") String faq_no);
 
 }
