@@ -118,8 +118,13 @@
     background-color: #9eefcc;
     cursor: pointer;
 	}
-
 	
+	#availableRooms{
+		width: 70%;
+		margin: auto;
+		text-align: center;
+	}
+
 </style>
 </head>
 <body>
@@ -143,7 +148,7 @@
     </div>
 </div>
 
-<!--Check-In Modal -->
+<!--체크인 모달-->
 <div id="success-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="success-header-modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -154,7 +159,7 @@
             <div class="modal-body">
                 <h5 id="roomNumberHeader" class="mt-0"></h5>
                 <input type="text" id="reservationNumber" placeholder="예약번호 입력">
-                <button type="button" class="btn btn-success" onclick="openReservationModal()"><i class=" icon-magnifier"></i></button>
+                <button type="button" class="btn btn-success" onclick="openReservationModal()"><i class="fas fa-caret-down"></i></button>
                 <div id="modal-room-info">
                     <!-- Room details will be displayed here -->
                 </div>
@@ -162,10 +167,7 @@
             <div class="modal-footer">
             	<button type="button" class="btn btn-sm btn-success" onclick="checkIn()">
 				    <i class="fas fa-check"></i> 체크인
-				</button>
-				<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
-				    <i class="fas fa-times"></i> Close
-				</button>
+				</button>				
             </div>
         </div>
     </div>
@@ -211,6 +213,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- 체크인 alert 모달 -->
 <div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered">
        <div class="modal-content">
@@ -223,21 +226,68 @@
  
                      <p id="currentTime"></p>
                      <p id="reservationNumberInfo"></p>
-                     
-                     
+             
            </div>
            <div class="modal-footer">
             	<button type="button" class="btn btn-sm waves-effect waves-light btn-primary" onclick="lastCheck()">
 				    <i class="fas fa-check"></i> 체크인
 				</button>
-				<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
-				    <i class="fas fa-times"></i> Close
-				</button>
             </div>
        </div><!-- /.modal-content -->
    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- 체크아웃 모달 -->
+<div id="danger-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-danger">
+                <h4 class="modal-title" id="danger-header-modalLabel">Room Check-Out</h4>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+            
+                <h4 id="checkOutHeader" class="mt-0"></h4>
+				<h5 id="res_no" class="mt-0"></h5>
+				<h5 id="check_in_date" class="mt-0"></h5>
+                
+            </div>
+            <div class="modal-footer">
+          	    <button type="button" style="color: white;" class="btn btn-sm waves-effect waves-light btn-warning" onclick="changeCheckIn()"><i class="fas fa-exchange-alt"></i> 객실변경</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="checkOut()"><i class="fas fa-sign-in-alt"></i> 체크아웃</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </body>
+
+<div id="changeCheckIn" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">체크인 객실 변경</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="current-room">
+                    <strong>현재 체크인 객실:</strong> <span id="currentRoomNo"></span>
+                </div>
+                <div class="available-rooms">
+                    <strong>체크인 가능한 객실:</strong>
+                    <select id="availableRooms" class="form-control" size="5">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 $(document).ready(function(){
     listCall();   
@@ -309,15 +359,32 @@ function drawList(roomList) {
                 if (roomStatus === 'I') {
                     roomElement.addClass('occupied');
                     roomStatusDiv.text('체크인');
+                    
+                    (function(num) {
+                        roomElement.on('click', function() {
+                            openCheckOutModal(num); // 모달 열기 함수 호출
+                        });
+                    })(roomNumber);
+                    
+                    
                 } else if (roomStatus === 'A') {
                     roomElement.addClass('available');
                     roomStatusDiv.text('체크인가능');
                     
-                    (function(num, status) {
+                   
+                    
+                    var $availableRoomsSelect = $('#availableRooms');
+                                      
+                    var option = $('<option>').val(room.room_no).text(room.room_no);
+                    $availableRoomsSelect.append(option);
+                    
+                    (function(num) {
                         roomElement.on('click', function() {
-                            openRoomModal(num, status); // 모달 열기 함수 호출
+                            openCheckInModal(num); // 모달 열기 함수 호출
                         });
                     })(roomNumber, roomStatus);
+                    
+                    
                     
                 } else if (roomStatus === 'O') {
                     roomElement.addClass('checkout');
@@ -339,23 +406,62 @@ function drawList(roomList) {
     }
 }
 
-function openRoomModal(roomNumber, roomStatus) {
-    // 모달 열기
-    $('#success-header-modal').modal('show');
-    
-    // 모달 헤더에 방 번호 설정
-    $('#roomNumberHeader').text('Room ' + roomNumber);
-
-    // 모달 내용 초기화
-    $('#modal-room-info').empty();
-    $('#reservationNumber').val(''); // 예약번호 입력창 초기화
+function openCheckInModal(roomNumber) {
+	 	$('#success-header-modal').modal('show');
+	    $('#roomNumberHeader').text('Room ' + roomNumber);
+	    $('#modal-room-info').empty();
+	    $('#reservationNumber').val('');
 }
+
+function openCheckOutModal(roomNumber) {
+	 	$('#danger-header-modal').modal('show');
+	    $('#checkOutHeader').text('Room ' + roomNumber);
+    
+    $.ajax({
+    	type:'POST',
+    	url:'/room/checkInInfo.ajax',
+    	data:{
+    		room_no:roomNumber
+    	},
+    	dataType:'JSON',
+    	success:function(data){
+    		console.log(data);
+    		$('#res_no').text('예약번호 : ' + data.res_no);
+    		
+    		var formattedCheckInDate = formatDate(data.stay_check_in);
+    		$('#check_in_date').text('체크인 : ' + formattedCheckInDate);
+    	},
+    	error:function(e){
+    		console.log(e);
+    	}
+    })
+    
+    
+}
+
+
+function formatDate(dateString) {
+
+    var date = new Date(dateString);
+
+    var year = date.getUTCFullYear();
+    var month = String(date.getUTCMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더함
+    var day = String(date.getUTCDate()).padStart(2, '0');
+    var hours = String(date.getUTCHours()).padStart(2, '0');
+    var minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    var seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+
+    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+}
+
+
+
 
 function openReservationModal() {
 	$('#scrollable-modal').modal('show');
-	
+	$('#searchInput').val('');
 	reservationList();
-	
 		
 }
 
@@ -459,6 +565,44 @@ function lastCheck() {
 	});
 	 	
 }
+
+function checkOut() {
+	var room_no = $('#checkOutHeader').text().replace('Room ','');
+	var res_no = $('#res_no').text().replace('예약번호 : ','');
+	
+	console.log('room_no : '+ room_no);
+	console.log('res_no : '+ res_no);
+	
+	$.ajax({
+		type:'post',
+		url:'/room/checkOut.ajax',
+		data:{
+			room_no : room_no,
+			res_no : res_no,
+		},
+		dataType:'json',
+		success:function(data){				
+			listCall();
+			$('#danger-header-modal').modal('hide');	
+		},
+		error:function(e){
+			console.log(e)
+		}
+	})
+		
+}
+
+function changeCheckIn() {
+    $('#changeCheckIn').modal('show');
+    var room_no = $('#checkOutHeader').text().replace('Room ', '');
+    var res_no = $('#res_no').text().replace('예약번호 : ', '');
+
+    // 현재 체크인된 객실 번호 표시
+    $('#currentRoomNo').text(room_no);
+
+}
+
+
 
 </script>
 </html>

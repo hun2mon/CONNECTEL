@@ -30,5 +30,135 @@
 		UPDATE room SET room_status = 'I' WHERE room_no = #{room_no} 
 	</update>
 	
+	<select id="checkInInfo" resultType="com.connec.tel.dto.RoomDTO">
+		SELECT res_no,stay_check_in  FROM stay 
+			WHERE room_no = #{room_no} ORDER BY stay_check_in DESC;
+	</select>
+	
+	<update id="checkOut" parameterType="String">
+		UPDATE stay 
+		SET stay_check_out = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
+			   updater = #{emp_no},
+			   update_date = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul')
+		WHERE room_no = #{room_no}
+  		AND res_no = #{res_no}
+	</update>
+	
+	<update id="roomCheckOut" parameterType="String">
+		UPDATE room SET room_status = 'O' WHERE room_no = #{room_no} 
+	</update>
+	
+	<select id="roomStateList" resultType="com.connec.tel.dto.RoomDTO">
+		<if test="param1 == ''">
+			SELECT room_no, type_code, room_status FROM room LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT room_no, type_code, room_status FROM room WHERE room_no LIKE #{param1} LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	<update id="updateNotAvailable">
+		UPDATE room SET room_status = 'N'  WHERE room_no = #{room_no}
+	</update>
+	
+	<update id="updateAvailable">
+		UPDATE room SET room_status = 'A'  WHERE room_no = #{room_no}
+	</update>
+	
+	<select id="totalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(room_no)/#{param2}) AS pages FROM room
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(room_no)/#{param2}) AS pages FROM room WHERE room_no LIKE #{param1}
+		</if>
+	
+	</select>
+	
+	<select id="roomPirceList" resultType="com.connec.tel.dto.RoomDTO" parameterType="map">
+		SELECT yearAndmonth, dd_division, standard, superior, delux, suite
+			FROM default_room_price WHERE yearAndmonth = #{year_month}
+	</select>
+	
+	<select id="row" resultType="int">
+		SELECT COUNT(*) as cnt FROM default_room_price 
+			WHERE  yearAndmonth = #{yearMonth} AND dd_division = #{division}
+	</select>
+	
+	
+	<update id="updateRoomPirceList" parameterType="Map">
+		UPDATE default_room_price 
+		SET ${column} = #{value},
+					updater = #{emp_no},
+					update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		WHERE  yearAndmonth = #{year_month} AND dd_division = #{dd_division}	
+										
+	</update>
+	
+	<insert id="insertRoomPirceList" parameterType="Map">
+		INSERT INTO default_room_price(yearAndmonth,dd_division,
+										${column},register,regist_date)
+				VALUES(#{year_month},#{dd_division},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))						
+	</insert>
+	
+	<select id="roomPriceRow" resultType="int">
+		SELECT COUNT(*) as cnt FROM room_price WHERE date = #{ddate}
+	</select>
+	
+	<update id="updateRoomPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<insert id="sundayPrice" parameterType="map">
+		INSERT INTO room_price(date,${column},register,regist_date)
+				VALUES (#{ddate},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))
+	</insert>
+	
+	<insert id="weekendPrice" parameterType="map">
+		INSERT INTO room_price(date,${column},register,regist_date)
+				VALUES (#{ddate},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))
+	</insert>
+	
+	<insert id="weekdayPrice" parameterType="map">
+		INSERT INTO room_price(date,${column},register,regist_date)
+				VALUES (#{ddate},#{value},#{emp_no},CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul'))
+	</insert>
+	
+	<update id="updateSundayPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<update id="updateWeekendPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<update id="updateWeekdayPrice" parameterType="map">
+		UPDATE room_price 
+		SET ${column} = #{value},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		 WHERE date = #{ddate}
+	</update>
+	
+	<select id="roomPriceCalendarList" resultType="com.connec.tel.dto.RoomDTO">
+			SELECT date,standard,superior,delux,suite
+			FROM room_price
+			WHERE DATE_FORMAT(date, '%Y-%m') = #{year_month}
+	</select>
 	
 </mapper>

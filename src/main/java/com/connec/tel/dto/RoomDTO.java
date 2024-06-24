@@ -15,9 +15,67 @@ public class RoomDTO {
 	private Date out_date;
 	private Date res_date;
 	private int res_price;
+	private int type_code;
+	private String yearAndmonth;
+	private char dd_division;
+	private int standard;
+	private int superior;
+	private int delux;
+	private int suite;
+	private String date;
 	
 	
 	
+	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public char getDd_division() {
+		return dd_division;
+	}
+	public void setDd_division(char dd_division) {
+		this.dd_division = dd_division;
+	}
+	public String getYearAndmonth() {
+		return yearAndmonth;
+	}
+	public void setYearAndmonth(String yearAndmonth) {
+		this.yearAndmonth = yearAndmonth;
+	}
+	
+	public int getStandard() {
+		return standard;
+	}
+	public void setStandard(int standard) {
+		this.standard = standard;
+	}
+	public int getSuperior() {
+		return superior;
+	}
+	public void setSuperior(int superior) {
+		this.superior = superior;
+	}
+	public int getDelux() {
+		return delux;
+	}
+	public void setDelux(int delux) {
+		this.delux = delux;
+	}
+	public int getSuite() {
+		return suite;
+	}
+	public void setSuite(int suite) {
+		this.suite = suite;
+	}
+	public int getType_code() {
+		return type_code;
+	}
+	public void setType_code(int type_code) {
+		this.type_code = type_code;
+	}
 	public String getCos_name() {
 		return cos_name;
 	}
