@@ -85,17 +85,21 @@ th{
 
 .modal_table{
 	margin: 0 auto;	
-	width: 200px;
+	width: 270px;
 }
 
 .table_text{
 	text-align: center;
 }
+
+.modal-dialog{
+	max-width: 600px;
+}
 </style>
 </head>
 <body>
 
-<form action="/test" method="post">
+<form action="/test" method="post" enctype="multipart/form-data">
 	<div class="parent">
 		<div class="sideBar">
 			<jsp:include page="../sideBar.jsp"></jsp:include>
@@ -113,7 +117,6 @@ th{
 											<tr class="appName">
 												<th scope="col" rowspan="3" class="table_title">신청자</th>
 												<th scope="col" class="emp_name">
-													<input type="hidden" value="1" name="procedure">
 													<input type="hidden" value="${emp_no}" name="emp_no"><br>${name }
 												</th>
 												<th scope="col" rowspan="3" class="table_title">결재자</th>
@@ -135,8 +138,8 @@ th{
 								<div class="table-responsive">
 									<table class="table">
 										<tr>
-											<td class="draftTitle">양식</td>
-											<td class="draftSecond">휴가신청서</td>
+											<td class="draftTitle">제목</td>
+											<td class="draftSecond"><input type="text" class="form-control" id="prenametext" value="${name }의 휴가신청서" name="subject"></td>
 											<td>마감기한</td>
 											<td>
 												<input type="date" class="form-control" value="" name="deadline">
@@ -146,7 +149,8 @@ th{
 											<td class="draftTitle">휴가종류</td>
 											<td><select class="form-control" id="exampleFormControlSelect1" name="leave_type">
 													<option>연차</option>
-													<option>반차</option>
+													<option>오전 반차</option>
+													<option>오후 반차</option>
 													<option>경조사</option>
 													<option>공가</option>
 													<option>병가</option>
@@ -159,25 +163,26 @@ th{
 											<td class="draftTitle">기간</td>
 											<td>
 													<div class="date">
-														<input type="date" class="form-control" value="" name="start_date">
-														~ <input type="date" class="form-control" value="" name="end_date">
+														<input type="date" class="form-control startDate" value="" name="start_date" onchange="calculateDays()">
+														~ <input type="date" class="form-control endDate" value="" name="end_date" onchange="calculateDays()">
 													</div>
 											</td>
 											<td>선택일수</td>
-											<td></td>
+											<td class="selectDate"></td>
 										</tr>
 										<tr>
 											<td class="draftTitle">참조자</td>
 											<td colspan="2" class="referrer">
+											<input type="hidden" value="0" name="referrer">
 											</td>
-											<td class="tdButton"><button type="button" class="btn waves-effect waves-light btn-light" data-toggle="modal"
+											<td class="tdButton" rowspan="2"><button type="button" class="btn waves-effect waves-light btn-light" data-toggle="modal"
                                         		data-target=".referrer_modal">조직도</button></td>
 										</tr>
 										<tr>
 											<td class="draftTitle">조회자</td>
-											<td colspan="2" class="viewer"></td>
-											<td class="tdButton"><button type="button" data-toggle="modal"
-                                        		data-target=".viewer_modal" class="btn waves-effect waves-light btn-light">조직도</button></td>
+											<td colspan="2" class="viewer">
+											<input type="hidden" value="0" name="viewer">
+											</td>
 										</tr>
 									</table>
 								</div>
@@ -193,7 +198,7 @@ th{
 						<span class="input-group-text">첨부파일</span>
 					</div>
 					<div class="custom-file">
-						<input type="file" class="custom-file-input" id="inputGroupFile01" name="app_file">
+						<input type="file" class="custom-file-input" id="inputGroupFile01" name="app_file" multiple="multiple">
 						<label class="custom-file-label" for="inputGroupFile01">Choose
 							file</label>
 					</div>
@@ -258,6 +263,9 @@ th{
 					    	<table class="table table_text">
 								<thead>
 									<tr>
+										<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11)"></th>
+										<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(22)"></th>
+										<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(33)"></th>
 									</tr>
 								</thead>
 								<tbody class="modal_table_viewer">
@@ -302,6 +310,28 @@ th{
 		treeCall();
 	});
 	
+	function calculateDays() {
+	    var startDate = $('.startDate').val();
+	    var endDate =$('.endDate').val();
+
+	    var start = new Date(startDate);
+	    var end = new Date(endDate);
+
+	    // 날짜 차이 계산 (밀리초 단위)
+	    var timeDiff = end - start;
+
+	    // 밀리초를 일 단위로 변환
+	    var daysDiff = timeDiff / (1000 * 3600 * 24) + 1;
+
+	    // 결과 출력
+	    if (endDate != '') {
+		   $('.selectDate').html(daysDiff + '일');			
+		}
+	}
+	
+	
+	
+	
     function checkTab(item) {
 		division = item;
 	}
@@ -314,7 +344,6 @@ th{
 	var editor = new RichTextEditor("#div_editor", config);
 	
 	function save() {
-		// 에디터에 작성된 문자열을 가져온다.
 		var content = editor.getHTMLCode();
 		$('input[name="content"]').val(content);
 		
@@ -338,13 +367,13 @@ th{
     }
     
     function drawAppList(appVal) {
-    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><input type="hidden" value="1" name="procedure"><input type="hidden" value="${emp_no}" name="emp_no"><br>${name }</th><th scope="col" rowspan="3" class="table_title">결재자</th>');
+    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><input type="hidden" value="${emp_no}" name="register"><br>${name }</th><th scope="col" rowspan="3" class="table_title">결재자</th>');
 		$('.rankName').html('<td>${rank_name}</td>');
 		$('.top_div').css('width','800px');
     	
 		var content = '';
 		var rankName = '';
-		var procedure = 2;
+		var procedure = 1;
 		
 		for(item of appVal){
 			content += '<th scope="col" class="emp_name"><input type="hidden" value="'+procedure+'" name="procedure">';
@@ -471,7 +500,7 @@ th{
 		}else{
 	    	delete viewer[$(item).children().first().val()];
 	    	delete sameCheckView[$(item).children().first().val()];
-	    	console.log(referrer);
+	    	console.log(viewer);
 			$(item).remove();			
 		}
 	}
@@ -495,13 +524,14 @@ th{
 		$('.referrer').append(referrer_emp_no);	
 		
 		$('.viewer').html('');	
+		
     	var viewer_emp_no = '';
     	var addViewer = '';
 		for(item of viewer){
 			if (item == null) {
 				continue;
 			} else {
-				viewer_emp_no += '<input type="hidden" value="'+item.emp_no+'" name="referrer">';
+				viewer_emp_no += '<input type="hidden" value="'+item.emp_no+'" name="viewer">';
 				addViewer += item.name+'/';
 			}
 		}
@@ -510,6 +540,55 @@ th{
 		}
 		$('.viewer').append(addViewer);	
 		$('.viewer').append(viewer_emp_no);	
+	}
+    
+    function addTeam(code) {
+    	for(emp of sameCheckView){
+			if (code == emp) {
+				$('.same').modal('show');
+				return;
+			}
+		}
+    	var team_name = '';
+    	if (code == 11) {
+        	var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numView+'" class="index">';
+        	content += '<td colspan="2">인사팀</td>';
+        	content += '<td><a href="#">삭제</a></td>';
+        	content += '</tr>';
+        	
+        	team_name = '인사팀';
+		}
+    	
+    	if (code == 22) {
+        	var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numView+'" class="index">';
+        	content += '<td colspan="2">고객팀</td>';
+        	content += '<td><a href="#">삭제</a></td>';
+        	content += '</tr>';
+        	
+        	team_name = '고객팀';
+		}
+    	
+    	if (code == 33) {
+        	var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numView+'" class="index">';
+        	content += '<td colspan="2">시설팀</td>';
+        	content += '<td><a href="#">삭제</a></td>';
+        	content += '</tr>';
+        	
+        	team_name = '시설팀';
+		}
+    	sameCheckView.push(code);
+    	console.log(sameCheckView);
+    	numView += 1;
+
+    	viewer.push({'emp_no' : code, 'name' : team_name});
+		
+		$('.modal_table_viewer').append(content);			
+	}
+    
+    
+    function sendData() {
+		var referrerData = $('input[name="referrer"]').val();
+		console.log(referrerData);
 	}
     
 </script>

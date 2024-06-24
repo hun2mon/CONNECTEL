@@ -1,6 +1,8 @@
 package com.connec.tel.service;
 
+import java.sql.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.connec.tel.dao.ApprovalDAO;
 import com.connec.tel.dto.ApprovalDTO;
@@ -64,6 +67,37 @@ public class ApprovalService {
 			map.put("msg", "삭제되었습니다.");
 		}
 		return map;
+	}
+	public String writeDraft(List<String> emp_no, List<String> referrer, List<String> viewer, Map<String, Object> param, MultipartFile[] app_file) {
+		String page = "/approval/draftWrite.go";
+		
+		int authNo = (int)(Math.random() * (99999 - 10000 + 1)) + 10000;
+		String draft_no = "A" + authNo;
+		
+		
+		ApprovalDTO appDTO = new ApprovalDTO();
+		appDTO.setDraft_no(draft_no);
+		appDTO.setRegister((String) param.get("register"));
+		logger.info("register : " + appDTO.getRegister());
+		appDTO.setDraft_end((String) param.get("deadline"));
+		appDTO.setDraft_subject((String) param.get("subject"));
+		appDTO.setDraft_content((String) param.get("content"));
+		int row = appDAO.writeDraft(appDTO);
+		
+		if (row > 0) {
+			for (int i = 0; i < emp_no.size(); i++) {
+				appDAO.approverWrite(draft_no,emp_no.get(i), i+1);				
+			}
+		}
+		
+		logger.info("row : {}", row);
+		
+		
+		
+		
+		
+		
+		return page;
 	}
 	
 }

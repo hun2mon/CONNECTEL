@@ -31,5 +31,13 @@
 		DELETE FROM approval_line_save WHERE app_line_no=#{param1};
 	</delete>
 	
+	<insert id="writeDraft" parameterType="app">
+		INSERT INTO draft(draft_no,register, draft_subject, draft_end, draft_content) values (#{draft_no}, #{register}, #{draft_subject}, #{draft_end}, #{draft_content})
+	</insert>
+	
+	<insert id="approverWrite">
+		INSERT INTO approver (draft_no, emp_no, app_procedure)values(#{param1},#{param2}, #{param3})
+	</insert>
+	
 	
 </mapper>

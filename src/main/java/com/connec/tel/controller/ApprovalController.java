@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.service.ApprovalService;
@@ -25,18 +26,27 @@ public class ApprovalController {
 	
 	
 	@PostMapping(value = "/test")
-	public String test(@RequestParam List<String> emp_no, @RequestParam List<String> referrer, @RequestParam Map<String, Object> param) {
+	public String test(MultipartFile[] app_file, @RequestParam List<String> emp_no, @RequestParam List<String> referrer, @RequestParam Map<String, Object> param, @RequestParam List<String> viewer){
 		for (String string : emp_no) {
 			logger.info("emp_no : {}", string);			
 		}
-		
-		logger.info("param : {}", param);
 		
 		for (String string : referrer) {
 			logger.info("referrer : {}", string);			
 		}
 		
-		return "redirect:/";		
+		for (String string : viewer) {
+			logger.info("viewer : {}", string);			
+		}
+		
+		for (MultipartFile string : app_file) {
+			logger.info("file : {}", string);			
+		}
+		
+
+		logger.info("param : {}", param);
+		
+		return appService.writeDraft(emp_no, referrer, viewer, param, app_file);		
 	}
 	
 	@GetMapping(value = "/approval/appLineSave.ajax")

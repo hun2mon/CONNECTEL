@@ -22,4 +22,8 @@ public interface ApprovalDAO {
 
 	int saveLineDel(int app_line_no);
 
+	int writeDraft(ApprovalDTO appDTO);
+
+	void approverWrite(String draft_no, String string, int i);
+
 }
