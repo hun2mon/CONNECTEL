@@ -113,23 +113,22 @@ public class EmpService {
 
 
 
-	public Map<String, Object> empList(int currPage, int categoryNum) {
+	public Map<String, Object> empList(int currPage, String searchType, String searchText, String categoryNum) {
 		int pagePerCnt = 20;
 		int start = (currPage-1)*pagePerCnt;
 		logger.info("start" + start);
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<EmpDTO> resultList = null;
-		
-		resultList = empDAO.empList(start,pagePerCnt,categoryNum);
+		logger.info("categorynum = " + categoryNum);
+	
+		resultList = empDAO.empList(start,pagePerCnt,searchText,searchType,categoryNum);
 
-		for (EmpDTO empDto : resultList) {
-			logger.info(empDto.getEmp_no());
-		}
+
 	
 		result.put("list", resultList);
 		result.put("currPage", currPage);
-		result.put("totalPages", empDAO.empAllCount(pagePerCnt,categoryNum));
-		logger.info("직원 관리에서 받아온 allCount"+empDAO.empAllCount(pagePerCnt,categoryNum));
+		result.put("totalPages", empDAO.empAllCount(pagePerCnt,searchText,searchType,categoryNum));
+		logger.info("직원 관리에서 받아온 allCount"+empDAO.empAllCount(pagePerCnt,searchText,searchType,categoryNum));
 		
 		return result;
 	}
@@ -137,8 +136,10 @@ public class EmpService {
 	public EmpDTO empDetail(String emp_no, Model model) {
 		logger.info("emp_no " + emp_no);
 		EmpDTO photos = empDAO.UserPhotoLoad(emp_no);
-		
+		EmpDTO leave  = empDAO.leaveDetail(emp_no);
 		model.addAttribute("P",photos);
+		
+		model.addAttribute("leave",leave);
 		
 		return empDAO.empDetail(emp_no);
 	}
@@ -150,6 +151,45 @@ public class EmpService {
         empDAO.resetPw(rawPassword);
 
 		
+	}
+
+	public void empEditDo(MultipartFile[] photos, Map<String, String> param, HttpSession session) {
+		EmpDTO dto = new EmpDTO();
+		dto.setPho_division(param.get("pho_division"));
+		int row = empDAO.empEditDo(param);
+		
+		
+		String pho_division = dto.getPho_division();
+        if (row>0) {
+        	String emp_no = param.get("emp_no");
+            String page = "main/main";
+            fileSave(emp_no,pho_division,photos);
+		}
+		
+		
+		
+		
+		
+	
+	}
+
+	public Map<String, Object> leaveList(int currPage, String emp_no) {
+		int pagePerCnt = 10;
+		int start = (currPage-1)*pagePerCnt;
+		logger.info("start" + start);
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<EmpDTO> resultList = null;
+	
+		resultList = empDAO.leaveList(start,pagePerCnt,emp_no);
+
+		
+	
+		result.put("list", resultList);
+		result.put("currPage", currPage);
+		result.put("totalPages", empDAO.leaveAllCount(pagePerCnt,emp_no));
+		logger.info("직원 관리에서 받아온 allCount"+empDAO.leaveAllCount(pagePerCnt,emp_no));
+		
+		return result;
 	}
 	
 }

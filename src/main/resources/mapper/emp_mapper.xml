@@ -28,50 +28,116 @@
 	</insert>
 
 	<select id="empList" resultType="emp">
-		SELECT * FROM emp
-		<choose>
-			<when test="param3 != null and param3 == 1">
-			</when>
-			<when test="param3 != null and param3 == 2">
-				<!-- 인사팀 카테고리 선택시 -->
-				Where dept_code = 11
-			</when>
-			<when test="param3 != null and param3 == 3">
-				<!-- 시설팀 카테고리 선택시 -->
-				AND dept_code = 22
-			</when>
-			<when test="param3 != null and param3 == 4">
-				<!-- 서비스 카테고리 선택시 -->
-				AND dept_code = 33
-			</when>
-		</choose>
-		ORDER BY emp_no DESC LIMIT #{param1},#{param2};
+	    SELECT * FROM emp e JOIN emp_status es ON es.emp_no = e.emp_no 
+	    WHERE e.emp_no LIKE 'SH%'
+	    <choose>
+	        <when test="param5 == 1">
+	            <if test="param4 != null">
+	                <choose>
+	                    <when test="param4 == 2">
+	                        AND es.status_division LIKE '%${param3}%'
+	                    </when>
+	                    <when test="param4 == 1">
+	                        AND e.name LIKE '%${param3}%'
+	                    </when>
+	                </choose>
+	            </if>
+	        </when>
+	        <when test="param5 == 2">
+	            AND e.dept_code = '11'
+	            <if test="param4 != null">
+	                <choose>
+	                    <when test="param4 == 2">
+	                        AND es.status_division LIKE '%${param3}%'
+	                    </when>
+	                    <when test="param4 == 1">
+	                        AND e.name LIKE '%${param3}%'
+	                    </when>
+	                </choose>
+	            </if>
+	        </when>
+	        <when test="param5 == 3">
+	            AND e.dept_code = '22'
+	            <if test="param4 != null">
+	                <choose>
+	                    <when test="param4 == 2">
+	                        AND es.status_division LIKE '%${param3}%'
+	                    </when>
+	                    <when test="param4 == 1">
+	                        AND e.name LIKE '%${param3}%'
+	                    </when>
+	                </choose>
+	            </if>
+	        </when>
+	        <when test="param5 == 4">
+	            AND e.dept_code = '33'
+	            <if test="param4 != null">
+	                <choose>
+	                    <when test="param4 == 2">
+	                        AND es.status_division LIKE '%${param3}%'
+	                    </when>
+	                    <when test="param4 == 1">
+	                        AND e.name LIKE '%${param3}%'
+	                    </when>
+	                </choose>
+	            </if>
+	        </when>
+	    </choose>
+	    LIMIT #{param1}, #{param2}
 	</select>
 
+
+
 	<select id="empAllCount" resultType="int">
-		SELECT CEIL (COUNT(emp_no)/#{param1}) AS pages FROM emp Where
-		<choose>
-			<when test="param2 != null and param2 == 1">
-				<!-- 전체 카테고리 선택시 -->
-				(
-				dept_code = 11
-				OR dept_code = 22
-				OR dept_code = 33
-				)
-			</when>
-			<when test="param2 != null and param2 == 2">
-				<!-- 인사팀 카테고리 선택시 -->
-				dept_code = 11
-			</when>
-			<when test="param2 != null and param2 == 3">
-				<!-- 시설팀 카테고리 선택시 -->
-				dept_code = 22
-			</when>
-			<when test="param2 != null and param2 == 4">
-				<!-- 고객팀 카테고리 선택시 -->
-				dept_code = 33
-			</when>
-		</choose>
+		SELECT CEIL (COUNT(e.emp_no)/#{param1}) AS pages FROM emp e JOIN emp_status es ON es.emp_no = e.emp_no 
+		WHERE e.emp_no LIKE 'SH%'
+			<choose>
+				<when test="param4 == 1">
+					<if test='param3 != null'>					
+						 <if test="param3 == 2">
+						 AND es.status_division LIKE '%${param2}%' 
+						 </if>
+						<if test="param3 == 1">
+						AND e.name LIKE '%${param2}%' 	
+						</if> 
+					</if>	
+				</when>
+				<when test="param4 == 2">
+					AND e.dept_code = "11"
+					<if test='param3 != null'>
+				
+						 <if test="param3 == 2">
+						 AND es.status_division LIKE '%${param2}%' 
+						 </if>
+						<if test="param3 == 1">
+							e.name LIKE '%${param2}%' 	
+						</if> 
+					</if>	
+				</when>
+				<when test="param4 == 3">
+					AND e.dept_code = "22"
+					<if test='param3 != null'>
+					 
+						 <if test="param3 == 2">
+						 AND es.status_division LIKE '%${param2}%' 
+						 </if>
+						<if test="param3 == 1">
+						AND	 e.name LIKE '%${param2}%' 	
+						</if> 
+					</if>	
+				</when>
+				<when test="param4 ==4">
+					AND e.dept_code = "33"
+					<if test='param3 != null'>
+						 <if test="param3 == 2">
+						 AND es.status_division LIKE '%${param2}%' 
+						 </if>
+						<if test="param3 == 1">
+						AND	 e.name LIKE '%${param2}%' 	
+						</if> 
+					</if>	
+				</when>
+			</choose>
 	</select>
 
 	<select id="empDetail" resultType="emp">
@@ -93,6 +159,50 @@
 	<update id="resetPw">
 		UPDATE emp SET pw = #{param1} 
 	</update>
+	
+	<update id="empEditDo" parameterType="map">
+	    UPDATE emp 
+	    SET 
+	        dept_code = #{dept_code},
+	        rank_code = #{rank_code},
+	        name = #{name},
+	        email = #{email},
+	        phone = #{phone},
+	        post_no = #{post_no},
+	        address = #{address},
+	        detail_address = #{detail_address},
+	        bank_name = #{bank_name},
+	        account_no = #{account_no},
+	        join_date = #{join_date},
+	        authority = #{authority}
+	    WHERE emp_no = #{emp_no}
+	</update>
+	
+	<select id = "leaveList" resultType = "emp">
+		SELECT * FROM leave_history lh JOIN leave_management lm
+			ON lh.emp_no = lm.emp_no
+				WHERE lh.emp_no = #{param3}
+	    LIMIT #{param1}, #{param2}	
+	</select>
+	
+	<select id = "leaveAllCount" resultType = "int">
+	SELECT CEIL (COUNT(lh.emp_no)/#{param1}) AS pages FROM leave_history lh
+		 JOIN leave_management lm ON lh.emp_no = lm.emp_no WHERE lh.emp_no = #{param2}
+	</select>
+	
+	<select id = "leaveDetail" resultType = "emp">
+	SELECT 
+	    lh.emp_no,
+	    lh.annual AS total_leave,
+	    COALESCE(SUM(lm.leave_use), 0) AS use_leave,
+	    lh.annual - COALESCE(SUM(lm.leave_use), 0) AS balance_leave
+	FROM 
+	    leave_history lh
+	LEFT JOIN 
+	    leave_management lm ON lh.emp_no = lm.emp_no
+	GROUP BY 
+	    lh.emp_no, lh.annual order by '총휴가일' limit 1
+	</select>
 
 
 </mapper>

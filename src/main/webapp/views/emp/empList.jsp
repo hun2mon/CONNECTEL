@@ -5,9 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
-	<script src="scss/icons/jquery.twbsPagination.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <style>
 	.parent {
 		display: flex;
@@ -18,7 +17,6 @@
 		background-color: #f0f0f0;
 		padding: 10px;
 	}
-	
 	.content {
 		flex: 1;
 		padding: 20px;
@@ -34,16 +32,19 @@
 		width: 100%;
 	}
 	.input-container input {
-		width: calc(100% - 40px); /* 이미지의 크기만큼 여유 공간 추가 */
-		padding-right: 40px; /* 이미지의 크기만큼 여유 공간 추가 */
+		width: calc(100% - 40px);
+		padding-right: 40px;
 		box-sizing: border-box;
 	}
 	.input-container img {
 		position: absolute;
-		right: 10px; /* 입력 필드의 오른쪽 끝에서 10px 떨어진 위치 */
+		right: 10px;
 		top: 50%;
 		transform: translateY(-50%);
 		cursor: pointer;
+	}
+	.titless{
+		text-align : center;
 	}
 </style>
 </head>
@@ -52,22 +53,41 @@
 		<div class="sidebar">
 			<jsp:include page="../sideBar.jsp"></jsp:include>
 		</div>
-		<div id="content">
-			<!-- 구분기능  -->
-			<div class="filterTab">
-				<button class="cate" value="1" onclick="setCategory(1)">전체</button>
-				<button class="cate" value="2" onclick="setCategory(2)">인사팀</button>
-				<button class="cate" value="3" onclick="setCategory(3)">시설팀</button>
-				<button class="cate" value="4" onclick="setCategory(4)">고객팀</button>
-			</div>
+		<div class="content">
+			<section>
+				<div>
+					<button value="1" onclick="setCategory(1)">전체</button>
+					<button value="2" onclick="setCategory(2)">인사팀</button>
+					<button value="3" onclick="setCategory(3)">시설팀</button>
+					<button value="4" onclick="setCategory(4)">고객팀</button>
+				</div>
+				<div>
+					<select id="searchType" class="searchType">
+						<option value="1" class="searchType">이름</option>
+						<option value="2" class="searchType">재직상태</option>
+					</select>
+					<div class="input-container">
+						<input type="text" id="searchText">
+						<img src="/scss/icons/search.png" id="search" height="20px" width="20px" onclick="search()" class="searchIcon">
+						
+					</div>
+				</div>
+			</section>
+			<table id="showlist" class="table">
+				<thead>
+					<tr class="listhead">
+						<th class="titless">사원번호</th>
+						<th class="titless">이름</th>
+						<th class="titless">부서</th>
+						<th class="titless">직급</th>
+						<th class="titless">재직상태</th>
 
-			<br> <br>
-			<hr>
-			<hr>
-			<table id="showlist">
+					</tr>
+				</thead>
+				
 				<tbody id="list" class="listhead"></tbody>
 				<tr>
-					<td colspan="7" id="paging">
+					<td colspan="5" id="paging">
 						<div class="container">
 							<nav aria-label="page navigation" style="text-align: center">
 								<ul class="pagination" id="pagination"></ul>
@@ -79,94 +99,106 @@
 			</table>
 		</div>
 	</div>
-
+<script src="/scss/icons/jquery.twbsPagination.js" type="text/javascript"></script>	
 	<script>
-		var category = 1;
-		var showPage = 1;
-		var searchRemain = false;
+	var category = 1;
+	var showPage =1;
+	var searchRemain = false;
+	
+	$(document).ready(function(){ // html 문서가 모두 읽히면 되면(준비되면) 다음 내용을 실행 해라
+		listCall(showPage);
+	});
 
-		$(document).ready(function() {
-			listCall(showPage);
-		});
+	function setCategory(num){
+		console.log("Category set to: " + num);
+		category = num;
+		$('#pagination').twbsPagination('destroy');
+		showPage =1;
+		listCall(showPage);
+	}
+	
+	function search(){
+		$('#pagination').twbsPagination('destroy');
+		showPage =1;
+		listCall(showPage);		
+	};
+	
+	
+	function listCall(page){
+			var searchType = $('select[id="searchType"]').val();
+			var searchText = $('input[id="searchText"]').val();
+			console.log(searchType);
+			console.log(searchText);
+		    console.log("Category: " + category); // 추가된 콘솔 로그
 
-		function setCategory(num) {
-			console.log(num);
-			category = num;
-			$('#pagination').twbsPagination('destroy');
-			showPage = 1;
+	    $.ajax({
+	       type:'get',
+	       url:'/empList.ajax',
+	       data:{
+	    	    'page':page,
+	    		'searchType':searchType,
+	    		'searchText':searchText,
+	    		'categoryNum' : category,
+	       },
+	       dataType:'json',
+	       success:function(data){
+	          drawList(data.list);
+	          
+	          var startPage = 1;
+	          
+	       // 플러그인 추가
+	       	$('#pagination').twbsPagination({
+	    		startPage:data.currPage, // 시작 페이지
+	    		totalPages:data.totalPages, // 총 페이지 갯수
+	    		visiblePages:5,  // 보여줄 페이지 수[1][2][3][4][5]
+	    		onPageClick:function(evt,pg){ // 페이지 클릭시 실행 함수
+	    			console.log(evt); // 이벤트 객체
+	    			console.log(pg); //클릭한 페이지 번호 의미
+	        		showPage = pg;
+	        		listCall(pg);
+	    			
+	    		}
+	       	});
+	       
+	       },
+	       error:function(error){
+	          console.log(error)
+	       }
+	    });
+	}
 
-			$('.cate').removeClass('selected');
-			$('.cate[value="' + num + '"]').addClass('selected');
+    function drawList(list) {
+        var content = '';
+        for (var i = 0; i < list.length; i++) {
+            var emp = list[i];
+            var dept = '';
+            var rank = '';
 
-			listCall(showPage);
-		}
+            switch (emp.dept_code) {
+                case 11: dept = "인사팀"; break;
+                case 22: dept = "시설팀"; break;
+                case 33: dept = "고객팀"; break;
+            }
 
-		function listCall(page) {
-			$.ajax({
-				type: 'get',
-				url: '/empList.ajax',
-				data: {
-					'page': page,
-					'categoryNum': category
-				},
-				dataType: 'json',
-				success: function(data) {
-					drawList(data.list);
+            switch (emp.rank_code) {
+                case 1: rank = "사장"; break;
+                case 2: rank = "이사"; break;
+                case 3: rank = "팀장"; break;
+                case 4: rank = "과장"; break;
+                case 5: rank = "대리"; break;
+                case 6: rank = "사원"; break;
+            }
 
-					$('#pagination').twbsPagination({
-						startPage: data.currPage,
-						totalPages: data.totalPages,
-						visiblePages: 5,
-						onPageClick: function(evt, pg) {
-							showPage = pg;
-							listCall(pg);
-						}
-					});
-				},
-				error: function(error) {
-					console.log(error)
-				}
-			});
-		}
-
-		function drawList(list) {
-			var content = '';
-			for (var i = 0; i < Math.min(10, list.length); i++) {
-				var emp = list[i];
-				if (emp.dept_code == 11) {
-					emp.dept_code = "인사팀";
-				} else if (emp.dept_code == 22) {
-					emp.dept_code = "시설팀";
-				} else if (emp.dept_code == 33) {
-					emp.dept_code = "고객팀";
-				}
-
-				if (emp.rank_code == 1) {
-					emp.rank_code = "사장";
-				} else if (emp.rank_code == 2) {
-					emp.rank_code = "이사";
-				} else if (emp.rank_code == 3) {
-					emp.rank_code = "팀장";
-				} else if (emp.rank_code == 4) {
-					emp.rank_code = "과장";
-				} else if (emp.rank_code == 5) {
-					emp.rank_code = "대리";
-				} else if (emp.rank_code == 6) {
-					emp.rank_code = "사원";
-				}
-
-				content += '<tr style="border-bottom: 1px solid #ddd; height: 50px;">';
-				content += '<td style="text-align: center;">' + emp.emp_no + '</td>';
-				content += '<td style="text-align: center;">'
-						+ '<a href="/empDetail.go?emp_no=' + emp.emp_no + '">'
-						+ emp.name + '</a>' + '</td>';
-				content += '<td style="text-align: center;">' + emp.dept_code + '</td>';
-				content += '<td style="text-align: center;">' + emp.rank_code + '</td>';
-
-				content += '</tr>';
-			}
-			$('#list').html(content);
-		}
+            content += '<tr style="border-bottom: 1px solid #ddd; height: 50px;">';
+            content += '<td style="text-align: center;">' + emp.emp_no + '</td>';
+            content += '<td style="text-align: center;"><a href="/empDetail.go?emp_no=' + emp.emp_no + '">' + emp.name + '</a></td>';
+            content += '<td style="text-align: center;">' + dept + '</td>';
+            content += '<td style="text-align: center;">' + rank + '</td>';
+            content += '<td style="text-align: center;">' + emp.status_division + '</td>';
+            content += '</tr>';
+        }
+        $('#list').html(content);
+    }
 	</script>
 </body>
 </html>
