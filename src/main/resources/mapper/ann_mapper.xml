@@ -4,6 +4,8 @@
 >
 
 <mapper namespace="com.connec.tel.dao.AnnDAO">
-	
+	<select id="list" resultType="annDTO" parameterType="map">
+		SELECT ann_no, ann_subject, ann_content, ann_bHit, ann_division, ann_fixed FROM announcement WHERE ann_division = 'E'
+	</select>
 	
 </mapper>

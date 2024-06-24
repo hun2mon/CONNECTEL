@@ -23,46 +23,61 @@ public class FAQService {
 	
 	@Autowired FaqDAO faqDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
-	public Map<String, Object> list(int currPage, int pagePerCnt) {
+	
+	
+	public Map<String, Object> list(int currPage, int pagePerCnt, String category) {
 		Map<String, Object>result = new HashMap<String, Object>();
-		List<FaqDTO>list =faqDAO.list(pagePerCnt, currPage);
+		List<FaqDTO>list =faqDAO.list(pagePerCnt, currPage,category);
 		result.put("list", list);
 		result.put("currPage", currPage);
-		result.put("totalPages", faqDAO.allCount(pagePerCnt));
+		result.put("totalPages", faqDAO.allCount(pagePerCnt,category));
+		result.put("category", category);
 		
 		
 		return result;
 	}
+
 	public ModelAndView write(Map<String, String> param, HttpSession session) {
+		// FAQ 작성 로직
 		ModelAndView mav = new ModelAndView();
-		
-		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
-		param.put("emp_no", empDTO.getEmp_no());
-		
-		int row = faqDAO.write(param);
-		if (row > 0) {
-			mav.setViewName("faq/faqList");
-			mav.addObject("msg", "작성이 완료 되었습니다.");
+		int result = faqDAO.write(param);
+		if(result > 0) {
+			mav.setViewName("redirect:/faqList.go");
 		} else {
 			mav.setViewName("faq/faqWrite");
-			mav.addObject("msg", "작성에 실패했습니다.");
 		}
-		
 		return mav;
 	}
-	public ModelAndView detail(String faq_no) {
+
+	public ModelAndView faqDetail(String faq_no) {
 		ModelAndView mav = new ModelAndView();
-		
-		FaqDTO dto = faqDAO.detail(faq_no);			
+		FaqDTO dto = faqDAO.faqDetail(faq_no);
+		logger.info("detail");
 		mav.addObject("dto", dto);
 		mav.setViewName("faq/faqDetail");
 		return mav;
 	}
-	@Transactional
-    public void deleteFAQs(List<Integer> faqNos) {
-        faqDAO.deleteFAQs(faqNos);
-    }
-	
-	
 
+	public int deleteFaqs(List<Integer> faqNos) {
+		return faqDAO.deleteFaqs(faqNos);
+	}
+
+	public Map<String, Object> search(Map<String, Object> map, String textval) {
+	    List<FaqDTO> list = faqDAO.faqsearch(textval);
+	    map.put("list", list);
+	    return map;
+	}
+
+
+	 public FaqDTO getFaqById(String faq_no) {
+	        return faqDAO.getFaqById(faq_no);
+	    }
+
+	    public void updateFaq(FaqDTO FaqDTO, String faq_subject, String faq_content, String faq_category, String faq_no, HttpSession session) {
+	        faqDAO.updateFaq(FaqDTO, faq_subject, faq_content, faq_category, faq_no);
+	    }
+	
+	
+	
+	
 }
