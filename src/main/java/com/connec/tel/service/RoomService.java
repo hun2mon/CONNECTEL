@@ -294,6 +294,24 @@ public class RoomService {
 		return map;
 	}
 
+	public Map<String, Object> changeCheckIn(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		// stay테이블에서 투숙한 방번호 바꾸기.
+		roomDAO.updateStay(param);
+		
+		//해당 호수를 이용가능한 방으로 바꾸기.
+		String room_no = (String) param.get("room_no");
+		roomDAO.updateAvailable(room_no);
+		
+		// 해당 호수 체크인
+		room_no = (String) param.get("changeRoom_no");
+		roomDAO.roomCheckIn(room_no);
+		
+		
+		return map;
+	}
+
 
 }
 	

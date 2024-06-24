@@ -42,7 +42,8 @@
         text-align: right;
     }
     
-    table {
+    table,tr {
+		text-align: justify;
 		text-align: center;
 	}
 

@@ -91,9 +91,9 @@ public class RoomController {
 	public Map<String, Object> roomStateList(String search, String page, String cnt) {
 
 		logger.info("RoomStateList.axax 요청!!!");
-		logger.info("search : {}", search);
-		logger.info("search : {}", page);
-		logger.info("search : {}", cnt);
+		logger.info("search : "+ search);
+		logger.info("search : "+ page);
+		logger.info("search : "+ cnt);
 
 		return roomService.roomStateList(search, page, cnt);
 	}
@@ -168,7 +168,22 @@ public class RoomController {
 	}
 	
 	
-	
+	@PostMapping(value = "/room/changeCheckIn.ajax")
+	@ResponseBody
+	public Map<String, Object> changeCheckIn(
+			@RequestParam Map<String, Object>param,HttpSession session){
+		logger.info("changeCheckIn 요청!!!");
+		
+		EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
+		String emp_no = emp.getEmp_no();
+
+		param.put("emp_no", emp_no);
+		logger.info("param : {}", param);
+		
+		
+		
+		return roomService.changeCheckIn(param);
+	}
 	
 
 }

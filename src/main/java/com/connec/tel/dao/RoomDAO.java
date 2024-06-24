@@ -60,4 +60,7 @@ public interface RoomDAO {
 
 	List<RoomDTO> roomPriceCalendarList(String year_month);
 
+	void updateStay(Map<String, Object> param);
+
+
 }

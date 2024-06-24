@@ -4,6 +4,77 @@
 >
 
 <mapper namespace="com.connec.tel.dao.GuestManageDAO">
+	<select id="totalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE in_date = #{param3}
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE cos_name LIKE #{param1} AND in_date = #{param3}
+		</if>
+	
+	</select>
+	
+	<select id="stayListTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages 
+			FROM reservation r LEFT JOIN stay s using(res_no)
+			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param3}
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages 
+			FROM reservation r LEFT JOIN stay s using(res_no)
+			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param3} AND cos_name LIKE #{param1}
+		</if>
+	
+	</select>
+	
+	<select id="reserveList" resultType="com.connec.tel.dto.GuestManageDTO" parameterType="map">
+		
+		<if test="param1 == ''">
+			SELECT * FROM reservation
+		    ORDER BY res_date DESC
+		    WHERE in_date = #{param4}
+		    LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT * FROM reservation
+		    WHERE cos_name LIKE CONCAT('%', #{param1}, '%') AND in_date = #{param4}
+		    ORDER BY res_date DESC
+		    LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	<select id="stayList" resultType="com.connec.tel.dto.GuestManageDTO" parameterType="map">
+		
+		<if test="param1 == ''">
+			SELECT r.res_no , s.room_no  ,r.cos_name,
+				 r.cos_phone ,s.stay_check_in ,s.stay_check_out 
+			FROM reservation r LEFT JOIN stay s using(res_no) 
+			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param4}
+			ORDER BY s.stay_check_in DESC
+			LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT r.res_no , s.room_no  ,r.cos_name,
+				 r.cos_phone ,s.stay_check_in ,s.stay_check_out 
+			FROM reservation r LEFT JOIN stay s using(res_no) 
+			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param4} AND cos_name LIKE CONCAT('%', #{param1}, '%')
+			ORDER BY s.stay_check_in DESC
+			LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	<delete id="reserveDelete">
+		DELETE FROM reservation WHERE res_no = #{res_no}
+	</delete>
+	
+	
 	
 	
 </mapper>
