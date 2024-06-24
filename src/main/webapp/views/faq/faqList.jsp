@@ -21,7 +21,30 @@ body {
     overflow-y: auto;
 }
 
-/* 텍스트 박스 */
+.pagination {
+    margin-top: 10px; /* 적절한 상단 마진 추가 */
+    margin-bottom: 10px; /* 적절한 하단 마진 추가 */
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+}
+
+.commonstext {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    margin-top: 100px; 
+    text-align: center;
+}
+
+.search-container {
+    display: inline-block;
+    border: 2px solid #6076E8;
+    border-radius: 8px;
+    padding: 5px 40px;
+    margin: 10px;
+    background-color: #f8f9fa;
+}
+
 input[type="text"].freetextbox {
     border: 2px solid #6076E8; 
     border-radius: 4px; 
@@ -33,32 +56,10 @@ input[type="text"].freetextbox {
     margin-right: 15px;
 }
 
-/* 텍스트 박스 포커스 시 */
 input[type="text"].freetextbox:focus {
     border-color: #4056A1;
 }
 
-/* **전체** */
-.commonstext {
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto;
-    margin-top: 100px; 
-    text-align: center;
-    white-space: nowrap;
-}
-
-/* 검색 영역 */
-.search-container {
-    display: inline-block;
-    border: 2px solid #6076E8;
-    border-radius: 8px;
-    padding: 5px 40px;
-    margin: 10px;
-    background-color: whitegray;
-}
-
-/* 버튼 공통 스타일 */
 button {
     background-color: #6076E8; 
     border: none; 
@@ -74,21 +75,10 @@ button {
     transition-duration: 0.2s;
 }
 
-/* 버튼에 마우스 갖다 대면 */
 button:hover {
     background-color: #4056A1;
 }
 
-/* 삭제 버튼 스타일 */
-button#deletebutton {
-    background-color: #6076E8;
-}
-
-button#deletebutton:hover {
-    background-color: #4056A1;
-}
-
-/* 탭 스타일 */
 .tab {
     overflow: hidden;
     border-bottom: 1px solid #ccc;
@@ -113,63 +103,72 @@ button#deletebutton:hover {
     background-color: #4056A1;
 }
 
-.tabcontent {
-    display: none;
-    padding: 20px;
-}
-
-/* FAQ 리스트 스타일 */
 .faq-list {
+    padding-left: 200px;
+	width:80%;	
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin: 10px 0;
 }
 
 .faq-list_no, .faq-list_subject {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.faq-list_no {
+    flex-basis: 50px;
+}
+
+.faq-list_subject {
+    flex-grow: 1;
     margin: 0 10px;
 }
 
-.faq-list_no, .faq-list_subject, .freecheckbox {
-    align-self: center;
+.freecheckbox {
+    margin-left: 10px;
 }
 
 </style>
 </head>
 <body>
-<!-- 상단 및 사이드 바 기본 -->
 <div class="sidebar-container">
     <jsp:include page="../sideBar.jsp"></jsp:include>
 </div>
 
-<!-- 검색 라인 -->
 <div class="commonstext">
     <div class="faq-title">
         <h2>- FAQ -</h2>
     </div>
-    <span class="search-container">
-        <input type="text" class="freetextbox" id="customtextbox" placeholder=" 제목을 입력해주세요.">
+    <div class="search-container">
+        <input type="text" class="freetextbox" id="freetextbox" placeholder=" 제목을 입력해주세요.">
         <button id="freebutton">검색</button>
-    </span>
+    </div>
     <span class="nav-right">
         <button id="writebutton" onclick="faqwrite()">글쓰기</button>
-        <button id="deletebutton" style="margin-left:10px;">삭제</button>
+        <button id="deletebutton" style="margin-left: 10px;">삭제</button>
     </span>
     
     <hr>
     <div class="faqContent">
-        <!-- 탭 -->
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, '전체')" id="defaultOpen">전체</button>
             <button class="tablinks" onclick="openTab(event, '객실')">객실</button>
-            <button class="tablinks" onclick="openTab(event, '예약')">예약 및 환불</button>
+            <button class="tablinks" onclick="openTab(event, '예약 및 환불')">예약 및 환불</button>
             <button class="tablinks" onclick="openTab(event, '부대시설')">부대시설</button>
             <button class="tablinks" onclick="openTab(event, '기타')">기타</button>
         </div>
+        
+        <div class="faq-list">
+            <div class="faq-list_no"><strong>번호</strong></div>
+            <div class="faq-list_subject"><strong>제목</strong></div>
+            <div class="freecheckbox"><strong>선택</strong></div>
+        </div>
     </div>
-    <!-- 리스트 라인 -->
-    <div id="faqList">
-    </div>
+    <hr>
+    <div id="faqList"></div>
     
     <div class="pagination">                           
         <nav aria-label="Page navigation" style="text-align:center">
@@ -180,28 +179,64 @@ button#deletebutton:hover {
 </div>
 <hr>
 <script>
-// JavaScript 코드는 body 태그 하단에 위치시키는 것이 좋습니다.
+var showPage = 1;
+
 $(document).ready(function(){
-    // 페이지가 로드되면 FAQ 리스트를 초기화하고, 첫 번째 페이지를 호출합니다.
-    listCall(1);
+    // 기본적으로 첫 번째 페이지를 '전체' 탭으로 호출
+    listCall(1, '전체');
     
- 
+    $('#freebutton').on('click', function() {
+	    var searchText = $('#freetextbox').val(); // 검색 입력란의 값 가져오기
+	    // 검색어가 비어있는지 확인
+	    if (searchText.trim() !== '') {
+	        // 검색어가 비어있지 않으면 검색 실행
+	        search(searchText, showPage); // 현재 페이지 번호를 함께 전달
+	    } else {
+	        // 검색어가 비어있으면 현재 페이지를 기준으로 공지사항을 다시 불러옴
+	        listCall(showPage);
+	    }
+	});
+    
+    function search(title, page) {
+        $.ajax({
+            type: 'GET',
+            url: '/faq/search.ajax', // 경로 앞에 슬래시 추가
+            data: {
+                'textval': title,
+                'page': page.toString() // 페이지 번호를 문자열로 변환하여 전달
+            },
+            dataType: 'json', // 대소문자 구분에 주의해야 함
+            success: function(data) {
+                drawFaqList(data.list);
+            },
+            error: function(error) {
+                console.log('검색 실패:', error);
+            }
+        });
+    }
+    
+  
+    
+    
+    
+    
     // 페이지 이동 시 호출될 함수
-    function listCall(page) {
+    function listCall(page, category) {
         var cnt = 10; // 페이지당 항목 수, 필요에 따라 변경 가능
         $.ajax({
             type: 'GET',
             url: '/faq/faqList.ajax',
             data: {
                 'page': page,
-                'cnt': cnt
+                'cnt': cnt,
+                'category': category
             },
             dataType: 'json',
             success: function(data) {
                 console.log('AJAX 요청 성공');
                 console.log(data.list);
                 drawFaqList(data.list); // FAQ 리스트 그리기 함수 호출
-                initializePagination(data.totalPages); // 페이징 초기화
+                initializePagination(data.totalPages, category); // 페이징 초기화
             },
             error: function(error) {
                 console.log('FAQ 리스트 출력 실패:', error);
@@ -212,10 +247,10 @@ $(document).ready(function(){
     // FAQ 리스트를 그리는 함수
     function drawFaqList(data) {
         var content = '';  
-        for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < data.length; i++) {	
             content += '<div class="faq-list">';
             content += '<div class="faq-list_no">' + data[i].faq_no + '</div>';
-            content += '<div class="faq-list_subject"><a href="faqDetail.go?faq_no=' + data[i].faq_no + '">' + data[i].faq_subject + '</a></div>';
+            content += '<div class="faq-list_subject"><a href="/faqDetail.go?faq_no=' + data[i].faq_no + '">' + data[i].faq_subject + '</a></div>';
             content += '<input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].faq_no + '">';
             content += '</div>';
         }
@@ -223,64 +258,70 @@ $(document).ready(function(){
     }
 
     // 페이징을 초기화하는 함수
-    function initializePagination(totalPages) {
+    function initializePagination(totalPages, category) {
         $('#pagination').twbsPagination({
             totalPages: totalPages, // 전체 페이지 수
             visiblePages: 5, // 보여줄 페이지 수
             onPageClick: function(event, page) { 
                 console.log('페이지 클릭 이벤트 발생:', page);
-                listCall(page); // 페이지 클릭 시 해당 페이지의 데이터를 호출하는 함수 호출
+                listCall(page, category); // 페이지 클릭 시 해당 페이지의 데이터를 호출하는 함수 호출
             }
         });
     }
 
-    
-   //삭제하기
-    // FAQ 삭제 버튼 클릭 이벤트 처리
-    $('#deletebutton').click(function() {
-        var checkedItems = $('.freecheckbox:checked'); // 선택된 체크박스들을 가져옴
-        var faqNos = []; // 삭제할 FAQ 번호들을 담을 배열
+    // 탭 열기 함수
+    window.openTab = function(evt, tabName) {
+        var i, tablinks;
+        // 모든 탭 버튼의 active 클래스 제거
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        // 클릭된 탭의 콘텐츠를 표시하고, 버튼에 active 클래스 추가
+        evt.currentTarget.className += " active";
+        listCall(1, tabName); // 해당 탭의 첫 번째 페이지 데이터를 호출
+        $('#pagination').twbsPagination('destroy');
+    }
 
-        // 선택된 체크박스들의 FAQ 번호를 배열에 추가
+    // 기본으로 열리는 탭 설정
+    document.getElementById("defaultOpen").click();
+
+    // 삭제 기능
+    $('#deletebutton').click(function() {
+        var checkedItems = $('.freecheckbox:checked');
+        var faqNos = [];
+
         checkedItems.each(function() {
-            var faqNo = $(this).attr('id').split('_')[1]; // 체크박스 ID에서 FAQ 번호 추출
-            faqNos.push(parseInt(faqNo)); // FAQ 번호를 정수로 변환하여 배열에 추가
+            var faqNo = $(this).attr('id').split('_')[1];
+            faqNos.push(parseInt(faqNo));
         });
 
-        // 최소한 하나의 체크박스가 선택되었는지 확인
         if (faqNos.length > 0) {
-            // 삭제할 FAQ 번호들을 서버로 전송하여 삭제 요청
             $.ajax({
                 type: 'POST',
                 url: '/faq/deleteFaq.ajax',
                 contentType: 'application/json',
-                data: JSON.stringify(faqNos), // JSON 형식으로 데이터 전송
+                data: JSON.stringify(faqNos),
                 success: function(response) {
                     console.log('삭제 성공:', response);
                     alert('삭제에 성공하였습니다.');
-                    listCall(1); // 삭제 후 리스트 다시 호출
+                    listCall(1, '전체'); // 삭제 후 전체 리스트 다시 호출
                 },
                 error: function(error) {
                     console.log('삭제 실패:', error);
-                    alert('삭제 중 오류가 발생했습니다.'); // 오류 메시지 표시
+                    alert('삭제 중 오류가 발생했습니다.');
                 }
             });
         } else {
             alert('삭제할 FAQ를 선택해주세요.');
         }
     });
+
+    // 작성 폼으로 이동
+    $('#writebutton').click(function() {
+        window.location.href = '/faqwrite.go';
+    });
 });
-
-
-
-
-
-
-
-//작성 폼으로가기
-function faqwrite() {
-    window.location.href = '/faqwrite.go';
-}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
 </body>

@@ -2,32 +2,64 @@
 <!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN"
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
 >
-
 <mapper namespace="com.connec.tel.dao.FaqDAO">
-
-<select id="list" resultType="faqDTO" parameterType="map">
+    <select id="list" resultType="faqDTO" parameterType="map">
     SELECT FAQ_no, FAQ_subject 
     FROM FAQ
-</select>
+    <where>
+        <if test="category != null and category != '' and category != '전체'">
+            AND FAQ_category = #{category}
+        </if>
+    </where>
+    ORDER BY FAQ_no DESC
+    LIMIT #{pagePerCnt} OFFSET ${(currPage - 1) * pagePerCnt}
+</select>	
 
 <select id="allCount" resultType="Integer">
-	SELECT CEIL(COUNT(FAQ_no)/#{param1}) AS pages FROM FAQ
+    SELECT CEIL(COUNT(FAQ_no) / #{param1}) AS pages FROM FAQ
+    <where>
+        <if test="category != null and category != '' and category != '전체'">
+            AND FAQ_category = #{category}
+        </if>
+    </where>
 </select>
+    
+    <insert id="write" parameterType="map">
+        INSERT INTO FAQ (FAQ_subject, FAQ_content, FAQ_category, FAQ_date)
+        VALUES (#{FAQ_subject}, #{FAQ_content}, #{FAQ_category}, NOW())
+    </insert>
 
-<insert id="write" parameterType="map">
-    INSERT INTO FAQ(FAQ_subject, register, FAQ_content, FAQ_category, regist_date)
-    VALUES(#{subject}, #{emp_no}, #{content}, #{category}, now())
-</insert>
-	
-<select id="detail" resultType="faqDTO">
-		SELECT * FROM FAQ WHERE faq_no = #{param1}	
+    <select id="faqDetail" resultType="FaqDTO">
+        SELECT * FROM FAQ WHERE FAQ_no = #{faq_no}
+    </select>
+    
+<select id="faqsearch" parameterType="string" resultType="FaqDTO">
+    SELECT * FROM FAQ
+    WHERE FAQ_subject LIKE CONCAT('%', #{textval}, '%')
+    ORDER BY FAQ_no DESC
 </select>
-
-<delete id="deleteFAQs">
-        DELETE FROM FAQ WHERE faq_no IN
-        <foreach collection="faqNos" item="faqNo" open="(" separator="," close=")">
-            #{faqNo}
+   
+    
+    <delete id="deleteFaqs" parameterType="list">
+        DELETE FROM FAQ WHERE FAQ_no IN 
+        <foreach item="FAQ_no" collection="list" open="(" separator="," close=")">
+            #{FAQ_no}
         </foreach>
     </delete>
-	
+    
+     <select id="getFaqById" parameterType="String" resultType="FaqDTO">
+        SELECT * FROM FAQ WHERE FAQ_no = #{faq_no}
+    </select>
+
+<update id="updateFaq" parameterType="map">
+    <![CDATA[
+    UPDATE FAQ
+    SET FAQ_subject = #{faq_subject},
+        FAQ_category = #{faq_category},
+        FAQ_content = #{faq_content},
+        update_date = NOW()
+    WHERE FAQ_no = #{faq_no}
+    ]]>
+</update>
+    
 </mapper>
