@@ -55,7 +55,7 @@
      border-radius: 15px;
 	}
 	
-	event-content{
+	.event-content{
 	background-color: #fff; /* 이벤트 컨텐츠의 배경색을 흰색으로 설정합니다. */
     border-radius: 5px; /* 모서리를 둥글게 만듭니다. */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다. */
@@ -65,6 +65,11 @@
 
 .fc-h-event {
     background-color: white;
+}
+
+.fc .fc-daygrid-day-top {
+    display: block;
+    /* flex-direction: row-reverse; */
 }
 
 .fc .fc-scroller-liquid-absolute {
@@ -113,14 +118,15 @@
         </div>
     </div>
 </div>
-
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 <script>
 $(document).ready(function() {
     listCall(); 
+    console.log("listCall 요청!!");
 });
 
 function listCall() {
+	console.log("listCall 실행");
     var calendarEl = $('#calendar')[0];
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth', 
@@ -135,9 +141,9 @@ function listCall() {
                 data: {
                 	year_month: yearMonth.getFullYear() + '-' + ('0' + (yearMonth.getMonth() + 1)).slice(-2) 
                 },
-                dataType: 'json', 
+                dataType: 'JSON', 
                 success: function(data) {
-
+					console.log(data);
                     var events = data.list.map(function(event) {
                         return {
                         	 title: '', 
@@ -167,7 +173,7 @@ function listCall() {
             var $bar2 = $('<div class="bar" id="superBar">').text('슈페리어룸 ' + event.extendedProps.superior +'KRW');
             var $bar3 = $('<div class="bar" id="deluxBar">').text('디럭스룸 ' + event.extendedProps.delux +'KRW');
             var $bar4 = $('<div class="bar" id="suiteBar">').text('스위트룸 ' + event.extendedProps.suite +'KRW');
-.
+
             $eventContent.append($bar1, $bar2, $bar3, $bar4);
 
             info.el.innerHTML = '';

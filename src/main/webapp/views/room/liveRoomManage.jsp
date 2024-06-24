@@ -118,6 +118,12 @@
     background-color: #9eefcc;
     cursor: pointer;
 	}
+	
+	#availableRooms{
+		width: 70%;
+		margin: auto;
+		text-align: center;
+	}
 
 </style>
 </head>
@@ -248,12 +254,40 @@
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-danger" onclick="checkOut()"><i class="fas fa-sign-in-alt"></i>체크아웃</button>
+          	    <button type="button" style="color: white;" class="btn btn-sm waves-effect waves-light btn-warning" onclick="changeCheckIn()"><i class="fas fa-exchange-alt"></i> 객실변경</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="checkOut()"><i class="fas fa-sign-in-alt"></i> 체크아웃</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 </body>
+
+<div id="changeCheckIn" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">체크인 객실 변경</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="current-room">
+                    <strong>현재 체크인 객실:</strong> <span id="currentRoomNo"></span>
+                </div>
+                <div class="available-rooms">
+                    <strong>체크인 가능한 객실:</strong>
+                    <select id="availableRooms" class="form-control" size="5">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 $(document).ready(function(){
     listCall();   
@@ -337,11 +371,20 @@ function drawList(roomList) {
                     roomElement.addClass('available');
                     roomStatusDiv.text('체크인가능');
                     
+                   
+                    
+                    var $availableRoomsSelect = $('#availableRooms');
+                                      
+                    var option = $('<option>').val(room.room_no).text(room.room_no);
+                    $availableRoomsSelect.append(option);
+                    
                     (function(num) {
                         roomElement.on('click', function() {
                             openCheckInModal(num); // 모달 열기 함수 호출
                         });
                     })(roomNumber, roomStatus);
+                    
+                    
                     
                 } else if (roomStatus === 'O') {
                     roomElement.addClass('checkout');
@@ -364,23 +407,15 @@ function drawList(roomList) {
 }
 
 function openCheckInModal(roomNumber) {
-    // 모달 열기
-    $('#success-header-modal').modal('show');
-    
-    // 모달 헤더에 방 번호 설정
-    $('#roomNumberHeader').text('Room ' + roomNumber);
-
-    // 모달 내용 초기화
-    $('#modal-room-info').empty();
-    $('#reservationNumber').val(''); // 예약번호 입력창 초기화
+	 	$('#success-header-modal').modal('show');
+	    $('#roomNumberHeader').text('Room ' + roomNumber);
+	    $('#modal-room-info').empty();
+	    $('#reservationNumber').val('');
 }
 
 function openCheckOutModal(roomNumber) {
-    // 모달 열기
-    $('#danger-header-modal').modal('show');
-    
-    // 모달 헤더에 방 번호 설정
-    $('#checkOutHeader').text('Room ' + roomNumber);
+	 	$('#danger-header-modal').modal('show');
+	    $('#checkOutHeader').text('Room ' + roomNumber);
     
     $.ajax({
     	type:'POST',
@@ -556,6 +591,18 @@ function checkOut() {
 	})
 		
 }
+
+function changeCheckIn() {
+    $('#changeCheckIn').modal('show');
+    var room_no = $('#checkOutHeader').text().replace('Room ', '');
+    var res_no = $('#res_no').text().replace('예약번호 : ', '');
+
+    // 현재 체크인된 객실 번호 표시
+    $('#currentRoomNo').text(room_no);
+
+}
+
+
 
 </script>
 </html>
