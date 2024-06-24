@@ -31,7 +31,7 @@ public class EmpController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String page = "main/main";
+		String page = "emp/empList";
 		
 		logger.info("param :{}",param);
 		 empService.empRegist(photos,param, session);
@@ -42,15 +42,17 @@ public class EmpController {
 	
 	@RequestMapping(value = "/empList.ajax")
 	@ResponseBody
-	public Map<String, Object> empList(int page, int categoryNum) {
-		logger.info("emp List 요청");
+	public Map<String, Object> empList(int page , String searchType, String searchText, String categoryNum) {
+		logger.info("Emplist 요청");
 		logger.info("요청페이지 : " + page);
-
+		logger.info("emp 검색에서 가져온 text : "+searchText);
+		logger.info("emp 검색에서 가져온 type : "+searchType);
+		logger.info("emp 검색에서 가져온 category num : " + categoryNum);
 		logger.info("emp 검색에서 가져온 category num : " + categoryNum);
 		Map<String, Object> map = null;
 		int currPage = page;
 			
-		map = empService.empList(currPage,categoryNum);	
+		map = empService.empList(currPage,searchType,searchText,categoryNum);	
 		
 		
 		return map;
@@ -76,6 +78,46 @@ public class EmpController {
 		
 		empService.resetPw();
 		return "aa";
+	}
+	
+	
+	@RequestMapping(value = "/empEdit.go")
+	public String empEdit(String emp_no, Model model) {
+		logger.info("emp_no  : " + emp_no);
+		String page = "emp/empEdit";
+		
+		EmpDTO dto = empService.empDetail(emp_no,model);
+	
+		model.addAttribute("emp",dto);
+
+	
+		
+		return page;
+	}
+	@RequestMapping(value = "/empEdit.do")
+	public String empEditDo(MultipartFile[] photos, @RequestParam Map<String, String> param, HttpSession session) {
+		String page = "emp/empList";
+		
+		logger.info("param :{}",param);
+		 empService.empEditDo(photos,param, session);
+		
+		
+		 return page;
+
+	}
+	
+	@RequestMapping(value = "/leaveList.ajax")
+	@ResponseBody
+	public Map<String, Object> leaveList(int page, String emp_no) {
+		logger.info("leave List 요청");
+		logger.info("요청페이지 : " + page);
+		Map<String, Object> map = null;
+		int currPage = page;
+			
+		map = empService.leaveList(currPage,emp_no);	
+		
+		
+		return map;
 	}
 	
 	

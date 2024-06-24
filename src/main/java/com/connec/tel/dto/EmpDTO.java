@@ -36,9 +36,81 @@ public class EmpDTO {
 	// 재직상태
 	private String status_division;
 	
+	// 연차정보
+	private int annual;
+	private String leave_division;
+	private int draft_no;
+	private String leave_cate;
+	private int leave_use;
+	private Date leave_start;
+	private Date leave_end;
+	private String total_leave;
+	private String use_leave;
+	private String balance_leave;
 	
 	
 	
+	
+	public String getTotal_leave() {
+		return total_leave;
+	}
+	public void setTotal_leave(String total_leave) {
+		this.total_leave = total_leave;
+	}
+	public String getUse_leave() {
+		return use_leave;
+	}
+	public void setUse_leave(String use_leave) {
+		this.use_leave = use_leave;
+	}
+	public String getBalance_leave() {
+		return balance_leave;
+	}
+	public void setBalance_leave(String balance_leave) {
+		this.balance_leave = balance_leave;
+	}
+	public int getAnnual() {
+		return annual;
+	}
+	public void setAnnual(int annual) {
+		this.annual = annual;
+	}
+	public String getLeave_division() {
+		return leave_division;
+	}
+	public void setLeave_division(String leave_division) {
+		this.leave_division = leave_division;
+	}
+	public int getDraft_no() {
+		return draft_no;
+	}
+	public void setDraft_no(int draft_no) {
+		this.draft_no = draft_no;
+	}
+	public String getLeave_cate() {
+		return leave_cate;
+	}
+	public void setLeave_cate(String leave_cate) {
+		this.leave_cate = leave_cate;
+	}
+	public int getLeave_use() {
+		return leave_use;
+	}
+	public void setLeave_use(int leave_use) {
+		this.leave_use = leave_use;
+	}
+	public Date getLeave_start() {
+		return leave_start;
+	}
+	public void setLeave_start(Date leave_start) {
+		this.leave_start = leave_start;
+	}
+	public Date getLeave_end() {
+		return leave_end;
+	}
+	public void setLeave_end(Date leave_end) {
+		this.leave_end = leave_end;
+	}
 	public String getStatus_division() {
 		return status_division;
 	}
