@@ -5,9 +5,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="richtexteditor/rte_theme_default.css" />
-<script type="text/javascript" src="richtexteditor/rte.js"></script>
-	<script type="text/javascript" src='richtexteditor/plugins/all_plugins.js'></script>
+
 <style>
 body {
     display: flex;
@@ -32,6 +30,112 @@ body {
 }
 
 
+table {
+    margin: 0 auto; /* 가운데 정렬 */
+    border-collapse: collapse; /* 테이블 간격 없애기 */
+    width: 800px; /* 테이블 너비 지정 */
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    border-radius: 8px; /* 모서리 둥글게 */
+}
+
+table th, table td {
+    padding: 15px; /* 셀 안 여백 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+table th {
+    border-bottom: 1px solid #f0f0f0; /* 셀 아래 테두리 */
+    color: ffffff;
+
+}
+
+table td {
+    border-bottom: 1px solid #f0f0f0; /* 셀 아래 테두리 */
+}
+
+table tr:last-child td {
+    border-bottom: none; /* 마지막 행의 아래 테두리 없애기 */
+}
+
+.ann_subject {
+    width: 100%; /* 너비 100%로 채우기 */
+    padding: 10px; /* 내부 여백 */
+    border: 1px solid #ccc; /* 테두리 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    box-sizing: border-box; /* 테두리와 안쪽 여백 포함 */
+    font-size: 16px; /* 글자 크기 */
+}
+
+.textcontent {
+    width: 100%; /* 너비 100%로 채우기 */
+    padding: 10px; /* 내부 여백 */
+    border: 1px solid #ccc; /* 테두리 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    box-sizing: border-box; /* 테두리와 안쪽 여백 포함 */
+    font-size: 16px; /* 글자 크기 */
+    height: 200px; /* 높이 지정 */
+}
+
+select {
+    width: 100%; /* 너비 100%로 채우기 */
+    padding: 10px; /* 내부 여백 */
+    border: 1px solid #ccc; /* 테두리 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    box-sizing: border-box; /* 테두리와 안쪽 여백 포함 */
+    font-size: 16px; /* 글자 크기 */
+}
+
+input[type="submit"] {
+margin-top: -30px;
+	margin-left: 700px;
+    background-color: #6076E8; /* 배경색 */
+    color: white; /* 글자색 */
+    padding: 10px 20px; /* 내부 여백 */
+    border: none; /* 테두리 없음 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    cursor: pointer; /* 커서 포인터 */
+    font-size: 16px; /* 글자 크기 */
+    transition: background-color 0.3s; /* 배경색 변경 애니메이션 */
+}
+
+input[type="submit"]:hover {
+    background-color: #4056A1; /* 마우스 호버 시 배경색 변경 */
+}
+
+a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #6076E8; /* 링크 색상 */
+    font-size: 16px; /* 글자 크기 */
+    transition: color 0.3s; /* 색상 변경 애니메이션 */
+}
+
+a:hover {
+    color: #4056A1; /* 마우스 호버 시 링크 색상 변경 */
+}
+
+.exit {
+
+    text-align: right;
+    margin-top: 20px;
+}
+
+.exit a {
+	margin-right: 654px;
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #6076E8;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.exit a:hover {
+    background-color: #6076E8;
+    color: white;
+}
+
+
 
 
 </style>
@@ -42,16 +146,16 @@ body {
 </div>
 
 <div class="write-container">
-    <form id="empannForm" action="/empannwrite.do" method="post">
+    <form id="empannForm" action="/empannwrite.do" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <th colspan="2" style="background-color:#6076E8; color:white;">
-                    직원 공지사항 글쓰기
+                    공지사항 글쓰기
                 </th>
             </tr>
             <tr>
                 <th>
-                    <input type="text" class="subject" id="subject" name="subject" placeholder="제목을 입력해주세요." required>
+                    <input type="text" class="ann_subject" id="ann_subject" name="ann_subject" placeholder="제목을 입력해주세요." required>
                 </th>
                 <td>
                     <select id="ann_division" name="ann_division">
@@ -62,16 +166,20 @@ body {
             </tr>
             <tr>
                 <td colspan="2">
-                    <div id="div_editor"></div>
-					<input type="hidden" name="content"/>
+                    <input type="text" class="textcontent" id="textcontent" name="textcontent" placeholder="내용을 입력해 주세요" required>
                 </td>
             </tr>
+            <tr>
+            	<td colspan="2">
+            		첨부파일 : <input type="file" name="photos" multiple="multiple"/><span style="margin-left: 250px;">작성자:${name}</span>
+            	</td>    
+            </tr>            
             <tr>
                 <td colspan="2">
                     <div class="exit">
                         <a href="ann/empAnnList.go"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
                     </div>
-                   <button type="button" onclick="save()">저장</button> 
+                   <input type="submit" value="등록"> 
                 </td>
             </tr>
         </table>
@@ -86,24 +194,6 @@ body {
 
 </body>
 <script>
-var config = {}
-config.toolbar = "basic";
-config.editorResizeMode="none";
-var editor = new RichTextEditor("#div_editor", config);
-
-
-function save(){
-	// 에디터에 작성된 문자열을 가져온다.
-	var content = editor.getHTMLCode();
-	console.log('에디터에 작성된 문자열 : ',content.length);
-	$('input[type="hidden"]').val(content);
-	
-	if(content.length>(5*1024*1024)){
-		alert('컨텐츠의 크기가 너무 큽니다. 이미지의 크기나 갯수를 줄여 주세요');
-	}else{
-		$('form').submit(); //form 태그를 서브밋 하는 함수
-	}	
-}
 
 
 
