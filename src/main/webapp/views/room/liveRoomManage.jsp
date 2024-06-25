@@ -158,7 +158,7 @@
             </div>
             <div class="modal-body">
                 <h5 id="roomNumberHeader" class="mt-0"></h5>
-                <input type="text" id="reservationNumber" placeholder="예약번호 입력">
+                <input type="text" id="reservationNumber" placeholder="예약번호 입력" readonly="readonly">
                 <button type="button" class="btn btn-success" onclick="openReservationModal()"><i class="fas fa-caret-down"></i></button>
                 <div id="modal-room-info">
                     <!-- Room details will be displayed here -->
@@ -254,7 +254,7 @@
                 
             </div>
             <div class="modal-footer">
-          	    <button type="button" style="color: white;" class="btn btn-sm waves-effect waves-light btn-warning" onclick="changeCheckIn()"><i class="fas fa-exchange-alt"></i> 객실변경</button>
+          	    <button type="button" style="color: white;" class="btn btn-sm waves-effect waves-light btn-warning" onclick="changeCheckInModalOpen()"><i class="fas fa-exchange-alt"></i> 객실변경</button>
                 <button type="button" class="btn btn-sm btn-danger" onclick="checkOut()"><i class="fas fa-sign-in-alt"></i> 체크아웃</button>
             </div>
         </div><!-- /.modal-content -->
@@ -262,6 +262,7 @@
 </div><!-- /.modal -->
 </body>
 
+<!-- 체크인 객실 변경 모달 -->
 <div id="changeCheckIn" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -274,15 +275,15 @@
                     <strong>현재 체크인 객실:</strong> <span id="currentRoomNo"></span>
                 </div>
                 <div class="available-rooms">
-                    <strong>체크인 가능한 객실:</strong>
+                    <strong>변경 가능한 객실:</strong>
                     <select id="availableRooms" class="form-control" size="5">
                         
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">닫기</button>
+                <button type="button" onclick="changeCheckIn()" class="btn btn-primary">객실변경</button>
             </div>
         </div>
     </div>
@@ -311,6 +312,7 @@ function listCall() {
 function drawList(roomList) {
     var roomContainer = $('#roomContainer');
     roomContainer.empty(); // 기존 내용을 지웁니다
+    $('#availableRooms').empty();
     
     var floors = {};
     for (let i = 0; i < roomList.length; i++) {
@@ -375,7 +377,7 @@ function drawList(roomList) {
                     
                     var $availableRoomsSelect = $('#availableRooms');
                                       
-                    var option = $('<option>').val(room.room_no).text(room.room_no);
+                    var option = $('<option value="'+room.room_no+'">').val(room.room_no).text(room.room_no);
                     $availableRoomsSelect.append(option);
                     
                     (function(num) {
@@ -555,9 +557,10 @@ function lastCheck() {
 		dataType:'json',
 		success:function(data){
 			console.log(data.msg);
+			listCall();
 			$('#success-header-modal').modal('hide');
 			$('#centermodal').modal('hide');			
-			listCall();
+			
 		},
 		error:function(e){
 			console.log(e)
@@ -592,14 +595,44 @@ function checkOut() {
 		
 }
 
-function changeCheckIn() {
-    $('#changeCheckIn').modal('show');
-    var room_no = $('#checkOutHeader').text().replace('Room ', '');
-    var res_no = $('#res_no').text().replace('예약번호 : ', '');
-
-    // 현재 체크인된 객실 번호 표시
+function changeCheckInModalOpen() {  
+	var room_no = $('#checkOutHeader').text().replace('Room ', '');
+	
+	$('#changeCheckIn').modal('show');
     $('#currentRoomNo').text(room_no);
+}
 
+function changeCheckIn(){
+		
+	    var room_no = $('#checkOutHeader').text().replace('Room ', '');
+	    var res_no = $('#res_no').text().replace('예약번호 : ', '');
+		var changeRoom_no = $('#availableRooms').val();
+	    
+		console.log(room_no);
+		console.log(res_no);
+		console.log(changeRoom_no);
+		
+		$.ajax({
+	        type: 'POST',
+	        url: '/room/changeCheckIn.ajax',
+	        data: {
+	            room_no: room_no,
+	            res_no: res_no,
+	            changeRoom_no:changeRoom_no
+	        },
+	        dataType: 'JSON',
+	        success: function(data) {
+	            console.log(data);
+	            $('#changeCheckIn').modal('hide');
+	            $('#danger-header-modal').modal('hide');
+	            listCall();
+	            
+	        },
+	        error: function(e) {
+	            console.log(e);
+	        }
+	    });
+		
 }
 
 
