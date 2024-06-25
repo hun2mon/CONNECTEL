@@ -10,15 +10,17 @@
 	</select>
 	
 	<select id="reservationList" resultType="com.connec.tel.dto.RoomDTO">
-		SELECT res_no,cos_name,cos_phone,
-					cos_email,in_date,out_date,res_date,res_price
-		FROM reservation WHERE Date(in_date) = CURRENT_DATE();
+		SELECT r.res_no, r.cos_name, r.cos_phone, r.cos_email, r.in_date, r.out_date, r.res_date, r.res_price
+		FROM reservation r
+		LEFT JOIN stay s ON r.res_no = s.res_no
+		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL;	
 	</select>
 	
 	<select id="reservationSearchList" resultType="com.connec.tel.dto.RoomDTO" parameterType="map">
-		SELECT res_no,cos_name,cos_phone,
-					cos_email,in_date,out_date,res_date,res_price
-		FROM reservation WHERE Date(in_date) = CURRENT_DATE() AND cos_name = #{name};	
+		SELECT r.res_no, r.cos_name, r.cos_phone, r.cos_email, r.in_date, r.out_date, r.res_date, r.res_price
+		FROM reservation r
+		LEFT JOIN stay s ON r.res_no = s.res_no
+		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL	 AND cos_name = #{name};	
 	</select>
 	
 	<insert id="checkIn" parameterType="map">
@@ -161,4 +163,18 @@
 			WHERE DATE_FORMAT(date, '%Y-%m') = #{year_month}
 	</select>
 	
+	<update id="updateStay" parameterType="map">
+		UPDATE stay 
+		SET room_no = #{changeRoom_no},
+				updater = #{emp_no},
+				update_date = CONVERT_TZ(CURRENT_DATE(), 'UTC', 'Asia/Seoul')
+		WHERE res_no = #{res_no}
+		
+	</update>
+	
+	<insert id="test">
+		INSERT INTO reservation(res_no,cos_name,cos_phone,cos_email,in_date,out_date,res_date,res_price,type_code)
+	values(#{i},'킹정훈','010-1234-1234','aaa@naver.com','2024-06-26','2024-06-27','2024-06-02',900000,1002);
+	</insert>
+		
 </mapper>

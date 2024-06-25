@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -292,6 +293,34 @@ public class RoomService {
 		
 		map.put("list", list);
 		return map;
+	}
+
+	public Map<String, Object> changeCheckIn(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		// stay테이블에서 투숙한 방번호 바꾸기.
+		roomDAO.updateStay(param);
+		
+		//해당 호수를 이용가능한 방으로 바꾸기.
+		String room_no = (String) param.get("room_no");
+		roomDAO.updateAvailable(room_no);
+		
+		// 해당 호수 체크인
+		room_no = (String) param.get("changeRoom_no");
+		roomDAO.roomCheckIn(room_no);
+		
+		
+		return map;
+	}
+
+	public void test() {
+		
+		for (int i = 1511111111; i < 1511111211; i++) {
+			
+			roomDAO.test(i);
+		}
+		
+		
 	}
 
 
