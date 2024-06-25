@@ -237,12 +237,13 @@
 									관리 </span></a>
 							<ul aria-expanded="false"
 								class="collapse first-level base-level-line">
+								<li class="sidebar-item"><a href="/guest/proxyReserve.go"
+									class="sidebar-link"><span class="hide-menu"> 예약 </span></a></li>
 								<li class="sidebar-item"><a href="/guest/reserveManage.go"
-									class="sidebar-link"><span class="hide-menu"> 예약관리 </span></a></li>
-
+									class="sidebar-link"><span class="hide-menu"> 예약리스트 </span></a></li>
 								<li class="sidebar-item"><a
 									href="/guest/stayManage.go" class="sidebar-link"><span
-										class="hide-menu"> 투숙관리 </span></a></li>
+										class="hide-menu"> 투숙리스트 </span></a></li>
 							</ul></li>
 
 						<li class="sidebar-item"><a class="sidebar-link has-arrow"
@@ -310,67 +311,19 @@
 
 						<li class="sidebar-item"><a class="sidebar-link has-arrow"
 							href="javascript:void(0)" aria-expanded="false"><i
-								class="fa-solid fa-handshake"></i><span class="hide-menu">공용설비
-							</span></a>
+								class="fa-solid fa-gears"></i><span class="hide-menu">객실 관리</span></a>
 							<ul aria-expanded="false"
 								class="collapse first-level base-level-line">
-								<li class="sidebar-item"><a href="/facility/facilityReserveList.go"
-									class="sidebar-link"><span class="hide-menu"> 공용설비
-											예약 </span></a></li>
-
-								<li class="sidebar-item"><a
-									href="/facility/myFacilityReserve.go" class="sidebar-link"><span
-										class="hide-menu"> 내 예약 내역 </span></a></li>
-
-								<li class="sidebar-item"><a
-									href="/facility/facilityReserveList.go" class="sidebar-link"><span
-										class="hide-menu"> 전체 예약 내역 </span></a></li>
-							</ul></li>
-
-						<li class="sidebar-item"><a class="sidebar-link has-arrow"
-							href="javascript:void(0)" aria-expanded="false"><i
-								class="fa-solid fa-gears"></i><span class="hide-menu">시설/비품관리</span></a>
-							<ul aria-expanded="false"
-								class="collapse first-level base-level-line">
-								<li class="sidebar-item"><a class="has-arrow sidebar-link"
-									href="javascript:void(0)" aria-expanded="false"><span
-										class="hide-menu">비품초기설정</span></a>
-									<ul aria-expanded="false"
-										class="collapse second-level base-level-line">
-										<li class="sidebar-item"><a href="/equip/itemCodeManage.go"
-											class="sidebar-link"><span class="hide-menu">품목코드</span></a></li>
-										<li class="sidebar-item"><a href="/equip/unitCodeManage.go"
-											class="sidebar-link"><span class="hide-menu">단위코드</span></a></li>
-										<li class="sidebar-item"><a href="/equip/usageCodeManage.go"
-											class="sidebar-link"><span class="hide-menu">용도코드</span></a></li>
-									</ul></li>
-								<li class="sidebar-item"><a class="has-arrow sidebar-link"
-									href="javascript:void(0)" aria-expanded="false"><span
-										class="hide-menu">비품관리</span></a>
-									<ul aria-expanded="false"
-										class="collapse second-level base-level-line">
-										<li class="sidebar-item"><a href="/equip/equipmentList.go"
-											class="sidebar-link"><span class="hide-menu">비품리스트</span></a></li>
-										<li class="sidebar-item"><a href="/equip/equipmentRegist.go"
-											class="sidebar-link"><span class="hide-menu">비품등록</span></a></li>
-									</ul></li>
-								<li class="sidebar-item"><a href="/equip/companyManage.go"
-									class="sidebar-link"><span class="hide-menu">업체 관리</span></a></li>
-								<li class="sidebar-item"><a class="has-arrow sidebar-link"
-									href="javascript:void(0)" aria-expanded="false"><span
-										class="hide-menu">객실관리</span></a>
-									<ul aria-expanded="false"
-										class="collapse second-level base-level-line">
-										<li class="sidebar-item"><a href="/room/roomList.go"
-											class="sidebar-link"><span class="hide-menu">객실
-													리스트</span></a></li>
-										<li class="sidebar-item"><a href="/room/roomPriceSet.go"
-											class="sidebar-link"><span class="hide-menu">객실 가격
-													설정</span></a></li>
-										<li class="sidebar-item"><a href="/room/roomManageList.go"
-											class="sidebar-link"><span class="hide-menu">객실 관리
-													내역</span></a></li>
-									</ul></li>
+								<li class="sidebar-item"><a href="/room/roomInfoUpdate.go"
+									class="sidebar-link"><span class="hide-menu">객실 정보</span></a></li>
+								<li class="sidebar-item"><a href="/room/roomList.go"
+									class="sidebar-link"><span class="hide-menu">객실 리스트</span></a></li>
+								<li class="sidebar-item"><a href="/room/roomPriceSet.go"
+									class="sidebar-link"><span class="hide-menu">객실 가격 설정</span></a></li>
+								<li class="sidebar-item"><a href="/room/roomPriceCalendar.go"
+									class="sidebar-link"><span class="hide-menu">객실 가격 캘린더</span></a></li>
+								<li class="sidebar-item"><a href="/room/roomManageList.go"
+									class="sidebar-link"><span class="hide-menu">객실 관리 내역</span></a></li>
 							</ul></li>
 
 						<li class="sidebar-item"><a class="sidebar-link has-arrow"

@@ -25,23 +25,8 @@ public class ApprovalController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
-	@PostMapping(value = "/test")
-	public String test(MultipartFile[] app_file, @RequestParam List<String> emp_no, @RequestParam List<String> referrer, @RequestParam Map<String, Object> param, @RequestParam List<String> viewer){
-		for (String string : emp_no) {
-			logger.info("emp_no : {}", string);			
-		}
-		
-		for (String string : referrer) {
-			logger.info("referrer : {}", string);			
-		}
-		
-		for (String string : viewer) {
-			logger.info("viewer : {}", string);			
-		}
-		
-		for (MultipartFile string : app_file) {
-			logger.info("file : {}", string);			
-		}
+	@PostMapping(value = "/approval/writeDraft")
+	public String writeDraft(MultipartFile[] app_file, @RequestParam List<String> emp_no, @RequestParam List<String> referrer, @RequestParam Map<String, Object> param, @RequestParam List<String> viewer){
 		
 
 		logger.info("param : {}", param);
@@ -76,5 +61,13 @@ public class ApprovalController {
 	public Map<String, Object> saveListDel(int app_line_no) {
 		logger.info("app_line_no : {}", app_line_no);
 		return appService.savaLineDel(app_line_no);
+	}
+	
+	@GetMapping(value = "/approval/myAppListCall.ajax")
+	@ResponseBody
+	public Map<String, Object> myAppListCall(String search,String page, String cnt, String cate,HttpSession session){
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo"); 
+		String emp_no = empDTO.getEmp_no();
+		return appService.myAppListCall(search, page, cnt, emp_no, cate);
 	}
 }

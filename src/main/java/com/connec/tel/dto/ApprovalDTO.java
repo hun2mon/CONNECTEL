@@ -22,6 +22,9 @@ public class ApprovalDTO {
 	private String draft_content;
 	private String draft_status;
 	private String reason;
+	private String final_approver;
+	
+	
 	
 	public int getApp_line_no() {
 		return app_line_no;
@@ -94,6 +97,12 @@ public class ApprovalDTO {
 	}
 	public void setDraft_no(String draft_no) {
 		this.draft_no = draft_no;
+	}
+	public String getFinal_approver() {
+		return final_approver;
+	}
+	public void setFinal_approver(String final_approver) {
+		this.final_approver = final_approver;
 	}
 
 }

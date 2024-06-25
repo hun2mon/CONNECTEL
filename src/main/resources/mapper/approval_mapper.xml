@@ -31,13 +31,57 @@
 		DELETE FROM approval_line_save WHERE app_line_no=#{param1};
 	</delete>
 	
-	<insert id="writeDraft" parameterType="app">
-		INSERT INTO draft(draft_no,register, draft_subject, draft_end, draft_content) values (#{draft_no}, #{register}, #{draft_subject}, #{draft_end}, #{draft_content})
+	<insert id="writeDraft" parameterType="map">
+		INSERT INTO draft(draft_no,register, draft_subject, draft_end, draft_content, draft_status) values (#{draft_no}, #{register}, #{draft_subject}, #{deadline}, #{draft_content}, #{draft_status})		
 	</insert>
 	
 	<insert id="approverWrite">
 		INSERT INTO approver (draft_no, emp_no, app_procedure)values(#{param1},#{param2}, #{param3})
 	</insert>
+	
+	<insert id="referrerWrite">
+		INSERT INTO view_referrer (draft_no, view_reffer_division, emp_no) values (#{param1}, 'R', #{param2})
+	</insert>
+	
+	<insert id="viewerWrite">
+		<if test="param2.equals('11') or param2.equals('22') or param2.equals('33')">
+			INSERT INTO view_referrer (draft_no, view_reffer_division, dept_code) values (#{param1}, 'V', #{param2})		
+		</if>
+		<if test="!param2.equals('11') and !param2.equals('22') and !param2.equals('33')">
+			INSERT INTO view_referrer (draft_no, view_reffer_division, emp_no) values (#{param1}, 'V', #{param2})		
+		</if>
+	</insert>
+	
+	<insert id="fileSave">
+		INSERT INTO file (ori_file_name, file_name, ref_idx, file_division) values (#{param1}, #{param2}, #{param3}, 'D')
+	</insert>
+	
+	<insert id="leaveMng" parameterType="map">
+		INSERT INTO leave_management(draft_no, emp_no, leave_cate, leave_use, leave_start, leave_end, draft_status) values (#{draft_no},#{register},#{leave_type},#{totalDay}, #{start_date},#{end_date},#{draft_status})
+	</insert>
+	
+	<select id="myAppListCall" resultType="app">
+		SELECT 
+			d.draft_no
+			,d.draft_start 
+			,d.draft_end 
+			,d.draft_subject
+			,e.name AS register 
+			,(SELECT e2.name FROM approver a JOIN emp e2 WHERE d.draft_no = a.draft_no AND a.emp_no = e2.emp_no ORDER BY a.app_procedure DESC LIMIT 1) AS final_approver
+			,d.draft_status 
+		FROM draft d JOIN emp e ON d.register = e.emp_no WHERE emp_no = #{param4} and d.draft_subject LIKE #{param1} 
+		<if test="param5 != null">
+			AND d.draft_status = #{param5}
+		</if>
+		ORDER BY d.draft_start DESC LIMIT #{param2}, #{param3}
+	</select>
+	
+	<select id="myAppTotalPage" resultType="int">
+		SELECT CEIL(COUNT(draft_no)/#{param2}) AS pages FROM draft WHERE draft_subject LIKE #{param1} and register = #{param3}
+		<if test="param4 != null">
+			AND draft_status = #{param4}
+		</if>
+</select>
 	
 	
 </mapper>

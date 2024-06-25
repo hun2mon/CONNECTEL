@@ -142,9 +142,9 @@
 							class="btn waves-effect waves-light btn-sm btn-success"
 							onclick="selectDel()">삭제</button>
 						<button type="button"
-							class="btn waves-effect waves-light btn-sm btn-success upBtn">위로</button>
+							class="btn waves-effect waves-light btn-sm btn-success upBtn" onclick="upNum()">위로</button>
 						<button type="button"
-							class="btn waves-effect waves-light btn-sm btn-success">아래로</button>
+							class="btn waves-effect waves-light btn-sm btn-success" onclick="downNum()">아래로</button>
 					</div>
 					<div class="table-responsive">
 						<table class="table">
@@ -255,6 +255,63 @@
 					<div class="text-center">
 						<i class="dripicons-information h1 text-info"></i>
 						<p class="mt-3">결재선 저장이 완료되었습니다..</p>
+						<button type="button" class="btn btn-info my-2"
+							data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	
+	<!--결재선 미지정 모달 -->
+	<div id="info-alert-modal" class="modal fade appNoti" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-information h1 text-info"></i>
+						<p class="mt-3">결재자를 선택해 주세요.</p>
+						<button type="button" class="btn btn-info my-2"
+							data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	
+	<!--이동 불가 모달 -->
+	<div id="info-alert-modal" class="modal fade moveNoti" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-information h1 text-info"></i>
+						<p class="mt-3">더 이상 이동할 수 없습니다.</p>
+						<button type="button" class="btn btn-info my-2"
+							data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	
+	<!-- 다중선택 모달 -->
+	<div id="info-alert-modal" class="modal fade bothNoti" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-information h1 text-info"></i>
+						<p class="mt-3">하나만 선택해 주세요.</p>
 						<button type="button" class="btn btn-info my-2"
 							data-dismiss="modal">닫기</button>
 					</div>
@@ -432,7 +489,7 @@ function drawList(appVal) {
 	var index = 1;
 	content = '';
 	for(item of appVal){
-		content += '<tr>';
+		content += '<tr class="validation">';
 		content += '<td><input type="checkbox" class="check" value="' + item.emp_no + '"></td>';
 		content += '<th scope="row" class="thIndex">'+index+'</th>';
 		content += '<td>'+item.dept_name+'</td>';
@@ -510,10 +567,65 @@ function appLineSave() {
 }
 
 function sendData() {
-	 window.opener.drawAppList(appVal);
-	 window.close();
+	if ($('.validation').next().length <= 0) {
+		$('.appNoti').modal('show');
+	} else {
+		 window.opener.drawAppList(appVal);
+		 window.close();		
+	}
 }
 
+function upNum() {
+	 var checkedRows = $('.check:checked').closest('tr');
+     if (checkedRows.length === 1) {
+         var checkedRow = checkedRows.first();
+         if (checkedRow.index() > 0 && checkedRow.index() > 1 && checkedRow.prev().length) {
+             var currentIndex = checkedRow.index();
+             var prevIndex = currentIndex - 1;
+             
+             checkedRow.insertBefore(checkedRow.prev());
+             
+             moveInArray(appVal, currentIndex, prevIndex);
+             
+             updateIndex();
+         } else {
+        	 $('.moveNoti').modal('show');
+         }
+     } else {
+    	 $('.bothNoti').modal('show');
+     }
+}
+
+function downNum() {
+	 var checkedRows = $('.check:checked').closest('tr');
+     if (checkedRows.length === 1) {
+         var checkedRow = checkedRows.first();
+         if (checkedRow.index() > 0 && checkedRow.next().length) {
+             var currentIndex = checkedRow.index();
+             var nextIndex = currentIndex + 1;
+             
+             checkedRow.insertAfter(checkedRow.next());
+
+             moveInArray(appVal, currentIndex, nextIndex);
+             
+             updateIndex();
+         }
+     } else {
+    	 $('.bothNoti').modal('show');
+     }
+}
+
+function updateIndex() {
+    $('.appBody tr').each(function(index) {
+        $(this).find('.thIndex').text(index + 1);
+    });
+}
+
+function moveInArray(arr, fromIndex, toIndex) {
+    var element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
+}
 
 
 

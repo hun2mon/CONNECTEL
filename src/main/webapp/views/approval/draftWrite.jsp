@@ -99,7 +99,7 @@ th{
 </head>
 <body>
 
-<form action="/test" method="post" enctype="multipart/form-data">
+<form action="/approval/writeDraft" method="post" enctype="multipart/form-data">
 	<div class="parent">
 		<div class="sideBar">
 			<jsp:include page="../sideBar.jsp"></jsp:include>
@@ -119,7 +119,7 @@ th{
 												<th scope="col" class="emp_name">
 													<input type="hidden" value="${emp_no}" name="emp_no"><br>${name }
 												</th>
-												<th scope="col" rowspan="3" class="table_title">결재자</th>
+												<th scope="col" rowspan="3" class="table_title validation">결재자</th>
 											</tr>
 											<tr class="rankName">
 												<td>${rank_name}</td>
@@ -139,7 +139,7 @@ th{
 									<table class="table">
 										<tr>
 											<td class="draftTitle">제목</td>
-											<td class="draftSecond"><input type="text" class="form-control" id="prenametext" value="${name }의 휴가신청서" name="subject"></td>
+											<td class="draftSecond"><input type="text" class="form-control" id="prenametext" value="${name }의 휴가신청서" name="draft_subject"></td>
 											<td>마감기한</td>
 											<td>
 												<input type="date" class="form-control" value="" name="deadline">
@@ -191,7 +191,7 @@ th{
 					</div>
 				</div>
 				<div id="div_editor"></div>
-				<input type="hidden" name="content">
+				<input type="hidden" name="draft_content">
 				<br>
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
@@ -204,8 +204,9 @@ th{
 					</div>
 				</div>
 				<div class="bottomBtn">
-					<input type="button" class="appBtn botBtn" value="임시저장">
-					<input type="button" class="appBtn botBtn" value="작성완료" onclick="save()">
+					<input type="hidden" name="draft_status">
+					<input type="button" class="appBtn botBtn" value="임시저장" onclick="save('1')">
+					<input type="button" class="appBtn botBtn" value="작성완료" onclick="save('2')">
 				</div>
 			</div>
 		</div>
@@ -301,6 +302,26 @@ th{
 		</div>
 		<!-- /.modal-dialog -->
 	</div>
+	
+	<!-- 결재자 미선택 모달 -->
+	<div id="info-alert-modal" class="modal fade appNoti" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-information h1 text-info"></i>
+						<p class="mt-3 noti">결재자를 선택해 주세요.</p>
+						<button type="button" class="btn btn-info my-2"
+							data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	
 
 
 </body>
@@ -309,23 +330,28 @@ th{
 	$(document).ready(function(){
 		treeCall();
 	});
+
+    $('input[type="date"]').attr('min', getTodayDate());
 	
+	/* 선택일수 표시 */
 	function calculateDays() {
-	    var startDate = $('.startDate').val();
-	    var endDate =$('.endDate').val();
-
-	    var start = new Date(startDate);
-	    var end = new Date(endDate);
-
-	    // 날짜 차이 계산 (밀리초 단위)
-	    var timeDiff = end - start;
-
-	    // 밀리초를 일 단위로 변환
-	    var daysDiff = timeDiff / (1000 * 3600 * 24) + 1;
-
-	    // 결과 출력
-	    if (endDate != '') {
-		   $('.selectDate').html(daysDiff + '일');			
+		 if ( $('input[name="end_date"]').val() != '' && $('input[name="end_date"]').val() < $('input[name="start_date"]').val()) {
+			$('.noti').html('기간을 다시 설정해 주세요');
+			$('.appNoti').modal('show');
+		} else {
+		    var startDate = $('.startDate').val();
+		    var endDate =$('.endDate').val();
+	
+		    var start = new Date(startDate);
+		    var end = new Date(endDate);
+	
+		    var timeDiff = end - start;
+	
+		    var daysDiff = timeDiff / (1000 * 3600 * 24) + 1;
+	
+		    if (endDate != '') {
+			   $('.selectDate').html(daysDiff + '일<input type="hidden" value="'+daysDiff+'" name="totalDay">');			
+			}
 		}
 	}
 	
@@ -343,19 +369,37 @@ th{
 	config.editorResizeMode = "none";
 	var editor = new RichTextEditor("#div_editor", config);
 	
-	function save() {
+	function save(saveDivision) {
 		var content = editor.getHTMLCode();
 		$('input[name="content"]').val(content);
 		
 		console.log("에디터에 작성된 문자열 : " + editor.getHTMLCode().length)
 		
-		if (content.length < (5 * 1024 * 1024)) {
-			$('form').submit();
+		if (saveDivision == 1) {
+			$('input[name="draft_status"]').val('T');
 		} else {
-			alert('5MB 초과 입니다.');
+			$('input[name="draft_status"]').val('W');
 		}
 		
-		$('.form').submit();
+		
+		if ($('.validation').next().length <= 0) {
+			 $('.appNoti').modal('show');
+		}else if ($('input[name="deadline"]').val() == '') {
+			$('.noti').html('마감기한을 설정해 주세요');
+			$('.appNoti').modal('show');
+			$('input[name="deadline"]').focus();
+		}else if ($('input[name="start_date"]').val() == '') {
+			$('.noti').html('시작 날짜를 설정해 주세요');
+			$('.appNoti').modal('show');
+		}else if ($('input[name="end_date"]').val() == '') {
+			$('.noti').html('종료 날짜를 설정해 주세요');
+			$('.appNoti').modal('show');
+		}else if (content.length > (5 * 1024 * 1024)) {
+			$('.noti').html('파일 용량이 초과되었습니다.');
+			$('.appNoti').modal('show');
+		} else {
+			$('form').submit();
+		}
 		
 	}
 	
@@ -367,7 +411,7 @@ th{
     }
     
     function drawAppList(appVal) {
-    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><input type="hidden" value="${emp_no}" name="register"><br>${name }</th><th scope="col" rowspan="3" class="table_title">결재자</th>');
+    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><input type="hidden" value="${emp_no}" name="register"><br>${name }</th><th scope="col" rowspan="3" class="table_title validation">결재자</th>');
 		$('.rankName').html('<td>${rank_name}</td>');
 		$('.top_div').css('width','800px');
     	
@@ -507,7 +551,7 @@ th{
     
     function drawReferrer() {
 		$('.referrer').html('');	
-    	var referrer_emp_no = '';
+    	var referrer_emp_no = '<input type="hidden" value="0" name="referrer">';
     	var addReferrer = '';
 		for(item of referrer){
 			if (item == null) {
@@ -525,7 +569,7 @@ th{
 		
 		$('.viewer').html('');	
 		
-    	var viewer_emp_no = '';
+    	var viewer_emp_no = '<input type="hidden" value="0" name="viewer">';
     	var addViewer = '';
 		for(item of viewer){
 			if (item == null) {
@@ -579,17 +623,21 @@ th{
     	sameCheckView.push(code);
     	console.log(sameCheckView);
     	numView += 1;
-
+ 
     	viewer.push({'emp_no' : code, 'name' : team_name});
 		
 		$('.modal_table_viewer').append(content);			
 	}
     
+    function getTodayDate() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = ('0' + (today.getMonth() + 1)).slice(-2);
+        var day = ('0' + today.getDate()).slice(-2);
+        return year + '-' + month + '-' + day;
+    }
     
-    function sendData() {
-		var referrerData = $('input[name="referrer"]').val();
-		console.log(referrerData);
-	}
+    
     
 </script>
 </html>

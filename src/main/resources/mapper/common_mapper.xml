@@ -20,7 +20,7 @@
 		SELECT 
 			(SELECT code_name FROM common_code cc WHERE e.dept_code = cc.code_no) AS dept_name,
 			CONCAT(e.name, ' ', (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no)) AS name 
-		FROM emp e WHERE e.name LIKE #{param1} ORDER BY e.rank_code, e.name LIMIT #{param2}, #{param3};
+		FROM emp e WHERE e.name LIKE #{param1} ORDER BY e.rank_code, e.name LIMIT #{param2}, #{param3}
 </select>
 
 <select id="totalPage" resultType="int">
