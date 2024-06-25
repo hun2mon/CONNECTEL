@@ -195,6 +195,7 @@ function search() {
 }
 
 $('#searchDate').change(function() {
+	$('#pagination').twbsPagination('destroy');
     var selectedDate = $(this).val();
     console.log('Selected date:', selectedDate);
 
@@ -231,8 +232,8 @@ function listCall(showPage) {
             	totalPages:totalPages, // 총 페이지 수
             	visiblePages:5, // 보여줄 페이지 수 1,2,3,4,5
             	onPageClick:function(evt,pg){ // 페이지 클릭시 실행 함수
-            		console.log(pg); // 클릭한 페이지 번호
-            		num = pg;
+            		console.log(pg); // 클릭한 페이지 번호            	
+            		num=pg;
             		listCall(pg);
             	}
             })

@@ -171,5 +171,10 @@
 		WHERE res_no = #{res_no}
 		
 	</update>
+	
+	<insert id="test">
+		INSERT INTO reservation(res_no,cos_name,cos_phone,cos_email,in_date,out_date,res_date,res_price,type_code)
+	values(#{i},'킹정훈','010-1234-1234','aaa@naver.com','2024-06-26','2024-06-27','2024-06-02',900000,1002);
+	</insert>
 		
 </mapper>

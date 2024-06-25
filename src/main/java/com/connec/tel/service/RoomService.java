@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -310,6 +311,16 @@ public class RoomService {
 		
 		
 		return map;
+	}
+
+	public void test() {
+		
+		for (int i = 1511111111; i < 1511111211; i++) {
+			
+			roomDAO.test(i);
+		}
+		
+		
 	}
 
 

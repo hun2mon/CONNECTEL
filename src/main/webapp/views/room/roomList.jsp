@@ -91,6 +91,7 @@
                         <div class="table-responsive">
                             <div class="customize-input">
                                 <input class="form-control custom-shadow custom-radius bg-white" type="search" placeholder="Search" aria-label="Search" onkeyup="search()" id="search">
+                            	<!-- <button id="test">버튼 텍스트</button>  -->
                             </div>
                             <hr>
                             <table class="table">
@@ -111,8 +112,8 @@
                                                     <div id="pagination"></div>
                                                 </nav>
                                             </div>
-                                        </td>
-                                    </tr>                                
+                                        </td>                                       
+                                    </tr>                                                                   
                             </table>
                         </div>
                     </div>
@@ -127,6 +128,10 @@
 <script>
 	var showPage = 1;
 	var num;
+	
+	document.getElementById('test').addEventListener('click', function() {
+	    location.href = '/room/test';
+	});
 	
 	$(document).ready(function(){
 	    listCall(showPage);   

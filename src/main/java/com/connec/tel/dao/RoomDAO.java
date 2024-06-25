@@ -62,5 +62,7 @@ public interface RoomDAO {
 
 	void updateStay(Map<String, Object> param);
 
+	void test(int i);
+
 
 }

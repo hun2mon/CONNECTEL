@@ -168,6 +168,7 @@ function search() {
 }
 
 $('#searchDate').change(function() {
+	$('#pagination').twbsPagination('destroy');
     var selectedDate = $(this).val();
     console.log('Selected date:', selectedDate);
 

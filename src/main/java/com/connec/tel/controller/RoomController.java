@@ -185,5 +185,10 @@ public class RoomController {
 		return roomService.changeCheckIn(param);
 	}
 	
+	@GetMapping(value = "room/test")
+	public void test() {
+		roomService.test();
+	}
+	
 
 }
