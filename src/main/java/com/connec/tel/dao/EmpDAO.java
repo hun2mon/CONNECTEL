@@ -24,7 +24,7 @@ public interface EmpDAO {
 
 	EmpDTO UserPhotoLoad(String emp_no);
 
-	void resetPw(String rawPassword);
+	void resetPw(String rawPassword, String emp_no);
 
 	void empEdit(String emp_no);
 
@@ -35,5 +35,7 @@ public interface EmpDAO {
 	Object leaveAllCount(int pagePerCnt, String emp_no);
 
 	EmpDTO leaveDetail(String emp_no);
+
+	List<EmpDTO> excelList();
 
 }

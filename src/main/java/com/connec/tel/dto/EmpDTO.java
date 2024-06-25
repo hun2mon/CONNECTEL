@@ -44,7 +44,7 @@ public class EmpDTO {
 	private String leave_division;
 	private int draft_no;
 	private String leave_cate;
-	private int leave_use;
+	private float leave_use;
 	private Date leave_start;
 	private Date leave_end;
 	private String total_leave;
@@ -96,10 +96,10 @@ public class EmpDTO {
 	public void setLeave_cate(String leave_cate) {
 		this.leave_cate = leave_cate;
 	}
-	public int getLeave_use() {
+	public float getLeave_use() {
 		return leave_use;
 	}
-	public void setLeave_use(int leave_use) {
+	public void setLeave_use(float leave_use) {
 		this.leave_use = leave_use;
 	}
 	public Date getLeave_start() {

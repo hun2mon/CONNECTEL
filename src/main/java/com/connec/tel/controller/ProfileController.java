@@ -13,4 +13,5 @@ public class ProfileController {
 	@Autowired ProfileService profileService;
 	Logger logger = LoggerFactory.getLogger(getClass());
 
+	
 }
