@@ -1,5 +1,7 @@
 package com.connec.tel.dto;
 
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
 
 @Alias("annDTO")
@@ -11,6 +13,9 @@ public class AnnDTO {
 	private String ann_bHit;
 	private String ann_division;
 	private String ann_fixed;
+	private String ann_date;
+	private String updater;
+	private String update_date;
 	public String getAnn_no() {
 		return ann_no;
 	}
@@ -53,7 +58,26 @@ public class AnnDTO {
 	public void setAnn_fixed(String ann_fixed) {
 		this.ann_fixed = ann_fixed;
 	}
+	public String getAnn_date() {
+		return ann_date;
+	}
+	public void setAnn_date(String ann_date) {
+		this.ann_date = ann_date;
+	}
+	public String getUpdater() {
+		return updater;
+	}
+	public void setUpdater(String updater) {
+		this.updater = updater;
+	}
+	public String getUpdate_date() {
+		return update_date;
+	}
+	public void setUpdate_date(String update_date) {
+		this.update_date = update_date;
+	}
 	
 	
+
 
 }
