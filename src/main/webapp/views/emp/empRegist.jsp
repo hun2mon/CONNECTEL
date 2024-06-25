@@ -181,7 +181,7 @@
             </div> 
             <br><br>
                 <div class="btnParent">                             
-                    <button class="submit" type="submit" onclick="return validateForm()">사원등록</button>
+                    <button class="btn waves-effect waves-light btn-primary" type="submit" onclick="return validateForm()">사원등록</button>
                 </div>                                            
         </div>
     </div>

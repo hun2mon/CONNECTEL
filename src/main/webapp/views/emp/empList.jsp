@@ -8,6 +8,37 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style>
+	.searchdd{
+		display : flex;
+		text-align:right;
+		margin-left:800px;
+		width : 800px;
+	}
+	#excelForm{
+		text-align : right;
+		margin-right :100px;
+	}
+	.btnss button {
+	    /* 기본 버튼 스타일 */
+	    background-color: #ccc;
+	    padding: 10px;
+	    margin-right: 5px;
+	    border: none;
+	    cursor: pointer;
+	}
+	
+	.btnss button.active {
+	    /* 선택된 버튼 스타일 */
+	    background-color: #444; /* 진한 회색 배경색 */
+	    color: #fff; /* 글자색은 흰색 */
+	    font-weight: bold;
+	}
+	.btnss{
+		display : flex;
+	}
+	#searchdd{
+		display : flex;
+	}
 	.parent {
 		display: flex;
 	}
@@ -55,24 +86,27 @@
 		</div>
 		<div class="content">
 			<section>
-				<div>
-					<button value="1" onclick="setCategory(1)">전체</button>
+			<div style= "text-align:right display : flex; margin : 0">
+				<div id = "searchdd"">
+					<select id="searchType" class="searchType">
+						<option value="1" class="searchType">이름</option>
+						<option value="2" class="searchType">재직상태</option>
+						<input type="text" id="searchText">
+						<img src="/scss/icons/search.png" id="search" height="20px" width="20px" onclick="search()" class="searchIcon">				
+					</select>
+				</div>
+				</div><br>
+				
+				<div class = "btnss">
+					<button value="1" onclick="setCategory(1)" class = "active">전체</button>
 					<button value="2" onclick="setCategory(2)">인사팀</button>
 					<button value="3" onclick="setCategory(3)">시설팀</button>
 					<button value="4" onclick="setCategory(4)">고객팀</button>
 				</div>
-				<div>
-					<select id="searchType" class="searchType">
-						<option value="1" class="searchType">이름</option>
-						<option value="2" class="searchType">재직상태</option>
-					</select>
-					<div class="input-container">
-						<input type="text" id="searchText">
-						<img src="/scss/icons/search.png" id="search" height="20px" width="20px" onclick="search()" class="searchIcon">
-						
-					</div>
-				</div>
+				<br>
+
 			</section>
+			<br>
 			<table id="showlist" class="table">
 				<thead>
 					<tr class="listhead">
@@ -89,7 +123,7 @@
 				<tr>
 					<td colspan="5" id="paging">
 						<div class="container">
-							<nav aria-label="page navigation" style="text-align: center">
+							<nav aria-label="page navigation" style="text-align: center; width: 1000px; margin-left :355px;"">
 								<ul class="pagination" id="pagination"></ul>
 							</nav>
 							<hr>
@@ -97,6 +131,9 @@
 					</td>
 				</tr>
 			</table>
+				<form id="excelForm" action="/excel/download" method="get" style = "text-align : right;">
+				    <button type="submit" class="btn waves-effect waves-light btn-primary">엑셀 다운</button>
+				</form>
 		</div>
 	</div>
 <script src="/scss/icons/jquery.twbsPagination.js" type="text/javascript"></script>	
@@ -105,16 +142,21 @@
 	var showPage =1;
 	var searchRemain = false;
 	
-	$(document).ready(function(){ // html 문서가 모두 읽히면 되면(준비되면) 다음 내용을 실행 해라
-		listCall(showPage);
+	$(document).ready(function() {
+
+	    // 기존 기능 초기화
+	    listCall(showPage);
 	});
 
-	function setCategory(num){
-		console.log("Category set to: " + num);
-		category = num;
-		$('#pagination').twbsPagination('destroy');
-		showPage =1;
-		listCall(showPage);
+	function setCategory(num) {
+	    console.log("Category set to: " + num);
+	    category = num;
+	    // 버튼 스타일 변경
+	    $('.btnss button').removeClass('active'); // 모든 버튼에서 active 클래스 제거
+	    $('.btnss button[value="' + num + '"]').addClass('active'); // 선택한 버튼에 active 클래스 추가
+	    $('#pagination').twbsPagination('destroy');
+	    showPage = 1;
+	    listCall(showPage);
 	}
 	
 	function search(){

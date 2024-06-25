@@ -1,15 +1,28 @@
 package com.connec.tel.controller;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -72,12 +85,13 @@ public class EmpController {
 		return page;
 	}
 	
-	@RequestMapping(value = "/resetPw")
-	public String resetPw() {
+	@RequestMapping(value = "/resetPw.do")
+	public String resetPw(String emp_no) {
+		String page = "redirect:/empDetail.go?emp_no="+emp_no;
+		logger.info("비밀번호 초기화 요청");
 		
-		
-		empService.resetPw();
-		return "aa";
+		empService.resetPw(emp_no);
+		return page;
 	}
 	
 	

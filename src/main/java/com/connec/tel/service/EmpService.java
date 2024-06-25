@@ -144,12 +144,11 @@ public class EmpService {
 		return empDAO.empDetail(emp_no);
 	}
 
-	public void resetPw() {
+	public void resetPw(String emp_no) {
 		String rawPassword = "1111";
         String encryptedPassword = encryptPassword(rawPassword);
-        
-        empDAO.resetPw(rawPassword);
-
+        logger.info("암호화 된 비밀번호 ㅇㅇ" + encryptedPassword);
+        empDAO.resetPw(encryptedPassword,emp_no);
 		
 	}
 
@@ -190,6 +189,10 @@ public class EmpService {
 		logger.info("직원 관리에서 받아온 allCount"+empDAO.leaveAllCount(pagePerCnt,emp_no));
 		
 		return result;
+	}
+
+	public List<EmpDTO> excelList() {
+		return empDAO.excelList();
 	}
 	
 }

@@ -104,13 +104,12 @@
 				</when>
 				<when test="param4 == 2">
 					AND e.dept_code = "11"
-					<if test='param3 != null'>
-				
+					<if test='param3 != null'>				
 						 <if test="param3 == 2">
 						 AND es.status_division LIKE '%${param2}%' 
 						 </if>
 						<if test="param3 == 1">
-							e.name LIKE '%${param2}%' 	
+						AND e.name LIKE '%${param2}%' 	
 						</if> 
 					</if>	
 				</when>
@@ -157,7 +156,7 @@
 	</select>
 	
 	<update id="resetPw">
-		UPDATE emp SET pw = #{param1} 
+		UPDATE emp SET password = #{param1} WHERE emp_no = #{param2}
 	</update>
 	
 	<update id="empEditDo" parameterType="map">
@@ -179,10 +178,11 @@
 	</update>
 	
 	<select id = "leaveList" resultType = "emp">
-		SELECT * FROM leave_history lh JOIN leave_management lm
-			ON lh.emp_no = lm.emp_no
-				WHERE lh.emp_no = #{param3}
-	    LIMIT #{param1}, #{param2}	
+		SELECT lm.leave_start,lm.leave_end, lm.leave_use ,a.app_date as regist_date, e.name as register
+			FROM leave_management lm JOIN approver a ON lm.draft_no = a.draft_no 
+				JOIN emp e ON e.emp_no = a.emp_no
+					WHERE a.emp_no = #{param3}
+	    				LIMIT #{param1}, #{param2}	
 	</select>
 	
 	<select id = "leaveAllCount" resultType = "int">
@@ -202,6 +202,10 @@
 	    leave_management lm ON lh.emp_no = lm.emp_no
 	GROUP BY 
 	    lh.emp_no, lh.annual order by '총휴가일' limit 1
+	</select>
+	
+	<select id = "excelList" resultType = "emp">
+	    SELECT e.emp_no,e.name ,e.dept_code ,e.rank_code, es.status_division FROM emp e JOIN emp_status es ON es.emp_no = e.emp_no
 	</select>
 
 

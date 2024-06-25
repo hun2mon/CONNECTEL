@@ -9,7 +9,7 @@
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     
     <style>
-        .submit {
+        .btn waves-effect waves-light btn-primary {
             margin-right: 30px;
             width: 150px;
             height: 40px;
@@ -181,7 +181,7 @@
             </div> 
             <br><br>
                 <div class="btnParent">                             
-                    <button class="submit" type="submit" onclick="return validateForm()">수정하기</button>
+                    <button class="btn waves-effect waves-light btn-primary" type="submit" onclick="return validateForm()">수정하기</button>
                 </div>                                            
         </div>
     </div>
