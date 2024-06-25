@@ -167,8 +167,10 @@ flex-basis: 80px;
         <div class="list-title"style="margin-left:20px;">
             <div class="list-no"><strong>번호</strong></div>
             <div class="list-subject"><strong>제목</strong></div>
-            <div class="list-check"><strong>선택</strong></div>
+            <div class="list-name"><strong>작성자</strong></div>
+            <div class="list-date"><strong>작성일</strong></div>
             <div class="list-hit"><strong>조회수</strong></div>
+            <div class="list-check"><strong>선택</strong></div>
         </div>
     </div>
     <hr>
@@ -187,6 +189,10 @@ flex-basis: 80px;
 <script>
 var showPage = 1;
 var ann_fixed = 'N';
+var ann_division = 'E';
+var register = ''; // register 변수 정의
+var ann_date = ''; // regist_date 변수 정의
+var cnt = 10;
 
 $(document).ready(function(){
     listCall(1);
@@ -211,6 +217,7 @@ $(document).ready(function(){
             dataType: 'json',
             success: function(data) {
                 drawList(data.list);
+                $('#pagination').twbsPagination('destroy');
             },
             error: function(error) {
                 console.log('검색 실패:', error);
@@ -218,16 +225,6 @@ $(document).ready(function(){
         });
     }
     
-    function initializePagination(totalPages, category) {
-        $('#pagination').twbsPagination({
-            totalPages: totalPages, // 전체 페이지 수
-            visiblePages: 5, // 보여줄 페이지 수
-            onPageClick: function(event, page) { 
-                console.log('페이지 클릭 이벤트 발생:', page);
-                listCall(page, category); // 페이지 클릭 시 해당 페이지의 데이터를 호출하는 함수 호출
-            }
-        });
-    }
     
 
     function listCall(page) {
@@ -238,8 +235,10 @@ $(document).ready(function(){
             data: {
                 'page': page,
                 'cnt': cnt,
-                'ann_division': 'E',
-                'ann_fixed': ann_fixed
+                'ann_division': ann_division,
+                'ann_fixed': ann_fixed,
+                'register' : register,
+                'ann_date' : ann_date
             },
             dataType: 'json',
             success: function(data) {
@@ -273,8 +272,10 @@ $(document).ready(function(){
                 content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
             }
             content += '<div class="ann-list-subject"><a href="/empannDetail.go?empann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
-            content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"></div>';
+            content += '<div class="ann-list-name">'+data[i].register+'</div>';
+            content += '<div class="ann-list-date">'+data[i].ann_date+'</div>';
             content += '<div class="ann-list-hit">' + data[i].ann_bHit + '</div>';
+            content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"></div>';
             content += '</div>';
         }
         $('#list').html(content);
@@ -302,7 +303,7 @@ $(document).ready(function(){
         if (annNos.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '/ann/deleteAnn.ajax',
+                url: '/empann/deleteempann.ajax',
                 contentType: 'application/json',
                 data: JSON.stringify(annNos),
                 success: function(response) {
@@ -327,3 +328,4 @@ $(document).ready(function(){
 </script>
 </body>
 </html>
+
