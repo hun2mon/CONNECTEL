@@ -147,7 +147,8 @@ th{
 										</tr>
 										<tr>
 											<td class="draftTitle">휴가종류</td>
-											<td><select class="form-control" id="exampleFormControlSelect1" name="leave_type">
+											<td>
+												<select class="form-control" id="exampleFormControlSelect1" name="leave_type" onchange="changeType()">
 													<option>연차</option>
 													<option>오전 반차</option>
 													<option>오후 반차</option>
@@ -155,7 +156,8 @@ th{
 													<option>공가</option>
 													<option>병가</option>
 													<option>대체휴가</option>
-											</select></td>
+												</select>
+											</td>
 											<td>보유 연차일수</td>
 											<td>25일</td>
 										</tr>
@@ -331,7 +333,7 @@ th{
 		treeCall();
 	});
 
-    $('input[type="date"]').attr('min', getTodayDate());
+    $('input[name="deadline"]').attr('min', getTodayDate());
 	
 	/* 선택일수 표시 */
 	function calculateDays() {
@@ -371,7 +373,7 @@ th{
 	
 	function save(saveDivision) {
 		var content = editor.getHTMLCode();
-		$('input[name="content"]').val(content);
+		$('input[name="draft_content"]').val(content);
 		
 		console.log("에디터에 작성된 문자열 : " + editor.getHTMLCode().length)
 		
@@ -636,6 +638,23 @@ th{
         var day = ('0' + today.getDate()).slice(-2);
         return year + '-' + month + '-' + day;
     }
+    
+    function changeType() {
+    	var type = $('#exampleFormControlSelect1').val();
+    	console.log(type);
+    	var content = '';
+    	if (type == '오전 반차' || type == '오후 반차') {
+			content = '<input type="date" class="form-control startDate" name="start_date" onchange="endDaySet()">';
+			content += '<input type="hidden" class="form-control endDate" name="end_date">'
+			$('.date').html(content);
+			$('.selectDate').html('0.5일<input type="hidden" value="0.5" name="totalDay">');
+		}
+	}
+    
+    function endDaySet() {
+		var end_date = $('.startDate').val();
+		$('.endDate').val(end_date);
+	}
     
     
     

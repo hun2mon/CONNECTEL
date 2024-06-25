@@ -81,7 +81,30 @@
 		<if test="param4 != null">
 			AND draft_status = #{param4}
 		</if>
-</select>
+	</select>
+		
+	<select id="draftDetail" resultType="app">
+		SELECT 
+			d.draft_no
+			,d.draft_subject 
+			,d.draft_end 
+			,d.draft_content
+			,lm.leave_cate 
+			,lm.leave_start
+			,lm.leave_end 
+			,lm.leave_use 
+		FROM draft d JOIN leave_management lm ON d.draft_no = lm.draft_no WHERE d.draft_no = #{param1};
+	</select>
+	
+	<select id="appLineCall">
+		SELECT
+			a.emp_no 
+			,(select cc.code_name from common_code cc where e.rank_code = cc.code_no) as rank_name
+			,e.name
+			,a.app_date
+			,a.app_procedure
+		FROM approver a JOIN emp e ON a.emp_no = e.emp_no WHERE a.draft_no = #{param1};
+	</select>
 	
 	
 </mapper>

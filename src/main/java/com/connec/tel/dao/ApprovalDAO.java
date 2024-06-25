@@ -39,4 +39,8 @@ public interface ApprovalDAO {
 
 	int myAppTotalPage(String search, int cntt, String emp_no, String cate);
 
+	ApprovalDTO draftDetail(String draft_no);
+
+	List<ApprovalDTO> appLineCall(String draft_no);
+
 }

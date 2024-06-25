@@ -69,31 +69,38 @@ form {
 							<h4 class="card-title mb-3">내 기안문서</h4>
 
 							<ul class="nav nav-tabs mb-3">
-								<li class="nav-item"><a href="#home" data-toggle="tab"
-									aria-expanded="false" class="nav-link active"> <i
-										class="mdi mdi-home-variant d-lg-none d-block mr-1"></i> <span
-										class="d-none d-lg-block" onclick="listCall('1')">전체보기</span>
-								</a></li>
-								<li class="nav-item"><a href="#home" data-toggle="tab"
-									aria-expanded="true" class="nav-link"> <i
-										class="mdi mdi-account-circle d-lg-none d-block mr-1"></i> <span
-										class="d-none d-lg-block" onclick="listCall('1','W')">기안중</span>
-								</a></li>
-								<li class="nav-item"><a href="#home" data-toggle="tab"
-									aria-expanded="false" class="nav-link"> <i
-										class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i> <span
-										class="d-none d-lg-block" onclick="listCall('1','N')">반려</span>
-								</a></li>
-								<li class="nav-item"><a href="#home" data-toggle="tab"
-									aria-expanded="false" class="nav-link"> <i
-										class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i> <span
-										class="d-none d-lg-block" onclick="listCall('1','Y')">결재</span>
-								</a></li>
-								<li class="nav-item"><a href="#home" data-toggle="tab"
-									aria-expanded="false" class="nav-link"> <i
-										class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i> <span
-										class="d-none d-lg-block" onclick="listCall('1','T')">임시저장</span>
-								</a></li>
+								<li class="nav-item" onclick="cateListCall('1')">
+									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active">
+										<input type="hidden" value="T">
+										<i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+										<span class="d-none d-lg-block">전체보기</span>
+									</a>
+								</li>
+								<li class="nav-item" onclick="cateListCall('1','W')">
+									<a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link">
+										 <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i> 
+										 <span class="d-none d-lg-block">기안중</span>
+									</a>
+								</li>
+								<li class="nav-item" onclick="cateListCall('1','N')">
+									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link"> 
+										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i> 
+										<span class="d-none d-lg-block">반려</span>
+									</a>
+								</li>
+								<li class="nav-item"  onclick="cateListCall('1','Y')">
+									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
+										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+										<span class="d-none d-lg-block">결재</span>
+									</a>
+								</li>
+								<li class="nav-item" onclick="cateListCall('1','T')">
+									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
+										<input type="hidden" value="T">
+								 		<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+								 		<span class="d-none d-lg-block">임시저장</span>
+									</a>
+								</li>
 							</ul>
 
 							<div class="tab-content">
@@ -105,12 +112,10 @@ form {
 											<!-- ============================================================== -->
 											<li class="nav-item d-none d-md-block"><a
 												class="nav-link" href="javascript:void(0)">
-													<div class="customize-input">
 														<input
 															class="form-control custom-shadow custom-radius border-0 bg-white"
 															type="search" placeholder="Search" aria-label="Search"
 															onkeyup="search()">
-													</div>
 											</a></li>
 										</ul>
 										<table class="table table-bordered">
@@ -157,17 +162,30 @@ form {
 
 var showPage = 1;
 var num;
+var category;
 
 $(document).ready(function(){
 	listCall(showPage);
 });
 
-function search() {
-	$('#pagination').twbsPagination('destroy');
-	listCall(showPage);
+function cateListCall(page, cate) {
+	category = cate;
+	listCall(page, category);
 }
 
+function search() {
+	$('#pagination').twbsPagination('destroy');
+	listCall(showPage, category);
+}
+
+var dontDouble = false;
 function listCall(showPage, cate) {
+	
+	if(dontDouble) {
+		return;
+	}
+	dontDouble = true;
+	
 	console.log(cate);
 	console.log(showPage);
 	var search = $('.form-control').val();
@@ -184,17 +202,23 @@ function listCall(showPage, cate) {
 		dataType:'JSON',
 		success:function(data){
 			drawList(data.list);
+
 			
 			var totalPages = data.totalPages;
 			
-			$('#pagination').twbsPagination({
-            	startPage:1, // 시작페이지
-            	totalPages:totalPages, // 총 페이지 수
-            	visiblePages:5, // 보여줄 페이지 수 1,2,3,4,5
-            	onPageClick:function(evt,pg){ // 페이지 클릭시 실행 함수
-            		listCall(pg);
-            	}
-            })
+			if (data.totalPages > 0) {
+				$('#pagination').twbsPagination({
+	            	startPage:showPage, // 시작페이지
+	            	totalPages:totalPages, // 총 페이지 수
+	            	visiblePages:5, // 보여줄 페이지 수 1,2,3,4,5
+	            	onPageClick:function(evt,pg){ // 페이지 클릭시 실행 함수
+	            		listCall(pg);
+	            	}
+	            })				
+			}			
+			
+			dontDouble = false;
+			
 		},
 		error:function(e){
 			console.log(e);
@@ -216,9 +240,9 @@ function drawList(list) {
 			content += '<td>' + item.draft_subject + '</td>';
 			content += '<td>' + item.register + '</td>';
 			content += '<td>' + item.final_approver + '</td>';
-			content += '<td><a href="#">보기</a></td>';
+			content += '<td><a href="/approval/draftDetail?draft_no='+item.draft_no+'&draft_status='+item.draft_status+'">보기</a></td>';
 			if (item.draft_status == 'W') {
-				content += '<td>처리중</td>';					
+				content += '<td>기안중</td>';					
 			}
 			if (item.draft_status == 'Y') {
 				content += '<td>결재</td>';					

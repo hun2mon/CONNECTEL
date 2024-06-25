@@ -1,6 +1,7 @@
 package com.connec.tel.dto;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -23,6 +24,17 @@ public class ApprovalDTO {
 	private String draft_status;
 	private String reason;
 	private String final_approver;
+	
+	//휴가
+	private String leave_cate;
+	private Float leave_use;
+	private Date leave_start;
+	private Date leave_end;
+	
+	private String name;
+	private Timestamp app_date;
+	private int app_procedure;
+	private String rank_name;
 	
 	
 	
@@ -103,6 +115,54 @@ public class ApprovalDTO {
 	}
 	public void setFinal_approver(String final_approver) {
 		this.final_approver = final_approver;
+	}
+	public String getLeave_cate() {
+		return leave_cate;
+	}
+	public void setLeave_cate(String leave_cate) {
+		this.leave_cate = leave_cate;
+	}
+	public Float getLeave_use() {
+		return leave_use;
+	}
+	public void setLeave_use(Float leave_use) {
+		this.leave_use = leave_use;
+	}
+	public Date getLeave_start() {
+		return leave_start;
+	}
+	public void setLeave_start(Date leave_start) {
+		this.leave_start = leave_start;
+	}
+	public Date getLeave_end() {
+		return leave_end;
+	}
+	public void setLeave_end(Date leave_end) {
+		this.leave_end = leave_end;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Timestamp getApp_date() {
+		return app_date;
+	}
+	public void setApp_date(Timestamp app_date) {
+		this.app_date = app_date;
+	}
+	public int getApp_procedure() {
+		return app_procedure;
+	}
+	public void setApp_procedure(int app_procedure) {
+		this.app_procedure = app_procedure;
+	}
+	public String getRank_name() {
+		return rank_name;
+	}
+	public void setRank_name(String rank_name) {
+		this.rank_name = rank_name;
 	}
 
 }

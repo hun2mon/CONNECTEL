@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.connec.tel.dao.ApprovalDAO;
 import com.connec.tel.dto.ApprovalDTO;
@@ -157,6 +158,31 @@ public class ApprovalService {
 		map.put("list", list);
 		map.put("currPage", currPage);
 		map.put("totalPages", totalpage);
+		return map;
+	}
+	public ModelAndView draftDetail(String draft_no, String draft_status) {
+		
+		ModelAndView mav = new ModelAndView();
+		ApprovalDTO dto;
+		
+		if (draft_status.equals("T")) {
+			logger.info("임시저장");;
+		} else {
+			dto = appDAO.draftDetail(draft_no);
+			mav.addObject("dto", dto);
+			logger.info("dto : {}", dto);
+			mav.setViewName("approval/approvalDetail");
+		}
+		
+		
+		return mav;
+	}
+	public Map<String, Object> approverCall(String draft_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<ApprovalDTO> list = appDAO.appLineCall(draft_no);
+		
+		map.put("approver", list);
+		
 		return map;
 	}
 	
