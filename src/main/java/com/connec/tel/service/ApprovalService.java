@@ -27,7 +27,6 @@ public class ApprovalService {
 
 	
 	@Autowired ApprovalDAO appDAO;
-	@Value("${spring.servlet.multipart.location}") private String root;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
@@ -79,68 +78,7 @@ public class ApprovalService {
 		}
 		return map;
 	}
-	public String writeDraft(List<String> emp_no, List<String> referrer, List<String> viewer, Map<String, Object> param, MultipartFile[] app_file) {
-		String page = "redirect:/approval/draftWrite.go";
-		
-		int authNo = (int)(Math.random() * (99999 - 10000 + 1)) + 10000;
-		String draft_no = "A" + authNo;
-		param.put("draft_no", draft_no);
-		
-		int row = appDAO.writeDraft(param);
-		
-		if (row > 0) {
-			for (int i = 0; i < emp_no.size(); i++) {
-				appDAO.approverWrite(draft_no,emp_no.get(i), i+1);				
-			}
-			
-			for (String refer : referrer) {
-				if (!refer.equals("0")) {
-					appDAO.referrerWrite(draft_no,refer);					
-				}
-			}
-			
-			for (String view : viewer) {
-				if (!view.equals("0")) {
-					appDAO.viewerWrite(draft_no,view);					
-				}
-			}
-			
-			appDAO.leaveMng(param);
-			
-			for (MultipartFile file : app_file) {
-				if (!file.isEmpty()) {
-					upload(file, draft_no);					
-				}
-			}	
-			page = "redirect:/approval/myApproval.go";
-		}
-		
-		logger.info("row : {}", row);
-		
-		return page;
-	}
 	
-	
-	public void upload(MultipartFile uploadFile, String draft_no) {
-		//1. 파일명 추출
-		String oriFileName = uploadFile.getOriginalFilename();
-		
-		//2. 새 파일명 생성
-		String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
-		String newFileName = System.currentTimeMillis() + ext;
-		logger.info(oriFileName + " -> " + newFileName);
-		
-		//3. 파일 저장
-		try {
-			byte[] bytes = uploadFile.getBytes();
-			Path path = Paths.get(root + "/" + newFileName);
-			Files.write(path, bytes);
-			appDAO.fileSave(oriFileName, newFileName, draft_no);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	public Map<String, Object> myAppListCall(String search, String page, String cnt, String emp_no, String cate) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -184,6 +122,64 @@ public class ApprovalService {
 		map.put("approver", list);
 		
 		return map;
+	}
+	public Map<String, Object> draftWrite(Map<String, Object> params) {
+		
+		Map<String, Object>map = new HashMap<String, Object>();
+		
+		logger.info("params : {}", params);
+		@SuppressWarnings("unchecked")
+		Map<String, Object> param = (Map<String, Object>) params.get("param");
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> approvers = (List<Map<String, Object>>) params.get("approvers");
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> referrers = (List<Map<String, Object>>) params.get("referrer");
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> viewers = (List<Map<String, Object>>) params.get("viewer");
+		
+		
+		int authNo = (int)(Math.random() * (99999 - 10000 + 1)) + 10000;
+		String draft_no = "A" + authNo;
+		param.put("draft_no", draft_no);
+		
+		int row = appDAO.writeDraft(param);
+		String emp_no = "";
+		
+		if (row > 0) {
+			for (int i = 0; i < approvers.size(); i++) {
+				emp_no = String.valueOf(approvers.get(i).get("emp_no"));
+				appDAO.approverWrite(draft_no, emp_no, i+1);				
+			}
+			
+			for (int i = 0; i < referrers.size(); i++) {
+				emp_no = String.valueOf(referrers.get(i).get("emp_no"));
+				appDAO.referrerWrite(draft_no, emp_no);				
+			}
+			
+			for (int i = 0; i < viewers.size(); i++) {
+				emp_no = String.valueOf(viewers.get(i).get("emp_no"));
+				appDAO.viewerWrite(draft_no, emp_no);				
+			}
+			
+			appDAO.leaveMng(param);
+			
+			map.put("draft_no", draft_no);
+		}
+		
+
+		
+		
+		return map;
+	}
+	public String fileSave(MultipartFile[] app_file, String draft_no) {
+		if (app_file.length != 0) {
+			for (MultipartFile file : app_file) {
+				CommonService.upload(file);
+				appDAO.fileSave(file.getOriginalFilename(), file.getOriginalFilename(), draft_no);
+				
+			}			
+		}
+		return "redirect:/approval/myApproval.go";
 	}
 	
 }

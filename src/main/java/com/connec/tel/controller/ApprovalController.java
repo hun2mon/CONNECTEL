@@ -1,6 +1,7 @@
 package com.connec.tel.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.service.ApprovalService;
+import com.connec.tel.service.CommonService;
 
 @Controller
 public class ApprovalController {
@@ -26,15 +29,6 @@ public class ApprovalController {
 	@Autowired ApprovalService appService;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
-	
-	@PostMapping(value = "/approval/writeDraft")
-	public String writeDraft(MultipartFile[] app_file, @RequestParam List<String> emp_no, @RequestParam List<String> referrer, @RequestParam Map<String, Object> param, @RequestParam List<String> viewer){
-		
-
-		logger.info("param : {}", param);
-		
-		return appService.writeDraft(emp_no, referrer, viewer, param, app_file);		
-	}
 	
 	@GetMapping(value = "/approval/appLineSave.ajax")
 	@ResponseBody
@@ -83,9 +77,19 @@ public class ApprovalController {
 	@GetMapping(value = "/approval/approverCall.ajax")
 	@ResponseBody
 	public Map<String, Object> approverCall(String draft_no){
-		Map<String, Object> map = new HashMap<String, Object>();
 		logger.info("draft_no : {}", draft_no);
 		return appService.approverCall(draft_no);
 	}
 	
+	@PostMapping(value = "/approval/draftWrite.ajax")
+	@ResponseBody
+	public Map<String, Object> draftWrite(@RequestBody Map<String, Object> params){
+		return appService.draftWrite(params);
+		
+	}	
+	
+	@PostMapping(value = "approval/fileSave")
+	public String fileSave(MultipartFile[] app_file, String draft_no) {
+		return appService.fileSave(app_file, draft_no);
+	}
 }

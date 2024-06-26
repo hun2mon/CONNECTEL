@@ -32,15 +32,26 @@
 	</delete>
 	
 	<insert id="writeDraft" parameterType="map">
-		INSERT INTO draft(draft_no,register, draft_subject, draft_end, draft_content, draft_status) values (#{draft_no}, #{register}, #{draft_subject}, #{deadline}, #{draft_content}, #{draft_status})		
+		INSERT INTO draft(draft_no,register, draft_subject, draft_end, draft_content, draft_status) values (#{draft_no}, #{register}, #{draft_subject}, #{draft_end}, #{draft_content}, #{draft_status})		
 	</insert>
 	
+	
 	<insert id="approverWrite">
-		INSERT INTO approver (draft_no, emp_no, app_procedure)values(#{param1},#{param2}, #{param3})
+		<if test="param3 == 1">
+			INSERT INTO approver (draft_no, emp_no, app_procedure, app_date)values(#{param1},#{param2}, #{param3}, now())
+		</if>
+		<if test="param3 != 1">
+			INSERT INTO approver (draft_no, emp_no, app_procedure)values(#{param1},#{param2}, #{param3})		
+		</if>
 	</insert>
 	
 	<insert id="referrerWrite">
+	<if test="param2.equals('11') or param2.equals('22') or param2.equals('33')">
+		INSERT INTO view_referrer (draft_no, view_reffer_division, dept_code) values (#{param1}, 'R', #{param2})
+	</if>
+	<if test="!param2.equals('11') and !param2.equals('22') and !param2.equals('33')">
 		INSERT INTO view_referrer (draft_no, view_reffer_division, emp_no) values (#{param1}, 'R', #{param2})
+	</if>
 	</insert>
 	
 	<insert id="viewerWrite">
@@ -57,7 +68,7 @@
 	</insert>
 	
 	<insert id="leaveMng" parameterType="map">
-		INSERT INTO leave_management(draft_no, emp_no, leave_cate, leave_use, leave_start, leave_end, draft_status) values (#{draft_no},#{register},#{leave_type},#{totalDay}, #{start_date},#{end_date},#{draft_status})
+		INSERT INTO leave_management(draft_no, emp_no, leave_cate, leave_use, leave_start, leave_end, draft_status) values (#{draft_no},#{register},#{leave_cate},#{leave_use}, #{leave_start},#{leave_end},#{draft_status})
 	</insert>
 	
 	<select id="myAppListCall" resultType="app">

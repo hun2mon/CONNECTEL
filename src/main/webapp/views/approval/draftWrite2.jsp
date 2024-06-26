@@ -98,6 +98,8 @@ th{
 </style>
 </head>
 <body>
+
+<form action="/approval/writeDraft" method="post" enctype="multipart/form-data">
 	<div class="parent">
 		<div class="sideBar">
 			<jsp:include page="../sideBar.jsp"></jsp:include>
@@ -115,7 +117,7 @@ th{
 											<tr class="appName">
 												<th scope="col" rowspan="3" class="table_title">신청자</th>
 												<th scope="col" class="emp_name">
-													${name }
+													<input type="hidden" value="${emp_no}" name="emp_no"><br>${name }
 												</th>
 												<th scope="col" rowspan="3" class="table_title validation">결재자</th>
 											</tr>
@@ -137,7 +139,7 @@ th{
 									<table class="table">
 										<tr>
 											<td class="draftTitle">제목</td>
-											<td class="draftSecond"><input type="text" class="form-control" id="prenametext" value="${sessionScope.loginInfo.name }의 휴가신청서" name="draft_subject"></td>
+											<td class="draftSecond"><input type="text" class="form-control" id="prenametext" value="${name }의 휴가신청서" name="draft_subject"></td>
 											<td>마감기한</td>
 											<td>
 												<input type="date" class="form-control" value="" name="deadline">
@@ -173,6 +175,7 @@ th{
 										<tr>
 											<td class="draftTitle">참조자</td>
 											<td colspan="2" class="referrer">
+											<input type="hidden" value="0" name="referrer">
 											</td>
 											<td class="tdButton" rowspan="2"><button type="button" class="btn waves-effect waves-light btn-light" data-toggle="modal"
                                         		data-target=".referrer_modal">조직도</button></td>
@@ -180,6 +183,7 @@ th{
 										<tr>
 											<td class="draftTitle">조회자</td>
 											<td colspan="2" class="viewer">
+											<input type="hidden" value="0" name="viewer">
 											</td>
 										</tr>
 									</table>
@@ -195,23 +199,22 @@ th{
 					<div class="input-group-prepend">
 						<span class="input-group-text">첨부파일</span>
 					</div>
-					<form action="/approval/fileSave" enctype="multipart/form-data" id="form" method="post">
-						<input type="hidden" id="draft_no">
-						<div class="custom-file">
-							<input type="file" class="custom-file-input" id="inputGroupFile01" name="app_file" multiple="multiple">
-							<label class="custom-file-label" for="inputGroupFile01">Choose
-								file</label>
-						</div>
-					</form>
+					<div class="custom-file">
+						<input type="file" class="custom-file-input" id="inputGroupFile01" name="app_file" multiple="multiple">
+						<label class="custom-file-label" for="inputGroupFile01">Choose
+							file</label>
+					</div>
 				</div>
 				<div class="bottomBtn">
 					<input type="hidden" name="draft_status">
-					<input type="button" class="appBtn botBtn" value="임시저장" onclick="test('1')">
-					<input type="button" class="appBtn botBtn" value="작성완료" onclick="test('2')">
+					<input type="button" class="appBtn botBtn" value="임시저장" onclick="save('1')">
+					<input type="button" class="appBtn botBtn" value="작성완료" onclick="save('2')">
 				</div>
 			</div>
 		</div>
 	</div>	
+</form>
+
 <!-- 참조자 모달 -->
 <div id="info-header-modal" class="modal fade referrer_modal" tabindex="-1" role="dialog"
     aria-labelledby="referrer-modalLabel" aria-hidden="true">
@@ -253,9 +256,6 @@ th{
 					    	<table class="table table_text">
 								<thead>
 									<tr>
-										<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11,'인사팀','R')"></th>
-										<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(22,'고객팀','R')"></th>
-										<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(33,'시설팀','R')"></th>
 									</tr>
 								</thead>
 								<tbody class="modal_table_body">
@@ -266,9 +266,9 @@ th{
 					    	<table class="table table_text">
 								<thead>
 									<tr>
-										<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11,'인사팀','V')"></th>
-										<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(22,'고객팀','V')"></th>
-										<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(33,'시설팀','V')"></th>
+										<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11,'인사팀')"></th>
+										<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(22,'고객팀')"></th>
+										<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(33,'시설팀')"></th>
 									</tr>
 								</thead>
 								<tbody class="modal_table_viewer">
@@ -412,19 +412,20 @@ th{
         window.open(url, name, option);
     }
     
-	var approvers = [];
     function drawAppList(appVal) {
-    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><br>${name }</th><th scope="col" rowspan="3" class="table_title validation">결재자</th>');
+    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><input type="hidden" value="${emp_no}" name="register"><br>${name }</th><th scope="col" rowspan="3" class="table_title validation">결재자</th>');
 		$('.rankName').html('<td>${rank_name}</td>');
 		$('.top_div').css('width','800px');
+    	
 		var content = '';
 		var rankName = '';
 		var procedure = 1;
-		approvers = [];
+		
 		for(item of appVal){
-			content += '<th scope="col" class="emp_name">'+item.eName+'</th>';
+			content += '<th scope="col" class="emp_name"><input type="hidden" value="'+procedure+'" name="procedure">';
+			content += '<input type="hidden" value="'+item.emp_no+'" name="emp_no">'+item.eName+'</th>';
 			rankName += '<td>'+item.rank_name+'</td>';
-			approvers.push(item);
+			procedure += 1;
 		}
 		$('.appName').append(content);
 		$('.rankName').append(rankName);
@@ -537,48 +538,46 @@ th{
 	}
     
     function removeTd(item) {
-    	console.log('sdfsd');
     	if (division == 'referrer') {
 	    	delete referrer[$(item).children().first().val()];
 	    	delete sameCheckRef[$(item).children().first().val()];
-			$(item).remove();
-			referrer = referrer.filter(function(item) {
-				return item !== null && item !== undefined && item !== '';
-			});
 	    	console.log(referrer);
+			$(item).remove();
 		}else{
 	    	delete viewer[$(item).children().first().val()];
 	    	delete sameCheckView[$(item).children().first().val()];
-			$(item).remove();		
-			viewer = viewer.filter(function(item) {
-				return item !== null && item !== undefined && item !== '';
-			});	
-			console.log(viewer);
+	    	console.log(viewer);
+			$(item).remove();			
 		}
 	}
     
     function drawReferrer() {
 		$('.referrer').html('');	
+    	var referrer_emp_no = '<input type="hidden" value="0" name="referrer">';
     	var addReferrer = '';
 		for(item of referrer){
 			if (item == null) {
 				continue;
 			} else {
+				referrer_emp_no += '<input type="hidden" value="'+item.emp_no+'" name="referrer">';
 				addReferrer += item.name+'/';
 			}
 		}
 		if (addReferrer.length>20) {
 			addReferrer = addReferrer.substr(0,  32) + '...';
 		}
-		$('.referrer').append(addReferrer);
+		$('.referrer').append(addReferrer);	
+		$('.referrer').append(referrer_emp_no);	
 		
 		$('.viewer').html('');	
 		
+    	var viewer_emp_no = '<input type="hidden" value="0" name="viewer">';
     	var addViewer = '';
 		for(item of viewer){
 			if (item == null) {
 				continue;
 			} else {
+				viewer_emp_no += '<input type="hidden" value="'+item.emp_no+'" name="viewer">';
 				addViewer += item.name+'/';
 			}
 		}
@@ -586,56 +585,30 @@ th{
 			addViewer = addViewer.substr(0,  32) + '...';
 		}
 		$('.viewer').append(addViewer);	
+		$('.viewer').append(viewer_emp_no);	
 	}
     
     
     
-    function addTeam(code, teamName, RV) {
-    	console.log('test');
-    	
-    	if (RV == 'R') {
-    		for(emp of sameCheckRef){
-    			if (code == emp) {
-    				$('.same').modal('show');
-    				return;
-    			}
-    		}
-	        var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numRef+'" class="index">';
-	        content += '<td colspan="2">'+teamName+'</td>';
-	        content += '<td><a href="#">삭제</a></td>';
-	        content += '</tr>';
-	        	
-	    	sameCheckRef.push(code);
-	    	console.log(sameCheckRef);
-	    	numRef += 1;
-	 
-	    	referrer.push({'emp_no' : code, 'name' : teamName});			
-	    	$('.modal_table_body').append(content);			
+    function addTeam(code, teamName) {
+    	for(emp of sameCheckView){
+			if (code == emp) {
+				$('.same').modal('show');
+				return;
+			}
 		}
-    	
-    	
-    	
-    	if (RV == 'V') {
-    		for(emp of sameCheckView){
-    			if (code == emp) {
-    				$('.same').modal('show');
-    				return;
-    			}
-    		}
-    		var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numView+'" class="index">';
-            content += '<td colspan="2">'+teamName+'</td>';
-            content += '<td><a href="#">삭제</a></td>';
-            content += '</tr>';
-            	
-        	sameCheckView.push(code);
-        	console.log(sameCheckView);
-        	numView += 1;
-     
-        	viewer.push({'emp_no' : code, 'name' : teamName});
-    		
-    		$('.modal_table_viewer').append(content);	
-		}
+        var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numView+'" class="index">';
+        content += '<td colspan="2">'+teamName+'</td>';
+        content += '<td><a href="#">삭제</a></td>';
+        content += '</tr>';
+        	
+    	sameCheckView.push(code);
+    	console.log(sameCheckView);
+    	numView += 1;
+ 
+    	viewer.push({'emp_no' : code, 'name' : teamName});
 		
+		$('.modal_table_viewer').append(content);			
 	}
     
     function getTodayDate() {
@@ -653,79 +626,14 @@ th{
     	if (type == '오전 반차' || type == '오후 반차') {
 			content = '<input type="date" class="form-control startDate" name="start_date" onchange="endDaySet()">';
 			content += '<input type="hidden" class="form-control endDate" name="end_date">'
+			$('.date').html(content);
 			$('.selectDate').html('0.5일<input type="hidden" value="0.5" name="totalDay">');
-		} else {
-			content = '<input type="date" class="form-control startDate" value="" name="start_date" onchange="calculateDays()">';
-			content += '~ <input type="date" class="form-control endDate" value="" name="end_date" onchange="calculateDays()">';
-			$('.selectDate').html('');
 		}
-    	$('.date').html(content);
 	}
     
     function endDaySet() {
 		var end_date = $('.startDate').val();
 		$('.endDate').val(end_date);
-	}
-
-	function test(saveDivision){
-		var param = {
-			"register":'${emp_no}'
-			,"draft_subject":$('#prenametext').val()
-			,"draft_end":$('input[name="deadline"]').val()
-			,"draft_content":editor.getHTMLCode()
-			,"leave_cate":$('#exampleFormControlSelect1').val()
-			,"leave_use":$('input[name="totalDay"]').val()
-			,"leave_start":$('.startDate').val()
-			,"leave_end":$('.endDate').val()
-		};
-
-		if (saveDivision == 1) {
-			param.draft_status = 'T';
-		} else {
-			param.draft_status = 'W';
-		}
-
-		
-		
-		var params = {};
-		params.param = param;
-		params.approvers = approvers;
-		params.viewer = viewer;
-		params.referrer = referrer;
-		
-		console.log(params);
-		
-		if ($('.validation').next().length <= 0) {
-			 $('.appNoti').modal('show');
-		}else if ($('input[name="deadline"]').val() == '') {
-			$('.noti').html('마감기한을 설정해 주세요');
-			$('.appNoti').modal('show');
-			$('input[name="deadline"]').focus();
-		}else if ($('input[name="start_date"]').val() == '') {
-			$('.noti').html('시작 날짜를 설정해 주세요');
-			$('.appNoti').modal('show');
-		}else if ($('input[name="end_date"]').val() == '') {
-			$('.noti').html('종료 날짜를 설정해 주세요');
-			$('.appNoti').modal('show');
-		}else if (content.length > (5 * 1024 * 1024)) {
-			$('.noti').html('파일 용량이 초과되었습니다.');
-			$('.appNoti').modal('show');
-		} else {
-			$.ajax({
-	    		url:'/approval/draftWrite.ajax',
-	    		method:'post',
-	    		data:JSON.stringify(params),
-	    		dataType:'JSON',
-	    		contentType:'application/json; charset = UTF-8',
-	    		success:function(data){
-					$('#draft_no').val(data.draft_no);
-					$('#form').submit();
-	    		},
-	    		error:function(e){
-	    			console.log(e);
-	    		}
-	    	})
-		}
 	}
     
     
