@@ -57,6 +57,7 @@ public class RoomService {
 
 	public Map<String, Object> checkIn(Map<String, Object> param, HttpSession session) {
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		String checkIn = (String) param.get("check_in");		
 		logger.info("checkIn : " +checkIn);
 		
@@ -79,10 +80,14 @@ public class RoomService {
 		param.put("emp_no",emp_no);
 		roomDAO.checkIn(param);
 		
-		roomDAO.roomCheckIn(room_no);
+		String room_div = roomDAO.selectRoomDiv(room_no);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("msg", "체크인 성공");
+		if (room_div.equals("A")) {
+			roomDAO.roomCheckIn(room_no);
+			map.put("state", "success");
+		}
+			map.put("state", "false");
+		
 		return map;
 	}
 
@@ -298,29 +303,36 @@ public class RoomService {
 	public Map<String, Object> changeCheckIn(Map<String, Object> param) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		// stay테이블에서 투숙한 방번호 바꾸기.
-		roomDAO.updateStay(param);
-		
-		//해당 호수를 이용가능한 방으로 바꾸기.
 		String room_no = (String) param.get("room_no");
-		roomDAO.updateAvailable(room_no);
 		
-		// 해당 호수 체크인
-		room_no = (String) param.get("changeRoom_no");
-		roomDAO.roomCheckIn(room_no);
+		String room_div = roomDAO.selectRoomDiv(room_no);
 		
+		if (room_div.equals("A")) {
+			// stay테이블에서 투숙한 방번호 바꾸기.
+			roomDAO.updateStay(param);
+			
+			//해당 호수를 이용가능한 방으로 바꾸기.
+			roomDAO.updateAvailable(room_no);
+			
+			// 해당 호수 체크인
+			room_no = (String) param.get("changeRoom_no");
+			roomDAO.roomCheckIn(room_no);
+			
+			map.put("status", "success");
+		}
+		
+		map.put("status", "false");
 		
 		return map;
 	}
 
-	public void test() {
+
+	public Map<String, Object> updateDayRoomPrice(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		for (int i = 1511111111; i < 1511111211; i++) {
-			
-			roomDAO.test(i);
-		}
+		roomDAO.updateDayRoomPrice(param);
 		
-		
+		return map;
 	}
 
 

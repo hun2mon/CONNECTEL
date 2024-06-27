@@ -49,11 +49,13 @@
             justify-content: center;
             gap: 30px; /* 두 선택 요소 사이의 간격 */
             margin-top: 20px;
+            
         }
         label {
-             font-weight: bold;
-		    margin-right: 10px;
+            font-weight: bold;
 		    color: #0277bd; /* 파란색 글자 */
+		    margin-bottom: 0px;
+		    font-size: x-large;
         }
         
         dd, h1, h2, h3, h4, h5, h6, label {
@@ -70,7 +72,7 @@
 		}
 		
 		input{
-			 width: 100%;
+			width: 100%;
 		    border: 1px solid;
 		    background-color: #e1f5fe; /* 아주 연한 하늘색 배경 */
 		    text-align: center;
@@ -97,6 +99,10 @@
 		input:focus {
 		    background-color: #ffffff;
 		}
+		
+		#yearSelect ,#monthSelect{
+			width:7%;
+		}
 
 </style>
 </head>
@@ -113,13 +119,13 @@
                     <div class="card-body">
                         <div class="table-responsive">
                           	     <div class="select-container">
-						            <label for="yearSelect">연도 선택:</label>
-						            <select id="yearSelect">
+						            <label for="yearSelect">연도 선택</label>
+						            <select class="form-control" id="yearSelect">
 						                <option value="">연도를 선택하세요</option>
 						            </select>
 						
-						            <label for="monthSelect">월 선택:</label>
-						            <select id="monthSelect">
+						            <label for="monthSelect">월 선택</label>
+						            <select class="form-control" id="monthSelect">
 						                <option value="">연도를 먼저 선택하세요</option>
 						            </select>
 						        </div>
@@ -164,6 +170,7 @@ $(document).ready(function() {
     listCall();
     
 });
+
 
 function populateYears() {
 	var currentYear = new Date().getFullYear();
