@@ -51,9 +51,13 @@
             border: 1px solid black;
             padding: 10px;
             height: 400px;
-            width: 250px;
+            width: 320px;
             text-align: center;
             margin: 0 auto;
+        }
+        .photo img {
+            max-width: 100%;
+            height: auto;
         }
         .gender {
             text-align: center;
@@ -74,6 +78,10 @@
         	text-align : center;
         	margin-left : 130px;
         }
+        img#imgPreview {
+		    width: 100%;
+		    height: 100%;
+		}
 	    .input-container {
 	      position: relative;
 	      display: inline-block;
@@ -98,14 +106,14 @@
             <jsp:include page="../sideBar.jsp"></jsp:include>
         </div>
         <div class="content">
-			<input type="hidden" name="pho_division" value="P">       
-            <div class="photo">
-                <div>중앙에 위치한 사진 또는 콘텐츠</div>
-            </div>
-            <br>
-            <div class = "upload">
-				<input type="file" name="photos" id="imgUpload"/>               
-            </div>
+		    <input type="hidden" name="pho_division" value="P">
+		    <div class="photo">
+		        <img id="imgPreview" src="#" alt="이미지를 업로드하세요">
+		    </div>
+		    <br>
+		    <div class="upload">
+		        <input type="file" name="photos" id="imgUpload"/>
+		    </div>
             <br><br>
             <div class="form-group">
                 <span class="subject">이름</span>

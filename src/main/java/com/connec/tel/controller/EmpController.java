@@ -38,12 +38,7 @@ public class EmpController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@RequestMapping(value = "/empRegist.do")
-	public String empRegist(HttpSecurity http,MultipartFile[] photos,  @RequestParam Map<String, String> param, HttpSession session) {
-		try {
-			http.authorizeRequests();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public String empRegist(MultipartFile[] photos,  @RequestParam Map<String, String> param, HttpSession session) {
 		String page = "emp/empList";
 		
 		logger.info("param :{}",param);

@@ -1,21 +1,18 @@
 package com.connec.tel.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.connec.tel.dto.CalendarDTO;
 
 @Mapper
 public interface CalendarDAO {
+	List<Map<String, Object>> getEvents(String start, String end);
 
-	List<CalendarDTO> getEvents();
+	void addEvent(String title, String start, String end);
 
-	void createEvent(CalendarDTO event);
-
-	void deleteEvent(String cal_no);
-
-	void shareEvent(CalendarDTO dto);
+	void deleteEvent(Long id);
 
 
 }
