@@ -20,7 +20,7 @@ body {
     overflow-y: auto;
 }
 
-.container {
+.write-container {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
@@ -140,7 +140,7 @@ a:hover {
     <jsp:include page="../sideBar.jsp"></jsp:include>
 </div>
 
-<div class="container">
+<div class="write-container">
     <form id="faqForm" action="/faqwrite.do" method="post">
         <table>
             <tr>

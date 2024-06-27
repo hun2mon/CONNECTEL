@@ -37,8 +37,8 @@ body {
 }
 
 .search-container {
-    display: inline-block;
-    border: 2px solid #6076E8;
+    display: flex;
+    align-items: center;
     border-radius: 8px;
     padding: 5px 40px;
     margin: 10px;
@@ -54,6 +54,7 @@ input[type="text"].freetextbox {
     outline: none; 
     width: 30vh;
     margin-right: 15px;
+    margin-left: -50px;
 }
 
 input[type="text"].freetextbox:focus {
@@ -131,6 +132,23 @@ button:hover {
     margin-left: 10px;
 }
 
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.nav-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
 </style>
 </head>
 <body>
@@ -142,16 +160,17 @@ button:hover {
     <div class="faq-title">
         <h2>- FAQ -</h2>
     </div>
-    <div class="search-container">
-        <input type="text" class="freetextbox" id="freetextbox" placeholder=" 제목을 입력해주세요.">
-        <button id="freebutton">검색</button>
+    <div class="button-container">
+        <div class="search-container">
+            <input type="text" class="freetextbox" id="freetextbox" placeholder=" 제목을 입력해주세요.">
+            <button id="freebutton">검색</button>
+        </div>
+        <div class="nav-right">
+            <button id="writebutton" onclick="faqwrite()">글쓰기</button>
+            <button id="deletebutton" style="margin-left: 10px;">삭제</button>
+        </div>
     </div>
-    <span class="nav-right">
-        <button id="writebutton" onclick="faqwrite()">글쓰기</button>
-        <button id="deletebutton" style="margin-left: 10px;">삭제</button>
-    </span>
     
-    <hr>
     <div class="faqContent">
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, '전체')" id="defaultOpen">전체</button>

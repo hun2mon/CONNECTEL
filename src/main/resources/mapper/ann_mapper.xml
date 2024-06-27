@@ -4,46 +4,199 @@
 >
 
 <mapper namespace="com.connec.tel.dao.AnnDAO">
-<select id="list" resultType="annDTO" parameterType="map">
-    SELECT ann_no, ann_subject, ann_content, ann_bHit, ann_division, ann_fixed, register, ann_date
-    FROM announcement
-    WHERE ann_division = 'E'
-    ORDER BY ann_fixed DESC, ann_no DESC -- ann_fixed를 우선순위로 내림차순 정렬, 그 다음 ann_no 내림차순 정렬
-    LIMIT #{pagePerCnt} OFFSET ${(currPage - 1) * pagePerCnt}
-</select>
 
-<select id="allCount" resultType="Integer">
-    SELECT CEIL(COUNT(ann_no) / #{param1}) AS pages FROM announcement WHERE ann_division = 'E'
-</select>
-	
+    <select id="list" resultType="annDTO" parameterType="map">
+        SELECT 
+            a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
+            e.name AS register, a.ann_date
+        FROM 
+            announcement a
+        LEFT JOIN 
+            emp e ON a.register = e.emp_no
+        WHERE 
+            a.ann_division = 'E'
+        ORDER BY 
+            a.ann_fixed DESC, a.ann_no DESC
+        LIMIT #{pagePerCnt} OFFSET ${(currPage - 1) * pagePerCnt}
+    </select>
+
+    <select id="empanndetail" resultType="annDTO">
+        SELECT  
+            a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
+            e.name AS register, a.ann_date 
+        FROM 
+            announcement a
+        LEFT JOIN 
+            emp e ON a.register = e.emp_no
+        WHERE 
+            ann_no = #{ann_no}
+    </select>
+
+    <select id="allCount" resultType="Integer">
+        SELECT CEIL(COUNT(ann_no) / #{param1}) AS pages 
+        FROM announcement 
+        WHERE ann_division = 'E'
+    </select>
+
     <delete id="deleteann" parameterType="list">
-        DELETE FROM announcement WHERE ann_no IN 
+        DELETE FROM announcement 
+        WHERE ann_no IN 
         <foreach item="ann_no" collection="list" open="(" separator="," close=")">
             #{ann_no}
         </foreach>
-    </delete>	
-	
-	<insert id="write" useGeneratedKeys="true" keyColumn="ann_no" keyProperty="ann_no" parameterType="annDTO">
-    	INSERT INTO announcement (ann_subject, register, ann_content, ann_division, ann_date)
-    	VALUES (#{ann_subject}, #{register}, #{ann_content}, #{ann_division}, NOW())
-	</insert>
-	
-	<insert id="fileWrite">
-		INSERT INTO photo(ori_pho_name,pho_name, ref_idx, pho_division)
-		VALUES(#{param1},#{param2},#{param3},'A')	
-	</insert>
-	
-	<select id="search" parameterType="string" resultType="annDTO">
-    	SELECT * FROM announcement
-    	WHERE ann_subject LIKE CONCAT('%', #{textval}, '%')
-    	ORDER BY ann_no DESC
-	</select>
+    </delete>
 
-	<select id="photo" parameterType="string" resultType="string">
-    SELECT pho_name
-    FROM photo 
-    WHERE ann_no = #{ann_no} AND pho_division = 'A'
+    <select id="count" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM announcement
+        WHERE ann_fixed = 'Y' AND ann_division = 'E'
+    </select>
+
+    <select id="getFixedCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM announcement 
+        WHERE ann_fixed = 'Y' and ann_division = 'E'
+    </select>
+
+    <update id="unfixAnnouncement" parameterType="List">
+        UPDATE announcement
+        SET ann_fixed = 
+            CASE 
+                WHEN ann_fixed = 'Y' THEN 'N'
+                ELSE 'Y'
+            END
+        WHERE ann_no = #{ann_no}
+    </update>
+
+    <insert id="write" useGeneratedKeys="true" keyColumn="ann_no" keyProperty="ann_no" parameterType="annDTO">
+        INSERT INTO announcement (ann_subject, register, ann_content, ann_division, ann_fixed, ann_date)
+        VALUES (#{ann_subject}, #{register}, #{ann_content}, #{ann_division}, #{ann_fixed}, NOW())
+    </insert>
+
+    <insert id="fileWrite">
+        INSERT INTO photo(ori_pho_name, pho_name, ref_idx, pho_division)
+        VALUES(#{param1}, #{param2}, #{param3}, 'A')
+    </insert>
+
+    <select id="search" parameterType="string" resultType="annDTO">
+        SELECT 
+            a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
+            e.name AS register, a.ann_date 
+        FROM 
+            announcement a 
+        LEFT JOIN 
+            emp e ON a.register = e.emp_no
+        WHERE 
+            ann_subject LIKE CONCAT('%', #{textval}, '%') and ann_division ='E'
+        ORDER BY 
+            ann_no DESC
+    </select>
+
+    <select id="photo" parameterType="string" resultType="string">
+        SELECT pho_name
+        FROM photo 
+        WHERE ref_idx = #{ann_no} AND pho_division = 'A'
+    </select>
+
+    <select id="annphoto" parameterType="string" resultType="string">
+        SELECT pho_name
+        FROM photo 
+        WHERE ref_idx = #{ann_no} AND pho_division = 'A'
+    </select>
+
+    <select id="annlist" resultType="annDTO" parameterType="map">
+        SELECT 
+            a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
+            e.name AS register, a.ann_date
+        FROM 
+            announcement a
+        LEFT JOIN 
+            emp e ON a.register = e.emp_no
+        WHERE 
+            a.ann_division = 'C'
+        ORDER BY 
+            a.ann_fixed DESC, a.ann_no DESC
+        LIMIT #{pagePerCnt} OFFSET ${(currPage - 1) * pagePerCnt}
+    </select>
+
+    <select id="annsearch" parameterType="string" resultType="annDTO">
+        SELECT 
+            a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
+            e.name AS register, a.ann_date 
+        FROM 
+            announcement a
+        LEFT JOIN 
+            emp e ON a.register = e.emp_no
+        WHERE 
+            ann_subject LIKE CONCAT('%', #{textval}, '%') and ann_division ='C'
+        ORDER BY 
+            ann_no DESC
+    </select>
+
+    <select id="anndetail" resultType="annDTO">
+        SELECT  
+            a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
+            e.name AS register, a.ann_date 
+        FROM 
+            announcement a
+        LEFT JOIN 
+            emp e ON a.register = e.emp_no
+        WHERE 
+            ann_no = #{ann_no}
+    </select>
+
+    <insert id="annwrite" useGeneratedKeys="true" keyColumn="ann_no" keyProperty="ann_no" parameterType="annDTO">
+        INSERT INTO announcement (ann_subject, register, ann_content, ann_division, ann_fixed, ann_date)
+        VALUES (#{ann_subject}, #{register}, #{ann_content}, #{ann_division}, #{ann_fixed}, NOW())
+    </insert>
+
+    <insert id="annfileWrite">
+        INSERT INTO photo(ori_pho_name, pho_name, ref_idx, pho_division)
+        VALUES(#{param1}, #{param2}, #{param3}, 'A')
+    </insert>
+
+    <delete id="deleteempann" parameterType="list">
+        DELETE FROM announcement 
+        WHERE ann_no IN 
+        <foreach item="ann_no" collection="list" open="(" separator="," close=")">
+            #{ann_no}
+        </foreach>
+    </delete>
+
+
+	<update id="increasebHitCount" parameterType="string">
+    UPDATE announcement
+    SET ann_bHit = ann_bHit + 1
+    WHERE ann_no = #{ann_no}
+</update>
+
+<update id="increaseCount" parameterType="string">
+    UPDATE announcement
+    SET ann_bHit = ann_bHit + 1
+    WHERE ann_no = #{ann_no}
+</update>
+
+<select id="getannbyId" parameterType="String" resultType="annDTO">
+        SELECT * FROM announcement WHERE ann_no = #{ann_no}
+    </select>
+    
+    
+<update id="updateann" parameterType="map">
+    <![CDATA[
+    UPDATE announcement
+    SET ann_subject = #{ann_subject},
+        ann_content = #{ann_content},
+        update_date = NOW()
+    WHERE ann_no = #{ann_no}
+    ]]>
+</update>
+
+
+
+<select id="photoname" parameterType="String" resultType="String">
+	 SELECT pho_name
+        FROM photo 
+        WHERE ref_idx = #{ann_no} AND pho_division = 'A'
 </select>
-	
 	
 </mapper>

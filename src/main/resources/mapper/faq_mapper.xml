@@ -24,10 +24,10 @@
     </where>
 </select>
     
-    <insert id="write" parameterType="map">
-        INSERT INTO FAQ (FAQ_subject, FAQ_content, FAQ_category, FAQ_date)
-        VALUES (#{FAQ_subject}, #{FAQ_content}, #{FAQ_category}, NOW())
-    </insert>
+ <insert id="write" parameterType="map">
+    INSERT INTO FAQ (FAQ_subject, FAQ_content, FAQ_category, regist_date, register)
+    VALUES (#{subject}, #{textcontent}, #{category}, NOW(), #{register})
+</insert>
 
     <select id="faqDetail" resultType="FaqDTO">
         SELECT * FROM FAQ WHERE FAQ_no = #{faq_no}
