@@ -27,7 +27,7 @@ public class ApprovalService {
 
 	
 	@Autowired ApprovalDAO appDAO;
-	@Value("${spring.servlet.multipart.location}") private String root;
+	private String root = "/Users/junmo/Desktop/photo/";
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	

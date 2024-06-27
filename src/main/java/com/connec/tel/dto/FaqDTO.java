@@ -10,6 +10,7 @@ public class FaqDTO {
     private String register;
     private String FAQ_category;
     private String updater;
+    private String FAQ_date;
 
     public String getUpdater() {
 		return updater;
