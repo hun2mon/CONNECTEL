@@ -69,32 +69,32 @@ form {
 							<h4 class="card-title mb-3">내 기안문서</h4>
 
 							<ul class="nav nav-tabs mb-3">
-								<li class="nav-item" onclick="cateListCall('1')">
+								<li class="nav-item" onclick="cateListCall()">
 									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active">
 										<input type="hidden" value="T">
 										<i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
 										<span class="d-none d-lg-block">전체보기</span>
 									</a>
 								</li>
-								<li class="nav-item" onclick="cateListCall('1','W')">
+								<li class="nav-item" onclick="cateListCall('W')">
 									<a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link">
 										 <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i> 
 										 <span class="d-none d-lg-block">기안중</span>
 									</a>
 								</li>
-								<li class="nav-item" onclick="cateListCall('1','N')">
+								<li class="nav-item" onclick="cateListCall('N')">
 									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link"> 
 										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i> 
 										<span class="d-none d-lg-block">반려</span>
 									</a>
 								</li>
-								<li class="nav-item"  onclick="cateListCall('1','Y')">
+								<li class="nav-item"  onclick="cateListCall('Y')">
 									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
 										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
 										<span class="d-none d-lg-block">결재</span>
 									</a>
 								</li>
-								<li class="nav-item" onclick="cateListCall('1','T')">
+								<li class="nav-item" onclick="cateListCall('T')">
 									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
 										<input type="hidden" value="T">
 								 		<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
@@ -160,22 +160,23 @@ form {
 <script src="/js/jquery.twbsPagination.js" type="text/javascript"></script>
 <script>
 
-var showPage = 1;
+var startPage = 1;
 var num;
 var category;
 
 $(document).ready(function(){
-	listCall(showPage);
+	listCall(startPage);
 });
 
-function cateListCall(page, cate) {
+function cateListCall(cate) {
 	category = cate;
-	listCall(page, category);
+	$('#pagination').twbsPagination('destroy');
+	listCall(startPage, category);
 }
 
 function search() {
 	$('#pagination').twbsPagination('destroy');
-	listCall(showPage, category);
+	listCall(startPage, category);
 }
 
 var dontDouble = false;
@@ -212,7 +213,7 @@ function listCall(showPage, cate) {
 	            	totalPages:totalPages, // 총 페이지 수
 	            	visiblePages:5, // 보여줄 페이지 수 1,2,3,4,5
 	            	onPageClick:function(evt,pg){ // 페이지 클릭시 실행 함수
-	            		listCall(pg);
+	            		listCall(pg,cate);
 	            	}
 	            })				
 			}			

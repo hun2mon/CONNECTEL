@@ -38,7 +38,7 @@
 	
 	<insert id="approverWrite">
 		<if test="param3 == 1">
-			INSERT INTO approver (draft_no, emp_no, app_procedure, app_date)values(#{param1},#{param2}, #{param3}, now())
+			INSERT INTO approver (draft_no, emp_no, app_procedure, app_status, app_date)values(#{param1},#{param2}, #{param3}, 'Y',now())
 		</if>
 		<if test="param3 != 1">
 			INSERT INTO approver (draft_no, emp_no, app_procedure)values(#{param1},#{param2}, #{param3})		
@@ -84,7 +84,7 @@
 		<if test="param5 != null">
 			AND d.draft_status = #{param5}
 		</if>
-		ORDER BY d.draft_start DESC LIMIT #{param2}, #{param3}
+		ORDER BY d.draft_start DESC, d.draft_end ASC LIMIT #{param2}, #{param3}
 	</select>
 	
 	<select id="myAppTotalPage" resultType="int">
@@ -97,14 +97,24 @@
 	<select id="draftDetail" resultType="app">
 		SELECT 
 			d.draft_no
+			,d.register
+			,(SELECT name FROM emp e WHERE e.emp_no = d.register) AS name
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = d.register AND e.dept_code = cc.code_no) AS dept_name
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = d.register AND e.rank_code = cc.code_no) AS rank_name
 			,d.draft_subject 
+			,d.draft_start
 			,d.draft_end 
 			,d.draft_content
+			,d.draft_status
 			,lm.leave_cate 
 			,lm.leave_start
 			,lm.leave_end 
 			,lm.leave_use 
 		FROM draft d JOIN leave_management lm ON d.draft_no = lm.draft_no WHERE d.draft_no = #{param1};
+	</select>
+	
+	<select id="fileList" resultType="map">
+		SELECT ori_file_name, file_name FROM file WHERE ref_idx = #{param1} 
 	</select>
 	
 	<select id="appLineCall">
@@ -114,7 +124,50 @@
 			,e.name
 			,a.app_date
 			,a.app_procedure
+			,a.app_status
 		FROM approver a JOIN emp e ON a.emp_no = e.emp_no WHERE a.draft_no = #{param1};
+	</select>
+	
+	<select id="reqAppListCall" resultType="app">
+			SELECT 
+				dr.draft_no
+				,dr.draft_start 
+				,dr.draft_end 
+				,dr.draft_subject 
+				,(select e.name from emp e where dr.register = e.emp_no) AS name
+				,(select e2.name from approver a2 JOIN emp e2 WHERE dr.draft_no = a2.draft_no AND e2.emp_no = a2.emp_no ORDER BY a2.app_procedure desc limit 1) AS final_approver
+				,dr.draft_status 
+			FROM draft dr JOIN approver ap 
+				ON dr.draft_no = ap.draft_no 
+				WHERE 
+			 (ap.emp_no = #{param4} 
+			 	AND dr.draft_status IN ('Y','N') 
+				AND dr.draft_subject LIKE #{param1}
+				AND dr.register != #{param4}
+			<if test="param5 != null">
+				AND dr.draft_status = #{param5}
+			</if>)
+			 	 OR 
+			 (ap.emp_no = #{param4}
+				AND (SELECT a.app_date FROM approver a WHERE a.draft_no = dr.draft_no AND a.app_procedure = ap.app_procedure - 1) is not null
+				AND dr.draft_status != 'T'
+				AND ap.app_date is null
+				AND dr.draft_subject LIKE #{param1}
+			<if test="param5 != null">
+				AND dr.draft_status = #{param5}
+			</if>)
+			ORDER BY dr.draft_start DESC, dr.draft_end ASC LIMIT #{param2}, #{param3}
+	</select>
+	
+	<select id="reqAppTotalPage" resultType="int">
+		SELECT CEIL(COUNT(dr.draft_no)/#{param2}) AS pages 
+			FROM draft dr JOIN approver ap 
+				ON dr.draft_no = ap.draft_no 
+				WHERE ap.emp_no = #{param3} AND (SELECT a.app_date FROM approver a WHERE a.draft_no = dr.draft_no AND a.app_procedure = ap.app_procedure - 1) is not null AND dr.draft_status != 'T'
+				AND dr.draft_subject LIKE #{param1}
+			<if test="param4 != null">
+				AND draft_status = #{param4}
+			</if>
 	</select>
 	
 	

@@ -30,12 +30,14 @@ public class ApprovalController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
+	//결재선 저장
 	@GetMapping(value = "/approval/appLineSave.ajax")
 	@ResponseBody
 	public Map<String,Object> appLineSave(String[] appLine, String name){
 		return appService.appLineSave(appLine, name);
 	}
 	
+	//저장된 결재선 리스트 불러오기
 	@GetMapping(value = "/approval/lineCall.ajax")
 	@ResponseBody
 	public Map<String, Object> lineCall(HttpSession session){
@@ -45,6 +47,7 @@ public class ApprovalController {
 		return appService.lineCall(empDTO.getEmp_no());
 	}
 	
+	//저장된 결재자 불러오기
 	@GetMapping(value = "/approval/saveListCall.ajax")
 	@ResponseBody
 	public Map<String, Object> saveListCall(int app_line_no){
@@ -52,6 +55,7 @@ public class ApprovalController {
 		return appService.saveListCall(app_line_no);
 	}
 	
+	//저장된 결재선 삭제
 	@GetMapping(value = "/approval/savaLineDel.ajax")
 	@ResponseBody
 	public Map<String, Object> saveListDel(int app_line_no) {
@@ -59,6 +63,22 @@ public class ApprovalController {
 		return appService.savaLineDel(app_line_no);
 	}
 	
+	//기안서 작성
+	@PostMapping(value = "/approval/draftWrite.ajax")
+	@ResponseBody
+	public Map<String, Object> draftWrite(@RequestBody Map<String, Object> params){
+		return appService.draftWrite(params);
+		
+	}	
+	
+	// 기안서 첨부파일 저장
+	@PostMapping(value = "approval/fileSave")
+	public String fileSave(MultipartFile[] app_file, String draft_no) {
+		logger.info("draft_no : {}", draft_no);
+		return appService.fileSave(app_file, draft_no);
+	}
+	
+	// 내 기안문 리스트
 	@GetMapping(value = "/approval/myAppListCall.ajax")
 	@ResponseBody
 	public Map<String, Object> myAppListCall(String search,String page, String cnt, String cate,HttpSession session){
@@ -67,6 +87,7 @@ public class ApprovalController {
 		return appService.myAppListCall(search, page, cnt, emp_no, cate);
 	}
 	
+	// 기안문 상세보기
 	@GetMapping(value = "/approval/draftDetail")
 	public ModelAndView draftDetail(String draft_no, String draft_status) {
 		logger.info("draft_no : {}", draft_no);
@@ -74,6 +95,7 @@ public class ApprovalController {
 		return appService.draftDetail(draft_no, draft_status);
 	}
 	
+	//결재자 불러오기
 	@GetMapping(value = "/approval/approverCall.ajax")
 	@ResponseBody
 	public Map<String, Object> approverCall(String draft_no){
@@ -81,15 +103,13 @@ public class ApprovalController {
 		return appService.approverCall(draft_no);
 	}
 	
-	@PostMapping(value = "/approval/draftWrite.ajax")
+	//결재 요청온 문서 리스트
+	@GetMapping(value = "/approval/reqAppListCall.ajax")
 	@ResponseBody
-	public Map<String, Object> draftWrite(@RequestBody Map<String, Object> params){
-		return appService.draftWrite(params);
-		
-	}	
-	
-	@PostMapping(value = "approval/fileSave")
-	public String fileSave(MultipartFile[] app_file, String draft_no) {
-		return appService.fileSave(app_file, draft_no);
+	public Map<String, Object> reqAppListCall(String search,String page, String cnt, String cate,HttpSession session){
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo"); 
+		String emp_no = empDTO.getEmp_no();
+		return appService.reqAppListCall(search, page, cnt, emp_no, cate);
 	}
+	
 }

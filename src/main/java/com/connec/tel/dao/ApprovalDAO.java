@@ -43,4 +43,10 @@ public interface ApprovalDAO {
 
 	List<ApprovalDTO> appLineCall(String draft_no);
 
+	int reqAppTotalPage(String search, int cntt, String emp_no, String cate);
+
+	List<ApprovalDTO> reqAppListCall(String search, int start, int cntt, String emp_no, String cate);
+
+	List<Map<String, Object>> fileList(String draft_no);
+
 }

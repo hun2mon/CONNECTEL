@@ -196,7 +196,7 @@ th{
 						<span class="input-group-text">첨부파일</span>
 					</div>
 					<form action="/approval/fileSave" enctype="multipart/form-data" id="form" method="post">
-						<input type="hidden" id="draft_no">
+						<input type="hidden" id="draft_no" name="draft_no">
 						<div class="custom-file">
 							<input type="file" class="custom-file-input" id="inputGroupFile01" name="app_file" multiple="multiple">
 							<label class="custom-file-label" for="inputGroupFile01">Choose
@@ -694,6 +694,8 @@ th{
 		params.referrer = referrer;
 		
 		console.log(params);
+	
+		var content = editor.getHTMLCode();
 		
 		if ($('.validation').next().length <= 0) {
 			 $('.appNoti').modal('show');

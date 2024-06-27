@@ -98,6 +98,7 @@ public class ApprovalService {
 		map.put("totalPages", totalpage);
 		return map;
 	}
+	
 	public ModelAndView draftDetail(String draft_no, String draft_status) {
 		
 		ModelAndView mav = new ModelAndView();
@@ -115,14 +116,18 @@ public class ApprovalService {
 		
 		return mav;
 	}
+	
 	public Map<String, Object> approverCall(String draft_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<ApprovalDTO> list = appDAO.appLineCall(draft_no);
+		List<Map<String, Object>> fileList = appDAO.fileList(draft_no);
 		
+		map.put("fileList", fileList);
 		map.put("approver", list);
 		
 		return map;
 	}
+	
 	public Map<String, Object> draftWrite(Map<String, Object> params) {
 		
 		Map<String, Object>map = new HashMap<String, Object>();
@@ -165,21 +170,43 @@ public class ApprovalService {
 			
 			map.put("draft_no", draft_no);
 		}
-		
-
-		
-		
 		return map;
 	}
+	
 	public String fileSave(MultipartFile[] app_file, String draft_no) {
 		if (app_file.length != 0) {
 			for (MultipartFile file : app_file) {
-				CommonService.upload(file);
-				appDAO.fileSave(file.getOriginalFilename(), file.getOriginalFilename(), draft_no);
+				String oriFileName = file.getOriginalFilename();
+				
+				//2. 새 파일명 생성
+				String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
+				String newFileName = System.currentTimeMillis() + ext;
+				CommonService.upload(file, newFileName);
+				appDAO.fileSave(file.getOriginalFilename(), newFileName, draft_no);
 				
 			}			
 		}
 		return "redirect:/approval/myApproval.go";
+	}
+	
+	public Map<String, Object> reqAppListCall(String search, String page, String cnt, String emp_no, String cate) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = appDAO.reqAppTotalPage(search, cntt, emp_no, cate);
+		
+		List<ApprovalDTO> list = appDAO.reqAppListCall(search, start, cntt,emp_no, cate);
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
+		return map;
 	}
 	
 }

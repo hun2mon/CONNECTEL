@@ -1,29 +1,68 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="/res/style.css" />
-<link rel="stylesheet" href="/richtexteditor/rte_theme_default.css" />
-<script type="text/javascript" src="/richtexteditor/rte.js"></script>
-<script type="text/javascript" src='/richtexteditor/plugins/all_plugins.js'></script>
+<link rel="stylesheet" type="text/css"
+	href="/assets/extra-libs/prism/prism.css">
 <style>
+.approver, .draft_content {
+	text-align: center;
+	width: 800px;
+	font-size: small;
+}
+
+.approver, .approver th, .approver td, .draft_content, .draft_content th,
+	.draft_content td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding: 10px 3px;
+}
+
+.smallWidth {
+	width: 10px;
+}
+
+.title {
+	background-color: lightgrey;
+	width: 100px;
+}
+
+.table_content {
+	width: 200px;
+}
+
+.reason {
+	height: 300px;
+}
+
+.approver {
+	width: auto;
+}
+
+.main_div {
+	width: 800px;
+	text-align: -webkit-right;
+}
+
+.draft_body {
+	margin-top: 20px;
+}
+
+.draft_title {
+	text-align: center;
+}
+
 .draftTitle {
 	width: 10%;
 }
 
-.form-control {
-	margin-bottom: 0px;
-}
-
 .draftSecond {
 	width: 20%;
-}
-
-form {
-	margin-bottom: 0px;
 }
 
 .date {
@@ -47,6 +86,14 @@ form {
 	border-radius: 5px;
 }
 
+.appBtn2 {
+	background: darkgray;
+	border: darkgray;
+	color: white;
+	height: 40px;
+	border-radius: 5px;
+}
+
 .table-bordered {
 	text-align: center;
 }
@@ -57,32 +104,39 @@ form {
 	overflow: hidden;
 }
 
-.bottomBtn{
+.bottomBtn {
 	margin: 0 auto;
-    width: 31.5%;
+	width: 44%;
 }
 
-.botBtn{
+.botBtn {
 	width: 150px;
 }
 
-.table_title{
+.table_title {
 	width: 10px;
 	max-width: 10px;
 }
 
-th{
+th {
 	width: 100px;
 }
 
-.top_div{
+.top_div {
 	width: 800px;
 }
 
+.card-body {
+	text-align: -webkit-center;
+}
+
+#bottom{
+	display: flex;
+}
 </style>
 </head>
 <body>
-<div class="parent">
+	<div class="parent">
 		<div class="sideBar">
 			<jsp:include page="../sideBar.jsp"></jsp:include>
 		</div>
@@ -134,7 +188,7 @@ th{
 										<tr>
 											<td class="draftTitle">기간</td>
 											<td>
-													<div class="date">${dto.leave_start} ~ ${dto.leave_end}</div>
+												<div class="date">${dto.leave_start}~ ${dto.leave_end}</div>
 											</td>
 											<td>신청일수</td>
 											<td class="selectDate">${dto.leave_use}일</td>
@@ -145,50 +199,103 @@ th{
 						</div>
 					</div>
 				</div>
-				<div id="div_editor"></div>
-				<br>
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<span class="input-group-text">첨부파일</span>
-					</div>
-					<div class="custom-file">
-						<input type="file" class="custom-file-input" id="inputGroupFile01" name="app_file" multiple="multiple">
-						<label class="custom-file-label" for="inputGroupFile01">Choose
-							file</label>
+				<div class="card">
+					<div class="card-body">
+						<div class="main_div">
+							<div class="draft_title">
+								<h1>휴가신청서</h1>
+							</div>
+							<div class="draft_head">
+								<table class="approver">
+									<tr id="approver">
+										<th rowspan="3" class="smallWidth">결재자</th>
+									</tr>
+									<tr id="approver_sign">
+									</tr>
+									<tr id="sign_date">
+									</tr>
+								</table>
+							</div>
+							<div class="draft_body">
+								<table class="draft_content">
+									<tr>
+										<th class="title">문서번호</th>
+										<td class="table_content">${dto.draft_no }</td>
+										<th class="title">작성일자</th>
+										<td>${dto.draft_start }</td>
+									</tr>
+									<tr>
+										<th class="title">이름</th>
+										<td class="table_content">${dto.name }</td>
+										<th class="title">보유 연차일수</th>
+										<td class="table_content">25일</td>
+									</tr>
+									<tr>
+										<th class="title">부서</th>
+										<td class="table_content">${dto.dept_name }</td>
+										<th class="title">직급</th>
+										<td class="table_content">${dto.rank_name }</td>
+									</tr>
+									<tr>
+										<th class="title">제목</th>
+										<td colspan="3">${dto.draft_subject }</td>
+									</tr>
+									<tr>
+										<th class="title">종류</th>
+										<td colspan="3">${dto.leave_cate }</td>
+									</tr>
+									<tr>
+										<th class="title">일정</th>
+										<td colspan="3">${dto.leave_start }~ ${dto.leave_end}
+											(${dto.leave_use }일)</td>
+									</tr>
+									<tr>
+										<th class="title">신청 사유</th>
+										<td colspan="3" class="reason">${dto.draft_content}</td>
+									</tr>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="bottomBtn">
-					<input type="hidden" name="draft_status">
-					<input type="button" class="appBtn botBtn" value="임시저장" onclick="save('1')">
-					<input type="button" class="appBtn botBtn" value="작성완료" onclick="save('2')">
+				<div id="bottom">
+					<div class="input-group mb-3">
+						<div id="accordion" class="custom-accordion mb-4">
+							<div class="card mb-0">
+								<div class="card-header" id="headingOne">
+									<h5 class="m-0">
+										<a class="custom-accordion-title d-block pt-2 pb-2" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 
+											3개의 첨부파일 <span class="float-right"><i class="mdi mdi-chevron-down accordion-arrow"></i></span>
+										</a>
+									</h5>
+								</div>
+								<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+									<div class="card-body" id="file">
+									</div>
+								</div>
+							</div>
+							<!-- end card-->
+						</div>
+					</div>
+					<c:if test="${loginInfo.emp_no != dto.register && dto.draft_status != 'N' && dto.draft_status != 'Y'}">
+						<div class="bottomBtn">
+							<input type="button" class="appBtn botBtn" value="승인" onclick="">
+							<input type="button" class="appBtn2 botBtn" value="반려" onclick="">
+						</div>					
+					</c:if>
+					<c:if test="${loginInfo.emp_no == dto.register && dto.draft_status == 'N' }">
+						<div class="bottomBtn">
+							<input type="button" class="appBtn botBtn" value="재기안" onclick="">
+							<input type="button" class="appBtn2 botBtn" value="이전" onclick="">
+						</div>
+					</c:if>
 				</div>
 			</div>
 		</div>
-	</div>	
-	<div id="content">${dto.draft_content}</div>
+	</div>
 </body>
-<script>	
-$(document).ready(function() {
-    var config = {};
-    config.toolbar = "simple"; // basic은 거의 대부분의 기능이 나타나지만, simple 은 아무것도 나타나지 않는다.
-    config.toolbar_simple = "{save,print,html2pdf}"; // 저장, 출력, pdf, html 코드보기
-
-    config.editorResizeMode = "none";
-
-    // 에디터 초기화
-    var editor = new RichTextEditor("#div_editor", config);
-    editor.setHTMLCode($('#content').html());
-    editor.setReadOnly();
-
-    // 이미지 크기를 조정하는 스타일 추가
-    $('#div_editor img').css({
-        'max-width': '100%',
-        'height': 'auto'
-    });
-    
-    $('#content').css('display','none');
-});
-	
+<script src="/assets/extra-libs/prism/prism.js"></script>
+<script>
 	approverCall();
 	
 	function approverCall() {
@@ -201,7 +308,8 @@ $(document).ready(function() {
     		},
     		dataType:'JSON',
     		success:function(data){
-    			drawApprover(data.approver);
+    			console.log(data.approver);
+    			drawApprover(data.approver, data.fileList);
     		},
     		error:function(e){
     			console.log(e);
@@ -209,7 +317,7 @@ $(document).ready(function() {
     	})
 	}
 	
-	function drawApprover(approver) {
+	function drawApprover(approver, files) {
 		console.log(approver);
 		var drafter =	approver[0].rank_name+'<br>'+approver[0].name;
 		$('.drafter').html(drafter);
@@ -218,8 +326,24 @@ $(document).ready(function() {
 		var appName = '';
 		var appSign = '';
 		var appSignDate='';
+		var fileList = '';
+		var fileCnt = '';
+		
+		if (files.length > 0) {
+			for (item of files) {
+				console.log(item);
+				fileList += '<a href="/download/'+item.file_name+'">'+item.ori_file_name+'</a><br>';
+			}			
+			fileCnt += '<a class="custom-accordion-title d-block pt-2 pb-2" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">';
+			fileCnt += files.length + '개의 첨부파일 <span class="float-right"><i class="mdi mdi-chevron-down accordion-arrow"></i></span></a>';
+			
+		}
+		
+		
 		
 		for (item of approver) {
+			
+			
 			if (item.app_procedure == 1) {
 				drafterSign = item.name;
 				var dateFormat = new Date(item.app_date);
@@ -230,17 +354,48 @@ $(document).ready(function() {
 				appSignDate += '<td></td>';
 			} else {
 				appName += '<th scope="col" class="emp_name">'+item.rank_name+'<br>'+item.name+'</th>';
-				appSign += '<td>'+item.name+'</td>';
+				if (item.app_status == 'N') {
+					appSign += '<td>반려</td>';
+				} else {
+					appSign += '<td>'+item.name+'</td>';					
+				}
 				var dateFormat = new Date(item.app_date);
 				drafterDate = dateFormat.toLocaleString();
 				appSignDate += '<td>'+drafterDate+'</td>';
 			}
 		}
+		
 		$('.drafterSign').html(drafterSign);
 		$('.drafterDate').html(drafterDate);
 		$('.appName').append(appName);
 		$('.sign').append(appSign);
 		$('.signDate').append(appSignDate);
+		$('#file').html(fileList);
+		$('.m-0').html(fileCnt);
+		
+		appName = '';
+		appSign = '';
+		appSignDate='';
+		
+		
+		for (item of approver) {
+				
+			if (item.app_date == null) {
+				appName += '<td>'+item.rank_name+'<br>'+item.name+'</td>' ;
+				appSign += '<td></td>';
+				appSignDate += '<td></td>';
+			} else {
+				appName += '<td>'+item.rank_name+'<br>'+item.name+'</td>' ;
+				appSign += '<td>'+item.name+'</td>';
+				var dateFormat = new Date(item.app_date);
+				drafterDate = dateFormat.toLocaleDateString();
+				appSignDate += '<td>'+drafterDate+'</td>';
+			}
+		}
+		
+		$('#approver').append(appName);
+		$('#approver_sign').append(appSign);
+		$('#sign_date').append(appSignDate);
 	}
 
 </script>

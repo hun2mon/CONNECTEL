@@ -35,6 +35,8 @@ public class ApprovalDTO {
 	private Timestamp app_date;
 	private int app_procedure;
 	private String rank_name;
+	private String dept_name;
+	private String app_status;
 	
 	
 	
@@ -163,6 +165,18 @@ public class ApprovalDTO {
 	}
 	public void setRank_name(String rank_name) {
 		this.rank_name = rank_name;
+	}
+	public String getDept_name() {
+		return dept_name;
+	}
+	public void setDept_name(String dept_name) {
+		this.dept_name = dept_name;
+	}
+	public String getApp_status() {
+		return app_status;
+	}
+	public void setApp_status(String app_status) {
+		this.app_status = app_status;
 	}
 
 }
