@@ -3,6 +3,8 @@ package com.connec.tel.dao;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,6 +18,7 @@ public interface FaqDAO {
 
 	Object allCount(int pagePerCnt, String category);
     int write(Map<String, String> param);    
+    
     int searchCount(@Param("textval") String textval);
     int deleteFaqs(List<Integer> faqNos);
 

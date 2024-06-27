@@ -38,16 +38,27 @@ public class FAQService {
 	}
 
 	public ModelAndView write(Map<String, String> param, HttpSession session) {
-		// FAQ 작성 로직
 		ModelAndView mav = new ModelAndView();
-		int result = faqDAO.write(param);
-		if(result > 0) {
-			mav.setViewName("redirect:/faqList.go");
+		
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+		param.put("emp_no", empDTO.getEmp_no());
+		 if (empDTO != null) {
+		        param.put("register", empDTO.getEmp_no());
+		    }
+		
+		int row = faqDAO.write(param);
+		if (row > 0) {
+			mav.setViewName("faq/faqList");
+			mav.addObject("msg", "작성이 완료 되었습니다.");
 		} else {
 			mav.setViewName("faq/faqWrite");
+			mav.addObject("msg", "작성에 실패했습니다.");
 		}
+		
 		return mav;
 	}
+
+	
 
 	public ModelAndView faqDetail(String faq_no) {
 		ModelAndView mav = new ModelAndView();

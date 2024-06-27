@@ -11,6 +11,11 @@ body {
     margin: 0;
     height: 100vh;
 }
+.ann-notice{
+	color: red;
+}
+
+
 
 .sidebar-container {
     flex-shrink: 0;
@@ -20,42 +25,62 @@ body {
     overflow-y: auto;
 }
 
-
-.annContent,.list-title{
-	    margin-left: 100px;
-    margin-right: 100px;
-} 
-.ann-list-no.ann-notice {
-    color: red; /* 빨간색으로 설정 */
-    font-weight: bold; /* 굵게 설정 */
-    /* 여기에 추가적인 스타일링을 할 수 있습니다. */
-}
-
-.pagination {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-}
-
 .commonstext {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
     margin-top: 100px;
+}
+
+.title {
     text-align: center;
+    margin-bottom: 20px;
 }
 
 .search-container {
-    display: inline-block;
-    border: 2px solid #6076E8;
-    border-radius: 8px;
-    padding: 5px 40px;
-    margin: 10px;
-    background-color: #f8f9fa;
+    position: relative; /* absolute positioning을 위해 부모 요소에 position: relative 추가 */
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-input[type="text"].freetextbox {
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.unfix-container {
+    position: absolute;
+    right: 0;
+}
+
+button {
+    background-color: #6076E8;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition-duration: 0.2s;
+}
+
+.freetextbox {
+    border: 2px solid #6076E8;
+    border-radius: 4px;
+    padding: 3px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    width: 30vh;
+    margin-right: 15px;
+}
+
+.freetextbox {
     border: 2px solid #6076E8; 
     border-radius: 4px; 
     padding: 3px; 
@@ -66,11 +91,11 @@ input[type="text"].freetextbox {
     margin-right: 15px;
 }
 
-input[type="text"].freetextbox:focus {
+.freetextbox:focus {
     border-color: #4056A1;
 }
 
-button {
+#freebutton {
     background-color: #6076E8; 
     border: none; 
     color: white; 
@@ -85,7 +110,7 @@ button {
     transition-duration: 0.2s;
 }
 
-button:hover {
+#freebutton:hover {
     background-color: #4056A1;
 }
 
@@ -94,53 +119,54 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     margin: 10px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
 }
 
-.empann-list_no, .empann-list_subject, .empann-list_check, .empann-list_bHit {
+.list-title div {
+    flex-basis: 16.67%; /* 각 항목이 6개이므로 100%를 6으로 나눈 값 */
+    text-align: center;
+    font-weight: bold;
+}
+
+.ann-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.ann-list-no, .ann-list-subject, .ann-list-name, .ann-list-date, .ann-list-hit, .ann-list-check {
+    flex-basis: 16.67%; /* 각 항목이 6개이므로 100%를 6으로 나눈 값 */
+    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.ann-list-no {
-flex-basis: 80px;
-    margin-right: -80px;
-    text-align: center;
-}
-
-.ann-list-no.ann-notice {
-    color: red; /* 공지사항 텍스트 색상 설정 */
-    font-weight: bold; /* 공지사항 텍스트 굵게 설정 */
-}
-
-.empann-list_subject {
+.ann-list-subject {
     flex-grow: 1;
-    margin: 0 10px;
+    text-align: left;
+    padding-left: 20px;
 }
 
-.empann-list_check {
-    flex-basis: 100px;
-    margin: 0 10px;
-}
-
-.empann-list_bHit {
-    flex-basis: 100px;
-    margin: 0 10px;
-}
 .ann-list-check {
-    flex-basis: 100px; /* 예시로 너비를 설정 */
-    display: flex; /* 체크박스와 텍스트를 수평 정렬 */
-    align-items: center; /* 세로 정렬 설정 */
-    margin: 0 10px; /* 필요한 여백 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .freecheckbox {
     margin-left: 5px; /* 체크박스와 텍스트 사이 여백 설정 */
 }
 
-
-.freecheckbox {
-    margin-left: 10px;
+.pagination {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
 }
 </style>
 </head>
@@ -153,18 +179,19 @@ flex-basis: 80px;
     <div class="title">
         <h2>- 직원 공지사항 -</h2>
     </div>
-    <div class="search-container">
-        <input type="text" class="freetextbox" id="freetextbox" placeholder=" 제목을 입력해주세요.">
-        <button id="freebutton">검색</button>
-    </div>
-    <span class="nav-right">
-        <button id="writebutton" onclick="writeAnn()">글쓰기</button>
-        <button id="deletebutton" style="margin-left: 10px;">삭제</button>
-    </span>
+<div class="search-container">
+    <input type="text" class="freetextbox" id="freetextbox" placeholder=" 제목을 입력해주세요.">
+    <button id="freebutton">검색</button>
     
-    <hr>
+    
+    <span class="unfix-container">
+        <button id="writebutton" onclick="writeAnn()">글쓰기</button>
+        <button id="deletebutton" style="margin-left: 5px; margin-right:20px">삭제</button>
+        <button id="unfixbutton">고정상태변경</button>
+    </span>
+</div>
     <div class="annContent">
-        <div class="list-title"style="margin-left:20px;">
+        <div class="list-title"style="background-color:#6076E8; color:white;">
             <div class="list-no"><strong>번호</strong></div>
             <div class="list-subject"><strong>제목</strong></div>
             <div class="list-name"><strong>작성자</strong></div>
@@ -173,16 +200,13 @@ flex-basis: 80px;
             <div class="list-check"><strong>선택</strong></div>
         </div>
     </div>
-    <hr>
-    <div id="list" style="    margin-left: 100px;
-    margin-right: 100px;"></div>
+    <div id="list"></div>
     
     <div class="pagination">
         <nav aria-label="Page navigation" style="text-align:center">
             <ul class="pagination" id="pagination"></ul>
         </nav>
     </div>
-    <hr>
 </div>
 <hr>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
@@ -193,6 +217,7 @@ var ann_division = 'E';
 var register = ''; // register 변수 정의
 var ann_date = ''; // regist_date 변수 정의
 var cnt = 10;
+var data = [];
 
 $(document).ready(function(){
     listCall(1);
@@ -225,8 +250,6 @@ $(document).ready(function(){
         });
     }
     
-    
-
     function listCall(page) {
         var cnt = 10;
         $.ajax({
@@ -271,7 +294,7 @@ $(document).ready(function(){
             } else {
                 content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
             }
-            content += '<div class="ann-list-subject"><a href="/empannDetail.go?empann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
+            content += '<div class="ann-list-subject"><a href="/empannDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
             content += '<div class="ann-list-name">'+data[i].register+'</div>';
             content += '<div class="ann-list-date">'+data[i].ann_date+'</div>';
             content += '<div class="ann-list-hit">' + data[i].ann_bHit + '</div>';
@@ -320,7 +343,65 @@ $(document).ready(function(){
             alert('삭제할 공지사항을 선택해주세요.');
         }
     });
+    
+    $('#unfixbutton').click(function() {
+        $.ajax({
+            type: 'GET',
+            url: '/empann/fixedCount.ajax',
+            success: function(response) {
+                var currentFixedCount = response.fixedCount;
+                var checkedItems = $('.freecheckbox:checked');
+                var annNos = [];
+                var willBeFixedCount = currentFixedCount;
 
+                checkedItems.each(function() {
+                    var annNo = $(this).attr('id').split('_')[1];
+                    annNos.push(parseInt(annNo));
+                    var isFixed = $(this).closest('.ann-list').find('.ann-list-no').hasClass('ann-notice');
+                    if (isFixed) {
+                        willBeFixedCount--; // [공지]에서 일반으로 변경할 때
+                    } else {
+                        willBeFixedCount++; // 일반에서 [공지]로 변경할 때
+                    }
+                });
+
+                // 고정된 [공지]가 5개 이상인 경우
+                if (currentFixedCount >= 5) {
+                    if (willBeFixedCount > currentFixedCount) {
+                        alert('상단 고정된 공지사항이 5개 이상이 될 수 없습니다.');
+                        return;
+                    }
+                }
+
+                // AJAX 요청 후에 공지사항 상태 변경
+                if (annNos.length > 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/empann/unfixann.ajax',
+                        contentType: 'application/json',
+                        data: JSON.stringify(annNos),
+                        success: function(response) {
+                            if (response === 'success') {
+                                alert('상단 고정 상태 변경에 성공하였습니다.');
+                                listCall(1);
+                            } else {
+                                alert('상단 고정 상태 변경에 실패하였습니다.');
+                            }
+                        },
+                        error: function(error) {
+                            console.log('상단 고정 해제 실패:', error);
+                            alert('상단 고정 상태 변경 중 오류가 발생했습니다.');
+                        }
+                    });
+                } else {
+                    alert('상단 고정 상태 변경할 공지사항을 선택해주세요.');
+                }
+            },
+            error: function(error) {
+                console.log('현재 고정된 공지사항 개수 확인 실패:', error);
+            }
+        });
+    });
     $('#writebutton').click(function() {
         window.location.href = '/empannwrite.go';
     });
@@ -328,4 +409,3 @@ $(document).ready(function(){
 </script>
 </body>
 </html>
-
