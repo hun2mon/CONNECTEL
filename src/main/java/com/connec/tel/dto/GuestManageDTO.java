@@ -13,10 +13,38 @@ public class GuestManageDTO {
 	private int room_no;
 	private String stay_check_in;
 	private String stay_check_out;
+	private String tid;
+	private char division;
+	private int cancel_price;
+	private String cancel_date;
 	
 	
 	
 	
+	public int getCancel_price() {
+		return cancel_price;
+	}
+	public void setCancel_price(int cancel_price) {
+		this.cancel_price = cancel_price;
+	}
+	public String getCancel_date() {
+		return cancel_date;
+	}
+	public void setCancel_date(String cancel_date) {
+		this.cancel_date = cancel_date;
+	}
+	public String getTid() {
+		return tid;
+	}
+	public void setTid(String tid) {
+		this.tid = tid;
+	}
+	public char getDivision() {
+		return division;
+	}
+	public void setDivision(char division) {
+		this.division = division;
+	}
 	public int getRoom_no() {
 		return room_no;
 	}

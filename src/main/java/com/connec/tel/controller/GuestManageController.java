@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.connec.tel.dto.kakaoPayCancelDTO;
 import com.connec.tel.service.GuestManageService;
 
 @Controller
@@ -31,13 +32,15 @@ public class GuestManageController {
 		return guestMngService.reserveList(search, page, cnt, searchDate);
 	}
 	
-	@PostMapping(value = "/guest/reserveDelete.ajax")
+	@PostMapping(value = "/guest/reserveCancel.ajax")
 	@ResponseBody
-	public Map<String, Object> reserveDelete(String res_no){
+	public kakaoPayCancelDTO reserveCancel(String res_no,String cancelPrice){
 		logger.info("reserveDelete.axax 요청!!!");
 		logger.info("res_no : "+ res_no);
-	
-		return guestMngService.reserveDelete(res_no);
+		logger.info("cancelPrice : "+ cancelPrice);
+		
+		kakaoPayCancelDTO res = guestMngService.reserveCancel(res_no,cancelPrice);
+		return res;
 	}
 	
 	@PostMapping(value = "/guest/stayList.ajax")
@@ -51,6 +54,28 @@ public class GuestManageController {
 		logger.info("searchDate : "+ searchDate);
 		
 		return guestMngService.stayList(search, page, cnt, searchDate);
+	}
+	
+	@PostMapping(value = "/guest/cancelList.ajax")
+	@ResponseBody
+	public Map<String, Object> cancelList(String search,
+			String page, String cnt,String searchDate){
+		logger.info("cancelList.axax 요청!!!");
+		logger.info("search : "+ search);
+		logger.info("page : "+ page);
+		logger.info("cnt : "+ cnt);
+		logger.info("searchDate : "+ searchDate);
+		
+		return guestMngService.cancelList(search, page, cnt, searchDate);
+	}
+	
+	@PostMapping(value = "/guest/resCancelDate.ajax")
+	@ResponseBody
+	public Map<String, Object> resCancelDate(String date){
+		logger.info("resCancelDate.axax 요청!!!");
+		logger.info("date : "+ date);
+		
+		return guestMngService.resCancelDate(date);
 	}
 	
 	

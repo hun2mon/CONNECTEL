@@ -129,9 +129,6 @@
 	var showPage = 1;
 	var num;
 	
-	document.getElementById('test').addEventListener('click', function() {
-	    location.href = '/room/test';
-	});
 	
 	$(document).ready(function(){
 	    listCall(showPage);   

@@ -184,10 +184,15 @@ public class RoomController {
 		
 		return roomService.changeCheckIn(param);
 	}
+
+	@PostMapping(value = "/room/updateDayRoomPrice.ajax")
+	@ResponseBody
+	public Map<String, Object> updateDayRoomPrice(
+			@RequestParam Map<String, Object> param){
+		logger.info("updateDayRoomPrice 요청!!!");
+		logger.info("param : {}", param);
 	
-	@GetMapping(value = "room/test")
-	public void test() {
-		roomService.test();
+		return roomService.updateDayRoomPrice(param);
 	}
 	
 
