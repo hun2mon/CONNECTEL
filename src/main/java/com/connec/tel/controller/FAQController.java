@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.dto.FaqDTO;
 import com.connec.tel.service.FAQService;
 
@@ -52,11 +53,20 @@ public class FAQController {
 		return"/faq/faqWrite";
 	}
 	
-	@PostMapping(value="faqwrite.do")
-	public ModelAndView writedo(@RequestParam Map<String, String> param, HttpSession session) {
-		logger.info("param {}", param);
-		return faqService.write(param, session);
-	}
+		@PostMapping(value="faqwrite.do")
+		public ModelAndView writedo(@RequestParam Map<String, String> param, HttpSession session) {
+			logger.info("param {}", param);
+			
+			EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+		    if (empDTO != null) {
+		        // 사용자 정보에서 register 값 설정
+		        param.put("register", empDTO.getEmp_no());
+		    }
+	 		
+			
+			return faqService.write(param, session);
+		}	
+
 
 	@GetMapping(value="/faqDetail.go")
 	public ModelAndView faqDetail(String faq_no) {

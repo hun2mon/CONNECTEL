@@ -33,7 +33,7 @@ body {
 table {
     margin: 0 auto; /* 가운데 정렬 */
     border-collapse: collapse; /* 테이블 간격 없애기 */
-    width: 800px; /* 테이블 너비 지정 */
+    width: 1000px; /* 테이블 너비 지정 */
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
     border-radius: 8px; /* 모서리 둥글게 */
@@ -88,7 +88,6 @@ select {
 
 input[type="submit"] {
 margin-top: -30px;
-	margin-left: 700px;
     background-color: #6076E8; /* 배경색 */
     color: white; /* 글자색 */
     padding: 10px 20px; /* 내부 여백 */
@@ -115,13 +114,11 @@ a:hover {
 }
 
 .exit {
-
     text-align: right;
     margin-top: 20px;
 }
 
 .exit a {
-	margin-right: 654px;
     background-color: #f8f9fa;
     padding: 10px 20px;
     border: 1px solid #ccc;
@@ -149,54 +146,58 @@ a:hover {
     <form id="empannForm" action="/empannwrite.do" method="post" enctype="multipart/form-data">
         <table>
             <tr>
-                <th colspan="2" style="background-color:#6076E8; color:white;">
+                <th colspan="3" style="background-color:#6076E8; color:white;">
                     공지사항 글쓰기
                 </th>
             </tr>
             <tr>
                 <th>
-                    <input type="text" class="ann_subject" id="ann_subject" name="ann_subject" placeholder="제목을 입력해주세요." required>
+                    <input type="text" class="ann_subject" id="ann_subject" name="ann_subject" 
+                           placeholder="제목을 입력해주세요." value="${ann_subject}" required>
                 </th>
                 <td>
                     <select id="ann_division" name="ann_division">
-                        <option value="E">직원 공지사항</option>
-                        <option value="C">고객 공지사항</option>
+                        <option value="E" ${ann_division == 'E' ? 'selected' : ''}>직원 공지사항</option>
+                        <option value="C" ${ann_division == 'C' ? 'selected' : ''}>고객 공지사항</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="ann_fixed" name="ann_fixed">
+                        <option value="N" ${ann_fixed == 'N' ? 'selected' : ''}>[일반]</option>
+                        <option value="Y" ${ann_fixed == 'Y' ? 'selected' : ''}>[상단고정]</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
-                    <input type="text" class="textcontent" id="textcontent" name="textcontent" placeholder="내용을 입력해 주세요" required>
+                <td colspan="3">
+                    <input type="text" class="textcontent" id="textcontent" name="textcontent" 
+                           placeholder="내용을 입력해 주세요" value="${textcontent}" required>
                 </td>
             </tr>
             <tr>
-            	<td colspan="2">
-            		첨부파일 : <input type="file" name="photos" multiple="multiple"/><span style="margin-left: 250px;">작성자:${name}</span>
-            	</td>    
+                <td colspan="2">
+                    첨부파일 : <input type="file" name="photos"/>
+                </td>    
+                <td style="text-align:right; padding-right:30px;">작성자:${name}</td>
             </tr>            
             <tr>
-                <td colspan="2">
+                <td colspan="3">
                     <div class="exit">
                         <a href="ann/empAnnList.go"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
                     </div>
-                   <input type="submit" value="등록"> 
+                    <input type="submit" value="등록"> 
                 </td>
             </tr>
         </table>
     </form>
 </div>
 
-
-
-
-
-
-
+<c:if test="${not empty error}">
+    <script>
+        alert("${error}");
+    </script>
+</c:if>
 </body>
 <script>
-
-
-
-
 </script>
 </html>
