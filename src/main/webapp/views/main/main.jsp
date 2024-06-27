@@ -167,7 +167,7 @@ th {
 }
 </style>
 </head>
-<body onload="setDays('오늘')">
+<body>
 	<header>
 		<div id="wrapper">
 			<div id="sidebar">
@@ -259,10 +259,7 @@ th {
 			</div>
 		</div>
 	</header>
-	<link rel="stylesheet"
-		href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-		crossorigin="anonymous">
+
 	<!-- 차트 링크 -->
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 	<script
