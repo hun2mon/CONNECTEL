@@ -7,11 +7,23 @@
 	<select id="totalPage" resultType="int">
 
 		<if test="param1 == ''">
-			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE in_date = #{param3}
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE in_date = #{param3} AND division ='A'
 		</if>
 	
 		<if test="param1 != null">
-			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE cos_name LIKE #{param1} AND in_date = #{param3}
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE cos_name LIKE #{param1} AND in_date = #{param3} AND division ='A'
+		</if>
+	
+	</select>
+	
+	<select id="cancelTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE in_date = #{param3} AND division ='C'
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE cos_name LIKE #{param1} AND in_date = #{param3} AND division ='C'
 		</if>
 	
 	</select>
@@ -22,28 +34,47 @@
 			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages 
 			FROM reservation r LEFT JOIN stay s using(res_no)
 			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param3}
+			ORDER BY out_date desc
 		</if>
 	
 		<if test="param1 != null">
 			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages 
 			FROM reservation r LEFT JOIN stay s using(res_no)
 			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param3} AND cos_name LIKE #{param1}
+			ORDER BY out_date desc
 		</if>
 	
+	</select>
+	
+	<select id="cancelList" resultType="com.connec.tel.dto.GuestManageDTO" parameterType="map">
+		
+		<if test="param1 == ''">
+			SELECT * FROM reservation LEFT JOIN res_cancel rc using(res_no)
+		    WHERE in_date = #{param4} AND division ='C'
+		    ORDER BY res_date DESC
+		    LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT * FROM reservation LEFT JOIN res_cancel rc using(res_no)
+		    WHERE cos_name LIKE CONCAT('%', #{param1}, '%') AND in_date = #{param4} AND division ='C'
+		    ORDER BY res_date DESC
+		    LIMIT #{param2}, #{param3}
+		</if>
 	</select>
 	
 	<select id="reserveList" resultType="com.connec.tel.dto.GuestManageDTO" parameterType="map">
 		
 		<if test="param1 == ''">
 			SELECT * FROM reservation
+		    WHERE in_date = #{param4} AND division ='A'
 		    ORDER BY res_date DESC
-		    WHERE in_date = #{param4}
 		    LIMIT #{param2}, #{param3}
 		</if>
 		
 		<if test="param1 != null">
 			SELECT * FROM reservation
-		    WHERE cos_name LIKE CONCAT('%', #{param1}, '%') AND in_date = #{param4}
+		    WHERE cos_name LIKE CONCAT('%', #{param1}, '%') AND in_date = #{param4} AND division ='A'
 		    ORDER BY res_date DESC
 		    LIMIT #{param2}, #{param3}
 		</if>
@@ -70,11 +101,23 @@
 		</if>
 	</select>
 	
-	<delete id="reserveDelete">
-		DELETE FROM reservation WHERE res_no = #{res_no}
-	</delete>
 	
+	<select id="resCancelDate" resultType="String">
+		SELECT cancel_price_percent FROM cancel_penalty 
+			WHERE res_cancel_date = #{date}
+	</select>
 	
+	<update id="reserveCancel">
+		UPDATE reservation SET division = 'C' WHERE res_no = #{res_no};
+	</update>
 	
+	<insert id="insert_res_cancel">
+		INSERT INTO res_cancel(res_no,cancel_price,cancel_date)
+			VALUES(#{res_no},#{cancelPrice},CURRENT_DATE())
+	</insert>
+	
+	<select id="selectTid" resultType="String">
+		SELECT tid FROM reservation WHERE res_no = #{res_no}
+	</select>
 	
 </mapper>

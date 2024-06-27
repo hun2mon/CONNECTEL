@@ -546,6 +546,7 @@ function lastCheck() {
 	 
 	 var room_no = $('#roomNumberHeader').text().replace('Room ', '');
 	 
+	 
 	$.ajax({
 		type:'post',
 		url:'/room/checkIn.ajax',
@@ -556,10 +557,18 @@ function lastCheck() {
 		},
 		dataType:'json',
 		success:function(data){
-			console.log(data.msg);
-			listCall();
-			$('#success-header-modal').modal('hide');
-			$('#centermodal').modal('hide');			
+			console.log(data.state);
+			if (data.state === 'success') {
+				listCall();
+				$('#success-header-modal').modal('hide');
+				$('#centermodal').modal('hide');
+			}else {
+				alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');
+				listCall();
+				$('#success-header-modal').modal('hide');
+				$('#centermodal').modal('hide');
+			}
+						
 			
 		},
 		error:function(e){
@@ -623,9 +632,18 @@ function changeCheckIn(){
 	        dataType: 'JSON',
 	        success: function(data) {
 	            console.log(data);
+	            if (data.status === success) {
 	            $('#changeCheckIn').modal('hide');
 	            $('#danger-header-modal').modal('hide');
 	            listCall();
+					
+				}else{
+					alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');
+					$('#changeCheckIn').modal('hide');
+		            $('#danger-header-modal').modal('hide');
+		            listCall();
+				}
+	            
 	            
 	        },
 	        error: function(e) {

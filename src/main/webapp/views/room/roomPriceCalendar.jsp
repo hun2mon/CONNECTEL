@@ -95,6 +95,60 @@
     background-color: lavender;
     color: black; /* 흰색 텍스트 */
 }
+
+ .modal-header {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .modal-body h4 {
+        margin-bottom: 20px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+        background-color: #fff;
+        text-align: center;
+    }
+
+    .table th,
+    .table td {
+        padding: 10px;
+        vertical-align: middle;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .table th {
+        background-color: #f2f2f2;
+        text-align: center;
+    }
+
+    .form-control-plaintext {
+        border: none;
+        padding: 0;
+        background-color: transparent;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: center;
+        padding: 15px;
+    }
+
+    .modal-footer .btn-info {
+        width: 100px;
+    }
+    
+    .event-content{
+    	cursor: pointer;
+    }
+    
+    #eventDate{
+    	text-align: center;
+    }
 	
 </style>
 </head>
@@ -118,35 +172,83 @@
         </div>
     </div>
 </div>
+
+<!--  모달  -->
+<div id="dayRoomPrice" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="info-header-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-info">
+                <h4 class="modal-title" id="info-header-modalLabel">일일 객실 가격</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <h4 id="eventDate"></h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>룸 타입</th>
+                            <th>가격 (KRW)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>스탠다드룸</td>
+                            <td><input type="text" id="modalStandardPrice" class="form-control-plaintext" /></td>
+                        </tr>
+                        <tr>
+                            <td>슈페리어룸</td>
+                            <td><input type="text" id="modalSuperiorPrice" class="form-control-plaintext" /></td>
+                        </tr>
+                        <tr>
+                            <td>디럭스룸</td>
+                            <td><input type="text" id="modalDeluxPrice" class="form-control-plaintext" /></td>
+                        </tr>
+                        <tr>
+                            <td>스위트룸</td>
+                            <td><input type="text" id="modalSuitePrice" class="form-control-plaintext" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateDayRoomPrice()">확인</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 <script>
+var selectedDate = '';
+var currentYearMonth = '';
+
 $(document).ready(function() {
     listCall(); 
     console.log("listCall 요청!!");
 });
 
 function listCall() {
-	console.log("listCall 실행");
+    console.log("listCall 실행");
     var calendarEl = $('#calendar')[0];
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth', 
         events: function(fetchInfo, successCallback, failureCallback) {
+        	 var yearMonth = new Date(fetchInfo.startStr);
+             yearMonth.setMonth(yearMonth.getMonth() + 1); 	
+
             
-        	var yearMonth = new Date(fetchInfo.startStr);
-            yearMonth.setMonth(yearMonth.getMonth() + 1);
-        	
-        	$.ajax({
+            $.ajax({
                 type: 'POST',
                 url: '/room/roomPriceCalendarList.ajax', 
                 data: {
-                	year_month: yearMonth.getFullYear() + '-' + ('0' + (yearMonth.getMonth() + 1)).slice(-2) 
+                    year_month: yearMonth.getFullYear() + '-' + ('0' + (yearMonth.getMonth() + 1)).slice(-2) 
                 },
                 dataType: 'JSON', 
                 success: function(data) {
-					console.log(data);
+                    console.log(data);
                     var events = data.list.map(function(event) {
                         return {
-                        	 title: '', 
+                             title: '', 
                              start: event.date, // 이벤트의 시작 날짜
                              end: event.date, // 이벤트의 종료 날짜
                              data: event, 
@@ -160,7 +262,7 @@ function listCall() {
                     successCallback(events); 
                 },
                 error: function(e) {
-                	console.log(e); 
+                    console.log(e); 
                     failureCallback('이벤트 데이터를 불러오는 중 오류가 발생했습니다.');
                 }
             });
@@ -178,9 +280,69 @@ function listCall() {
 
             info.el.innerHTML = '';
             info.el.appendChild($eventContent[0]);
+
+            // bar 클릭 이벤트 핸들러 추가
+            $bar1.on('click', function() {
+                openRoomPriceModal(event.extendedProps, event.startStr);
+            });
+            $bar2.on('click', function() {
+                openRoomPriceModal(event.extendedProps, event.startStr);
+            });
+            $bar3.on('click', function() {
+                openRoomPriceModal(event.extendedProps, event.startStr);
+            });
+            $bar4.on('click', function() {
+                openRoomPriceModal(event.extendedProps, event.startStr);
+            });
         }
     });
     calendar.render(); 
+}
+
+function openRoomPriceModal(data, date) {
+	selectedDate = date;
+    $('#eventDate').text(date); // 클릭한 날짜를 모달에 표시
+    $('#modalStandardPrice').val(data.standard);
+    $('#modalSuperiorPrice').val(data.superior);
+    $('#modalDeluxPrice').val(data.delux);
+    $('#modalSuitePrice').val(data.suite);
+    $('#dayRoomPrice').modal('show'); // 부트스트랩 모달 열기
+}
+
+// 해달 날짜 객실 타입별 가격 업데이트 !
+function updateDayRoomPrice() {
+	var standard = $('#modalStandardPrice').val();
+	var superior = $('#modalSuperiorPrice').val();
+	var delux = $('#modalDeluxPrice').val();
+	var suite = $('#modalSuitePrice').val();
+	
+	console.log("selectedDate : " + selectedDate);
+	console.log("standard : " + standard);
+	console.log("superior : " + superior);
+	console.log("delux : " + delux);
+	console.log("suite : " + suite);
+	
+	$.ajax({
+		type: 'POST',
+        url: '/room/updateDayRoomPrice.ajax', 
+        data: {
+        	standard:standard,
+        	superior:superior,
+        	delux:delux,
+        	suite:suite,
+        	date:selectedDate
+        },
+        dataType: 'JSON', 
+        success: function(data) {
+        	console.log(data);
+        	listCall(); 
+        },
+        error:function(e){
+        	console.log(e);
+        }
+	});
+	
+
 }
 </script>
 </body>

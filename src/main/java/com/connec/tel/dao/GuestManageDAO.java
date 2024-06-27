@@ -13,11 +13,23 @@ public interface GuestManageDAO {
 
 	List<GuestManageDTO> reserveList(String search, int start, int cntt, String searchDate);
 
-	void reserveDelete(String res_no);
+	
 
 	int stayListTotalPage(String search, int cntt, String searchDate);
 
 	List<GuestManageDTO> stayList(String search, int start, int cntt, String searchDate);
+
+	int cancelTotalPage(String search, int cntt, String searchDate);
+
+	List<GuestManageDTO> cancelList(String search, int start, int cntt, String searchDate);
+
+	String resCancelDate(String date);
+
+	void reserveCancel(String res_no);
+
+	void insert_res_cancel(String res_no, String cancelPrice);
+
+	String selectTid(String res_no);
 
 	
 

@@ -13,14 +13,18 @@
 		SELECT r.res_no, r.cos_name, r.cos_phone, r.cos_email, r.in_date, r.out_date, r.res_date, r.res_price
 		FROM reservation r
 		LEFT JOIN stay s ON r.res_no = s.res_no
-		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL;	
+		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL AND division = 'A';	
 	</select>
 	
 	<select id="reservationSearchList" resultType="com.connec.tel.dto.RoomDTO" parameterType="map">
 		SELECT r.res_no, r.cos_name, r.cos_phone, r.cos_email, r.in_date, r.out_date, r.res_date, r.res_price
 		FROM reservation r
 		LEFT JOIN stay s ON r.res_no = s.res_no
-		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL	 AND cos_name = #{name};	
+		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL	AND cos_name = #{name} AND division = 'A'; ;	
+	</select>
+	
+	<select id="selectRoomDiv" resultType="String">
+		SELECT room_status FROM room WHERE room_no = #{room_no}
 	</select>
 	
 	<insert id="checkIn" parameterType="map">
@@ -176,5 +180,16 @@
 		INSERT INTO reservation(res_no,cos_name,cos_phone,cos_email,in_date,out_date,res_date,res_price,type_code)
 	values(#{i},'킹정훈','010-1234-1234','aaa@naver.com','2024-06-26','2024-06-27','2024-06-02',900000,1002);
 	</insert>
+	
+	<update id="updateDayRoomPrice" parameterType="map">
+		UPDATE room_price 
+		SET standard = #{standard},
+		superior =#{superior},
+		delux=#{delux},
+		suite =#{suite}
+		WHERE date = #{date}
+	</update>
+	
+	
 		
 </mapper>

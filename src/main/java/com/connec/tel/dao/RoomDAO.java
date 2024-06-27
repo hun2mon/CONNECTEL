@@ -64,5 +64,9 @@ public interface RoomDAO {
 
 	void test(int i);
 
+	String selectRoomDiv(String room_no);
+
+	void updateDayRoomPrice(Map<String, Object> param);
+
 
 }
