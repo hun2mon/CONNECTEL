@@ -1,10 +1,13 @@
 package com.connec.tel.controller;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +32,12 @@ public class MainController {
 
 	// 메인 페이지 이동
 	@RequestMapping(value = "/main")
-	public String main() {
-		logger.info("main 요청");
-		
-		return "main/main";
+	public String mainss(Model model) throws IOException {
+	    String url = "https://www.sukbakmagazine.com/news/articleList.html?sc_sub_section_code=S2N10&view_type=sm"; // 페이지 번호를 쿼리 파라미터로 추가
+	    Document doc = Jsoup.connect(url).get();
+	    mainService.scrapeContent(doc, model);
+	    
+	    return "main/main";
 	}
 	
 	
@@ -53,6 +58,7 @@ public class MainController {
                 return Collections.emptyList();
         }
     }
+
 	
 	
 	// 페이지 이동

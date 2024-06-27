@@ -5,5 +5,26 @@
 
 <mapper namespace="com.connec.tel.dao.ProfileDAO">
 	
+	<select id = "leaveDetail" resultType = "profile">
+		SELECT 
+		    lh.emp_no,
+		    lh.annual AS total_leave,
+		    COALESCE(SUM(lm.leave_use), 0) AS use_leave,
+		    lh.annual - COALESCE(SUM(lm.leave_use), 0) AS balance_leave
+		FROM 
+		    leave_history lh
+		LEFT JOIN 
+		    leave_management lm ON lh.emp_no = lm.emp_no
+		GROUP BY 
+		    lh.emp_no, lh.annual order by '총휴가일' limit 1
+	</select>
+	
+	<update id = "changePassword">
+		UPDATE emp
+			SET password = #{param1}
+				WHERE emp_no = #{param2}	
+	</update>
+	
+	
 	
 </mapper>

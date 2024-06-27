@@ -5,7 +5,7 @@
 
 <mapper namespace="com.connec.tel.dao.CalendarDAO">
 	
-	<select id="getEvents" resultType="com.connec.tel.dto.CalendarDTO">
+	<select id="getEvents" resultType="calendar">
 	    SELECT cal_no, cal_content, cal_start, cal_end
 	    FROM calendar
 	</select>
@@ -17,11 +17,7 @@
     <delete id="deleteEvent">
         DELETE FROM calendar WHERE cal_no = #{cal_no}
     </delete>
-    
-    <update id="shareEvent" parameterType="com.connec.tel.dto.CalendarDTO">
-	    UPDATE calendar
-	    SET  where cal_content = #{cal_content}
-	</update>
+
 	
 
 	

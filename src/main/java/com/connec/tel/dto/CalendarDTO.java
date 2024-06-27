@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.apache.ibatis.type.Alias;
 
+@Alias(value = "calendar")
 public class CalendarDTO {
 	private String cal_no;
 	private String cal_content;
