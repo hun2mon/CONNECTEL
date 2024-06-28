@@ -74,6 +74,7 @@ public class ApprovalController {
 	// 기안서 첨부파일 저장
 	@PostMapping(value = "approval/fileSave")
 	public String fileSave(MultipartFile[] app_file, String draft_no) {
+		logger.info("app_file : {}", app_file.length);
 		logger.info("draft_no : {}", draft_no);
 		return appService.fileSave(app_file, draft_no);
 	}
@@ -111,5 +112,38 @@ public class ApprovalController {
 		String emp_no = empDTO.getEmp_no();
 		return appService.reqAppListCall(search, page, cnt, emp_no, cate);
 	}
+	
+	//결재 승인
+	@PostMapping(value = "/approval/approve.ajax")
+	@ResponseBody
+	public Map<String, Object> approve(@RequestParam Map<String, Object> param){
+		
+		return appService.approve(param);
+	}
+	
+	//결재 반려
+	@PostMapping(value = "/approval/comapnion.ajax")
+	@ResponseBody
+	public Map<String, Object> comapnion(@RequestParam Map<String, String> param){
+		logger.info("param : {}", param);
+		return appService.companion(param);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

@@ -144,6 +144,7 @@
 			 	AND dr.draft_status IN ('Y','N') 
 				AND dr.draft_subject LIKE #{param1}
 				AND dr.register != #{param4}
+				AND ap.app_date is not null
 			<if test="param5 != null">
 				AND dr.draft_status = #{param5}
 			</if>)
@@ -169,6 +170,37 @@
 				AND draft_status = #{param4}
 			</if>
 	</select>
+	
+	<update id="approve" parameterType="map">
+		UPDATE approver SET app_status = 'Y', app_date = now() WHERE draft_no = #{draft_no} AND emp_no = #{emp_no};
+	</update>
+	
+	
+	<update id="draftApprove" parameterType="map">
+		UPDATE draft SET draft_status = 'Y' WHERE draft_no = #{draft_no}
+	</update>
+	
+	<update id="leave_mng_approve" parameterType="map">
+		UPDATE leave_management SET draft_status = 'Y' WHERE draft_no = #{draft_no}
+	</update>
+	
+	<insert id="leave_history_add" parameterType="map">
+		INSERT INTO leave_history(emp_no, annual, leave_division, register)
+			VALUES(#{register}, #{annual}, '-', #{emp_no})
+	</insert>
+	
+	<update id="draft_companion" parameterType="map">
+		UPDATE draft SET draft_status = 'N', reason = #{reason} WHERE draft_no = #{draft_no}
+	</update>
+	
+	<update id="app_companion" parameterType="map">
+		UPDATE approver SET app_status = 'N', app_date = now() WHERE draft_no = #{draft_no} AND emp_no = #{emp_no}
+	</update>
+	
+	<update id="leave_companion" parameterType="map">
+		UPDATE leave_management SET draft_status = 'N' WHERE draft_no = #{draft_no}
+	</update>
+	
 	
 	
 </mapper>

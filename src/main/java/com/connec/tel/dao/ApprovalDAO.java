@@ -49,4 +49,18 @@ public interface ApprovalDAO {
 
 	List<Map<String, Object>> fileList(String draft_no);
 
+	int approve(Map<String, Object> param);
+
+	void draftApprove(Map<String, Object> param);
+
+	void leave_mng_approve(Map<String, Object> param);
+
+	void leave_history_add(Map<String, Object> param);
+
+	int app_companion(Map<String, String> param);
+
+	int draft_companion(Map<String, String> param);
+
+	int leave_companion(Map<String, String> param);
+
 }

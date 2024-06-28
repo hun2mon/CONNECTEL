@@ -169,13 +169,17 @@ public class ApprovalService {
 	public String fileSave(MultipartFile[] app_file, String draft_no) {
 		if (app_file.length != 0) {
 			for (MultipartFile file : app_file) {
-				String oriFileName = file.getOriginalFilename();
-				
-				//2. 새 파일명 생성
-				String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
-				String newFileName = System.currentTimeMillis() + ext;
-				CommonService.upload(file, newFileName);
-				appDAO.fileSave(file.getOriginalFilename(), newFileName, draft_no);
+				if (file.isEmpty()) {
+					return "redirect:/approval/myApproval.go";
+				}else {
+					String oriFileName = file.getOriginalFilename();
+					
+					//2. 새 파일명 생성
+					String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
+					String newFileName = System.currentTimeMillis() + ext;
+					CommonService.upload(file, newFileName);
+					appDAO.fileSave(file.getOriginalFilename(), newFileName, draft_no);					
+				}
 				
 			}			
 		}
@@ -199,6 +203,47 @@ public class ApprovalService {
 		map.put("list", list);
 		map.put("currPage", currPage);
 		map.put("totalPages", totalpage);
+		return map;
+		
+	}
+	public Map<String, Object> approve(Map<String, Object> param) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String emp_no = (String) param.get("emp_no");
+		int procedure = Integer.parseInt((String) param.get("procedure"));
+		int max_procedure = Integer.parseInt((String) param.get("max_procedure"));
+		int row = 0;
+		
+		if (procedure != max_procedure) {
+			logger.info("중간결재자 : {}", emp_no);
+			row = appDAO.approve(param);
+			if (row > 0) {
+				map.put("msg", "결재 완료되었습니다.");
+			}
+		} else {
+			logger.info("최종 결재자 : {}", emp_no);
+			row = appDAO.approve(param);
+			if (row > 0) {
+				appDAO.draftApprove(param);
+				appDAO.leave_mng_approve(param);
+				appDAO.leave_history_add(param);
+			}
+		}
+		
+		return map;
+	}
+	public Map<String, Object> companion(Map<String, String> param) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int app_row = appDAO.app_companion(param);
+		int draft_row = appDAO.draft_companion(param);
+		int leave_row = appDAO.leave_companion(param);
+		if (app_row > 0 && draft_row > 0 && leave_row > 0) {
+			map.put("msg", "기안서가 반려되었습니다.");
+		}
+		
 		return map;
 	}
 	

@@ -7,8 +7,9 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="/res/style.css" />
-<link rel="stylesheet" type="text/css"
-	href="/assets/extra-libs/prism/prism.css">
+<link rel="stylesheet" type="text/css" href="/assets/extra-libs/prism/prism.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 <style>
 .approver, .draft_content {
 	text-align: center;
@@ -55,6 +56,7 @@
 
 .draft_title {
 	text-align: center;
+	color: black;
 }
 
 .draftTitle {
@@ -199,7 +201,7 @@ th {
 						</div>
 					</div>
 				</div>
-				<div class="card">
+				<div class="card" id="pdf_body">
 					<div class="card-body">
 						<div class="main_div">
 							<div class="draft_title">
@@ -264,9 +266,6 @@ th {
 							<div class="card mb-0">
 								<div class="card-header" id="headingOne">
 									<h5 class="m-0">
-										<a class="custom-accordion-title d-block pt-2 pb-2" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 
-											3개의 첨부파일 <span class="float-right"><i class="mdi mdi-chevron-down accordion-arrow"></i></span>
-										</a>
 									</h5>
 								</div>
 								<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -277,22 +276,86 @@ th {
 							<!-- end card-->
 						</div>
 					</div>
-					<c:if test="${loginInfo.emp_no != dto.register && dto.draft_status != 'N' && dto.draft_status != 'Y'}">
-						<div class="bottomBtn">
-							<input type="button" class="appBtn botBtn" value="승인" onclick="">
-							<input type="button" class="appBtn2 botBtn" value="반려" onclick="">
-						</div>					
-					</c:if>
-					<c:if test="${loginInfo.emp_no == dto.register && dto.draft_status == 'N' }">
-						<div class="bottomBtn">
+					<div class="bottomBtn">
+						<c:if test="${loginInfo.emp_no == dto.register && dto.draft_status == 'N' }">
 							<input type="button" class="appBtn botBtn" value="재기안" onclick="">
 							<input type="button" class="appBtn2 botBtn" value="이전" onclick="">
-						</div>
-					</c:if>
+							<input type="button" class="appBtn2 botBtn" value="pdf 다운로드" onclick="downloadPDF()">
+						</c:if>
+						<c:if test="${dto.draft_status != 'N'}">
+							<input type="button" class="appBtn2 botBtn" value="pdf 다운로드" onclick="downloadPDF()">
+						</c:if>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	
+	<div id="info-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="info-header-modalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+        	<div class="modal-content">
+            	<div class="modal-header modal-colored-header bg-info">
+               		<h4 class="modal-title" id="info-header-modalLabel">기안서 결재</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<div class="modal-body">
+					<h5 class="mt-0">기안서를 결재하시겠습니까?</h5>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" data-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-info" id="approve">확인</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+	
+	<div id="info-alert-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog modal-sm">
+	        <div class="modal-content">
+	            <div class="modal-body p-4">
+	                <div class="text-center">
+	                    <i class="dripicons-information h1 text-info"></i>
+	                    <p class="mt-3">결재가 완료 되었습니다.</p>
+	                    <button type="button" class="btn btn-info my-2" data-dismiss="modal" id="location">확인</button>
+	                </div>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+	
+	
+	<!-- Danger Header Modal -->
+	<div id="danger-header-modal" class="modal fade" tabindex="-1" role="dialog"
+	    aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header modal-colored-header bg-danger">
+	                <h4 class="modal-title" id="danger-header-modalLabel">반려 하시겠습니까?</h4>
+	                <button type="button" class="close" data-dismiss="modal"
+	                    aria-hidden="true">×</button>
+	            </div>
+	            <div class="modal-body">
+	            	<textarea class="form-control" rows="3" placeholder="반려 사유를 입력해 주세요...." id="comReason"></textarea>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-light"
+	                    data-dismiss="modal">닫기</button>
+	                <button type="button" class="btn btn-danger" id="companion">반려</button>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+	
+	
+	
+	
+	
+	
+	
 </body>
 <script src="/assets/extra-libs/prism/prism.js"></script>
 <script>
@@ -310,6 +373,7 @@ th {
     		success:function(data){
     			console.log(data.approver);
     			drawApprover(data.approver, data.fileList);
+    			drawButton(data.approver);
     		},
     		error:function(e){
     			console.log(e);
@@ -386,7 +450,11 @@ th {
 				appSignDate += '<td></td>';
 			} else {
 				appName += '<td>'+item.rank_name+'<br>'+item.name+'</td>' ;
-				appSign += '<td>'+item.name+'</td>';
+				if (item.app_status == 'N') {
+					appSign += '<td>반려</td>';
+				} else {
+					appSign += '<td>'+item.name+'</td>';					
+				}
 				var dateFormat = new Date(item.app_date);
 				drafterDate = dateFormat.toLocaleDateString();
 				appSignDate += '<td>'+drafterDate+'</td>';
@@ -397,6 +465,126 @@ th {
 		$('#approver_sign').append(appSign);
 		$('#sign_date').append(appSignDate);
 	}
+	
+	var max_procedure = '';
+	function drawButton(approvers){
+		var content = '';
+		max_procedure = approvers.length;
+		for (item of approvers) {
+			if (item.emp_no == '${loginInfo.emp_no}' && item.app_date == null) {
+				content += '<input type="button" class="appBtn botBtn" value="승인" onclick="approve(\''+item.emp_no+'\',\''+item.app_procedure+'\')">';
+				content += '<input type="button" class="appBtn2 botBtn" value="반려" onclick="companion(\''+item.emp_no+'\')">';
+			}
+		}
+		
+		if (content != '') {
+			$('.bottomBtn').html(content);			
+		}
+	}
+	
+	// 결재 승인
+	function approve(emp_no, procedure){
+		var division = 0
+		$('#info-header-modal').modal('show');
+		
+		console.log(emp_no);
+		console.log(procedure);
+		console.log(max_procedure);
+
+		$('#approve').on("click",function(){
+			
+			$.ajax({
+	    		url:'/approval/approve.ajax',
+	    		method:'post',
+	    		data:{
+	    			draft_no:'${dto.draft_no}'
+					,emp_no:emp_no
+					,procedure:procedure
+					,max_procedure:max_procedure
+					,register:'${dto.register}'
+					,annual:'${dto.leave_use}'
+	    		},
+	    		dataType:'JSON',
+	    		success:function(data){
+					console.log(data);
+					if (data.msg != '') {
+						$('#info-alert-modal').modal('show');
+						$('#info-alert-modal').on("click",function(){
+							location.href="/approval/requestApproval.go";							
+						})
+					}
+	    		},
+	    		error:function(e){
+	    			console.log(e);
+	    		}
+    		}) 
+		})
+	}
+	
+	// 결재 반려
+	function companion(emp_no){
+		$('#danger-header-modal').modal("show");
+		console.log(emp_no);
+		
+		$('#companion').on("click",function(){
+			var reason = $('#comReason').val();
+			if (reason == '') {
+				$('.mt-3').html('사유를 입력해 주세요');
+				$('#info-alert-modal').modal('show');
+				return;
+			}
+			else{
+			
+				$.ajax({
+		    		url:'/approval/comapnion.ajax',
+		    		method:'post',
+		    		data:{
+		    			draft_no:'${dto.draft_no}'
+						,emp_no:emp_no
+						,reason:reason
+		    		},
+		    		dataType:'JSON',
+		    		success:function(data){
+						console.log(data);
+						if (data.msg != '') {
+							$('#info-alert-modal').modal('show');
+							$('.mt-3').html(data.msg);
+							$('#info-alert-modal').on("click",function(){
+								location.href="/approval/requestApproval.go";							
+							})
+						}
+		    		},
+		    		error:function(e){
+		    			console.log(e);
+		    		}
+	    		}) 
+			}
+		})
+	}
+	
+	
+	
+	// pdf 다운로드
+	function downloadPDF() {
+	    const element = document.getElementById('pdf_body');
+
+	    html2canvas(element).then((canvas) => {
+	    	let imgData = canvas.toDataURL('image/png');
+
+	        let imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
+	        let pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+	        let imgHeight = canvas.height * imgWidth / canvas.width;
+	        let heightLeft = imgHeight;
+
+	        let doc = new jspdf.jsPDF('p', 'mm');
+	        let position = 0;
+
+
+	        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+	        doc.save('${dto.draft_no}' + '_' +'${dto.draft_subject}' + '.pdf');
+	    });
+	}
+	
 
 </script>
 </html>

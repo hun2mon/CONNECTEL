@@ -48,9 +48,8 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label class="text-dark" for="pwd">비밀번호</label>
-                                        <input class="form-control" id="pwd" type="password" name="pw"
-                                            placeholder="비밀번호를 입력해 주세요.">
+                                        <label class="text-dark" for="pwd" >비밀번호</label>
+                                        <input class="form-control" id="pwd" type="password" name="pw" placeholder="비밀번호를 입력해 주세요." value="1111" onkeypress="loginCheckEnter(event)">
                                     </div>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-sm-2">
@@ -78,6 +77,7 @@
 <script src="/assets/libs/bootstrap/dist/js/bootstrap.min.js "></script>
 <script>
 	$(".preloader ").fadeOut();
+	
 	
 	$(document).ready(function(){
 		var key = getCookie("idChk"); //user1
@@ -132,6 +132,20 @@
 	
 	
 	function loginCheck() {
+	
+		if ($('#uname').val() == '') {
+			alert('아이디를 입력해 주세요.');
+		} else if($('#pwd').val() == ''){
+			alert('비밀번호를 입력해 주세요.');
+		} else {
+			$('form').submit();
+		}
+	}
+	
+	function loginCheckEnter(e) {
+		if (e.keyCode != 13) {
+			return;
+		}
 		if ($('#uname').val() == '') {
 			alert('아이디를 입력해 주세요.');
 		} else if($('#pwd').val() == ''){
