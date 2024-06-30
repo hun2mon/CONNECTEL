@@ -523,7 +523,12 @@ function handleSearch() {
 }
 
 function checkIn() {
-		
+		var res_number = $('#reservationNumber').val();	
+	
+		if (!res_number) {
+			alert('예약번호를 입력해주세요!');
+			return;
+		}
 	
 		$('#centermodal').modal('show');
 
@@ -617,6 +622,11 @@ function changeCheckIn(){
 	    var res_no = $('#res_no').text().replace('예약번호 : ', '');
 		var changeRoom_no = $('#availableRooms').val();
 	    
+		if (!changeRoom_no) {
+			alert('변경할 객실을 선택해주세요!!');
+			return
+		}
+		
 		console.log(room_no);
 		console.log(res_no);
 		console.log(changeRoom_no);
@@ -632,10 +642,10 @@ function changeCheckIn(){
 	        dataType: 'JSON',
 	        success: function(data) {
 	            console.log(data);
-	            if (data.status === success) {
-	            $('#changeCheckIn').modal('hide');
-	            $('#danger-header-modal').modal('hide');
-	            listCall();
+	            if (data.status === 'success') {
+		            $('#changeCheckIn').modal('hide');
+		            $('#danger-header-modal').modal('hide');
+		            listCall();
 					
 				}else{
 					alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');

@@ -120,4 +120,34 @@
 		SELECT tid FROM reservation WHERE res_no = #{res_no}
 	</select>
 	
+	<select id="reserveListCall" parameterType="map" resultType="com.connec.tel.dto.GuestManageDTO">
+	    SELECT date, standard, superior, delux, suite FROM room_price
+	    WHERE date <![CDATA[ >= ]]> #{in_date} AND date <![CDATA[ < ]]> #{out_date}
+	</select>
+	
+	<select id="room_info" resultType="com.connec.tel.dto.GuestManageDTO">
+		SELECT * FROM room_information
+	</select>
+	
+	<select id="standard_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1001'
+	</select>
+	
+	<select id="superior_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1002'
+	</select>
+	
+	<select id="delux_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1003'
+	</select>
+	
+	<select id="suite_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1004'
+	</select>
+	
+	<select id="getDate" resultType="String">
+		SELECT date  FROM room_price  WHERE date <![CDATA[ >= ]]> #{today}
+	</select>
+
+	
 </mapper>

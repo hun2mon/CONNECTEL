@@ -34,6 +34,19 @@
 	</if>
 
 </select>
-	
+
+<insert id="reservation" parameterType="map">
+	INSERT INTO reservation(res_no,cos_name,cos_phone,in_date,out_date,res_date,res_price,type_code,tid)
+		VALUES(#{res_no},#{cos_name},#{cos_phone},#{checkIn},#{checkOut},CURRENT_DATE(),#{total_amount},#{type_code},#{tid})
+</insert>
+
+<select id="todayResSearch" resultType="int">
+	SELECT COUNT(*)  as res_no from reservation where SUBSTRING(res_no,1,6) =#{currDate}
+</select>
+
+<select id="todayResNumSearch" resultType="int">
+	SELECT res_no FROM reservation 
+	WHERE SUBSTRING(res_no,1,6) =#{currDate} ORDER BY res_no DESC limit 1
+</select>
 	
 </mapper>

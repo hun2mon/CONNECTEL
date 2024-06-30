@@ -17,10 +17,117 @@ public class GuestManageDTO {
 	private char division;
 	private int cancel_price;
 	private String cancel_date;
+	private String date;
+	private int standard;
+	private int superior;
+	private int delux;
+	private int suite;
+	private String room_detail;
+	private String room_extent;
+	private String room_bed;
+	private int room_capacity;
+	private String room_amenities;
+	private String register;
+	private String regist_date;
+	private String updater;
+	private String update_date;
+	private String room_view;
 	
 	
 	
 	
+	
+	
+	public String getRoom_view() {
+		return room_view;
+	}
+	public void setRoom_view(String room_view) {
+		this.room_view = room_view;
+	}
+	public String getRoom_detail() {
+		return room_detail;
+	}
+	public void setRoom_detail(String room_detail) {
+		this.room_detail = room_detail;
+	}
+	public String getRoom_extent() {
+		return room_extent;
+	}
+	public void setRoom_extent(String room_extent) {
+		this.room_extent = room_extent;
+	}
+	public String getRoom_bed() {
+		return room_bed;
+	}
+	public void setRoom_bed(String room_bed) {
+		this.room_bed = room_bed;
+	}
+	public int getRoom_capacity() {
+		return room_capacity;
+	}
+	public void setRoom_capacity(int room_capacity) {
+		this.room_capacity = room_capacity;
+	}
+	public String getRoom_amenities() {
+		return room_amenities;
+	}
+	public void setRoom_amenities(String room_amenities) {
+		this.room_amenities = room_amenities;
+	}
+	public String getRegister() {
+		return register;
+	}
+	public void setRegister(String register) {
+		this.register = register;
+	}
+	public String getRegist_date() {
+		return regist_date;
+	}
+	public void setRegist_date(String regist_date) {
+		this.regist_date = regist_date;
+	}
+	public String getUpdater() {
+		return updater;
+	}
+	public void setUpdater(String updater) {
+		this.updater = updater;
+	}
+	public String getUpdate_date() {
+		return update_date;
+	}
+	public void setUpdate_date(String update_date) {
+		this.update_date = update_date;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public int getStandard() {
+		return standard;
+	}
+	public void setStandard(int standard) {
+		this.standard = standard;
+	}
+	public int getSuperior() {
+		return superior;
+	}
+	public void setSuperior(int superior) {
+		this.superior = superior;
+	}
+	public int getDelux() {
+		return delux;
+	}
+	public void setDelux(int delux) {
+		this.delux = delux;
+	}
+	public int getSuite() {
+		return suite;
+	}
+	public void setSuite(int suite) {
+		this.suite = suite;
+	}
 	public int getCancel_price() {
 		return cancel_price;
 	}

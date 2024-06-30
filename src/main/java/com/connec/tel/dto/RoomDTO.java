@@ -23,10 +23,87 @@ public class RoomDTO {
 	private int delux;
 	private int suite;
 	private String date;
+	private int room_manage_no;
+	private String room_type;
+	private String content;
+	private String status;
+	private String register;
+	private String updater;
+	private String unavailable;
+	private String name;
+	private String regist_date;
+	private String update_date;
+	private String authority;
 	
 	
 	
 	
+	public String getAuthority() {
+		return authority;
+	}
+	public void setAuthority(String authority) {
+		this.authority = authority;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getRegist_date() {
+		return regist_date;
+	}
+	public void setRegist_date(String regist_date) {
+		this.regist_date = regist_date;
+	}
+	public String getUpdate_date() {
+		return update_date;
+	}
+	public void setUpdate_date(String update_date) {
+		this.update_date = update_date;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getUnavailable() {
+		return unavailable;
+	}
+	public void setUnavailable(String unavailable) {
+		this.unavailable = unavailable;
+	}
+	public int getRoom_manage_no() {
+		return room_manage_no;
+	}
+	public void setRoom_manage_no(int room_manage_no) {
+		this.room_manage_no = room_manage_no;
+	}
+	public String getRoom_type() {
+		return room_type;
+	}
+	public void setRoom_type(String room_type) {
+		this.room_type = room_type;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getRegister() {
+		return register;
+	}
+	public void setRegister(String register) {
+		this.register = register;
+	}
+	public String getUpdater() {
+		return updater;
+	}
+	public void setUpdater(String updater) {
+		this.updater = updater;
+	}
 	public String getDate() {
 		return date;
 	}
