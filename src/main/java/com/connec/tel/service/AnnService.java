@@ -139,13 +139,94 @@ public Map<String, Object> annlist(int currPage, int pagePerCnt, String ann_divi
 	result.put("currPage", currPage);
 	result.put("ann_division", ann_division);
 	result.put("ann_fixed", ann_fixed);
-	result.put("totalPages", annDAO.allCount(pagePerCnt));
+	result.put("totalPages", annDAO.annallCount(pagePerCnt));
 	result.put("register", name);
 	result.put("ann_date", ann_date);
 
 	
 	return result;
 }
+
+public String empupdateann(AnnDTO annDTO, MultipartFile[] newphoto, MultipartFile[] newfile) {
+	String page = "";
+	logger.info("업데이트 서비스 셈");
+	logger.info("ann_no: " + annDTO.getAnn_no());
+	int result = annDAO.annupdate(annDTO);
+	String ann_no = annDTO.getAnn_no();
+	if(result > 0) {
+		logger.info("데이터 들어감?");
+		page ="redirect:/ann/empAnnList.go";
+		empupdatefileSave(ann_no, newphoto);
+		empupdateannfile(newfile, ann_no);
+	} else {
+		logger.info("팅긴거임 ㅋㅋ");
+		page = "ann/empAnnList";
+	}
+	
+	
+	return page;	
+}
+
+public void empupdatefileSave(String ann_no, MultipartFile[] newphoto) {
+    for (MultipartFile photo : newphoto) {
+        String fileName = photo.getOriginalFilename();
+        logger.info("upload file name : " + fileName);
+        if (!fileName.equals("")) {
+            String ext = fileName.substring(fileName.lastIndexOf("."));
+            String newFileName = System.currentTimeMillis() + ext;
+            logger.info(fileName + " -> " + newFileName);
+            try {
+                byte[] bytes = photo.getBytes();
+                Path path = Paths.get(file_root + newFileName);
+                Files.write(path, bytes);
+                Map<String, String> paramMap = new HashMap<>();
+                paramMap.put("ori_pho_name", fileName);
+                paramMap.put("pho_name", newFileName);
+                paramMap.put("ann_no", ann_no);
+                if(annDAO.photoname(ann_no)== null) {
+                	annDAO.annfileWrite(fileName, newFileName, ann_no);
+                }else {
+                annDAO.updatefileWrite(paramMap);
+                }
+                Thread.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+public void empupdateannfile(MultipartFile[] newfile, String ann_no) {
+    for (MultipartFile files : newfile) {
+        String fileName = files.getOriginalFilename();
+        logger.info("upload file name : " + fileName);
+        if (!fileName.equals("")) {
+            String ext = fileName.substring(fileName.lastIndexOf("."));
+            String newFileName = System.currentTimeMillis() + ext;
+            logger.info(fileName + " -> " + newFileName);
+            try {
+                byte[] bytes = files.getBytes();
+                Path path = Paths.get(file_root + newFileName);
+                Files.write(path, bytes);
+                Map<String, String> paramMap = new HashMap<>();
+                paramMap.put("ori_file_name", fileName);
+                paramMap.put("file_name", newFileName);
+                paramMap.put("ann_no", ann_no);
+                if(annDAO.annfile(ann_no)==null) {
+                	annDAO.annnewfileWrite(fileName, newFileName, ann_no);
+                }else {	
+                annDAO.updatenewfile(paramMap);
+                }
+                Thread.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+
+
 
 
 
@@ -155,13 +236,14 @@ public Map<String, Object> annlist(int currPage, int pagePerCnt, String ann_divi
 
 
 
-public String annwrite(MultipartFile[] photos, AnnDTO dto) {
+public String annwrite(MultipartFile[] photos, AnnDTO dto, MultipartFile[] file) {
 	String page = "";
 	int result = annDAO.annwrite(dto);
 	String ann_no = dto.getAnn_no();
 	if(result > 0) {
 		page ="redirect:/ann/annList.go";
-		fileSave(ann_no, photos);
+		annfileSave(ann_no, photos);
+		annfilewrite(file, ann_no);
 	} else {
 		page = "ann/annList";
 	}
@@ -195,11 +277,48 @@ public void annfileSave(String ann_no, MultipartFile[] photos) {
 	}			
 }
 
+public void annfilewrite(MultipartFile[] file, String ann_no) {
+	for (MultipartFile files : file) {
+		// 1. 업로드할 파일명이 있는가?
+		String fileName = files.getOriginalFilename();
+		logger.info("upload file name : "+fileName);
+		if(!fileName.equals("")) {
+			String ext = fileName.substring(fileName.lastIndexOf("."));
+			// 2. 새파일명 생성
+			String newFileName = System.currentTimeMillis()+ext;
+			logger.info(fileName+" -> "+newFileName);
+			//3. 파일 저장
+			try {
+				byte[] bytes = files.getBytes(); // MultipartFile 로 부터 바이너리 추출
+				Path path = Paths.get(file_root+newFileName);//저장경로지정
+				Files.write(path, bytes);//저장
+				annDAO.annnewfileWrite(fileName,newFileName,ann_no);
+				Thread.sleep(1);//파일명을 위해 강제 휴식 부여
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}		
+	}			
+	
+}
+
+
 
 public int anncountann_fixed(Map<String, String> param) {
 	
-	return  annDAO.count(param);
+	return  annDAO.anncount(param);
 }
+
+public int anngetFixedCount() {
+    return annDAO.anngetFixedCount();
+}
+
+public void annunfixAnnouncements(List<Integer> annNos) {
+    for (Integer annNo : annNos) {
+        annDAO.annunfixAnnouncement(annNo);
+    }
+}
+
 
 
 
@@ -211,6 +330,7 @@ public ModelAndView empannDetail(String ann_no) {
 	logger.info("직원디테일");
 	mav.addObject("dto", dto);
 	mav.addObject("image", annDAO.photo(ann_no));
+	mav.addObject("file", annDAO.annfile(ann_no));
 	mav.setViewName("/ann/empAnndetail");
 	
 	return mav;
@@ -224,6 +344,7 @@ public ModelAndView annDetaildo(String ann_no) {
 	logger.info("고객디테일");
 	mav.addObject("dto", dto);
 	mav.addObject("image", annDAO.annphoto(ann_no));
+	mav.addObject("file", annDAO.annfile(ann_no));
 	mav.setViewName("/ann/anndetail");
 	
 	return mav;
@@ -248,10 +369,94 @@ public AnnDTO getannById(String ann_no) {
 
 
 
-public void updateann(AnnDTO annDTO, String ann_subject, String ann_content, String ann_no) {
-	annDAO.updateann(annDTO, ann_subject, ann_content,ann_no);
-	
+public String updateAnn(AnnDTO annDTO, MultipartFile[] newphoto, MultipartFile[] newfile) {
+    String page = "";
+    logger.info("업데이트 서비스 셈");
+    logger.info("ann_no: " + annDTO.getAnn_no());
+    int result = annDAO.annupdate(annDTO);
+    String ann_no = annDTO.getAnn_no();
+    
+    if (result > 0) {
+        logger.info("데이터 업데이트 성공");
+        page = "redirect:/ann/annList.go";
+        
+        // 새로운 사진 업데이트
+        if (newphoto != null && newphoto.length > 0) {
+            updatefileSave(ann_no, newphoto);
+        }
+        
+        // 새로운 파일 업데이트
+        if (newfile != null && newfile.length > 0) {
+            updateAnnFile(newfile, ann_no);
+        }
+    } else {
+        logger.info("데이터 업데이트 실패");
+        page = "ann/annList"; // 실패 시 처리할 페이지
+    }
+    
+    return page;    
 }
+
+public void updatefileSave(String ann_no, MultipartFile[] newphoto) {
+    for (MultipartFile photo : newphoto) {
+        String fileName = photo.getOriginalFilename();
+        logger.info("upload file name : " + fileName);
+        if (!fileName.equals("")) {
+            String ext = fileName.substring(fileName.lastIndexOf("."));
+            String newFileName = System.currentTimeMillis() + ext;
+            logger.info(fileName + " -> " + newFileName);
+            try {
+                byte[] bytes = photo.getBytes();
+                Path path = Paths.get(file_root + newFileName);
+                Files.write(path, bytes);
+                Map<String, String> paramMap = new HashMap<>();
+                paramMap.put("ori_pho_name", fileName);
+                paramMap.put("pho_name", newFileName);
+                paramMap.put("ann_no", ann_no);
+                if(annDAO.photoname(ann_no)== null) {
+                	annDAO.annfileWrite(fileName, newFileName, ann_no);
+                }else {
+                annDAO.updatefileWrite(paramMap);
+                }
+                Thread.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+public void updateAnnFile(MultipartFile[] newfile, String ann_no) {
+    for (MultipartFile file : newfile) {
+        String fileName = file.getOriginalFilename();
+        logger.info("upload file name : " + fileName);
+        if (!fileName.equals("")) {
+            String ext = fileName.substring(fileName.lastIndexOf("."));
+            String newFileName = System.currentTimeMillis() + ext;
+            logger.info(fileName + " -> " + newFileName);
+            try {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(file_root + newFileName);
+                Files.write(path, bytes);
+                Map<String, String> paramMap = new HashMap<>();
+                paramMap.put("ori_file_name", fileName);
+                paramMap.put("file_name", newFileName);
+                paramMap.put("ann_no", ann_no);
+                if(annDAO.annfile(ann_no)==null) {
+                	annDAO.annnewfileWrite(fileName, newFileName, ann_no);
+                }else {	
+                annDAO.updatenewfile(paramMap);
+                }
+                Thread.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+
+
 
 
 
@@ -261,6 +466,11 @@ public String photoname(String ann_no) {
 }
 
 
+
+public String filename(String ann_no) {
+	
+	return annDAO.annfile(ann_no);
+}
 
 
 

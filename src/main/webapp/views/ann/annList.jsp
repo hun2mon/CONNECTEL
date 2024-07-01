@@ -185,11 +185,13 @@ button {
     
     
     <span class="unfix-container">
+    <c:if test="${loginInfo.authority eq '2' || loginInfo.authority eq '3'}">
         <button id="writebutton" onclick="writeAnn()">글쓰기</button>
         <button id="deletebutton" style="margin-left: 5px; margin-right:20px">삭제</button>
         <button id="unfixbutton">고정상태변경</button>
+   </c:if>
     </span>
-</div>
+</div>  
 
     <div class="annContent">
         <div class="list-title"style="background-color:#6076E8; color:white;">
@@ -199,6 +201,7 @@ button {
             <div class="list-date"><strong>작성일</strong></div>
             <div class="list-hit"><strong>조회수</strong></div>
             <div class="list-check"><strong>선택</strong></div>
+          
         </div>
     </div>
     <div id="list"></div>
@@ -215,44 +218,28 @@ button {
 var showPage = 1;
 var ann_fixed = 'N';
 var ann_division = 'C';
-var register = ''; // register 변수 정의
-var ann_date = ''; // regist_date 변수 정의
+var register = '';
+var ann_date = '';
 var cnt = 10;
-var data = [];
+var totalPages = 1;
 
-$(document).ready(function(){
-    listCall(1);
+$(document).ready(function() {
+    // 초기 페이지 로드
+    listCall(showPage);
 
+    // 검색 버튼 클릭 이벤트
     $('#freebutton').on('click', function() {
-        var searchText = $('#freetextbox').val();
-        if (searchText.trim() !== '') {
-            search(searchText, showPage);
+    	$('#pagination').twbsPagination('destroy'); // 기존 페이징 제거
+        var searchText = $('#freetextbox').val().trim();
+        if (searchText !== '') {
+            search(searchText, 1); // 검색 시 첫 페이지로 초기화
         } else {
-            listCall(showPage);
+            listCall(showPage); // 검색어 없이 검색 버튼 클릭 시 전체 리스트 보여주기
         }
     });
 
-    function search(title, page) {
-        $.ajax({
-            type: 'GET',
-            url: '/ann/annsearch.ajax',
-            data: {
-                'textval': title,
-                'page': page.toString()
-            },
-            dataType: 'json',
-            success: function(data) {
-                drawList(data.list);
-                $('#pagination').twbsPagination('destroy');
-            },
-            error: function(error) {
-                console.log('검색 실패:', error);
-            }
-        });
-    }
-    
+    // 리스트 호출 함수
     function listCall(page) {
-        var cnt = 10;
         $.ajax({
             type: 'GET',
             url: '/ann/annList.ajax',
@@ -261,13 +248,15 @@ $(document).ready(function(){
                 'cnt': cnt,
                 'ann_division': ann_division,
                 'ann_fixed': ann_fixed,
-                'register' : register,
-                'ann_date' : ann_date
+                'register': register,
+                'ann_date': ann_date
             },
             dataType: 'json',
             success: function(data) {
+          
                 drawList(data.list);
-                initializePagination(data.totalPages);
+                totalPages = data.totalPages;
+                initializePagination(totalPages, page);
             },
             error: function(error) {
                 console.log('리스트 출력 실패:', error);
@@ -275,55 +264,86 @@ $(document).ready(function(){
         });
     }
 
-    function drawList(data) {
-        var content = '';  
-        data.sort(function(a, b) {
-            if (a.ann_fixed === 'Y' && b.ann_fixed === 'Y') {
-                return b.ann_no - a.ann_no; // 둘 다 공지일 경우 ann_no 내림차순 정렬
-            } else if (a.ann_fixed === 'Y') {
-                return -1; // a가 공지면 우선순위로
-            } else if (b.ann_fixed === 'Y') {
-                return 1; // b가 공지면 우선순위로
-            } else {
-                return b.ann_no - a.ann_no; // 그 외에는 ann_no 내림차순 정렬
+    // 검색 함수
+   function search(title, page) {
+    	
+        $.ajax({
+            type: 'GET',
+            url: '/ann/annsearch.ajax',
+            data: {
+                'textval': title,
+                'page': page
+            },
+            dataType: 'json',
+            success: function(data) {
+                drawList(data.list);
+                totalPages = data.totalPages;
+                $('#pagination').twbsPagination({
+                    totalPages: totalPages,
+                    visiblePages: 5,
+                    startPage: page,
+                    onPageClick: function(event, page) {
+                        search(title,page);
+                    }
+                });
+            },
+            error: function(error) {
+                console.log('검색 실패:', error);
             }
         });
+    }
+
+    // 페이징 초기화 함수
+    function initializePagination(totalPages, startPage) {
+        $('#pagination').twbsPagination({
+            totalPages: totalPages,
+            visiblePages: 5,
+            startPage: startPage,
+            onPageClick: function(event, page) {
+                listCall(page);
+        
+            }
+        });
+    }
+
+    function drawList(data) {
+        var content = '';
         for (var i = 0; i < data.length; i++) {
             content += '<div class="ann-list">';
             if (data[i].ann_fixed === 'Y') {
-                content += '<div class="ann-list-no ann-notice">[공지]</div>'; // 공지 여부에 따라 클래스 추가
+                content += '<div class="ann-list-no ann-notice">[공지]</div>';
             } else {
                 content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
             }
             content += '<div class="ann-list-subject"><a href="/annDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
-            content += '<div class="ann-list-name">'+data[i].register+'</div>';
-            content += '<div class="ann-list-date">'+data[i].ann_date+'</div>';
+            
+            // updater가 존재할 경우 updater 표시, 그렇지 않으면 register 표시
+            var nameToShow = data[i].updater ? data[i].updater : data[i].register;
+            content += '<div class="ann-list-name">' + nameToShow + '</div>';
+            
+            // update_date가 존재할 경우 update_date 표시, 그렇지 않으면 ann_date 표시
+            var dateToShow = data[i].update_date ? data[i].update_date : data[i].ann_date;
+            content += '<div class="ann-list-date">' + dateToShow + '</div>';
+            
             content += '<div class="ann-list-hit">' + data[i].ann_bHit + '</div>';
+            <c:if test="${loginInfo.authority eq '2' || loginInfo.authority eq '3'}">
             content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"></div>';
+           	</c:if>
+           	<c:if test="${loginInfo.authority eq '1'}">
+           content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"disabled></div>';
+          	</c:if>
             content += '</div>';
         }
         $('#list').html(content);
     }
 
-    function initializePagination(totalPages) {
-        $('#pagination').twbsPagination({
-            totalPages: totalPages,
-            visiblePages: 5,
-            onPageClick: function(event, page) {
-                listCall(page);
-            }
-        });
-    }
-
+    // 삭제 버튼 클릭 이벤트
     $('#deletebutton').click(function() {
         var checkedItems = $('.freecheckbox:checked');
-        var annNos = [];
-
-        checkedItems.each(function() {
-            var annNo = $(this).attr('id').split('_')[1];
-            annNos.push(parseInt(annNo));
-        });
-
+        var annNos = checkedItems.map(function() {
+            return parseInt($(this).attr('id').split('_')[1]);
+        }).get();
+        
         if (annNos.length > 0) {
             $.ajax({
                 type: 'POST',
@@ -344,41 +364,35 @@ $(document).ready(function(){
             alert('삭제할 공지사항을 선택해주세요.');
         }
     });
-    
+
+    // 고정상태 변경 버튼 클릭 이벤트
     $('#unfixbutton').click(function() {
         $.ajax({
             type: 'GET',
-            url: '/empann/fixedCount.ajax',
+            url: '/ann/fixedCount.ajax',
             success: function(response) {
                 var currentFixedCount = response.fixedCount;
                 var checkedItems = $('.freecheckbox:checked');
                 var annNos = [];
                 var willBeFixedCount = currentFixedCount;
-
                 checkedItems.each(function() {
                     var annNo = $(this).attr('id').split('_')[1];
                     annNos.push(parseInt(annNo));
                     var isFixed = $(this).closest('.ann-list').find('.ann-list-no').hasClass('ann-notice');
                     if (isFixed) {
-                        willBeFixedCount--; // [공지]에서 일반으로 변경할 때
+                        willBeFixedCount--;
                     } else {
-                        willBeFixedCount++; // 일반에서 [공지]로 변경할 때
+                        willBeFixedCount++;
                     }
                 });
-
-                // 고정된 [공지]가 5개 이상인 경우
-                if (currentFixedCount >= 5) {
-                    if (willBeFixedCount > currentFixedCount) {
-                        alert('상단 고정된 공지사항이 5개 이상이 될 수 없습니다.');
-                        return;
-                    }
+                if (currentFixedCount >= 5 && willBeFixedCount > currentFixedCount) {
+                    alert('상단 고정된 공지사항이 5개 이상이 될 수 없습니다.');
+                    return;
                 }
-
-                // AJAX 요청 후에 공지사항 상태 변경
                 if (annNos.length > 0) {
                     $.ajax({
                         type: 'POST',
-                        url: '/empann/unfixann.ajax',
+                        url: '/ann/unfixann.ajax',
                         contentType: 'application/json',
                         data: JSON.stringify(annNos),
                         success: function(response) {
@@ -403,6 +417,8 @@ $(document).ready(function(){
             }
         });
     });
+
+    // 글쓰기 버튼 클릭 이벤트
     $('#writebutton').click(function() {
         window.location.href = '/annwrite.go';
     });
