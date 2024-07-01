@@ -53,6 +53,55 @@ form {
 .subject{
 	width: 450px;
 }
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal_my {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+  height: 20%;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modalBtn{
+	float: right;
+}
+
+.appBtn {
+	background: cornflowerblue;
+	border: cornflowerblue;
+	color: white;
+	height: 40px;
+	border-radius: 5px;
+	width: 60px;
+}
+
 </style>
 </head>
 <body>
@@ -155,6 +204,21 @@ form {
 			</div>
 		</div>
 	</div>
+	
+	
+	
+<div id="modal" class="modal">
+  <div class="modal_my">
+    <h4>반려 사유</h4>
+    <hr>
+    <p class="compReason">Modal content goes here...</p>
+   	<div class="modalBtn">
+	  	<input type="button" value="닫기" class="appBtn" id="modal_close">
+   	</div>
+  </div>
+</div>
+	
+	
 </body>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src="/js/jquery.twbsPagination.js" type="text/javascript"></script>
@@ -249,7 +313,7 @@ function drawList(list) {
 				content += '<td>결재</td>';					
 			}
 			if (item.draft_status == 'N') {
-				content += '<td>반려</td>';					
+				content += '<td><a href="javascript:reason(\''+item.draft_no+'\')">반려</a></td>';					
 			}
 			if (item.draft_status == 'T') {
 				content += '<td>임시저장</td>';					
@@ -258,9 +322,31 @@ function drawList(list) {
 		}		
 	}
 	
-
 	$('.table_content').html(content);
 }
+
+function reason(draft_no) {
+	$.ajax({
+		url:'/approval/compReason.ajax',
+		method:'post',
+		data:{
+			draft_no:draft_no 
+		},
+		dataType:'JSON',
+		success:function(data){
+			var modal = document.getElementById("modal");
+			$('.compReason').html(data.reason);
+			modal.style.display = "block";
+			$('#modal_close').on("click",function(){
+				modal.style.display = "none";	
+			})
+		},
+		error:function(e){
+			console.log(e);
+		}
+	})
+}
+
 	
 </script>
 </html>

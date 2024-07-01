@@ -95,6 +95,10 @@ th{
 .modal-dialog{
 	max-width: 600px;
 }
+
+#content{
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -115,12 +119,12 @@ th{
 											<tr class="appName">
 												<th scope="col" rowspan="3" class="table_title">신청자</th>
 												<th scope="col" class="emp_name">
-													${name }
+													${name } ${dto.name}
 												</th>
 												<th scope="col" rowspan="3" class="table_title validation">결재자</th>
 											</tr>
 											<tr class="rankName">
-												<td>${rank_name}</td>
+												<td>${rank_name} ${dto.rank_name}</td>
 											</tr>
 										</tbody>
 									</table>
@@ -157,7 +161,7 @@ th{
 												</select>
 											</td>
 											<td>보유 연차일수</td>
-											<td>25일</td>
+											<td>${leftOver}일</td>
 										</tr>
 										<tr>
 											<td class="draftTitle">기간</td>
@@ -189,6 +193,7 @@ th{
 					</div>
 				</div>
 				<div id="div_editor"></div>
+				<div id="content">${dto.draft_content }</div>
 				<input type="hidden" name="draft_content">
 				<br>
 				<div class="input-group mb-3">
@@ -206,111 +211,103 @@ th{
 				</div>
 				<div class="bottomBtn">
 					<input type="hidden" name="draft_status">
-					<input type="button" class="appBtn botBtn" value="임시저장" onclick="test('1')">
-					<input type="button" class="appBtn botBtn" value="작성완료" onclick="test('2')">
+					<c:if test="${dto.draft_status == 'T'}">
+						<input type="button" class="appBtn botBtn" value="삭제" onclick="delDraft('${dto.draft_no}')">
+					</c:if>
+					<c:if test="${dto.draft_status != 'T'}">
+						<input type="button" class="appBtn botBtn" value="임시저장" onclick="writeDraft('1')">					
+					</c:if>
+					<input type="button" class="appBtn botBtn" value="작성완료" onclick="writeDraft('2')">
 				</div>
 			</div>
 		</div>
 	</div>	
-<!-- 참조자 모달 -->
-<div id="info-header-modal" class="modal fade referrer_modal" tabindex="-1" role="dialog"
-    aria-labelledby="referrer-modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header modal-colored-header bg-info">
-                <h4 class="modal-title" id="info-header-modalLabel">Modal Heading</h4>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <div>
-					<ul id="tree">
-						<li class="card2">
-						</li>
-						<li class="customers">
-						</li>
-						<li class="config">
-						</li>
-					</ul>
-				</div>
-				<div class="modal_table">
-					<ul class="nav nav-tabs mb-3">
-					    <li class="nav-item">
-					        <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active" onclick="checkTab('referrer')">
-					            <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-					            <span class="d-none d-lg-block">참조자</span>
-					        </a>
-					    </li>
-					    <li class="nav-item">
-					        <a href="#profile" data-toggle="tab" aria-expanded="true" class="nav-link" onclick="checkTab('viewer')">
-					            <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
-					            <span class="d-none d-lg-block">조회자</span>
-					        </a>
-					    </li>
-					</ul>
-					<div class="tab-content">
-					    <div class="tab-pane show active" id="home">
-					    	<table class="table table_text">
-								<thead>
-									<tr>
-										<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11,'인사팀','R')"></th>
-										<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(22,'고객팀','R')"></th>
-										<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(33,'시설팀','R')"></th>
-									</tr>
-								</thead>
-								<tbody class="modal_table_body">
-								</tbody>
-							</table>
-					    </div>
-					    <div class="tab-pane" id="profile">
-					    	<table class="table table_text">
-								<thead>
-									<tr>
-										<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11,'인사팀','V')"></th>
-										<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(22,'고객팀','V')"></th>
-										<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(33,'시설팀','V')"></th>
-									</tr>
-								</thead>
-								<tbody class="modal_table_viewer">
-								</tbody>
-							</table>
-					    </div>
-					</div>
-				</div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-info"  data-dismiss="modal" onclick="drawReferrer()">확인</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-	<!--동일 조회/참조자 모달 -->
-	<div id="info-alert-modal" class="modal fade same" tabindex="-1"
-		role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-body p-4">
-					<div class="text-center">
-						<i class="dripicons-information h1 text-info"></i>
-						<p class="mt-3">이미 등록된 사원 입니다.</p>
-						<button type="button" class="btn btn-info my-2"
-							data-dismiss="modal">닫기</button>
-					</div>
-				</div>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
 	
+	
+	
+	
+	
+	
+	<!-- 참조자 모달 -->
+	<div id="info-header-modal" class="modal fade referrer_modal" tabindex="-1" role="dialog"
+	    aria-labelledby="referrer-modalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header modal-colored-header bg-info">
+	                <h4 class="modal-title" id="info-header-modalLabel">Modal Heading</h4>
+	                <button type="button" class="close" data-dismiss="modal"
+	                    aria-hidden="true">×</button>
+	            </div>
+	            <div class="modal-body">
+	                <div>
+						<ul id="tree">
+							<li class="card2">
+							</li>
+							<li class="customers">
+							</li>
+							<li class="config">
+							</li>
+						</ul>
+					</div>
+					<div class="modal_table">
+						<ul class="nav nav-tabs mb-3">
+						    <li class="nav-item">
+						        <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active" onclick="checkTab('R')">
+						            <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+						            <span class="d-none d-lg-block">참조자</span>
+						        </a>
+						    </li>
+						    <li class="nav-item">
+						        <a href="#profile" data-toggle="tab" aria-expanded="true" class="nav-link" onclick="checkTab('V')">
+						            <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+						            <span class="d-none d-lg-block">조회자</span>
+						        </a>
+						    </li>
+						</ul>
+						<div class="tab-content">
+						    <div class="tab-pane show active" id="home">
+						    	<table class="table table_text">
+									<thead>
+										<tr>
+											<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11,'인사팀','R')"></th>
+											<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(22,'시설팀','R')"></th>
+											<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(33,'고객팀','R')"></th>
+										</tr>
+									</thead>
+									<tbody class="modal_table_body">
+									</tbody>
+								</table>
+						    </div>
+						    <div class="tab-pane" id="profile">
+						    	<table class="table table_text">
+									<thead>
+										<tr>
+											<th><input type="button" class="appBtn" value="인사팀" onclick="addTeam(11,'인사팀','V')"></th>
+											<th><input type="button" class="appBtn" value="시설팀" onclick="addTeam(22,'시설팀','V')"></th>
+											<th><input type="button" class="appBtn" value="고객팀" onclick="addTeam(33,'고객팀','V')"></th>
+										</tr>
+									</thead>
+									<tbody class="modal_table_viewer">
+									</tbody>
+								</table>
+						    </div>
+						</div>
+					</div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-light" data-dismiss="modal" onclick="resetReferrer()">닫기</button>
+	                <button type="button" class="btn btn-info"  data-dismiss="modal" onclick="drawReferrer()">확인</button>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
 	<!-- 결재자 미선택 모달 -->
 	<div id="info-alert-modal" class="modal fade appNoti" tabindex="-1"
 		role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
-				<div class="modal-body p-4">
+				<div class="p-4">
 					<div class="text-center">
 						<i class="dripicons-information h1 text-info"></i>
 						<p class="mt-3 noti">결재자를 선택해 주세요.</p>
@@ -329,6 +326,7 @@ th{
 </body>
 <script src="/js/jquery-explr-1.4.js"></script> 
 <script>
+
 	$(document).ready(function(){
 		treeCall();
 	});
@@ -336,6 +334,7 @@ th{
     $('input[name="deadline"]').attr('min', getTodayDate());
 	
 
+    // 휴가 기간 설정
 	function calculateDays() {
 		 if ( $('input[name="end_date"]').val() != '' && $('input[name="end_date"]').val() < $('input[name="start_date"]').val()) {
 			$('.noti').html('기간을 다시 설정해 주세요');
@@ -359,52 +358,18 @@ th{
 	
 	
 	
-	
     function checkTab(item) {
 		division = item;
 	}
 	
-	var division = 'referrer';
+	var division = 'R';
 
 	var config = {}
 	config.toolbar = "basic";
 	config.editorResizeMode = "none";
 	var editor = new RichTextEditor("#div_editor", config);
-	
-	function save(saveDivision) {
-		var content = editor.getHTMLCode();
-		$('input[name="draft_content"]').val(content);
-		
-		console.log("에디터에 작성된 문자열 : " + editor.getHTMLCode().length)
-		
-		if (saveDivision == 1) {
-			$('input[name="draft_status"]').val('T');
-		} else {
-			$('input[name="draft_status"]').val('W');
-		}
-		
-		
-		if ($('.validation').next().length <= 0) {
-			 $('.appNoti').modal('show');
-		}else if ($('input[name="deadline"]').val() == '') {
-			$('.noti').html('마감기한을 설정해 주세요');
-			$('.appNoti').modal('show');
-			$('input[name="deadline"]').focus();
-		}else if ($('input[name="start_date"]').val() == '') {
-			$('.noti').html('시작 날짜를 설정해 주세요');
-			$('.appNoti').modal('show');
-		}else if ($('input[name="end_date"]').val() == '') {
-			$('.noti').html('종료 날짜를 설정해 주세요');
-			$('.appNoti').modal('show');
-		}else if (content.length > (5 * 1024 * 1024)) {
-			$('.noti').html('파일 용량이 초과되었습니다.');
-			$('.appNoti').modal('show');
-		} else {
-			$('form').submit();
-		}
-		
-	}
-	
+
+	// 결재자 선택 팝업
     function popup(){
         var url = "/approval/appChart.go";
         var name = "popup test";
@@ -412,15 +377,17 @@ th{
         window.open(url, name, option);
     }
     
+	// 결재자 출력
 	var approvers = [];
     function drawAppList(appVal) {
-    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><br>${name }</th><th scope="col" rowspan="3" class="table_title validation">결재자</th>');
-		$('.rankName').html('<td>${rank_name}</td>');
+    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><br>${name }${dto.name}</th><th scope="col" rowspan="3" class="table_title validation">결재자</th>');
+		$('.rankName').html('<td>${rank_name}${dto.rank_name}</td>');
 		$('.top_div').css('width','800px');
 		var content = '';
 		var rankName = '';
 		var procedure = 1;
 		approvers = [];
+		console.log(appVal);
 		for(item of appVal){
 			content += '<th scope="col" class="emp_name">'+item.eName+'</th>';
 			rankName += '<td>'+item.rank_name+'</td>';
@@ -430,6 +397,7 @@ th{
 		$('.rankName').append(rankName);
 	}
     
+    // 조직도 호출
     function treeCall() {
     	$.ajax({
     		url:'/treeCall.ajax',
@@ -447,14 +415,15 @@ th{
     	})
     }
 
+    // 조직도 출력
     var team = [];
     function drawTree(list) {
     		var card = '<a href="#">인사팀</a><ul>';
     		var customer = '<a href="#">고객팀</a><ul>';
     		var config = '<a href="#">시설팀</a><ul>';
     		var index = 0;
-    	
-    	if (division == 'referrer') {
+    	console.log(division);
+    	if (division == 'R') {
 	    	for(item of list){
 	    		if (item.dept_name == '인사팀') {
 	    			team[index] = item;
@@ -488,75 +457,87 @@ th{
     	$('.config').html(config);
     }
     
+    
+    
     var referrer = [];
     var viewer = [];
     var numRef = 0;
     var numView = 0;
     var sameCheckRef = [];
     var sameCheckView = [];
+    // 참조자 조회자 선택
     function addReferrer(index) {
-    	if (division == 'referrer') {
+    	if (division == 'R') {
     		for(emp of sameCheckRef){
     			if (team[index].emp_no == emp) {
-    				$('.same').modal('show');
+    				$('.noti').html('이미 등록한 사원/팀 입니다.');
+    				$('.appNoti').modal('show');
 					return;
 				}
     		}
 	    	var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numRef+'" class="index">';
-	    	content += '<td>'+team[index].eName+'</td>';
-	    	content += '<td>'+team[index].rank_name+'</td>';
+	    	content += '<td colspan="2">'+team[index].name+'</td>';
 	    	content += '<td><a href="#">삭제</a></td>';
 	    	content += '</tr>';
 	    	
 	    	sameCheckRef.push(team[index].emp_no);
 	    	numRef += 1;
-	
+			console.log(team[index]);
 	    	referrer.push(team[index]);
 			
 			$('.modal_table_body').append(content);			
 		} else {
 			for(emp of sameCheckView){
     			if (team[index].emp_no == emp) {
-    				$('.same').modal('show');
+    				$('.noti').html('이미 등록한 사원/팀 입니다.');
+    				$('.appNoti').modal('show');
 					return;
 				}
     		}
 	    	var content = '<tr onclick="removeTd(this)"><input type="hidden" value="'+numView+'" class="index">';
-	    	content += '<td>'+team[index].eName+'</td>';
-	    	content += '<td>'+team[index].rank_name+'</td>';
+	    	content += '<td colspan="2">'+team[index].name+'</td>';
 	    	content += '<td><a href="#">삭제</a></td>';
 	    	content += '</tr>';
 	    	
 	    	sameCheckView.push(team[index].emp_no);
 	    	numView += 1;
-	
+	    	
+	    	console.log(team[index]);
 	    	viewer.push(team[index]);
 			
 			$('.modal_table_viewer').append(content);			
 		}
 	}
     
+    // 참조자 조회자 초기화
+	function resetReferrer() {
+	    referrer = [];
+	    viewer = [];
+	    numRef = 0;
+	    numView = 0;
+	    sameCheckRef = [];
+	    sameCheckView = [];
+	    $('.modal_table_body').html('');
+	    $('.modal_table_viewer').html('');
+	}
+    
+    // 참조자 조회자 삭제
     function removeTd(item) {
     	console.log('sdfsd');
-    	if (division == 'referrer') {
+    	if (division == 'R') {
 	    	delete referrer[$(item).children().first().val()];
 	    	delete sameCheckRef[$(item).children().first().val()];
 			$(item).remove();
-			referrer = referrer.filter(function(item) {
-				return item !== null && item !== undefined && item !== '';
-			});
 	    	console.log(referrer);
 		}else{
 	    	delete viewer[$(item).children().first().val()];
 	    	delete sameCheckView[$(item).children().first().val()];
-			$(item).remove();		
-			viewer = viewer.filter(function(item) {
-				return item !== null && item !== undefined && item !== '';
-			});	
+			$(item).remove();
 			console.log(viewer);
 		}
 	}
     
+    // 참조자 조회자 출력
     function drawReferrer() {
 		$('.referrer').html('');	
     	var addReferrer = '';
@@ -589,14 +570,15 @@ th{
 	}
     
     
-    
+   	// 참조자 조회자 팀단위 선택
     function addTeam(code, teamName, RV) {
     	console.log('test');
     	
     	if (RV == 'R') {
     		for(emp of sameCheckRef){
     			if (code == emp) {
-    				$('.same').modal('show');
+    				$('.noti').html('이미 등록한 사원/팀 입니다.');
+    				$('.appNoti').modal('show');
     				return;
     			}
     		}
@@ -618,7 +600,8 @@ th{
     	if (RV == 'V') {
     		for(emp of sameCheckView){
     			if (code == emp) {
-    				$('.same').modal('show');
+    				$('.noti').html('이미 등록한 사원/팀 입니다.');
+    				$('.appNoti').modal('show');
     				return;
     			}
     		}
@@ -638,6 +621,7 @@ th{
 		
 	}
     
+   	// 오늘 날짜
     function getTodayDate() {
         var today = new Date();
         var year = today.getFullYear();
@@ -646,6 +630,7 @@ th{
         return year + '-' + month + '-' + day;
     }
     
+   	// 휴가 종류 선택
     function changeType() {
     	var type = $('#exampleFormControlSelect1').val();
     	console.log(type);
@@ -667,9 +652,9 @@ th{
 		$('.endDate').val(end_date);
 	}
 
-	function test(saveDivision){
+	function writeDraft(saveDivision){
 		var param = {
-			"register":'${emp_no}'
+			"register":'${loginInfo.emp_no}'
 			,"draft_subject":$('#prenametext').val()
 			,"draft_end":$('input[name="deadline"]').val()
 			,"draft_content":editor.getHTMLCode()
@@ -685,6 +670,14 @@ th{
 			param.draft_status = 'W';
 		}
 
+		referrer = referrer.filter(function(item) {
+			return item !== null && item !== undefined && item !== '';
+		});
+		
+		
+		viewer = viewer.filter(function(item) {
+			return item !== null && item !== undefined && item !== '';
+		});	
 		
 		
 		var params = {};
@@ -698,7 +691,8 @@ th{
 		var content = editor.getHTMLCode();
 		
 		if ($('.validation').next().length <= 0) {
-			 $('.appNoti').modal('show');
+			$('.noti').html('결재자를 선택해 주세요.');
+			$('.appNoti').modal('show');
 		}else if ($('input[name="deadline"]').val() == '') {
 			$('.noti').html('마감기한을 설정해 주세요');
 			$('.appNoti').modal('show');
@@ -720,14 +714,108 @@ th{
 	    		dataType:'JSON',
 	    		contentType:'application/json; charset = UTF-8',
 	    		success:function(data){
-					$('#draft_no').val(data.draft_no);
-					$('#form').submit();
+	    			if (saveDivision == 2) {
+	    				$('.noti').html('기안서 작성이 완료 되었습니다.');
+	    				$('.appNoti').modal('show');
+	    				$('.appNoti').on("click",function(){
+							$('#draft_no').val(data.draft_no);
+							$('#form').submit();						
+				    		location.href="/approval/myApproval.go";								
+						})		
+					} else {
+						$('.noti').html('기안서가 임시저장 되었습니다.');
+	    				$('.appNoti').modal('show');
+	    				$('.appNoti').on("click",function(){				
+				    		location.href="/approval/myApproval.go";								
+						})		
+					}
 	    		},
 	    		error:function(e){
 	    			console.log(e);
 	    		}
 	    	})
 		}
+	}
+	
+	
+	if ('${dto.draft_status}' == 'T' ||'${dto.draft_status}' == 'N') {
+		$('#prenametext').val('${dto.draft_subject}');
+		$('input[name="deadline"]').val('${dto.draft_end}');
+		console.log('${dto.leave_cate}');
+		$('#exampleFormControlSelect1').val('${dto.leave_cate}');
+		if ('${dto.leave_cate}' == '오전 반차' || '${dto.leave_cate}' == '오후 반차') {
+			changeType();
+			$('.startDate').val('${dto.leave_start}');
+			$('.endDate').val('${dto.leave_end}');
+		} else {
+			$('.startDate').val('${dto.leave_start}');
+			$('.endDate').val('${dto.leave_end}');
+			calculateDays();			
+		}
+		editor.setHTMLCode($('#content').html());
+		
+		$.ajax({
+    		url:'/approval/compApproverCall.ajax',
+    		method:'post',
+    		data:{draft_no:'${dto.draft_no}'},
+    		dataType:'JSON',
+    		success:function(data){
+    			console.log(data);
+    			drawAppList(data.appList);
+    			
+    			var refList = data.refList;
+    			var viewList = data.viewList;
+    			
+    			for (var i = 0; i <refList.length; i++) {
+	    			for (var j= 0; j< team.length; j++) {
+						if (refList[i].emp_no == team[j].emp_no && refList[i].dept_code == 0) {
+							addReferrer(j);
+						}
+					}
+	    			if (refList[i].dept_code != 0) {
+	    				addTeam(refList[i].dept_code, refList[i].dept_name, 'R');
+					}
+    			}
+    			
+    			division = 'V';
+    			
+    			for (var i = 0; i <viewList.length; i++) {
+	    			for (var j= 0; j< team.length; j++) {
+						if (viewList[i].emp_no == team[j].emp_no && viewList[i].dept_code == 0) {
+							addReferrer(j);
+						}
+					}
+	    			if (viewList[i].dept_code != 0) {
+	    				addTeam(viewList[i].dept_code, viewList[i].dept_name, 'V');
+					}
+    			}
+    			division = 'R';
+    			drawReferrer();
+    		},
+    		error:function(e){
+    			console.log(e);
+    		}
+    	})
+	}
+	
+	function delDraft(draft_no){
+		$.ajax({
+    		url:'/approval/delDraft.ajax',
+    		method:'post',
+    		data:{draft_no:'${dto.draft_no}'},
+    		dataType:'JSON',
+    		success:function(data){
+    			$('.noti').html('임시저장 문서가 삭제 되었습니다.');
+				$('.appNoti').modal('show');
+				$('.appNoti').on("click",function(){		
+		    		location.href="/approval/myApproval.go";								
+				})		
+    		},
+    		error:function(e){
+    			console.log(e);
+    		}
+    	})
+		
 	}
     
     

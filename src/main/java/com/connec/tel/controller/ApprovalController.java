@@ -130,7 +130,40 @@ public class ApprovalController {
 	}
 	
 	
+	//결재 요청온 문서 리스트
+	@GetMapping(value = "/approval/availableViewListCall.ajax")
+	@ResponseBody
+	public Map<String, Object> availableViewListCall(String search,String page, String cnt, String cate,HttpSession session){
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo"); 
+		String emp_no = empDTO.getEmp_no();
+		String dept_code = String.valueOf(empDTO.getDept_code()); 
+		return appService.availableViewListCall(search, page, cnt, emp_no, cate, dept_code);
+	}
+		
+	//결재 반려 사유 불러오기
+	@PostMapping(value = "/approval/compReason.ajax")
+	@ResponseBody
+	public Map<String, Object> compReason(String draft_no){
+		logger.info("draft_no :{}", draft_no);
+		return appService.compReason(draft_no);
+	}
 	
+	//임시저장 결재자 호출
+	@PostMapping(value = "/approval/compApproverCall.ajax")
+	@ResponseBody
+	public Map<String, Object> compApproverCall(String draft_no){
+		logger.info("darft_no : {}", draft_no);
+		return appService.compApproverCall(draft_no);
+	}
+	
+	
+	//임시저장 문서 삭제
+	@PostMapping(value = "/approval/delDraft.ajax")
+	@ResponseBody
+	public Map<String, Object>delDraft(String draft_no){
+		logger.info("draft_no : {}", draft_no);
+		return appService.delDraft(draft_no);
+	}
 	
 	
 	

@@ -185,7 +185,7 @@ th {
 											<td class="draftTitle">휴가종류</td>
 											<td>${dto.leave_cate}</td>
 											<td>보유 연차일수</td>
-											<td>25일</td>
+											<td>${leftOver}일</td>
 										</tr>
 										<tr>
 											<td class="draftTitle">기간</td>
@@ -230,7 +230,7 @@ th {
 										<th class="title">이름</th>
 										<td class="table_content">${dto.name }</td>
 										<th class="title">보유 연차일수</th>
-										<td class="table_content">25일</td>
+										<td class="table_content">${leftOver}일</td>
 									</tr>
 									<tr>
 										<th class="title">부서</th>
@@ -278,11 +278,10 @@ th {
 					</div>
 					<div class="bottomBtn">
 						<c:if test="${loginInfo.emp_no == dto.register && dto.draft_status == 'N' }">
-							<input type="button" class="appBtn botBtn" value="재기안" onclick="">
-							<input type="button" class="appBtn2 botBtn" value="이전" onclick="">
-							<input type="button" class="appBtn2 botBtn" value="pdf 다운로드" onclick="downloadPDF()">
+							<input type="button" class="appBtn botBtn" value="재기안" onclick="reApproval()">
+							<input type="button" class="appBtn2 botBtn" value="이전" onclick="history.back()">
 						</c:if>
-						<c:if test="${dto.draft_status != 'N'}">
+						<c:if test="${dto.draft_status == 'Y'}">
 							<input type="button" class="appBtn2 botBtn" value="pdf 다운로드" onclick="downloadPDF()">
 						</c:if>
 					</div>
@@ -508,6 +507,7 @@ th {
 	    		success:function(data){
 					console.log(data);
 					if (data.msg != '') {
+						$('#info-header-modal').modal('hide');
 						$('#info-alert-modal').modal('show');
 						$('#info-alert-modal').on("click",function(){
 							location.href="/approval/requestApproval.go";							
@@ -547,6 +547,7 @@ th {
 		    		success:function(data){
 						console.log(data);
 						if (data.msg != '') {
+							$('#danger-header-modal').modal("hide");
 							$('#info-alert-modal').modal('show');
 							$('.mt-3').html(data.msg);
 							$('#info-alert-modal').on("click",function(){
@@ -583,6 +584,10 @@ th {
 	        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
 	        doc.save('${dto.draft_no}' + '_' +'${dto.draft_subject}' + '.pdf');
 	    });
+	}
+	
+	function reApproval() {
+		location.href='/approval/draftDetail?draft_no=${dto.draft_no}&draft_status=T';
 	}
 	
 

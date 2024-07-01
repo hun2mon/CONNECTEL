@@ -170,7 +170,7 @@
 							<button type="button"
 								class="btn waves-effect waves-light btn-sm btn-success btn_submit" onclick="sendData()">확인</button>
 							<button type="button"
-								class="btn waves-effect waves-light btn-sm btn-success btn_cancel">취소</button>
+								class="btn waves-effect waves-light btn-sm btn-success btn_cancel" onclick="window.close()">취소</button>
 						</div>
 					</form>
 				</div>

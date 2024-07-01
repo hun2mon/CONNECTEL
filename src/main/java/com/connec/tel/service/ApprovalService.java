@@ -49,12 +49,14 @@ public class ApprovalService {
 		
 		return map;
 	}
+	
 	public Map<String, Object> lineCall(String emp_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<ApprovalDTO> list = appDAO.lineCall(emp_no);
 		map.put("list", list);
 		return map;
 	}
+	
 	public Map<String, Object> saveListCall(int app_line_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -63,6 +65,7 @@ public class ApprovalService {
 		map.put("list", list);
 		return map;
 	}
+	
 	public Map<String, Object> savaLineDel(int app_line_no) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		int row = appDAO.saveLineDel(app_line_no);
@@ -98,11 +101,16 @@ public class ApprovalService {
 		ApprovalDTO dto;
 		
 		if (draft_status.equals("T")) {
-			logger.info("임시저장");;
+			dto = appDAO.draftTemporary(draft_no);
+			
+			mav.addObject("dto", dto);
+		
+			mav.setViewName("approval/draftWrite");
 		} else {
 			dto = appDAO.draftDetail(draft_no);
+			
 			mav.addObject("dto", dto);
-			logger.info("dto : {}", dto);
+			
 			mav.setViewName("approval/approvalDetail");
 		}
 		
@@ -242,6 +250,58 @@ public class ApprovalService {
 		int leave_row = appDAO.leave_companion(param);
 		if (app_row > 0 && draft_row > 0 && leave_row > 0) {
 			map.put("msg", "기안서가 반려되었습니다.");
+		}
+		
+		return map;
+	}
+	public Map<String, Object> availableViewListCall(String search, String page, String cnt, String emp_no, String cate, String dept_code) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = appDAO.availableTotalPage(search, cntt, emp_no, cate, dept_code);
+		
+		List<ApprovalDTO> list = appDAO.availableViewListCall(search, start, cntt,emp_no, cate, dept_code);
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
+		return map;
+	}
+	
+	public Map<String, Object> compReason(String draft_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String reason = appDAO.compReason(draft_no);
+		map.put("reason", reason);
+	
+		return map;
+	}
+	
+	public Map<String, Object> compApproverCall(String draft_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<EmpDTO> appList = appDAO.approvers(draft_no);
+		List<ApprovalDTO> refList = appDAO.referrers(draft_no);
+		List<ApprovalDTO> viewList = appDAO.views(draft_no);
+		map.put("appList", appList);
+		map.put("refList", refList);
+		map.put("viewList", viewList);
+		return map;
+	}
+	
+	public Map<String, Object> delDraft(String draft_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int row = appDAO.delDraft(draft_no);
+		
+		if (row > 0) {
+			map.put("msg", "삭제되었습니다.");
+		} else {
+			map.put("msg", "삭제 되지 않았습니다.");
 		}
 		
 		return map;

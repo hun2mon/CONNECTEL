@@ -69,29 +69,17 @@ form {
 							<h4 class="card-title mb-3">결재 요청 문서</h4>
 
 							<ul class="nav nav-tabs mb-3">
-								<li class="nav-item" onclick="cateListCall()">
+								<li class="nav-item" onclick="cateListCall('R')">
 									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active">
 										<input type="hidden" value="T">
 										<i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-										<span class="d-none d-lg-block">전체보기</span>
+										<span class="d-none d-lg-block">참조문서</span>
 									</a>
 								</li>
-								<li class="nav-item" onclick="cateListCall('W')">
+								<li class="nav-item" onclick="cateListCall('V')">
 									<a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link">
 										 <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i> 
-										 <span class="d-none d-lg-block">기안중</span>
-									</a>
-								</li>
-								<li class="nav-item" onclick="cateListCall('N')">
-									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link"> 
-										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i> 
-										<span class="d-none d-lg-block">반려</span>
-									</a>
-								</li>
-								<li class="nav-item"  onclick="cateListCall('Y')">
-									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
-										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
-										<span class="d-none d-lg-block">결재</span>
+										 <span class="d-none d-lg-block">조회문서</span>
 									</a>
 								</li>
 							</ul>
@@ -154,7 +142,7 @@ var num;
 var category;
 
 $(document).ready(function(){
-	listCall(startPage);
+	listCall(startPage, 'R');
 });
 
 function cateListCall(cate) {
@@ -181,7 +169,7 @@ function listCall(showPage, cate) {
 	var search = $('.form-control').val();
 	
 	$.ajax({
-		url:'/approval/reqAppListCall.ajax',
+		url:'/approval/availableViewListCall.ajax',
 		method:'get',
 		data:{
 			search : search,
@@ -191,6 +179,9 @@ function listCall(showPage, cate) {
 		},
 		dataType:'JSON',
 		success:function(data){
+			
+			console.log(data);
+			
 			drawList(data.list);
 
 			
@@ -239,9 +230,6 @@ function drawList(list) {
 			}
 			if (item.draft_status == 'N') {
 				content += '<td>반려</td>';					
-			}
-			if (item.draft_status == 'T') {
-				content += '<td>임시저장</td>';					
 			}
 			content += '</tr>';
 		}		

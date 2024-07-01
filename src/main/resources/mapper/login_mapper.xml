@@ -9,8 +9,16 @@
 		SELECT
 		 *,
 		 (SELECT code_name FROM common_code cc WHERE e.dept_code = cc.code_no) AS dept_name,
-		   (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no) AS rank_name
+		 (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no) AS rank_name
 		FROM emp e WHERE email=#{param1}
+	</select>
+	
+	<select id="leftOver" resultType="float">
+		SELECT 
+			(SELECT SUM(annual) FROM leave_history lh WHERE leave_division = '+' AND emp_no = #{param1})
+				-
+			(SELECT SUM(annual) from leave_history lh WHERE leave_division = '-' AND emp_no = #{param1}) as leftover
+		FROM leave_history lh2 LIMIT 1;
 	</select>
 	
 	

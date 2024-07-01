@@ -11,4 +11,6 @@ public interface LoginDAO {
 
 	EmpDTO login(String id);
 
+	float leftOver(String emp_no);
+
 }

@@ -37,6 +37,7 @@ public class ApprovalDTO {
 	private String rank_name;
 	private String dept_name;
 	private String app_status;
+	private String dept_code;
 	
 	
 	
@@ -177,6 +178,12 @@ public class ApprovalDTO {
 	}
 	public void setApp_status(String app_status) {
 		this.app_status = app_status;
+	}
+	public String getDept_code() {
+		return dept_code;
+	}
+	public void setDept_code(String dept_code) {
+		this.dept_code = dept_code;
 	}
 
 }

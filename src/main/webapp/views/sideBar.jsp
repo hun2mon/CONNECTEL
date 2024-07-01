@@ -263,7 +263,11 @@
 
 								<li class="sidebar-item"><a
 									href="/approval/requestApproval.go" class="sidebar-link"><span
-										class="hide-menu"> 결재요청문서 </span></a></li>
+										class="hide-menu"> 결재 요청 문서 </span></a></li>
+										
+										<li class="sidebar-item"><a
+									href="/approval/availableViewList.go" class="sidebar-link"><span
+										class="hide-menu"> 열람 가능한 문서 </span></a></li>
 							</ul></li>
 
 						<li class="sidebar-item"><a class="sidebar-link has-arrow"

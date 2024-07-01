@@ -80,7 +80,7 @@
 			,e.name AS register 
 			,(SELECT e2.name FROM approver a JOIN emp e2 WHERE d.draft_no = a.draft_no AND a.emp_no = e2.emp_no ORDER BY a.app_procedure DESC LIMIT 1) AS final_approver
 			,d.draft_status 
-		FROM draft d JOIN emp e ON d.register = e.emp_no WHERE emp_no = #{param4} and d.draft_subject LIKE #{param1} 
+		FROM draft d JOIN emp e ON d.register = e.emp_no WHERE emp_no = #{param4} and (d.draft_subject LIKE #{param1} OR e.name LIKE #{param1})
 		<if test="param5 != null">
 			AND d.draft_status = #{param5}
 		</if>
@@ -201,6 +201,98 @@
 		UPDATE leave_management SET draft_status = 'N' WHERE draft_no = #{draft_no}
 	</update>
 	
+	<select id="availableTotalPage" resultType="int">
+		SELECT CEIL(COUNT(dr.draft_no)/#{param2}) AS pages 
+			FROM draft dr JOIN view_referrer vr 
+				ON dr.draft_no = vr.draft_no 
+				WHERE 
+					(vr.emp_no = #{param3} OR vr.dept_code = #{param5}) 
+			        <if test="param4.equals('V')">
+			            AND dr.draft_status = 'Y'
+			        </if>
+						AND vr.view_reffer_division = #{param4}
+						AND dr.draft_subject LIKE #{param1};
+	</select>
+	
+	<select id="availableViewListCall" resultType="app">
+		SELECT DISTINCT
+			dr.draft_no
+			,dr.draft_start 
+			,dr.draft_end 
+			,dr.draft_subject 
+			,(select e.name from emp e where dr.register = e.emp_no) AS name
+			,(select e2.name from approver a2 JOIN emp e2 WHERE dr.draft_no = a2.draft_no AND e2.emp_no = a2.emp_no ORDER BY a2.app_procedure desc limit 1) AS final_approver
+			,dr.draft_status 	
+		FROM draft dr JOIN view_referrer vr ON dr.draft_no = vr.draft_no 
+		WHERE 
+			(vr.emp_no = #{param4} OR vr.dept_code = #{param6})
+			<if test='param5.equals("V")'>
+				AND 
+			dr.draft_status = 'Y'
+			</if>
+		 		AND 
+		 	vr.view_reffer_division = #{param5}
+		 		AND
+		 	dr.draft_subject LIKE #{param1}
+		 		ORDER BY 
+		 	dr.draft_start DESC, dr.draft_end ASC LIMIT #{param2}, #{param3}
+	</select>
+	
+	<select id="draftTemporary" resultType="app">
+		SELECT 
+			d.draft_no
+			,d.register
+			,(SELECT name FROM emp e WHERE e.emp_no = d.register) AS name
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = d.register AND e.dept_code = cc.code_no) AS dept_name
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = d.register AND e.rank_code = cc.code_no) AS rank_name
+			,d.draft_subject 
+			,d.draft_start
+			,d.draft_end 
+			,d.draft_content
+			,d.draft_status
+			,lm.leave_cate 
+			,lm.leave_start
+			,lm.leave_end 
+			,lm.leave_use 
+		FROM draft d JOIN leave_management lm ON d.draft_no = lm.draft_no WHERE d.draft_no = #{param1};
+	</select>
+	
+	<select id="compReason">
+		SELECT reason FROM draft WHERE draft_no = #{param1}
+	</select>
+	
+	<select id="approvers" resultType="emp">
+		SELECT 
+			a.emp_no
+			,(SELECT name FROM emp e WHERE e.emp_no = a.emp_no) AS eName
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = a.emp_no AND e.dept_code = cc.code_no) AS dept_name
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = a.emp_no AND e.rank_code = cc.code_no) AS rank_name
+		FROM approver a WHERE a.draft_no = #{param1} ORDER BY a.app_procedure;
+	</select>
+	
+	<select id="referrers" resultType="emp">
+		SELECT 
+			vr.emp_no
+			,(SELECT name FROM emp e WHERE e.emp_no = vr.emp_no) AS name
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = vr.emp_no AND e.rank_code = cc.code_no) AS rank_name
+			,vr.dept_code
+			,(SELECT cc.code_name FROM common_code cc WHERE cc.code_no = vr.dept_code) AS dept_name
+		FROM view_referrer vr WHERE view_reffer_division = 'R' AND draft_no = #{param1}
+	</select>
+	
+	<select id="views" resultType="emp">
+		SELECT 
+			vr.emp_no
+			,(SELECT name FROM emp e WHERE e.emp_no = vr.emp_no) AS name
+			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = vr.emp_no AND e.rank_code = cc.code_no) AS rank_name
+			,vr.dept_code
+			,(SELECT cc.code_name FROM common_code cc WHERE cc.code_no = vr.dept_code) AS dept_name
+		FROM view_referrer vr WHERE view_reffer_division = 'V' AND draft_no = #{param1}
+	</select>
+	
+	<delete id="delDraft">
+		DELETE FROM draft WHERE draft_no = #{param1}
+	</delete>
 	
 	
 </mapper>

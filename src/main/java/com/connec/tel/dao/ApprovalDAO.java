@@ -63,4 +63,21 @@ public interface ApprovalDAO {
 
 	int leave_companion(Map<String, String> param);
 
+	int availableTotalPage(String search, int cntt, String emp_no, String cate, String dept_code);
+
+	List<ApprovalDTO> availableViewListCall(String search, int start, int cntt, String emp_no, String cate,
+			String dept_code);
+
+	ApprovalDTO draftTemporary(String draft_no);
+
+	String compReason(String draft_no);
+
+	List<EmpDTO> approvers(String draft_no);
+
+	List<ApprovalDTO> referrers(String draft_no);
+
+	List<ApprovalDTO> views(String draft_no);
+
+	int delDraft(String draft_no);
+
 }
