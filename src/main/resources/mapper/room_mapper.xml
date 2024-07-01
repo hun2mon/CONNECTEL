@@ -264,5 +264,30 @@
 <select id="getCheckoutRooms" resultType="String">
 	SELECT room_no FROM room WHERE room_status = 'O'
 </select>
+
+<select id="roomInfoList" resultType="com.connec.tel.dto.RoomDTO">
+	SELECT * FROM room_information WHERE type_code = #{type_code}
+</select>
 		
+<select id="select_pho_name" resultType="String">
+	SELECT pho_name FROM photo WHERE ref_idx = #{type_code}
+</select>
+
+<update id="roomInfoUpdate" parameterType="map">
+	UPDATE room_information
+	 SET room_detail = #{room_detail},
+	 	room_extent= #{room_extent},
+	 	room_bed=#{room_bed},
+	 	room_capacity=#{room_capacity},
+	 	room_amenities=#{room_amenities}
+	 WHERE type_code = #{room_type_code}
+</update>		
+
+<update id="room_img_photoUpdate">
+	UPDATE photo
+		SET ori_pho_name =#{oriName},
+			pho_name = #{newFileName}
+		WHERE ref_idx = #{type_code}
+</update>
+
 </mapper>
