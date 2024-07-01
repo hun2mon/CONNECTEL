@@ -11,6 +11,34 @@ public class CalendarDTO {
 	private LocalDateTime cal_start;
 	private LocalDateTime cal_end;
 	private String emp_no;
+	private String dept_code;
+	private String isShared;
+	
+	
+	
+	
+	public String getIsShared() {
+		return isShared;
+	}
+
+	public void setIsShared(String isShared) {
+		this.isShared = isShared;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getDept_code() {
+		return dept_code;
+	}
+	public void setDept_code(String dept_code) {
+		this.dept_code = dept_code;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	private String name;
 	
 	public String getCal_no() {
 		return cal_no;

@@ -4,21 +4,75 @@
 >
 
 <mapper namespace="com.connec.tel.dao.CalendarDAO">
-	
-	<select id="getEvents" resultType="calendar">
-	    SELECT cal_no, cal_content, cal_start, cal_end
-	    FROM calendar
+
+	<select id="getEvents" resultType="map">
+	    SELECT c.cal_no, c.cal_content, c.cal_start, c.cal_end
+	   		FROM calendar c
+	   			WHERE c.emp_no = #{param1}
 	</select>
-    
-    <insert id="createEvent">
-        INSERT INTO calendar (emp_no, cal_content, cal_start, cal_end) VALUES (1001,#{cal_content}, #{cal_start}, #{cal_end})
-    </insert>
-    
-    <delete id="deleteEvent">
-        DELETE FROM calendar WHERE cal_no = #{cal_no}
-    </delete>
-
 	
+	<select id="getShare" resultType="map">
+	    SELECT c.cal_no, c.cal_content, c.cal_start, c.cal_end, cs.emp_no as isShared
+	   		FROM calendar_share cs JOIN calendar c
+	   			ON c.cal_no = cs.cal_no
+	   			WHERE cs.emp_no = #{param1}
+	</select>
 
+	<insert id="addEvent" parameterType="calendar">
+		INSERT INTO calendar (cal_content, cal_start, cal_end, emp_no) VALUES
+		(#{cal_content}, #{cal_start}, #{cal_end},#{emp_no})
+	</insert>
+
+	<delete id="deleteEvent">
+		DELETE FROM calendar WHERE cal_no = #{param1}
+	</delete>
+
+	<insert id="updateParty">
+		INSERT INTO calendar_share (cal_no, emp_no) values (#{param1},#{param2})
+	</insert>
+
+	<select id="getParties" resultType="String">
+		SELECT e.name
+		FROM calendar_share cs
+		JOIN emp e ON e.emp_no = cs.emp_no
+		WHERE cs.cal_no = #{param1}
+	</select>
 	
+	<insert id = "deptInsert">
+		INSERT INTO calendar_share (cal_no, emp_no)
+		SELECT #{param1}, emp_no
+		FROM emp
+		WHERE dept_code = #{param2};	
+	</insert>
+	
+	<insert id="editEvent" parameterType="calendar">
+		UPDATE calendar SET
+			cal_content = #{cal_content},
+			 cal_start = #{cal_start}, cal_end = #{cal_end}
+			 WHERE emp_no = #{emp_no} AND cal_no = #{cal_no}
+	</insert>
+	
+	<delete id = "deleteParties">
+		DELETE FROM calendar_share WHERE cal_no = #{param1}
+	</delete>
+	
+	<delete id = "deleteParty">
+		DELETE FROM calendar_share WHERE cal_no = #{param1}
+	</delete>
+	
+	<select id="getEvent">
+	    SELECT * FROM calendar c JOIN calendar_share cs
+	    	ON c.cal_no = cs.cal_no
+	    		WHERE cs.emp_no = #{param1}
+	</select>
+
+	<update id ="deptShare">
+		UPDATE calendar SET shared_status = 1 WHERE cal_no = #{param1}
+	</update>
+	
+	<update id ="partyShare">
+		UPDATE calendar SET shared_status = 1 WHERE cal_no = #{param1}
+	</update>
+
+
 </mapper>
