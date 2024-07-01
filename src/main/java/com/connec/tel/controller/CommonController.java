@@ -23,8 +23,13 @@ public class CommonController {
 	// 조직도
 	@GetMapping(value = "/treeCall.ajax")
 	@ResponseBody
-	public Map<String, Object> treeCall(){
-		return commonService.treeCall(); 
+	public Map<String, Object> treeCall(String search){
+		String word = "%%";
+		if (search != null) {
+			word = "%" + search + "%";			
+		}
+		logger.info("search : {}", word);
+		return commonService.treeCall(word); 
 	}
 	
 	// 테이블 예시

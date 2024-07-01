@@ -9,7 +9,7 @@ import com.connec.tel.dto.EmpDTO;
 @Mapper
 public interface CommonDAO {
 
-	List<EmpDTO> treeCall();
+	List<EmpDTO> treeCall(String search);
 
 	List<EmpDTO> listCall(String search, int start, int cntt);
 

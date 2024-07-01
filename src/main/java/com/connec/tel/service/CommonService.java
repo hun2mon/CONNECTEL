@@ -30,10 +30,10 @@ public class CommonService {
 	@Autowired CommonDAO commonDAO;
 	static String root = "/Users/jeounghun/upload/connectel/file/";
 	
-	public Map<String, Object> treeCall() {
+	public Map<String, Object> treeCall(String word) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<EmpDTO> list = commonDAO.treeCall();
+		List<EmpDTO> list = commonDAO.treeCall(word);
 		
 		map.put("list", list);
 		

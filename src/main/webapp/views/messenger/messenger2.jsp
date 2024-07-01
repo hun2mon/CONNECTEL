@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link href="/css/jquery-explr-1.4.css" rel="stylesheet" type="text/css">	
+<link href="/dist/css/style.min.css" rel="stylesheet">
 <style>
 
 #chat_top {
@@ -20,9 +20,8 @@
     margin-top: 10px;
 }
 
-#bells, #bars, #create_icon{
+#bells, #bars{
 	font-size: 30px;
-	cursor: pointer;
 }
 
 #chat_content{
@@ -30,54 +29,13 @@
 }
 
 #createRoom{
+	font-size: 30px;
     text-align: end;
     padding: 9px;
-}
-
-.modal-body{
-	display: flex;
-}
-
-.modal_table{
-	margin: 0 auto;	
-	width: 270px;
-}
-
-.table_text{
-	text-align: center;
-}
-
-.modal-dialog{
-	max-width: 600px;
-}
-
-.appBtn {
-	background: cornflowerblue;
-	border: cornflowerblue;
-	color: white;
-	height: 40px;
-	border-radius: 5px;
-}
-
-.table{
-	width: 120%;
-}
-
-#treeDiv{
-	width: 200px;
-}
-
-#treeSearch{
-	width: 120%;
 }
 </style>
 </head>
 <body>
-	<div class="parent">
-		<div class="sideBar">
-			<jsp:include page="../sideBar.jsp"></jsp:include>
-		</div>
-		<div class="content">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
@@ -85,7 +43,7 @@
 							<div class="row no-gutters">
 								<div class="col-lg-3 col-xl-2 border-right">
 									<div class="card-body border-bottom" id="createRoom">
-										<i class="fa-solid fa-comment-medical" id="create_icon" onclick="createRoom()"></i>
+										<i class="fa-solid fa-comment-medical"></i>
 									</div>
 									<div class="scrollable position-relative"
 										style="height: calc(100vh - 111px);">
@@ -96,7 +54,7 @@
 													<a href="javascript:void(0)"
 														class="message-item d-flex align-items-center border-bottom px-3 py-2">
 														<div class="user-img">
-															<img src="/assets/images/users/1.jpg" alt="user"
+															<img src="assets/images/users/1.jpg" alt="user"
 																class="img-fluid rounded-circle" width="40px"> <span
 																class="profile-status online float-right"></span>
 														</div>
@@ -124,7 +82,7 @@
 											<!--chat Row -->
 											<li class="chat-item list-style-none mt-3">
 												<div class="chat-img d-inline-block">
-													<img src="/assets/images/users/1.jpg" alt="user"
+													<img src="assets/images/users/1.jpg" alt="user"
 														class="rounded-circle" width="45">
 												</div>
 												<div class="chat-content d-inline-block pl-3">
@@ -136,7 +94,7 @@
 											<!--chat Row -->
 											<li class="chat-item list-style-none mt-3">
 												<div class="chat-img d-inline-block">
-													<img src="/assets/images/users/1.jpg" alt="user"
+													<img src="assets/images/users/2.jpg" alt="user"
 														class="rounded-circle" width="45">
 												</div>
 												<div class="chat-content d-inline-block pl-3">
@@ -187,113 +145,8 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-	
-	<div class="modal fade" id="bs-example-modal-sm" tabindex="-1" role="dialog"
-	    aria-labelledby="mySmallModalLabel" aria-hidden="true">
-	    <div class="modal-dialog modal-sm">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h4 class="modal-title" id="mySmallModalLabel">채팅 상대 지정</h4>
-	                <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">×</button>
-	            </div>
-	            <div class="modal-body">
-					<div>
-	            		<div>
-	            			<input type="text" class="form-control" placeholder="검색" id="treeSearch" onkeyup="treeCall()">
-	            		</div>
-		                <div id="treeDiv">
-							<ul id="tree">
-								<li class="card2">
-								</li>
-								<li class="customers">
-								</li>
-								<li class="config">
-								</li>
-							</ul>
-						</div>
-					</div>
-	            </div>
-	        </div><!-- /.modal-content -->
-	    </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-	
 </body>
-<script src="/js/jquery-explr-1.4.js"></script> 
 <script>
-	$(document).ready(function(){
-		treeCall();
-	});
 	
-	var start = 0;
-	function treeCall() {
-		var search = $('#treeSearch').val();
-		
-    	$.ajax({
-    		url:'/treeCall.ajax',
-    		method:'get',
-    		data:{
-    			search:search
-    		},
-    		dataType:'JSON',
-    		success:function(data){
-    			drawTree(data.list);
-    			console.log(data);
-    			if (start == 0 && search == '') {
-    				start += 1;
-	    			console.log(start);
-    				$("#tree").explr();					
-				}
-    		},
-    		error:function(e){
-    			console.log(e);
-    		}
-    	})
-    }
-
-    // 조직도 출력
-    var team = [];
-    function drawTree(list) {
-    		var card = '<a href="#">인사팀</a><ul>';
-    		var customer = '<a href="#">고객팀</a><ul>';
-    		var config = '<a href="#">시설팀</a><ul>';
-    		var index = 0;
-	    	for(item of list){
-	    		if (item.dept_name == '인사팀') {
-	    			team[index] = item;
-	    			card += '<li class="user" onclick="addReferrer('+index+')">';
-	    			card += '<a href="#">' + item.name +'</a></li>';
-	    			index += 1;
-	    		}
-	    		
-	    		if (item.dept_name == '고객팀') {
-	    			team[index] = item;
-	    			customer += '<li class="customers" onclick="addReferrer('+index+')">';
-	    			customer += '<a href="#">' + item.name +'</a></li>';
-	    			index += 1;
-	    		}
-	    		
-	    		if (item.dept_name == '시설팀') {
-	    			team[index] = item;
-	    			config += '<li class="config" onclick="addReferrer('+index+')">';
-	    			config += '<a href="#">' + item.name +'</a></li>';
-	    			index += 1;
-	    		}
-	    	}
-    	
-    	card += '</ul>';
-    	customer += '</ul>';
-    	config += '</ul>';
-    	
-    	$('.customers').html(customer);
-    	$('.card2').html(card);
-    	$('.config').html(config);
-    }
-    
-    
-    function createRoom() {
-		$('#bs-example-modal-sm').modal('show');
-	}
 </script>
 </html>

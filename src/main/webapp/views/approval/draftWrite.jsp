@@ -339,6 +339,7 @@ th{
 		 if ( $('input[name="end_date"]').val() != '' && $('input[name="end_date"]').val() < $('input[name="start_date"]').val()) {
 			$('.noti').html('기간을 다시 설정해 주세요');
 			$('.appNoti').modal('show');
+			$('.endDate').val('');
 		} else {
 		    var startDate = $('.startDate').val();
 		    var endDate =$('.endDate').val();
@@ -350,7 +351,11 @@ th{
 	
 		    var daysDiff = timeDiff / (1000 * 3600 * 24) + 1;
 	
-		    if (endDate != '') {
+		    if (daysDiff > '${dto.leftOver}') {
+		    	$('.noti').html('보유 연차가 부족합니다.');
+				$('.appNoti').modal('show');
+				$('.endDate').val('');
+			} else if (endDate != '') {
 			   $('.selectDate').html(daysDiff + '일<input type="hidden" value="'+daysDiff+'" name="totalDay">');			
 			}
 		}

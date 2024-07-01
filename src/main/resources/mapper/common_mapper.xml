@@ -13,7 +13,7 @@
 		e.name as eName,
 		e.emp_no,
 		 (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no) as rank_name
-	FROM emp e ORDER BY e.rank_code, e.name;
+	FROM emp e WHERE e.name LIKE #{param1} ORDER BY e.rank_code, e.name
 </select>
 
 <select id="listCall" resultType="emp">
