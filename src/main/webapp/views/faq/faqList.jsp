@@ -197,151 +197,163 @@ button:hover {
     <hr>
 </div>
 <hr>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
 <script>
-var showPage = 1;
+    var showPage = 1;
+    var cnt = 10;
 
-$(document).ready(function(){
-    // 기본적으로 첫 번째 페이지를 '전체' 탭으로 호출
-    listCall(1, '전체');
-    
-    $('#freebutton').on('click', function() {
-	    var searchText = $('#freetextbox').val(); // 검색 입력란의 값 가져오기
-	    // 검색어가 비어있는지 확인
-	    if (searchText.trim() !== '') {
-	        // 검색어가 비어있지 않으면 검색 실행
-	        search(searchText, showPage); // 현재 페이지 번호를 함께 전달
-	    } else {
-	        // 검색어가 비어있으면 현재 페이지를 기준으로 공지사항을 다시 불러옴
-	        listCall(showPage);
-	    }
-	});
-    
-    function search(title, page) {
-        $.ajax({
-            type: 'GET',
-            url: '/faq/search.ajax', // 경로 앞에 슬래시 추가
-            data: {
-                'textval': title,
-                'page': page.toString() // 페이지 번호를 문자열로 변환하여 전달
-            },
-            dataType: 'json', // 대소문자 구분에 주의해야 함
-            success: function(data) {
-                drawFaqList(data.list);
-            },
-            error: function(error) {
-                console.log('검색 실패:', error);
+    $(document).ready(function() {
+        // 기본적으로 첫 번째 페이지를 '전체' 탭으로 호출
+        listCall(1, '전체');
+
+        $('#freebutton').on('click', function() {
+            $('#pagination').twbsPagination('destroy'); // 기존 페이징 제거
+            var searchText = $('#freetextbox').val().trim();
+            console.log(searchText);
+            if (searchText !== '') {
+                search(1, searchText); // 검색 시 첫 페이지로 초기화
+            } else {
+                listCall(showPage, '전체'); // 검색어 없이 검색 버튼 클릭 시 전체 리스트 보여주기
             }
         });
-    }
-    
-  
-    
-    
-    
-    
-    // 페이지 이동 시 호출될 함수
-    function listCall(page, category) {
-        var cnt = 10; // 페이지당 항목 수, 필요에 따라 변경 가능
-        $.ajax({
-            type: 'GET',
-            url: '/faq/faqList.ajax',
-            data: {
-                'page': page,
-                'cnt': cnt,
-                'category': category
-            },
-            dataType: 'json',
-            success: function(data) {
-                console.log('AJAX 요청 성공');
-                console.log(data.list);
-                drawFaqList(data.list); // FAQ 리스트 그리기 함수 호출
-                initializePagination(data.totalPages, category); // 페이징 초기화
-            },
-            error: function(error) {
-                console.log('FAQ 리스트 출력 실패:', error);
-            }
-        });
-    }
 
-    // FAQ 리스트를 그리는 함수
-    function drawFaqList(data) {
-        var content = '';  
-        for (var i = 0; i < data.length; i++) {	
-            content += '<div class="faq-list">';
-            content += '<div class="faq-list_no">' + data[i].faq_no + '</div>';
-            content += '<div class="faq-list_subject"><a href="/faqDetail.go?faq_no=' + data[i].faq_no + '">' + data[i].faq_subject + '</a></div>';
-            content += '<input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].faq_no + '">';
-            content += '</div>';
-        }
-        $('#faqList').html(content); // 기존 데이터를 초기화하고 새로운 데이터로 대체
-    }
-
-    // 페이징을 초기화하는 함수
-    function initializePagination(totalPages, category) {
-        $('#pagination').twbsPagination({
-            totalPages: totalPages, // 전체 페이지 수
-            visiblePages: 5, // 보여줄 페이지 수
-            onPageClick: function(event, page) { 
-                console.log('페이지 클릭 이벤트 발생:', page);
-                listCall(page, category); // 페이지 클릭 시 해당 페이지의 데이터를 호출하는 함수 호출
-            }
-        });
-    }
-
-    // 탭 열기 함수
-    window.openTab = function(evt, tabName) {
-        var i, tablinks;
-        // 모든 탭 버튼의 active 클래스 제거
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        // 클릭된 탭의 콘텐츠를 표시하고, 버튼에 active 클래스 추가
-        evt.currentTarget.className += " active";
-        listCall(1, tabName); // 해당 탭의 첫 번째 페이지 데이터를 호출
-        $('#pagination').twbsPagination('destroy');
-    }
-
-    // 기본으로 열리는 탭 설정
-    document.getElementById("defaultOpen").click();
-
-    // 삭제 기능
-    $('#deletebutton').click(function() {
-        var checkedItems = $('.freecheckbox:checked');
-        var faqNos = [];
-
-        checkedItems.each(function() {
-            var faqNo = $(this).attr('id').split('_')[1];
-            faqNos.push(parseInt(faqNo));
-        });
-
-        if (faqNos.length > 0) {
+        // 페이지 이동 시 호출될 함수
+        function listCall(page, category) {
+            var cnt = 10; // 페이지당 항목 수, 필요에 따라 변경 가능
             $.ajax({
-                type: 'POST',
-                url: '/faq/deleteFaq.ajax',
-                contentType: 'application/json',
-                data: JSON.stringify(faqNos),
-                success: function(response) {
-                    console.log('삭제 성공:', response);
-                    alert('삭제에 성공하였습니다.');
-                    listCall(1, '전체'); // 삭제 후 전체 리스트 다시 호출
+                type: 'GET',
+                url: '/faq/faqList.ajax',
+                data: {
+                    'page': page,
+                    'cnt': cnt,
+                    'category': category
+                },
+                dataType: 'json',
+                success: function(data) {
+                    console.log('AJAX 요청 성공');
+                    console.log(data.list);
+                    drawFaqList(data.list); // FAQ 리스트 그리기 함수 호출
+                    initializePagination(data.totalPages, category); // 페이징 초기화
                 },
                 error: function(error) {
-                    console.log('삭제 실패:', error);
-                    alert('삭제 중 오류가 발생했습니다.');
+                    console.log('FAQ 리스트 출력 실패:', error);
                 }
             });
-        } else {
-            alert('삭제할 FAQ를 선택해주세요.');
         }
-    });
 
-    // 작성 폼으로 이동
-    $('#writebutton').click(function() {
-        window.location.href = '/faqwrite.go';
+        // FAQ 리스트를 그리는 함수
+        function drawFaqList(data) {
+            var content = '';
+            for (var i = 0; i < data.length; i++) {
+                content += '<div class="faq-list">';
+                content += '<div class="faq-list_no">' + data[i].faq_no + '</div>';
+                content += '<div class="faq-list_subject"><a href="/faqDetail.go?faq_no=' + data[i].faq_no + '">' + data[i].faq_subject + '</a></div>';
+                content += '<input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].faq_no + '">';
+                content += '</div>';
+            }
+            $('#faqList').html(content); // 기존 데이터를 초기화하고 새로운 데이터로 대체
+        }
+
+        // 페이징을 초기화하는 함수
+        function initializePagination(totalPages, category) {
+            $('#pagination').twbsPagination({
+                totalPages: totalPages, // 전체 페이지 수
+                visiblePages: 5, // 보여줄 페이지 수
+                onPageClick: function(event, page) {
+                    console.log('페이지 클릭 이벤트 발생:', page);
+                    listCall(page, category); // 페이지 클릭 시 해당 페이지의 데이터를 호출하는 함수 호출
+                }
+            });
+        }
+       
+        
+
+        function search(page, title) {
+            console.log('타이틀 :' + title);
+            console.log('페이지 :' + page);
+            
+            $.ajax({
+                type: 'GET',
+                url: '/faq/search.ajax', // 경로 앞에 슬래시 추가
+                data: {
+                    'textval': title,
+                    'cnt': cnt,
+                    'page': page
+                },
+                dataType: 'json',
+                success: function(data) {
+                    console.log('검색');
+                    drawFaqList(data.list);
+                   	console.log(data.totalPages);
+                    
+                    $('#pagination').twbsPagination({
+                        totalPages:data.totalPages, // 전체 페이지 수
+                        visiblePages: 5, // 보여줄 페이지 수
+                        onPageClick: function(event, page) {
+                            console.log('페이지 클릭 이벤트 발생:', page);
+                            search(page, title); // 페이지 클릭 시 해당 페이지의 데이터를 호출하는 함수 호출
+                        }
+                    });
+                },
+                error: function(error) {
+                    console.log('검색 실패:', error);
+                }
+            });
+        }
+
+        // 탭 열기 함수
+        window.openTab = function(evt, tabName) {
+            var i, tablinks;
+            // 모든 탭 버튼의 active 클래스 제거
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            // 클릭된 탭의 콘텐츠를 표시하고, 버튼에 active 클래스 추가
+            evt.currentTarget.className += " active";
+            listCall(1, tabName); // 해당 탭의 첫 번째 페이지 데이터를 호출
+            $('#pagination').twbsPagination('destroy');
+        };
+
+        // 기본으로 열리는 탭 설정
+        document.getElementById("defaultOpen").click();
+
+        // 삭제 기능
+        $('#deletebutton').click(function() {
+            var checkedItems = $('.freecheckbox:checked');
+            var faqNos = [];
+
+            checkedItems.each(function() {
+                var faqNo = $(this).attr('id').split('_')[1];
+                faqNos.push(parseInt(faqNo));
+            });
+
+            if (faqNos.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/faq/deleteFaq.ajax',
+                    contentType: 'application/json',
+                    data: JSON.stringify(faqNos),
+                    success: function(response) {
+                        console.log('삭제 성공:', response);
+                        alert('삭제에 성공하였습니다.');
+                        listCall(1, '전체'); // 삭제 후 전체 리스트 다시 호출
+                    },
+                    error: function(error) {
+                        console.log('삭제 실패:', error);
+                        alert('삭제 중 오류가 발생했습니다.');
+                    }
+                });
+            } else {
+                alert('삭제할 FAQ를 선택해주세요.');
+            }
+        });
+
+        // 작성 폼으로 이동
+        $('#writebutton').click(function() {
+            window.location.href = '/faqwrite.go';
+        });
     });
-});
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
 </body>
 </html>

@@ -128,11 +128,11 @@ table th {
             </th>
         </tr>
         <tr>
-            <td>작성자 : </td>
-        	<td style="text-align: left;">${dto.register}</td>
-            <td style="text-align: right; border-bottom: 1px solid #f0f0f0;"> 작성일 : ${dto.ann_date}</td>
-        </tr>
-        <tr>
+    		<td>작성자 :</td>
+  			<td style="text-align: left;">${not empty dto.updater ? dto.updater : dto.register}</td>
+    		<td style="text-align: right; border-bottom: 1px solid #f0f0f0;"> 작성일 : ${not empty dto.update_date ? dto.update_date : dto.ann_date}</td>
+		</tr>
+		<tr>
         	 <td>제목 : </td>
             <td style="color:#737371; text-align: left; font-size:20px;">
                 ${dto.ann_subject}
@@ -144,11 +144,19 @@ table th {
             <td>내용</td>
             <td colspan="3" class="content">${dto.ann_content}<br><c:if test="${not empty image}"><img src="/photo/${image}" alt="첨부 이미지" style="max-width:800px;"> </c:if></td>
         </tr>
+         <tr>
+        	 <td>첨부파일</td>
+   			 <td colspan="3" class="file">
+        	 	<c:if test="${not empty file}">
+            		<a href="/download/${file}" target="_blank">${file}</a>
+        		</c:if>
+    		</td>
+        </tr>
         <tr>
             <td colspan="3">
                 <div class="buttons">
                     <div class="exit">
-                        <a href="/ann/empAnnList.go"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
+                        <a href="ann/empAnnList.go"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
                     </div>
                     <div class="update">
                         <button onclick="location.href='/empannupdate.go?ann_no=${dto.ann_no}'">수정</button>

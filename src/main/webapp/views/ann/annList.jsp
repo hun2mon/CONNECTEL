@@ -185,11 +185,13 @@ button {
     
     
     <span class="unfix-container">
+    <c:if test="${loginInfo.authority eq '2' || loginInfo.authority eq '3'}">
         <button id="writebutton" onclick="writeAnn()">글쓰기</button>
         <button id="deletebutton" style="margin-left: 5px; margin-right:20px">삭제</button>
         <button id="unfixbutton">고정상태변경</button>
+   </c:if>
     </span>
-</div>
+</div>  
 
     <div class="annContent">
         <div class="list-title"style="background-color:#6076E8; color:white;">
@@ -199,6 +201,7 @@ button {
             <div class="list-date"><strong>작성일</strong></div>
             <div class="list-hit"><strong>조회수</strong></div>
             <div class="list-check"><strong>선택</strong></div>
+          
         </div>
     </div>
     <div id="list"></div>
@@ -316,14 +319,27 @@ $(document).ready(function() {
             content += '<div class="ann-list-subject"><a href="/annDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
             content += '<div class="ann-list-name">' + data[i].register + '</div>';
             content += '<div class="ann-list-date">' + data[i].ann_date + '</div>';
+            
+            // updater가 존재할 경우 updater 표시, 그렇지 않으면 register 표시
+            var nameToShow = data[i].updater ? data[i].updater : data[i].register;
+            content += '<div class="ann-list-name">' + nameToShow + '</div>';
+            
+            // update_date가 존재할 경우 update_date 표시, 그렇지 않으면 ann_date 표시
+            var dateToShow = data[i].update_date ? data[i].update_date : data[i].ann_date;
+            content += '<div class="ann-list-date">' + dateToShow + '</div>';
+            
             content += '<div class="ann-list-hit">' + data[i].ann_bHit + '</div>';
+            <c:if test="${loginInfo.authority eq '2' || loginInfo.authority eq '3'}">
             content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"></div>';
+           	</c:if>
+           	<c:if test="${loginInfo.authority eq '1'}">
+           content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"disabled></div>';
+          	</c:if>
             content += '</div>';
         }
         $('#list').html(content);
     }
-
-
+    
     // 삭제 버튼 클릭 이벤트
     $('#deletebutton').click(function() {
         var checkedItems = $('.freecheckbox:checked');
