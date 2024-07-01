@@ -124,7 +124,15 @@
 		margin: auto;
 		text-align: center;
 	}
-
+	
+	#change_check_in{
+		margin-left: 86%;
+	}
+	
+	.table-striped{
+		text-align: center;
+	}
+	
 </style>
 </head>
 <body>
@@ -138,8 +146,9 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
+                    	<button class="btn btn-sm btn-success btn-sl-sm" id="change_check_in" onclick="change_check_in_modal()">체크인 준비 완료</button>
                         <div class="read-content" id="roomContainer">
-                            <!-- Room elements will be generated here by JavaScript -->
+
                         </div>
                     </div>
                 </div>
@@ -289,6 +298,38 @@
     </div>
 </div>
 
+<!-- 체크아웃 -> 체크인 가능 모달 -->
+<div id="change_check_in_Modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="warning-header-modalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+       <div class="modal-content">
+           <div class="modal-header modal-colored-header bg-warning">
+               <h4 class="modal-title" id="warning-header-modalLabel">체크아웃  -->  체크인
+               </h4>
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+           </div>
+           <div class="modal-body">
+               <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                   <table class="table table-striped">
+                       <thead>
+                           <tr>
+                               <th><input type="checkbox" id="select-all-checkouts"></th>
+                               <th>객실 번호</th>
+                           </tr>
+                       </thead>
+                       <tbody id="checkout-room-list">
+                           <!-- 체크아웃 상태인 객실 목록이 여기에 표시됩니다 -->
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+           <div class="modal-footer">
+               <button type="button" class="btn btn-warning" onclick="setRoomsToAvailable()">체크인 가능으로 변경</button>
+           </div>
+       </div><!-- /.modal-content -->
+   </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <script>
 $(document).ready(function(){
     listCall();   
@@ -391,6 +432,9 @@ function drawList(roomList) {
                 } else if (roomStatus === 'O') {
                     roomElement.addClass('checkout');
                     roomStatusDiv.text('체크아웃');
+
+                    
+                    
                 } else if (roomStatus === 'N') {
                     roomElement.addClass('unavailable');
                     roomStatusDiv.text('이용 불가');
@@ -408,6 +452,74 @@ function drawList(roomList) {
     }
 }
 
+function change_check_in_modal(){
+	$('#change_check_in_Modal').modal('show');
+	 loadCheckoutRooms();		
+}
+
+function loadCheckoutRooms() {
+    $.ajax({
+        type: 'POST',
+        url: '/room/getCheckoutRooms.ajax', // 체크아웃 상태인 객실 목록을 가져오는 URL
+        dataType: 'json',
+        success: function(data) {
+        	console.log(data);
+            drawCheckoutRooms(data.list);
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
+
+function drawCheckoutRooms(roomList) {
+	console.log('roomList:', roomList);  // 서버에서 반환된 데이터 구조 확인
+    var checkoutRoomList = $('#checkout-room-list');
+    checkoutRoomList.empty();
+
+    for (var i = 0; i < roomList.length; i++) {
+        var room = roomList[i];
+        console.log('room:', room);  // 각 room 객체의 구조 확인
+        var row = $('<tr></tr>');
+        row.append('<td><input type="checkbox" class="checkout-room-checkbox" value="' + room + '"></td>');
+        row.append('<td>' + room + '</td>');
+        checkoutRoomList.append(row);
+    }
+
+    // Select all 체크박스 클릭 이벤트 핸들러 추가
+    $('#select-all-checkouts').click(function() {
+        $('.checkout-room-checkbox').prop('checked', this.checked);
+    });
+}
+
+function setRoomsToAvailable() {
+    var selectedRooms = $('.checkout-room-checkbox:checked').map(function() {
+        return $(this).val();
+    }).get();
+
+    if (selectedRooms.length === 0) {
+        alert('체크인 가능으로 변경할 객실을 선택해주세요.');
+        return;
+    }
+	
+    console.log("selectedRooms : {}",selectedRooms );
+    
+    $.ajax({
+        type: 'POST',
+        url: '/room/setRoomsToAvailable.ajax', // 객실 상태를 체크인 가능으로 변경하는 URL
+        contentType: 'application/json', // JSON 형식으로 보낼 것을 명시
+        data: JSON.stringify({ rooms: selectedRooms }), // JSON 문자열로 데이터 변환
+        dataType: 'json',
+        success: function(data) {
+                alert('선택한 객실들이 체크인 가능 상태로 변경되었습니다.');
+                $('#change_check_in_Modal').modal('hide');
+                listCall(); // 객실 목록을 다시 로드           
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
 function openCheckInModal(roomNumber) {
 	 	$('#success-header-modal').modal('show');
 	    $('#roomNumberHeader').text('Room ' + roomNumber);
@@ -523,7 +635,12 @@ function handleSearch() {
 }
 
 function checkIn() {
-		
+		var res_number = $('#reservationNumber').val();	
+	
+		if (!res_number) {
+			alert('예약번호를 입력해주세요!');
+			return;
+		}
 	
 		$('#centermodal').modal('show');
 
@@ -617,6 +734,11 @@ function changeCheckIn(){
 	    var res_no = $('#res_no').text().replace('예약번호 : ', '');
 		var changeRoom_no = $('#availableRooms').val();
 	    
+		if (!changeRoom_no) {
+			alert('변경할 객실을 선택해주세요!!');
+			return
+		}
+		
 		console.log(room_no);
 		console.log(res_no);
 		console.log(changeRoom_no);
@@ -632,10 +754,10 @@ function changeCheckIn(){
 	        dataType: 'JSON',
 	        success: function(data) {
 	            console.log(data);
-	            if (data.status === success) {
-	            $('#changeCheckIn').modal('hide');
-	            $('#danger-header-modal').modal('hide');
-	            listCall();
+	            if (data.status === 'success') {
+		            $('#changeCheckIn').modal('hide');
+		            $('#danger-header-modal').modal('hide');
+		            listCall();
 					
 				}else{
 					alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');

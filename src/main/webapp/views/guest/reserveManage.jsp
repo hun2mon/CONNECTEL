@@ -124,13 +124,7 @@ thead {
                     </div>
                     
                     <!-- 탭 시작 -->
-                    <ul class="nav nav-tabs nav-justified nav-bordered mb-3">
-                                    <li class="nav-item">
-                                        <a href="#home-b2" data-toggle="tab" aria-expanded="false" class="nav-link">
-                                            <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-                                            <span class="d-none d-lg-block">현장결제</span>
-                                        </a>
-                                    </li>
+                    <ul class="nav nav-tabs nav-justified nav-bordered mb-3">                                   
                                     <li class="nav-item">
                                         <a href="#profile-b2" data-toggle="tab" aria-expanded="true"
                                             class="nav-link active">
@@ -149,14 +143,8 @@ thead {
                     
                     
                     <!-- 리스트 시작 -->
-                     <div class="tab-content">
-                     
-                     				<!-- 현장결제 -->
-                                    <div class="tab-pane" id="home-b2">
-                                       	
-                                    </div>
-                                    
-                                    <!-- 결제완료 -->
+                     <div class="tab-content">                                  
+                                    <!-- 예약완료 -->
                                     <div class="tab-pane show active" id="profile-b2">
                                         <div class="table-responsive">			                           
 				                           <table class="table">
@@ -203,7 +191,7 @@ thead {
 				                                       <th>결제금액</th>
 				                                       <th>환불금액</th>
 				                                       <th>체크인</th>
-				                                       <th>취소아웃</th>
+				                                       <th>체크아웃</th>
 				                                       <th>취소날짜</th>
 				                                   </tr>
 				                               </thead>

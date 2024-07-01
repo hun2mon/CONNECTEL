@@ -64,6 +64,16 @@
 		</if>
 	</select>
 	
+	<select id="roomManageList" resultType="com.connec.tel.dto.RoomDTO">
+		<if test="param1 == ''">
+			SELECT*FROM room_management r LEFT JOIN emp e ON r.register = e.emp_no  ORDER BY r.status ASC, r.regist_date DESC  LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT* FROM room_management r LEFT JOIN emp e ON r.register = e.emp_no WHERE r.room_no LIKE #{param1} ORDER BY r.status ASC , r.regist_date DESC LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
 	<update id="updateNotAvailable">
 		UPDATE room SET room_status = 'N'  WHERE room_no = #{room_no}
 	</update>
@@ -80,6 +90,18 @@
 	
 		<if test="param1 != null">
 			SELECT CEIL(COUNT(room_no)/#{param2}) AS pages FROM room WHERE room_no LIKE #{param1}
+		</if>
+	
+	</select>
+	
+	<select id="roomManagetotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(room_manage_no)/#{param2}) AS pages FROM room_management
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(room_manage_no)/#{param2}) AS pages FROM room_management WHERE room_no LIKE #{param1}
 		</if>
 	
 	</select>
@@ -190,6 +212,57 @@
 		WHERE date = #{date}
 	</update>
 	
+	<select id="roomList" resultType="string">
+		SELECT room_no FROM room
+	</select>
 	
+	
+	
+	<insert id="roomManageWrite" useGeneratedKeys="true" keyColumn="room_manage_no" keyProperty="room_manage_no" parameterType="com.connec.tel.dto.RoomDTO">
+    INSERT INTO room_management(room_no, room_type, content, register, regist_date)
+    VALUES (#{room_no}, #{room_type}, #{content}, #{register}, NOW())
+</insert>
+
+<insert id="photoUpload">
+	INSERT INTO photo(ori_pho_name,pho_name,ref_idx,pho_division)
+		VALUES(#{param2},#{param1},#{param3},'R')
+</insert>
+
+<select id="room_mng_detail" resultType="com.connec.tel.dto.RoomDTO">
+	SELECT room_manage_no,room_no,room_type,content,status,register,regist_date
+	FROM room_management WHERE room_manage_no = #{room_manage_no}
+</select>
+
+<select id="findName" resultType="String">
+	SELECT name FROM emp WHERE emp_no = #{emp_no}
+</select>
+
+<select id="photoName" resultType="String">
+	SELECT pho_name FROM photo WHERE ref_idx = #{room_manage_no}
+</select>
+
+<delete id="phoDelete">
+	DELETE FROM photo WHERE pho_name = #{pho_name}
+</delete>
+
+<update id="roomManageUpdateDo" parameterType="MAP">
+	UPDATE room_management SET content = #{content} WHERE room_manage_no = #{room_manage_no}
+</update>
+
+<select id="findAuthority" resultType="String">
+	SELECT authority FROM emp WHERE emp_no = #{emp_no}
+</select>
+
+<update id="room_manage_status_update">
+	UPDATE room_management 
+		SET status = 'Y',
+		updater = #{emp_no},
+		update_date = NOW()
+	WHERE room_manage_no= #{room_manage_no}
+</update>
+
+<select id="getCheckoutRooms" resultType="String">
+	SELECT room_no FROM room WHERE room_status = 'O'
+</select>
 		
 </mapper>

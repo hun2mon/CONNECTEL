@@ -11,12 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.connec.tel.dto.EmpDTO;
+import com.connec.tel.dto.RoomDTO;
 import com.connec.tel.service.RoomService;
 
 @Controller
@@ -26,18 +31,60 @@ public class RoomController {
 	RoomService roomService;
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@PostMapping(value = "/room/roomManageWrite.go")
-	public String roomManageWrite(@RequestParam Map<String, String> param,
-			@RequestParam("multipartFiles") List<MultipartFile> files, Model model) {
-		logger.info("roomManageWrite.go 요청!!");
-		logger.info("param : {}", param);
+	@PostMapping(value = "/room/roomManageWrite.do")
+	public String roomManageWrite(@RequestParam("multipartFiles") MultipartFile[] photos,
+			@ModelAttribute RoomDTO room_dto, Model model, HttpSession session) {
+		logger.info("roomManageWrite.do 요청!!");
+		logger.info("photos : {}",(Object[]) photos);
+		
+		EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
+		String emp_no = emp.getEmp_no();
+		room_dto.setRegister(emp_no);
+		
+		logger.info("room_dto : {}", room_dto);
+		int row = roomService.roomManageWrite(photos,room_dto);
+		
+		
 
-		String page = "/room/roomManageDetail";
-		// 파일 이름 저장하고 내용 저장하고 등등 처리
-		// 모델에 넣기... 상세보기로 감
-
-		return page;
+		return "redirect:/room/roomManageDetail.go?room_manage_no="+row;
 	}
+	
+	@RequestMapping(value = "/room/roomManageUpdate.do")
+	public String roomManageUpdateDo(@RequestParam("multipartFiles") MultipartFile[] photos,
+			@RequestParam Map<String, Object> param) {
+		logger.info("roomManageUpdate.DO 요청!!");
+		logger.info("photos : "+photos);
+		logger.info("param : {} ",param);
+		String room_manageNo = (String) param.get("room_manage_no") ;
+		int room_manage_no = Integer.parseInt(room_manageNo);
+		roomService.roomManageUpdateDo(photos,param,room_manage_no);
+		
+		return "redirect:/room/roomManageDetail.go?room_manage_no="+room_manage_no;
+	}
+	
+	@RequestMapping(value = "/room/roomManageDetail.go")
+	public ModelAndView roomManageDetail(int room_manage_no,HttpSession session) {
+		logger.info("roomManageDetail 요청!!");
+		logger.info("room_manage_no : "+room_manage_no);
+		EmpDTO dto = (EmpDTO) session.getAttribute("loginInfo");
+		String authority = dto.getAuthority();
+		logger.info("authority : " + authority);
+		
+		return roomService.room_mng_detail(room_manage_no,authority);
+	}
+	
+	@RequestMapping(value = "/room/roomManageUpdate.go")
+	public ModelAndView roomManageUpdate(int room_manage_no) {
+		logger.info("roomManageUpdate 요청!!");
+		logger.info("room_manage_no : "+room_manage_no);
+
+		return roomService.room_mng_update(room_manage_no);
+	}
+	
+	
+	
+	
+	
 
 	@GetMapping(value = "/room/liveRoomManage.ajax")
 	@ResponseBody
@@ -96,6 +143,17 @@ public class RoomController {
 		logger.info("search : "+ cnt);
 
 		return roomService.roomStateList(search, page, cnt);
+	}
+	
+	@PostMapping(value = "/room/roomManageList.ajax")
+	@ResponseBody
+	public Map<String, Object> roomManageList(String search, String page, String cnt){
+		logger.info("roomManageList.axax 요청!!!");
+		logger.info("search : "+ search);
+		logger.info("search : "+ page);
+		logger.info("search : "+ cnt);
+		
+		return roomService.roomManageList(search, page, cnt);
 	}
 
 	@PostMapping(value = "/room/updateNotAvailable.ajax")
@@ -195,5 +253,55 @@ public class RoomController {
 		return roomService.updateDayRoomPrice(param);
 	}
 	
+	@PostMapping(value = "/room/roomList.ajax")
+	@ResponseBody
+	public Map<String, Object> roomList(){
+		logger.info("roomList 요청!!!");
+	
+		return roomService.roomList();
+	}
+	
+	@GetMapping(value = "/room/phoDelete.do")
+	public String phoDelete(String pho_name,String room_manage_no) {
+		logger.info("phoDelete 요청!");
+		logger.info("pho_name : "+pho_name);
+		logger.info("room_manage_no : "+room_manage_no);
+		
+		roomService.phoDelete(pho_name);
+		
+		return "redirect:/room/roomManageUpdate.go?room_manage_no="+room_manage_no;
+	}
+	
+	@GetMapping(value = "/room/room_manage_status_update.do")
+	public String room_manage_status_update(int room_manage_no,int room_no,HttpSession session) {
+		logger.info("room_manage_status_update 요청!");
+		logger.info("room_manage_no : "+room_manage_no);
+		EmpDTO dto = (EmpDTO) session.getAttribute("loginInfo");
+		String emp_no = dto.getEmp_no();
+		roomService.room_manage_status_update(room_manage_no,room_no,emp_no);
+		
+		return "redirect:/room/roomManageDetail.go?room_manage_no="+room_manage_no;
+	}
+	
+	@PostMapping(value = "/room/getCheckoutRooms.ajax")
+	@ResponseBody
+	public Map<String, Object> getCheckoutRooms(){
+		logger.info("getCheckoutRooms 요청!!!");
+	
+		return roomService.getCheckoutRooms();
+	}
+	
+	@PostMapping(value = "/room/setRoomsToAvailable.ajax")
+	@ResponseBody
+	public Map<String, Object> setRoomsToAvailable(@RequestBody Map<String, Object> params){
+		logger.info("setRoomsToAvailable 요청!!!");
+		logger.info("params : {}",params);
+	
+	    List<String> rooms = (List<String>) params.get("rooms");
+	    logger.info("rooms : {}", rooms);
+		
+		
+		return roomService.setRoomsToAvailable(rooms);
+	}
 
 }
