@@ -1,5 +1,6 @@
 package com.connec.tel.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -279,6 +281,27 @@ public class RoomController {
 		roomService.room_manage_status_update(room_manage_no,room_no,emp_no);
 		
 		return "redirect:/room/roomManageDetail.go?room_manage_no="+room_manage_no;
+	}
+	
+	@PostMapping(value = "/room/getCheckoutRooms.ajax")
+	@ResponseBody
+	public Map<String, Object> getCheckoutRooms(){
+		logger.info("getCheckoutRooms 요청!!!");
+	
+		return roomService.getCheckoutRooms();
+	}
+	
+	@PostMapping(value = "/room/setRoomsToAvailable.ajax")
+	@ResponseBody
+	public Map<String, Object> setRoomsToAvailable(@RequestBody Map<String, Object> params){
+		logger.info("setRoomsToAvailable 요청!!!");
+		logger.info("params : {}",params);
+	
+	    List<String> rooms = (List<String>) params.get("rooms");
+	    logger.info("rooms : {}", rooms);
+		
+		
+		return roomService.setRoomsToAvailable(rooms);
 	}
 
 }

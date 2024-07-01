@@ -191,7 +191,7 @@ thead {
 				                                       <th>결제금액</th>
 				                                       <th>환불금액</th>
 				                                       <th>체크인</th>
-				                                       <th>취소아웃</th>
+				                                       <th>체크아웃</th>
 				                                       <th>취소날짜</th>
 				                                   </tr>
 				                               </thead>

@@ -92,6 +92,8 @@ public interface RoomDAO {
 
 	void room_manage_status_update(int room_manage_no, String emp_no);
 
+	List<String> getCheckoutRooms();
+
 
 
 

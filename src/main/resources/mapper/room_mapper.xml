@@ -260,5 +260,9 @@
 		update_date = NOW()
 	WHERE room_manage_no= #{room_manage_no}
 </update>
+
+<select id="getCheckoutRooms" resultType="String">
+	SELECT room_no FROM room WHERE room_status = 'O'
+</select>
 		
 </mapper>

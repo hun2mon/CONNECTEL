@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -503,6 +504,25 @@ public class RoomService {
 		roomDAO.room_manage_status_update(room_manage_no,emp_no);
 		String roomNO = room_no+"";
 		roomDAO.updateAvailable(roomNO);
+	}
+
+	public Map<String, Object> getCheckoutRooms() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<String> list = roomDAO.getCheckoutRooms();		
+		
+		map.put("list",list);
+		return map;
+	}
+
+	public Map<String, Object> setRoomsToAvailable(List<String> rooms) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (String room : rooms) {
+			roomDAO.updateAvailable(room);
+		}
+		
+		return map;
 	}
 
 
