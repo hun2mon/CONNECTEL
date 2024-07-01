@@ -23,6 +23,11 @@
         </if>
     </where>
 </select>
+
+<select id="searchCount" resultType="Integer">
+    SELECT CEIL(COUNT(FAQ_no) / #{param1}) AS pages FROM FAQ WHERE FAQ_subject LIKE CONCAT('%', #{param3}, '%')
+</select>
+
     
  <insert id="write" parameterType="map">
     INSERT INTO FAQ (FAQ_subject, FAQ_content, FAQ_category, regist_date, register)
@@ -51,15 +56,14 @@
         SELECT * FROM FAQ WHERE FAQ_no = #{faq_no}
     </select>
 
-<update id="updateFaq" parameterType="map">
-    <![CDATA[
+<update id="updateFaq" parameterType="faqDTO">
     UPDATE FAQ
-    SET FAQ_subject = #{faq_subject},
-        FAQ_category = #{faq_category},
-        FAQ_content = #{faq_content},
-        update_date = NOW()
-    WHERE FAQ_no = #{faq_no}
-    ]]>
+    SET FAQ_subject = #{FAQ_subject},
+        FAQ_category = #{FAQ_category},
+        FAQ_content = #{FAQ_content},
+        update_date = NOW(),
+        updater = #{updater}
+    WHERE FAQ_no = #{FAQ_no}
+
 </update>
-    
 </mapper>

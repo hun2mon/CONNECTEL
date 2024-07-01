@@ -12,7 +12,15 @@ public class FaqDTO {
     private String updater;
     private String FAQ_date;
 
-    public String getUpdater() {
+    public String getFAQ_date() {
+		return FAQ_date;
+	}
+
+	public void setFAQ_date(String fAQ_date) {
+		FAQ_date = fAQ_date;
+	}
+
+	public String getUpdater() {
 		return updater;
 	}
 

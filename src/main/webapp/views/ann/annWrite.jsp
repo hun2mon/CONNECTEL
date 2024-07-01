@@ -176,7 +176,8 @@ a:hover {
             </tr>
             <tr>
                 <td colspan="2">
-                    첨부파일 : <input type="file" name="photos"/>
+                    사진파일 : <input type="file" name="photos"/>
+                    첨부파일 : <input type="file" name="file"/>
                 </td>    
                 <td style="text-align:right; padding-right:30px;">작성자:${name}</td>
             </tr>            
@@ -197,6 +198,7 @@ a:hover {
         alert("${error}");
     </script>
 </c:if>
+
 </body>
 <script>
 </script>

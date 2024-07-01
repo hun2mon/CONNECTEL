@@ -73,9 +73,12 @@ public class FAQService {
 		return faqDAO.deleteFaqs(faqNos);
 	}
 
-	public Map<String, Object> search(Map<String, Object> map, String textval) {
+	public Map<String, Object> search(Map<String, Object> map, String textval, int currPage, int pagePerCnt) {
 	    List<FaqDTO> list = faqDAO.faqsearch(textval);
 	    map.put("list", list);
+	    map.put("totalPages", faqDAO.searchCount(pagePerCnt,currPage, textval));
+	    logger.info("pagePerCnt :"+ pagePerCnt);
+	    logger.info("curr : "+ currPage);
 	    return map;
 	}
 
@@ -84,8 +87,8 @@ public class FAQService {
 	        return faqDAO.getFaqById(faq_no);
 	    }
 
-	    public void updateFaq(FaqDTO FaqDTO, String faq_subject, String faq_content, String faq_category, String faq_no, HttpSession session) {
-	        faqDAO.updateFaq(FaqDTO, faq_subject, faq_content, faq_category, faq_no);
+	    public void updateFaq(FaqDTO FaqDTO) {
+	        faqDAO.updateFaq(FaqDTO);
 	    }
 	
 	

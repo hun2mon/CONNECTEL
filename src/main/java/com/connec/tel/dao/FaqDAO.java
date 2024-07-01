@@ -30,10 +30,9 @@ public interface FaqDAO {
 
 	FaqDTO getFaqById(String faq_no);
 
-	public void updateFaq(@Param("faqDTO") FaqDTO faqDTO, 
-            @Param("faq_subject") String faqSubject,
-            @Param("faq_content") String faqContent,
-            @Param("faq_category") String faqCategory, 
-            @Param("faq_no") String faq_no);
+	public void updateFaq(FaqDTO faqDTO);
+
+	Object searchCount(int pagePerCnt, int currPage, String textval);
+		
 
 }
