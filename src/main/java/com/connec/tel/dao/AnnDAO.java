@@ -49,6 +49,7 @@ public interface AnnDAO {
 	int annwrite(AnnDTO dto);
 
 	void annfileWrite(String fileName, String newFileName, String ann_no);
+	String annfile(String ann_no);
 
 	AnnDTO anndetail(String ann_no);
 
@@ -70,6 +71,34 @@ public interface AnnDAO {
 
 
 	String photoname(String ann_no);
+
+
+	Object annallCount(int pagePerCnt);
+
+
+	int anncount(Map<String, String> param);
+
+
+	int anngetFixedCount();
+
+
+	void annunfixAnnouncement(Integer annNo);
+
+
+	void annnewfileWrite(String fileName, String newFileName, String ann_no);
+
+
+	int annupdate(AnnDTO annDTO);
+
+
+	void updatefileWrite(Map<String, String> paramMap);
+
+
+	void updatenewfile(Map<String, String> paramMap);
+
+
+
+
 	
 
 }

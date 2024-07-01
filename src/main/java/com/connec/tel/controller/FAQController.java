@@ -90,13 +90,15 @@ public class FAQController {
 	
 	@RequestMapping(value = "/faq/search.ajax")
 	@ResponseBody
-	public Map<String, Object> noticeSearch(@RequestParam("textval") String textval, @RequestParam("page") String page) {
+	public Map<String, Object> noticeSearch(String textval,String page, String cnt) {
 	    Map<String, Object> map = new HashMap<>();
-	    faqService.search(map, textval);
 	    logger.info("서칭");
 	    logger.info("텍스트: " + textval);
+	    logger.info("page"+ page);
+	    int currPage = Integer.parseInt(page);
+		int pagePerCnt = Integer.parseInt(cnt);
 
-	    return map;
+	    return faqService.search(map, textval,currPage,pagePerCnt);
 	}
 	
 	@GetMapping("/faqupdate.go")
@@ -110,15 +112,20 @@ public class FAQController {
 	}
 
 	@PostMapping("/faq/update.do")
-	public ModelAndView updateFaq(FaqDTO faqDTO, String faq_subject, String faq_content, String faq_category, String faq_no, HttpSession session) {
+	public ModelAndView updateFaq(FaqDTO faqDTO, HttpSession session) {
 	    logger.info("업데이트 시도");
-	    logger.info("faq_subject :" + faq_subject);
-	    logger.info("faq_content : " + faq_content);
-	    logger.info("카테고리 :" + faq_category);
+	    logger.info("faq_subject :" + faqDTO.getFAQ_subject());
+	    logger.info("faq_content : " + faqDTO.getFAQ_content());
+	    logger.info("카테고리 :" + faqDTO.getFAQ_category());
 	    
-	    faqService.updateFaq(faqDTO, faq_subject, faq_content, faq_category, faq_no, session);
+	    // 세션에서 로그인 정보를 가져와서 updater 필드 설정
+	    EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+	    faqDTO.setUpdater(empDTO.getEmp_no());
+	    
+	    // FAQ 정보 업데이트
+	    faqService.updateFaq(faqDTO);
+	    
 	    return new ModelAndView("redirect:/faq/faqList.go");
 	}
-
 
 }

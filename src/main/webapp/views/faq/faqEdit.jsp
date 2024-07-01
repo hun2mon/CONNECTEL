@@ -95,16 +95,16 @@ form .form-actions button:hover {
 <div class="container">
     <form action="/faq/update.do" method="post">
         <div class="form-group">
-            <label for="faq_no">번호</label>
-            <input type="text" id="faq_no" name="faq_no" value="${dto.FAQ_no}" readonly>
+            <label for="FAQ_no">번호</label>
+            <input type="text" id="FAQ_no" name="FAQ_no" value="${dto.FAQ_no}" readonly>
         </div>
         <div class="form-group">
-            <label for="faq_subject">제목</label>
-            <input type="text" id="faq_subject" name="faq_subject" value="${dto.FAQ_subject}">
+            <label for="FAQ_subject">제목</label>
+            <input type="text" id="FAQ_subject" name="FAQ_subject" value="${dto.FAQ_subject}">
         </div>
         <div class="form-group">
-            <label for="faq_category">카테고리</label>
-            <select id="faq_category" name="faq_category">
+            <label for="FAQ_category">카테고리</label>
+            <select id="FAQ_category" name="FAQ_category">
                 <option value="객실" ${dto.FAQ_category eq '객실' ? 'selected' : ''}>객실</option>
                 <option value="예약 및 환불" ${dto.FAQ_category eq '예약 및 환불' ? 'selected' : ''}>예약 및 환불</option>
                 <option value="부대시설" ${dto.FAQ_category eq '부대시설' ? 'selected' : ''}>부대시설</option>
@@ -112,9 +112,10 @@ form .form-actions button:hover {
             </select>
         </div>
         <div class="form-group">
-            <label for="faq_content">내용</label>
-            <textarea id="faq_content" name="faq_content" rows="10">${dto.FAQ_content}</textarea>
+            <label for="FAQ_content">내용</label>
+            <textarea id="FAQ_content" name="FAQ_content" rows="10">${dto.FAQ_content}</textarea>
         </div>
+        <input type="hidden" name="updater" value="${sessionScope.loginInfo.emp_no}">
         <div class="form-actions">
             <button type="submit">저장</button>
             <button type="button" onclick="location.href='/faq/faqList.go'">취소</button>

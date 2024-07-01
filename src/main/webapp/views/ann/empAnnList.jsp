@@ -185,9 +185,11 @@ button {
     
     
     <span class="unfix-container">
+        <c:if test="${loginInfo.authority eq '2' || loginInfo.authority eq '3'}">
         <button id="writebutton" onclick="writeAnn()">글쓰기</button>
         <button id="deletebutton" style="margin-left: 5px; margin-right:20px">삭제</button>
         <button id="unfixbutton">고정상태변경</button>
+        </c:if>
     </span>
 </div>
     <div class="annContent">
@@ -220,9 +222,10 @@ var cnt = 10;
 var data = [];
 
 $(document).ready(function(){
-    listCall(1);
+    listCall(showPage);
 
     $('#freebutton').on('click', function() {
+    	$('#pagination').twbsPagination('destroy');
         var searchText = $('#freetextbox').val();
         if (searchText.trim() !== '') {
             search(searchText, showPage);
@@ -237,12 +240,20 @@ $(document).ready(function(){
             url: '/empann/search.ajax',
             data: {
                 'textval': title,
-                'page': page.toString()
+                'page': page
             },
             dataType: 'json',
             success: function(data) {
                 drawList(data.list);
-                $('#pagination').twbsPagination('destroy');
+                totalPages = data.totalPages;
+                $('#pagination').twbsPagination({
+                    totalPages: totalPages,
+                    visiblePages: 5,
+                    startPage: page,
+                    onPageClick: function(event, page) {
+                        search(title,page);
+                    }
+                });
             },
             error: function(error) {
                 console.log('검색 실패:', error);
@@ -260,13 +271,15 @@ $(document).ready(function(){
                 'cnt': cnt,
                 'ann_division': ann_division,
                 'ann_fixed': ann_fixed,
-                'register' : register,
-                'ann_date' : ann_date
+                'register': register,
+                'ann_date': ann_date
             },
             dataType: 'json',
             success: function(data) {
+          
                 drawList(data.list);
-                initializePagination(data.totalPages);
+                totalPages = data.totalPages;
+                initializePagination(totalPages, page);
             },
             error: function(error) {
                 console.log('리스트 출력 실패:', error);
@@ -275,41 +288,45 @@ $(document).ready(function(){
     }
 
     function drawList(data) {
-        var content = '';  
-        data.sort(function(a, b) {
-            if (a.ann_fixed === 'Y' && b.ann_fixed === 'Y') {
-                return b.ann_no - a.ann_no; // 둘 다 공지일 경우 ann_no 내림차순 정렬
-            } else if (a.ann_fixed === 'Y') {
-                return -1; // a가 공지면 우선순위로
-            } else if (b.ann_fixed === 'Y') {
-                return 1; // b가 공지면 우선순위로
-            } else {
-                return b.ann_no - a.ann_no; // 그 외에는 ann_no 내림차순 정렬
-            }
-        });
+        var content = '';
         for (var i = 0; i < data.length; i++) {
             content += '<div class="ann-list">';
             if (data[i].ann_fixed === 'Y') {
-                content += '<div class="ann-list-no ann-notice">[공지]</div>'; // 공지 여부에 따라 클래스 추가
+                content += '<div class="ann-list-no ann-notice">[공지]</div>';
             } else {
                 content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
             }
             content += '<div class="ann-list-subject"><a href="/empannDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
-            content += '<div class="ann-list-name">'+data[i].register+'</div>';
-            content += '<div class="ann-list-date">'+data[i].ann_date+'</div>';
+            
+            // updater가 존재할 경우 updater 표시, 그렇지 않으면 register 표시
+            var nameToShow = data[i].updater ? data[i].updater : data[i].register;
+            content += '<div class="ann-list-name">' + nameToShow + '</div>';
+            
+            // update_date가 존재할 경우 update_date 표시, 그렇지 않으면 ann_date 표시
+            var dateToShow = data[i].update_date ? data[i].update_date : data[i].ann_date;
+            content += '<div class="ann-list-date">' + dateToShow + '</div>';
+            
             content += '<div class="ann-list-hit">' + data[i].ann_bHit + '</div>';
+            <c:if test="${loginInfo.authority eq '2' || loginInfo.authority eq '3'}">
             content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"></div>';
+            </c:if>
+        	<c:if test="${loginInfo.authority eq '1'}">
+            content += '<div class="ann-list-check"><input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].ann_no + '"disabled></div>';
+           	</c:if>
             content += '</div>';
         }
         $('#list').html(content);
     }
-
-    function initializePagination(totalPages) {
+    
+    
+    function initializePagination(totalPages, startPage) {
         $('#pagination').twbsPagination({
             totalPages: totalPages,
             visiblePages: 5,
+            startPage: startPage,
             onPageClick: function(event, page) {
                 listCall(page);
+        
             }
         });
     }
