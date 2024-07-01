@@ -1,6 +1,7 @@
 package com.connec.tel.service;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -98,7 +99,7 @@ public class GuestManageService {
 		String tid = geustMngDAO.selectTid(res_no);
 		logger.info("tid 값: " +tid);
 		
-		int cancel_price = Integer.parseInt(cancelPrice);	
+		int cancel_price = Integer.parseInt(cancelPrice.replace(".", ""));	
 		logger.info("cancel_price : " + cancel_price);
 		
 		kakaoPayCancelDTO res = null;
@@ -131,6 +132,55 @@ public class GuestManageService {
 		geustMngDAO.insert_res_cancel(res_no,cancelPrice);
 		
 		return res;
+	}
+
+	public Map<String, Object> reserveListCall(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<GuestManageDTO> resList = geustMngDAO.room_info();
+		map.put("resList", resList);
+		
+		String in_date = (String) param.get("in_date");
+		String out_date= (String) param.get("out_date");
+		
+		int standard_num = geustMngDAO.standard_num(in_date,out_date);
+		int superior_num = geustMngDAO.superior_num(in_date,out_date);
+		int delux_num = geustMngDAO.delux_num(in_date,out_date);
+		int suite_num = geustMngDAO.suite_num(in_date,out_date);
+		
+		List<GuestManageDTO> list = geustMngDAO.reserveListCall(param);
+		
+		int standard = 0;
+		int superior = 0;
+		int delux = 0;
+		int suite = 0;
+		
+		for (GuestManageDTO dto : list) {
+			standard += dto.getStandard();
+			superior += dto.getSuperior();
+			delux += dto.getDelux();
+			suite += dto.getSuite();
+		}
+		
+		map.put("standard_num", standard_num);
+		map.put("superior_num", superior_num);
+		map.put("delux_num", delux_num);
+		map.put("suite_num", suite_num);
+		
+		map.put("standard", standard);
+		map.put("superior", superior);
+		map.put("delux", delux);
+		map.put("suite", suite);
+		
+		return map;
+	}
+
+	public Map<String, Object> getDate(String today) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<String> list = geustMngDAO.getDate(today);
+		
+		map.put("list", list);
+		return map;
 	}
 
 }

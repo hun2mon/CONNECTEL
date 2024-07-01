@@ -1,6 +1,7 @@
 package com.connec.tel.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -30,6 +31,21 @@ public interface GuestManageDAO {
 	void insert_res_cancel(String res_no, String cancelPrice);
 
 	String selectTid(String res_no);
+
+	List<GuestManageDTO> reserveListCall(Map<String, Object> param);
+
+	List<GuestManageDTO> room_info();
+
+	int standard_num(String in_date, String out_date);
+
+	int superior_num(String in_date, String out_date);
+
+	int delux_num(String in_date, String out_date);
+
+	int suite_num(String in_date, String out_date);
+
+	List<String> getDate(String today);
+
 
 	
 

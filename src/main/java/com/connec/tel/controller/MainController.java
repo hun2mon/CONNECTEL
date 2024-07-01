@@ -73,6 +73,7 @@ public class MainController {
 			model.addAttribute("rank_name", loginDTO.getRank_name());
 		}
 		
+		
 		return folder + "/" + jsp;
 	}
 	

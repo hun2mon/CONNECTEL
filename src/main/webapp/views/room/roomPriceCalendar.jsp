@@ -149,6 +149,16 @@
     #eventDate{
     	text-align: center;
     }
+    
+    .past-date {
+    cursor: default; /* 포인터가 아닌 기본 커서 */
+    opacity: 0.5; /* 활성화되지 않은 것을 나타내기 위해 투명도를 낮춤 */
+}
+
+.future-date {
+    cursor: pointer; /* 포인터 커서 */
+    opacity: 1; /* 완전히 불투명한 상태 */
+}
 	
 </style>
 </head>
@@ -269,7 +279,7 @@ function listCall() {
         },        
         eventDidMount: function(info) {
             var event = info.event;
-            var $eventContent = $('<div class="event-content">'); 
+            var $eventContent = $('<div class="event-content">');
 
             var $bar1 = $('<div class="bar" id="standBar">').text('스탠다드룸 ' + event.extendedProps.standard +'KRW');
             var $bar2 = $('<div class="bar" id="superBar">').text('슈페리어룸 ' + event.extendedProps.superior +'KRW');
@@ -281,19 +291,36 @@ function listCall() {
             info.el.innerHTML = '';
             info.el.appendChild($eventContent[0]);
 
-            // bar 클릭 이벤트 핸들러 추가
-            $bar1.on('click', function() {
-                openRoomPriceModal(event.extendedProps, event.startStr);
-            });
-            $bar2.on('click', function() {
-                openRoomPriceModal(event.extendedProps, event.startStr);
-            });
-            $bar3.on('click', function() {
-                openRoomPriceModal(event.extendedProps, event.startStr);
-            });
-            $bar4.on('click', function() {
-                openRoomPriceModal(event.extendedProps, event.startStr);
-            });
+            // 이벤트 날짜와 오늘 날짜 비교
+            var eventDate = new Date(event.start);
+            var today = new Date();
+            
+            // 시간 부분을 제거하여 날짜만 비교
+            eventDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+
+            // 날짜가 오늘 이전인지 확인
+            if (eventDate < today) {
+                // 과거 날짜인 경우
+                info.el.classList.add('past-date');
+            } else {
+                // 현재 및 미래 날짜인 경우
+                info.el.classList.add('future-date');
+                
+                // 클릭 이벤트 핸들러 추가
+                $bar1.on('click', function() {
+                    openRoomPriceModal(event.extendedProps, event.startStr);
+                });
+                $bar2.on('click', function() {
+                    openRoomPriceModal(event.extendedProps, event.startStr);
+                });
+                $bar3.on('click', function() {
+                    openRoomPriceModal(event.extendedProps, event.startStr);
+                });
+                $bar4.on('click', function() {
+                    openRoomPriceModal(event.extendedProps, event.startStr);
+                });
+            }
         }
     });
     calendar.render(); 

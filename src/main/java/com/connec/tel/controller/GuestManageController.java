@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.connec.tel.dto.kakaoPayCancelDTO;
@@ -76,6 +77,24 @@ public class GuestManageController {
 		logger.info("date : "+ date);
 		
 		return guestMngService.resCancelDate(date);
+	}
+	
+	@PostMapping(value = "/guest/reserveListCall.ajax")
+	@ResponseBody
+	public Map<String, Object> reserveListCall(@RequestParam Map<String, Object> param){
+		logger.info("reserveListCall.axax 요청!!!");
+		logger.info("param : {}", param);
+		
+		return guestMngService.reserveListCall(param);
+	}
+	
+	@PostMapping(value = "/guest/getDate.ajax")
+	@ResponseBody
+	public Map<String, Object> getDate(String today){
+		logger.info("reserveListCall.axax 요청!!!");
+		logger.info("today : "+today);
+		
+		return guestMngService.getDate(today);
 	}
 	
 	

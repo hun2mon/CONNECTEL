@@ -68,5 +68,33 @@ public interface RoomDAO {
 
 	void updateDayRoomPrice(Map<String, Object> param);
 
+	List<String> roomList();
+
+	void roomManageWrite(RoomDTO room_dto);
+
+	void photoUpload(String newFileName, String oriName, int room_manage_no);
+
+	RoomDTO room_mng_detail(int room_manage_no);
+
+	String findName(String emp_no);
+
+	List<String> photoName(int room_manage_no);
+
+	int roomManagetotalPage(String search, int cntt);
+
+	List<RoomDTO> roomManageList(String search, int start, int cntt);
+
+	void phoDelete(String pho_name);
+
+	void roomManageUpdateDo(Map<String, Object> param);
+
+	String findAuthority(String emp_no);
+
+	void room_manage_status_update(int room_manage_no, String emp_no);
+
+	List<String> getCheckoutRooms();
+
+
+
 
 }
