@@ -167,11 +167,6 @@
                                 .siblings('.explr-plus')
                                     .addClass('explr-minus');
                     }
-
-                    if($.browser.msie){
-                        // set as target of CSS hacks for IE6-8
-                        $tree.addClass('explr-ie');
-                    }
                 });
             }
         };
