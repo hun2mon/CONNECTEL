@@ -4,7 +4,7 @@
 >
 <mapper namespace="com.connec.tel.dao.FaqDAO">
     <select id="list" resultType="faqDTO" parameterType="map">
-    SELECT FAQ_no, FAQ_subject 
+    SELECT * 
     FROM FAQ
     <where>
         <if test="category != null and category != '' and category != '전체'">
