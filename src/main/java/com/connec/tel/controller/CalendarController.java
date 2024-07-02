@@ -83,15 +83,16 @@ public class CalendarController {
 	public List<Map<String, Object>> getEvents(@RequestParam("emp_no") String emp_no) {
 		logger.info("ㅎㅇㅎㅇ~");
 		List<Map<String, Object>> events = calService.getEvents(emp_no);
+
 		return events;
 	}
 	
 	@RequestMapping(value = "/getEvent", method = RequestMethod.GET)
 	@ResponseBody
-	public EventData getEvent(@RequestParam("cal_no") String cal_no) {
-		logger.info("ㅎㅇㅎㅇ~");
-	    EventData eventData = calService.getEvent(cal_no);
-		return eventData;
+	public Map<String, Object> getEvent(@RequestParam("cal_no") String cal_no, @RequestParam("emp_no") String emp_no) {
+		logger.info("ㅎㅇㅎㅇ~" + cal_no + emp_no);
+	    Map<String,Object> event = calService.getEvent(cal_no,emp_no);
+		return event;
 	}
 	
 	@RequestMapping(value = "/deleteEvent", method = RequestMethod.POST)

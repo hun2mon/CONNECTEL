@@ -33,10 +33,6 @@ public class CalendarService {
 	public List<Map<String, Object>> getEvents(String emp_no) {
 	    List<Map<String, Object>> events = new ArrayList<>();
 
-	    // 첫 번째 리스트 가져오기
-	    List<Map<String, Object>> eventsList = calendarDAO.getEvents(emp_no);
-	    events.addAll(eventsList); // 리스트 합치기
-
 	    // 두 번째 리스트 가져오기
 	    List<Map<String, Object>> shareList = calendarDAO.getShare(emp_no);
 	    events.addAll(shareList); // 리스트 합치기
@@ -87,6 +83,7 @@ public class CalendarService {
 	}
 
 	public void deptInsert(String cal_no, String dept_code) {
+		
 		calendarDAO.deptInsert(cal_no,dept_code);
 		calendarDAO.deptShare(cal_no);
 	}
@@ -100,10 +97,11 @@ public class CalendarService {
 
 	public void deleteParties(Long id) {
 		calendarDAO.deleteParty(id);
+		calendarDAO.deleteShare(id);
 	}
 
-	public EventData getEvent(String cal_no) {
-		return calendarDAO.getEvent(cal_no);
+	public Map<String, Object> getEvent(String cal_no, String emp_no) {
+		return calendarDAO.getEvent(cal_no,emp_no);
 	}
 
 

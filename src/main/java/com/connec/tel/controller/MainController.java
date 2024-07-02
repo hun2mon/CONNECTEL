@@ -1,8 +1,10 @@
 package com.connec.tel.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -33,27 +35,36 @@ public class MainController {
 	// 메인 페이지 이동
 	@RequestMapping(value = "/main")
 	public String mainss(Model model) throws IOException {
+		mainService.totalReserve(model);
 	    String url = "https://www.sukbakmagazine.com/news/articleList.html?sc_sub_section_code=S2N10&view_type=sm"; // 페이지 번호를 쿼리 파라미터로 추가
 	    Document doc = Jsoup.connect(url).get();
 	    mainService.scrapeContent(doc, model);
 	    
 	    return "main/main";
 	}
-	
+	@GetMapping(value = "/reservation/count")
+	@ResponseBody
+	public List<MainDTO> reservess(Model model){
+		mainService.totalReserve(model);
+		List<MainDTO> event = mainService.nowaReserve();
+		
+		
+		return event;
+	}
 	
     @GetMapping("/filterEventsByCategory")
     @ResponseBody
-    public List<MainDTO> filterEventsByCategory(@RequestParam("category") String category) {
+    public List<MainDTO> filterEventsByCategory(@RequestParam("category") String category, @RequestParam("emp_no") String emp_no) {
         logger.info("필터링 ㄱㄱ");
         logger.info(category + "ㅇㅇㅇㅇ");
 
         switch (category) {
             case "금주":
-                return mainService.getThisWeek(); // 금주 일정
+                return mainService.getThisWeek(emp_no); // 금주 일정
             case "오늘":
-                return mainService.getToday(); // 오늘 일정
+                return mainService.getToday(emp_no); // 오늘 일정
             case "내일":
-                return mainService.getTomorrow(); // 내일 일정
+                return mainService.getTomorrow(emp_no); // 내일 일정
             default:
                 return Collections.emptyList();
         }

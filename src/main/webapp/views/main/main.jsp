@@ -9,6 +9,80 @@
 <title>페이지 제목</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+
+
+#list{
+	background-color : white;
+}
+.list-hit{
+	margin-right:33px;
+}
+.list-no{
+	margin-left:50px;
+}
+.list-title{
+	width: 100%;
+	margin-left : 10px;
+}
+.annContent{
+	margin-top :200px;
+	background-color:white;
+}
+.list-title, .ann-list {
+   flex-basis: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 40px 10px -6px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.ann-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.ann-list-no, .ann-list-subject, .ann-list-name, .ann-list-date, .ann-list-hit, .ann-list-check {
+    flex-basis: 20%; /* 각 항목이 5개이므로 100%를 5로 나눈 값 */
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ann-list-subject {
+    flex-grow: 1;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.ann-list-check {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.card-card{
+	display : flex;
+	width: 70%;
+}
+.card-link{
+	width: 500px;
+	text-align : center;
+}
+.card-date{
+	font-size : 12px;width: 40%;
+	text-align : center;
+}
+
+
 #container3 {
 	background-color: white;
 }
@@ -22,7 +96,7 @@
 	background-color: white;
 	height: auto;
 	text-align: center;
-	width: 90%;
+	width: 81%;
 	margin-left: 30px;
 }
 
@@ -133,9 +207,10 @@ th {
 }
 
 #approval {
+	background-color : white;
+	margin-bottom:30px;
 	margin-left: 30px;
 	width: 80%;
-	background-color: #f9f9f9;
 	border: 1px solid #ddd;
 	padding: 20px;
 	text-align: center;
@@ -165,6 +240,11 @@ th {
 #content-wrapper {
 	background-color: #F9FBFD;
 }
+#scraped-content{
+	overflow-y : scroll;
+	height : 700px;
+}
+
 </style>
 </head>
 <body>
@@ -173,6 +253,7 @@ th {
 			<div id="sidebar">
 				<jsp:include page="../sideBar.jsp"></jsp:include>
 			</div>
+			<input type ="hidden" value = "${sessionScope.loginInfo.emp_no}" id = "emp_no">
 			<div id="userName">
 				<span class="user" id="user">안녕하세요,
 					${sessionScope.loginInfo.name}님!</span><br>
@@ -209,13 +290,27 @@ th {
 							<canvas id="myChart"></canvas>
 						</div>
 					</div>
+					<br><br>
+				    <div class="annContent">
+				        <div class="list-title"style="background-color:#6076E8; color:white;">
+				            <div class="list-no"><strong>&nbsp;번호</strong></div>
+				            <div class="list-subject"><strong>제목</strong></div>
+				            <div class="list-name"><strong>작성자</strong></div>
+				            <div class="list-date"><strong>작성일</strong></div>
+				            <div class="list-hit"><strong>조회수</strong></div>
+				        </div>
+				    </div>
+				    <div id="list"></div>					
+					
 				</section>
 				<section id="right">
 					<div id="approval">
+					<span style = "font-size: 20px; font-weight:bold;">전자결재</span>
+					<br><br>
 						<div id="wait">
 							<span class="arrr"><img id="approvalImg"
 								src="/scss/icons/approve.png"> 전자결재(대기)</span> 0건
-						</div>
+						</div><br><br>
 						<div id="refer">
 							<span class="arrr"><img id="approvalImg"
 								src="/scss/icons/approve.png"> 전자결재(참조)</span> 0건
@@ -228,7 +323,7 @@ th {
 							<br>
 							<br>
 						</div>
-						<span>오늘의 예약자수 150명</span><br>
+						<span>오늘의 예약자수 ${total}명</span><br>
 						<br>
 					</div>
 					<br>
@@ -239,7 +334,7 @@ th {
 							<table class="card">
 								<thead class="card-title">
 									<tr>
-										<td><a class="card-link" href="${article.link}"
+										<td class = "card-card" style = "display : flex; width: 100%;"><a class="card-link" href="${article.link}"
 											target="_blank">${article.title}</a></td>
 											<td class="card-date">${article.date}</td>
 											
@@ -249,7 +344,7 @@ th {
 									<tr>
 										<td class="card-desc">${article.desc}</td>
 									</tr>
-																		<tr>
+									<tr>
 									</tr>
 								</tbody>
 							</table>
@@ -268,6 +363,73 @@ th {
 		crossorigin="anonymous"></script>
 
 	<script>
+	var showPage = 1;
+	var ann_fixed = 'N';
+	var ann_division = 'E';
+	var register = ''; // register 변수 정의
+	var ann_date = ''; // regist_date 변수 정의
+	var cnt = 10;
+	var data = [];
+	
+	
+	$(document).ready(function(){
+	    listCall(showPage);
+	    setDays('오늘');
+	    
+	    
+	    function listCall(page) {
+	        var cnt = 10;
+	        $.ajax({
+	            type: 'GET',
+	            url: '/empann/annList.ajax',
+	            data: {
+	                'page': page,
+	                'cnt': cnt,
+	                'ann_division': ann_division,
+	                'ann_fixed': ann_fixed,
+	                'register': register,
+	                'ann_date': ann_date
+	            },
+	            dataType: 'json',
+	            success: function(data) {
+	          
+	                drawList(data.list);
+	                totalPages = data.totalPages;
+	            },
+	            error: function(error) {
+	                console.log('리스트 출력 실패:', error);
+	            }
+	        });
+	    }
+
+	    function drawList(data) {
+	        var content = '';
+	        for (var i = 0; i < data.length; i++) {
+	            content += '<div class="ann-list">';
+	            if (data[i].ann_fixed === 'Y') {
+	                content += '<div class="ann-list-no ann-notice">[공지]</div>';
+	            } else {
+	                content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
+	            }
+	            content += '<div class="ann-list-subject"><a href="/empannDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
+	            
+	            // updater가 존재할 경우 updater 표시, 그렇지 않으면 register 표시
+	            var nameToShow = data[i].updater ? data[i].updater : data[i].register;
+	            content += '<div class="ann-list-name">' + nameToShow + '</div>';
+	            
+	            // update_date가 존재할 경우 update_date 표시, 그렇지 않으면 ann_date 표시
+	            var dateToShow = data[i].update_date ? data[i].update_date : data[i].ann_date;
+	            content += '<div class="ann-list-date">' + dateToShow + '</div>';
+	            
+	            content += '<div class="ann-list-hit">' + data[i].ann_bHit + '</div>';
+	            content += '</div>';
+	        }
+	        $('#list').html(content);
+	    }
+	});
+	    
+	    
+	    
 	
 	function getDates() {
 	    const dates = [];
@@ -283,61 +445,73 @@ th {
 	}
 	
 	
-        function setDays(category) {
-            console.log("Selected category:", category); // 카테고리 값 확인
-            const xhr = new XMLHttpRequest();
-            const url = `/filterEventsByCategory?category=` + encodeURIComponent(category); // URL 인코딩
-            xhr.open('GET', url, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        try {
-                            const responseText = xhr.responseText;
-                            console.log("Response Text:", responseText);
-                            const filteredEvents = JSON.parse(responseText);
-                            drawList(filteredEvents);
-                        } catch (e) {
-                            console.error("JSON parsing error:", e);
-                        }
-                    } else {
-                        console.error('Error filtering events:', xhr.status);
-                    }
-                }
-            };
-            xhr.send();
-        }
+	function setDays(category) {
+	    var emp_no = document.getElementById('emp_no').value; // emp_no 값 가져오기
+	    console.log("Selected category:", category); // 카테고리 값 확인
+	    console.log("Selected emp_no:", emp_no); // emp_no 값 확인
 
-        function drawList(events) {
-            const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = ''; // 기존 내용을 초기화
+	    const xhr = new XMLHttpRequest();
+	    const url = `/filterEventsByCategory?category=` + encodeURIComponent(category) + `&emp_no=` + encodeURIComponent(emp_no); // URL 인코딩
+	    xhr.open('GET', url, true);
+	    xhr.onreadystatechange = function() {
+	        if (xhr.readyState === XMLHttpRequest.DONE) {
+	            if (xhr.status === 200) {
+	                try {
+	                    const responseText = xhr.responseText;
+	                    console.log("Response Text:", responseText);
+	                    const filteredEvents = JSON.parse(responseText);
+	                    drawList(filteredEvents);
+	                } catch (e) {
+	                    console.error("JSON parsing error:", e);
+	                }
+	            } else {
+	                console.error('Error filtering events:', xhr.status);
+	            }
+	        }
+	    };
+	    xhr.send();
+	}
 
-            if (events.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="3">No events found</td></tr>';
-                return;
-            }
+	function drawList(events) {
+	    const tableBody = document.getElementById('table-body');
+	    tableBody.innerHTML = ''; // 기존 내용을 초기화
 
-            events.forEach(event => {
-                const row = document.createElement('tr');
+	    if (events.length === 0) {
+	        tableBody.innerHTML = '<tr><td colspan="3">No events found</td></tr>';
+	        return;
+	    }
 
-                const titleCell = document.createElement('td');
-                titleCell.textContent = event.cal_content;
-                row.appendChild(titleCell);
+	    events.forEach(event => {
+	        const row = document.createElement('tr');
 
-                const startCell = document.createElement('td');
-                startCell.textContent = event.cal_start.slice(0, 16);
-                row.appendChild(startCell);
+	        const titleCell = document.createElement('td');
+	        const titleLink = document.createElement('a');
+	        titleLink.href = '/calendar/calendar.go'; // 이 부분을 원하는 URL로 변경하세요
+	        titleLink.textContent = event.cal_content;
+	        titleCell.appendChild(titleLink);
+	        row.appendChild(titleCell);
 
-                const endCell = document.createElement('td');
-                endCell.textContent = event.cal_end.slice(0, 16);
-                row.appendChild(endCell);
+	        const startCell = document.createElement('td');
+	        startCell.textContent = formatDateTime(event.cal_start);
+	        row.appendChild(startCell);
 
-                tableBody.appendChild(row);
-            });
-        }
+	        const endCell = document.createElement('td');
+	        endCell.textContent = formatDateTime(event.cal_end);
+	        row.appendChild(endCell);
+
+	        tableBody.appendChild(row);
+	    });
+	}
+
+	function formatDateTime(dateTimeString) {
+	    // T를 공백 두 개로 변경
+	    const dateTimeFormatted = dateTimeString.replace('T', '  ');
+	    return dateTimeFormatted;
+	}
 
         document.addEventListener('DOMContentLoaded', function() {
-            const maxCapacity = 150;
-            const reservedGuests = 100; // 예약된 손님 수 (예시로 75명을 사용)
+            const maxCapacity = 100;
+            const reservedGuests = ${total}; // 예약된 손님 수 (예시로 75명을 사용)
 
 			            
             
@@ -378,43 +552,63 @@ th {
             );
         });
         
+     // 차트를 그릴 canvas 요소 가져오기
         var ctx = document.getElementById('myChart');
-        const dates = getDates();
 
-        var myChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: dates,
-            datasets: [{
-              label: '일일 예약 손님',
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
+        // AJAX로 날짜별 예약 건수 데이터 가져오기
+        $.ajax({
+          url: '/reservation/count',
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            // 가져온 데이터를 차트 데이터로 변환
+            var labels = data.map(function(item) {
+              return item.date_str;
+            });
+            var counts = data.map(function(item) {
+              return item.count;
+            });
+
+            // 차트 생성
+            var myChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: '일일 예약 손님',
+                  data: counts,
+                  backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true
+                    }
+                  }]
                 }
-              }]
-            }
+              }
+            });
+          },
+          error: function() {
+            console.error('데이터를 가져오는 데 실패했습니다.');
           }
         });
     </script>

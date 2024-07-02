@@ -31,11 +31,13 @@ public interface CalendarDAO {
 
 	List<Map<String, Object>> getShare(String emp_no);
 
-	EventData getEvent(String cal_no);
+	Map<String, Object> getEvent(String cal_no, String emp_no);
 
 	void deptShare(String cal_no);
 
 	void partyShare(int cal_no);
+
+	void deleteShare(Long id);
 
 
 
