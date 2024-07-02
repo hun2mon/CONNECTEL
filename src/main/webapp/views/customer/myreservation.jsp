@@ -5,7 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>최고의 호텔 'The Shilla' 호텔에 오신걸 환영합니다!</title>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
     body {
         font-family: Arial, sans-serif;
