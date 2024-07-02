@@ -94,6 +94,14 @@ public interface RoomDAO {
 
 	List<String> getCheckoutRooms();
 
+	RoomDTO roomInfoList(String type_code);
+
+	String select_pho_name(String type_code);
+
+	void roomInfoUpdate(Map<String, Object> param);
+
+	void room_img_photoUpdate(String newFileName, String oriName, String type_code);
+
 
 
 

@@ -34,10 +34,44 @@ public class RoomDTO {
 	private String regist_date;
 	private String update_date;
 	private String authority;
+	private String room_detail;
+	private String room_extent;
+	private String room_bed;
+	private String room_capacity;
+	private String room_amenities;
 	
 	
 	
-	
+	public String getRoom_detail() {
+		return room_detail;
+	}
+	public void setRoom_detail(String room_detail) {
+		this.room_detail = room_detail;
+	}
+	public String getRoom_extent() {
+		return room_extent;
+	}
+	public void setRoom_extent(String room_extent) {
+		this.room_extent = room_extent;
+	}
+	public String getRoom_bed() {
+		return room_bed;
+	}
+	public void setRoom_bed(String room_bed) {
+		this.room_bed = room_bed;
+	}
+	public String getRoom_capacity() {
+		return room_capacity;
+	}
+	public void setRoom_capacity(String room_capacity) {
+		this.room_capacity = room_capacity;
+	}
+	public String getRoom_amenities() {
+		return room_amenities;
+	}
+	public void setRoom_amenities(String room_amenities) {
+		this.room_amenities = room_amenities;
+	}
 	public String getAuthority() {
 		return authority;
 	}
