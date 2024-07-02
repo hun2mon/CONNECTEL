@@ -6,8 +6,19 @@
 <head>
 <meta charset="UTF-8">
 <title>최고의 호텔 'Connectel' 호텔에 오신걸 환영합니다!</title>
+<!-- Leaflet CSS 및 JavaScript CDN 추가 -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
+	#map {
+            top: 0;
+            right: 0;
+            width: 400px; /* 원하는 가로 크기 조정 */
+            height: 300px; /* 정사각형 모양으로 조정 */
+        }
 	body{
 
 	margin: 0;
@@ -108,7 +119,10 @@
         letter-spacing: 0.5px;
          white-space: nowrap;
     }
-    
+     #map {
+        height: 400px;
+        margin: 20px;
+    }
     
 </style>
 </head>
@@ -185,13 +199,30 @@
            최고의 서비스를 약속드립니다.
     </p>
     </div>
-    </div>   
+    </div>  
+    
+     <!-- 지도를 표시할 div -->
+    <div id="map"></div>
+    
+    
+     
     <hr>
 
 </body>
 <script>
 	var slideIndex = 1;
 	var slideInterval;
+	var map = L.map('map').setView([36.072720680387306, 129.54110971926934], 16); //위도 / 경도 / 줌상태
+   
+	
+	//지도 
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	    maxZoom: 19,
+	    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+	
+	var beachMarker = L.marker([36.072720680387306, 129.54110971926934]).addTo(map); 
+	beachMarker.bindPopup("<b>The SheillaHotel</b><br>");
         
     showSlides(slideIndex);
     startSlideShow();

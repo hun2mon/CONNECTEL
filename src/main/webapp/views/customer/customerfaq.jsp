@@ -6,12 +6,41 @@
 <meta charset="UTF-8">
 <title>최고의 호텔 'The Shilla' 호텔에 오신걸 환영합니다!</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/topheader.css'/>">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
 body {
     font-family: Arial, sans-serif;
-    background-color: ;
     margin: 0;
     padding: 0;
+}
+.btn-info.active {
+    background-color: white;
+    color: black;
+    border: none;
+}
+
+.btn-info a.active{
+	background-color: white;
+	color: black;
+	border: none;
+}
+
+.btn-info {
+    background-color: white;
+    color: black;
+    border: none;
+}
+
+.btn-info:hover {
+    background-color: white;
+    color: black;
+}
+
+.btn-info.active {
+    background-color: white;
+    color: black;
 }
 
 h2 {
@@ -20,9 +49,11 @@ h2 {
     text-align: center;
     white-space: nowrap; /* 줄 바꿈 방지 */
 }
+
 hr {
     white-space: nowrap; /* 줄 바꿈 방지 */
 }
+
 .search {
     border: 1px solid gray;
     padding-top: 10px;
@@ -32,6 +63,7 @@ hr {
     background-color: #efeff1;
     text-align: center;
 }
+
 button {
     background-color: steelblue;
     border: solid 1px black;
@@ -62,8 +94,9 @@ button:hover {
     border-bottom: 1px solid #ccc;
     background-color: #5E94B1;
     margin-top: 20px;
-    font-size : 24px;
+    font-size: 24px;
 }
+
 .tab button {
     background-color: inherit;
     float: left;
@@ -72,7 +105,7 @@ button:hover {
     cursor: pointer;
     padding: 10px 20px;
     transition: 0.3s;
-   	font-size: 15px;
+    font-size: 15px;
 }
 
 .tab button:hover {
@@ -83,48 +116,36 @@ button:hover {
     background-color: #325c7f;
 }
 
-.faq {
-    margin-bottom: 20px;
-    width: 100%;
+.faq-list {
+    width: 80%;
+    margin: 10px auto;
     border-collapse: collapse;
 }
 
-.faq .faq-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.faq-list th, .faq-list td {
     border: 1px solid #ddd;
-    padding: 10px 0;
-    white-space: nowrap; /* 줄 바꿈 방지 */
-    overflow: hidden; /* 내용이 넘치면 숨기기 */
-    text-overflow: ellipsis; /* 말줄임표 처리 */
-}
-
-.faq .faq-list-no,
-.faq .faq-list-subject,
-.faq .faq-list-name,
-.faq .faq-list-date,
-.faq .faq-list-hit {
-    flex: 1;
-    text-align: center;
-}
-
-.faq .faq-list-no {
-    flex: 0.5; /* 번호 열의 너비를 줄임 */
-}
-
-.faq .faq-list-subject {
+    padding: 8px;
     text-align: left;
-    flex: 3;
+}
+
+.faq-list th {
+    background-color: #f2f2f2;
 }
 
 .pagination-container {
-    text-align: center;
+    text-align: center; /* 페이징 중앙 정렬 */
     margin-top: 20px;
 }
 
+.pagination {
+    display: inline-block; /* 페이징 중앙 정렬 */
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
+
 .pagination li {
-    display: inline-block;
+    display: inline-block; /* 한 줄로 정렬 */
     margin: 0 5px;
 }
 
@@ -140,42 +161,6 @@ button:hover {
     background-color: steelblue;
     color: white;
     border-color: steelblue;
-}
-
-.list-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #9a9a9a;
-    font-size: 14px;
-}
-
-.list-title div {
-    flex: 1;
-    text-align: center;
-}
-
-.list-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #9a9a9a;
-    font-size: 14px;
-    width: 100%;
-}
-
-.list-title .list-no {
-    flex: 0 0 10%;
-    text-align: center; /* 왼쪽 정렬 */
-
-}
-.list-title .list-subject {
-    flex: 0 0 90%;
-    text-align: center; /* 가운데 정렬 */
 }
 </style>
 </head>
@@ -200,10 +185,18 @@ button:hover {
     </div>
 
     <!-- FAQ 리스트 -->
-    <div class="faq-list" id="faqList">
-        <!-- 여기에 FAQ 목록이 동적으로 추가됩니다. -->
-    </div>
-
+    <table class="faq-list">
+        <thead>
+            <tr>
+                <th style="width: 10%;">번호</th>
+                <th style="width: 80%;">제목</th>
+            </tr>
+        </thead>
+        <tbody id="faqList">
+            <!-- 여기에 FAQ 목록이 동적으로 추가됩니다. -->
+        </tbody>
+    </table>
+   
     <!-- 페이징 -->
     <div class="pagination-container">
         <nav aria-label="Page navigation">
@@ -214,7 +207,6 @@ button:hover {
 <script>
 var showPage = 1;
 var cnt = 10;
-var currentCategory = '전체'; // 현재 선택된 탭 카테고리 저장 변수
 
 $(document).ready(function() {
     listCall(1, '전체'); // 초기 페이지 로드
@@ -225,7 +217,7 @@ $(document).ready(function() {
         if (searchText !== '') {
             search(1, searchText); // 검색 시 첫 페이지로 초기화
         } else {
-            listCall(showPage, currentCategory); // 검색어 없이 검색 버튼 클릭 시 현재 탭의 리스트 보여주기
+            listCall(showPage, '전체'); // 검색어 없이 검색 버튼 클릭 시 현재 탭의 리스트 보여주기
         }
     });
 
@@ -235,87 +227,102 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('click', '.faq-item .btn-info', function() {
+        $('.collapse').collapse('hide'); // 모든 FAQ 항목을 닫음
+        $('.btn-info').removeClass('active'); // 모든 버튼의 active 클래스 제거
+        $(this).addClass('active'); // 클릭된 버튼에 active 클래스 추가
+        $($(this).attr('href')).collapse('show'); // 클릭한 항목을 엶
+    });
+
+    // 기본 탭 설정
+    document.getElementById("defaultOpen").click();
+
+    function listCall(page, category) {
+        $.ajax({
+            type: 'GET',
+            url: '/faq/faqList.ajax',
+            data: {
+                'page': page,
+                'cnt': cnt,
+                'category': category
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('AJAX 요청 성공');
+                console.log(data.list);
+                drawFaqList(data.list); // FAQ 리스트 그리기 함수 호출
+                initializePagination(data.totalPages, category); // 페이징 초기화
+            },
+            error: function(error) {
+                console.log('FAQ 리스트 출력 실패:', error);
+            }
+        });
+    }
+
+    function drawFaqList(data) {
+        var content = '';
+        for (var i = 0; i < data.length; i++) {
+            var faqId = 'collapse' + i; // 고유 ID 생성
+            content += '<tr class="faq-item">';
+            content += '<td>' + data[i].faq_no + '</td>';
+            content += '<td><a class="btn btn-info" data-toggle="collapse" href="#' + faqId + '" aria-expanded="false" aria-controls="' + faqId + '">' + data[i].faq_subject + '</a></td>';
+            content += '</tr>';
+            content += '<tr class="collapse" id="' + faqId + '"><td colspan="2">' + data[i].faq_content + '</td></tr>';
+        }
+        $('#faqList').html(content); // FAQ 목록 업데이트
+    }
+
+    function initializePagination(totalPages, category) {
+        $('#pagination').twbsPagination({
+            totalPages: totalPages,
+            visiblePages: 5,
+            onPageClick: function(event, page) {
+                listCall(page, category);
+            }
+        });
+    }
+
+    function search(page, title) {
+        $.ajax({
+            type: 'GET',
+            url: '/faq/search.ajax', // 경로 앞에 슬래시 추가
+            data: {
+                'textval': title,
+                'cnt': cnt,
+                'page': page
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('검색');
+                drawFaqList(data.list);
+                $('#pagination').twbsPagination({
+                    totalPages: data.totalPages,
+                    visiblePages: 5,
+                    onPageClick: function(event, page) {
+                        search(page, title);
+                    }
+                });
+            },
+            error: function(error) {
+                console.log('검색 실패:', error);
+            }
+        });
+    }
+
     // 탭 열기 함수
     window.openTab = function(evt, tabName) {
         var i, tablinks;
+        // 모든 탭 버튼의 active 클래스 제거
         tablinks = document.getElementsByClassName("tablinks");
         for (i = 0; i < tablinks.length; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
+        // 클릭된 탭의 콘텐츠를 표시하고, 버튼에 active 클래스 추가
         evt.currentTarget.className += " active";
-        currentCategory = tabName; // 현재 탭 카테고리 업데이트
-        listCall(1, tabName); // 해당 탭의 데이터 로드
+        listCall(1, tabName); // 해당 탭의 첫 번째 페이지 데이터를 호출
+        $('#pagination').twbsPagination('destroy');
     };
-
-    // 기본 탭 설정
-    document.getElementById("defaultOpen").click();
 });
-
-function listCall(page, category) {
-    $.ajax({
-        type: 'GET',
-        url: '/faq/faqList.ajax',
-        data: {
-            'page': page,
-            'cnt': cnt,
-            'category': category
-        },
-        dataType: 'json',
-        success: function(data) {
-            console.log('AJAX 요청 성공');
-            console.log(data.list);
-            drawFaqList(data.list); // FAQ 리스트 그리기 함수 호출
-            initializePagination(data.totalPages, category); // 페이징 초기화
-        },
-        error: function(error) {
-            console.log('FAQ 리스트 출력 실패:', error);
-        }
-    });
-}
-
-function drawFaqList(data) {
-    var content = '';
-    for (var i = 0; i < data.length; i++) {
-        content += '<div class="faq-item">';
-        content += '<div><strong>번호: </strong>' + data[i].faq_no + '</div>';
-        content += '<div><strong>제목: </strong><a href="/faqDetail.go?faq_no=' + data[i].faq_no + '">' + data[i].faq_subject + '</a></div>';
-        content += '</div>';
-    }
-    $('#faqList').html(content); // FAQ 목록 업데이트
-}
-
-function initializePagination(totalPages, category) {
-    $('#pagination').twbsPagination({
-        totalPages: totalPages,
-        visiblePages: 5,
-        onPageClick: function(event, page) {
-            listCall(page, category);
-        }
-    });
-}
-
-
-function search(page, title) {
-    $.ajax({
-        type: 'GET',
-        url: '/faq/search.ajax', // 경로 앞에 슬래시 추가
-        data: {
-            'textval': title,
-            'cnt': cnt,
-            'page': page
-        },
-        dataType: 'json',
-        success: function(data) {
-            console.log('검색');
-            drawFaqList(data.list);
-            $('#pagination').twbsPagination('destroy'); // 기존 페이징 제거
-            initializePagination(data.totalPages, currentCategory); // 검색 결과에 맞는 페이징 초기화
-        },
-        error: function(error) {
-            console.log('검색 실패:', error);
-        }
-    });
-}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
 </body>
