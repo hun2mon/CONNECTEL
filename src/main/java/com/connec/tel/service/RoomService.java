@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -434,6 +433,38 @@ public class RoomService {
 		return room_manage_no;
 	}
 	
+	public void roomInfoUpdate(MultipartFile photo, Map<String, Object> param) {
+		
+		roomDAO.roomInfoUpdate(param);
+		
+		String type_code = (String) param.get("room_type_code");
+		
+		
+		String oriName = photo.getOriginalFilename();
+         logger.info("업로드 파일 이름 : " + oriName);
+         
+         if (!oriName.equals("")) {
+	            String ext = oriName.substring(oriName.lastIndexOf("."));
+	            
+	            String newFileName = System.currentTimeMillis() +ext;
+	            logger.info(oriName +" -> "+newFileName);
+	            
+	            try {
+	               byte[] bytes = photo.getBytes();
+	               Path path = Paths.get(file_root+newFileName);
+	               Files.write(path, bytes);
+	               //mypageDAO.introFileCreate(newFileName,userId);
+	               roomDAO.room_img_photoUpdate(newFileName,oriName,type_code);
+	               Thread.sleep(1);
+	            } catch (Exception e) {
+	               
+	               e.printStackTrace();
+	            }
+	   
+	         }
+		
+	}
+	
 	public void roomManageUpdateDo(MultipartFile[] photos, Map<String, Object> param, int room_manage_no) {
 		roomDAO.roomManageUpdateDo(param);
 		
@@ -524,6 +555,20 @@ public class RoomService {
 		
 		return map;
 	}
+
+	public Map<String, Object> roomInfoList(String type_code) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		RoomDTO dto = roomDAO.roomInfoList(type_code);
+		map.put("list", dto);
+		
+		String pho_name = roomDAO.select_pho_name(type_code);
+		
+		map.put("pho_name", pho_name);
+		return map;
+	}
+
+	
 
 
 }

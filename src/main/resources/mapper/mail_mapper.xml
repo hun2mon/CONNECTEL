@@ -4,5 +4,41 @@
 >
 
 <mapper namespace="com.connec.tel.dao.MailDAO">
+<insert id="mailSave" useGeneratedKeys="true" keyColumn="mail_no" keyProperty="mail_no" parameterType="com.connec.tel.dto.MailDTO">
+    INSERT INTO mail(emp_no,mail_receiver,mail_subject,mail_content,status,send_date)
+		VALUES(#{emp_no},#{mail_receiver},#{mail_subject},#{mail_content},'S',NOW())
+</insert>
+
+<insert id="fileUpload">
+	INSERT INTO file(ori_file_name,file_name,ref_idx,file_division)
+		VALUES(#{oriName},#{newFileName},#{mail_no},'M')
+</insert>
+
+<select id="totalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(mail_no)/#{param2}) AS pages FROM mail WHERE emp_no = #{param3}
+		</if>
 	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(mail_no)/#{param2}) AS pages FROM mail
+				WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param3}
+		</if>
+		
+</select>
+
+<select id="sendMailList" resultType="com.connec.tel.dto.MailDTO">
+		<if test="param1 == ''">
+			SELECT*FROM mail WHERE emp_no = #{param4} ORDER BY send_date DESC  LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT* FROM mail  WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param4} ORDER BY send_date DESC LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	<select id="mailDetail" resultType="com.connec.tel.dto.MailDTO">
+		SELECT * FROM mail WHERE mail_no= #{mail_no}
+	</select>
+
 </mapper>

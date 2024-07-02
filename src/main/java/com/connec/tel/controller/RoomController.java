@@ -303,5 +303,26 @@ public class RoomController {
 		
 		return roomService.setRoomsToAvailable(rooms);
 	}
+	
+	@PostMapping(value = "/room/roomInfoList.ajax")
+	@ResponseBody
+	public Map<String, Object> roomInfoList(@RequestParam String type_code){
+		logger.info("roomInfoList 요청!!!");
+		logger.info("type_code : {}",type_code);
 
+		return roomService.roomInfoList(type_code);
+	}
+
+	@PostMapping(value = "/room/roomInfoUpdate.do")
+	public String roomInfoUpdate(@RequestParam("photo") MultipartFile photo,
+			@RequestParam Map<String, Object> param,Model model) {
+		logger.info("roomInfoUpdate 요청!!!");
+		logger.info("param : {}",param);
+		logger.info("photo : "+photo);
+		
+		roomService.roomInfoUpdate(photo,param);
+		
+		model.addAttribute("room_type", param.get("room_type_code"));
+		return "/room/roomInfoUpdate";
+	}
 }

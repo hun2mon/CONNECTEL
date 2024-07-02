@@ -45,7 +45,9 @@
 			<artifactId>mariadb-java-client</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-	 	
+
+
+
 	 	<!-- security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -72,6 +74,7 @@
 		    <artifactId>jsoup</artifactId>
 		    <version>1.15.3</version>
 		</dependency>
+		
 		
 
 		
