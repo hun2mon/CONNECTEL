@@ -66,11 +66,6 @@
         a.ann_no = #{ann_no}
 </select>
 
-
-
-
-
-
 <update id="bHit" parameterType="string">
     UPDATE announcement
     SET ann_bHit = ann_bHit + 1
@@ -86,5 +81,57 @@
         FROM photo 
         WHERE ref_idx = #{ann_no} AND pho_division = 'A'
 </select>
+
+
+<select id="room_info" resultType="com.connec.tel.dto.GuestManageDTO">
+		SELECT * FROM room_information
+	</select>
+
+<select id="standard_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1001'
+</select>
+	
+<select id="superior_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1002'
+</select>
+	
+<select id="delux_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1003'
+</select>
+		
+<select id="suite_num">
+		SELECT COUNT(*) as cnt FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) AND division = 'A' AND type_code ='1004'
+	</select>
+
+<select id="reserveListCall" parameterType="map" resultType="com.connec.tel.dto.GuestManageDTO">
+	    SELECT date, standard, superior, delux, suite FROM room_price
+	    WHERE date <![CDATA[ >= ]]> #{in_date} AND date <![CDATA[ < ]]> #{out_date}
+</select>
+
+
+<select id="getRoomPrices" resultType="com.connec.tel.dto.GuestManageDTO">
+        SELECT MIN(standard) as standard, MIN(superior) as superior, MIN(delux) as delux, MIN(suite) as suite
+        FROM room_price
+        WHERE date <![CDATA[ >= ]]> #{in_date} AND date <![CDATA[ < ]]> #{out_date}
+    </select>
+
+<select id="standardphoto" resultType="String">
+	SELECT pho_name FROM photo where ref_idx = 1001 and pho_division = 'I'
+</select>
+
+<select id="superiorphoto" resultType="String">
+	SELECT pho_name FROM photo where ref_idx = 1002 and pho_division = 'I'
+</select>
+
+<select id="deluxphoto" resultType="String">
+	SELECT pho_name FROM photo where ref_idx = 1003 and pho_division = 'I'
+</select>
+
+<select id="suitephoto" resultType="String">
+	SELECT pho_name FROM photo where ref_idx = 1004 and pho_division = 'I'
+</select>
+
+
+
 
 </mapper>
