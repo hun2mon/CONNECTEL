@@ -10,5 +10,32 @@
 			VALUES (#{roomId}, #{emp_no}, #{name})
 	</insert>
 	
+	<select id="getChatRoom" resultType="chatRoom">
+		SELECT 
+			chat_no AS roomId,
+			chat_name AS name
+		FROM chat_room WHERE chat_no = #{param1}
+	</select>
+	
+	<select id="chatRoomList" resultType="chatRoom">
+		SELECT 
+			chat_no AS roomId,
+			chat_name AS name
+		FROM chat_room
+	</select>
+	
+	<insert id="addMsg" parameterType="String">
+		INSERT INTO chat_detail(chat_no, emp_no, chat_content)
+			VALUES(#{roomId},#{emp_no}, #{sendMessage})
+	</insert>
+	
+	<select id="contentsCall" resultType="chatRoom">
+		SELECT
+			c.chat_content
+			,c.chat_date
+			,e.name
+			,c.emp_no
+		FROM chat_detail c JOIN emp e ON c.emp_no = e.emp_no WHERE chat_no = #{param1} ORDER BY content_no
+	</select>
 	
 </mapper>

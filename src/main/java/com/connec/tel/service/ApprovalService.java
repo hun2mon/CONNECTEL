@@ -188,7 +188,6 @@ public class ApprovalService {
 					CommonService.upload(file, newFileName);
 					appDAO.fileSave(file.getOriginalFilename(), newFileName, draft_no);					
 				}
-				
 			}			
 		}
 		return "redirect:/approval/myApproval.go";

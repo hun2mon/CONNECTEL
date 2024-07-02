@@ -116,21 +116,6 @@
 										<ul class="mailbox list-style-none">
 											<li>
 												<div class="message-center">
-													<!-- Message -->
-													<a href="javascript:void(0)"
-														class="message-item d-flex align-items-center border-bottom px-3 py-2">
-														<div class="user-img">
-															<img src="/assets/images/users/1.jpg" alt="user"
-																class="img-fluid rounded-circle" width="40px"> <span
-																class="profile-status online float-right"></span>
-														</div>
-														<div class="w-75 d-inline-block v-middle pl-2">
-															<h6 class="message-title mb-0 mt-1">홍길동 사장</h6>
-															<span
-																class="font-12 text-nowrap d-block text-muted text-truncate">오늘 일찍 퇴근하세요</span> <span
-																class="font-12 text-nowrap d-block text-muted">9:30AM</span>
-														</div>
-													</a>
 												</div>
 											</li>
 										</ul>
@@ -145,48 +130,6 @@
 										style="height: calc(100vh - 111px);">
 										<!--chat Row -->
 										<ul class="chat-list list-style-none px-3 pt-3" id="chatContent">
-											<!--chat Row -->
-											<li class="chat-item list-style-none mt-3">
-												<div class="chat-img d-inline-block">
-													<img src="/assets/images/users/1.jpg" alt="user"
-														class="rounded-circle" width="45">
-												</div>
-												<div class="chat-content d-inline-block pl-3">
-													<h6 class="font-weight-medium">홍길동 사장</h6>
-													<div class="msg p-2 d-inline-block mb-1">안녕하세요</div>
-												</div>
-												<div class="chat-time d-block font-10 mt-1 mr-0 mb-3">10:56am</div>
-											</li>
-											<!--chat Row -->
-											<li class="chat-item list-style-none mt-3">
-												<div class="chat-img d-inline-block">
-													<img src="/assets/images/users/1.jpg" alt="user"
-														class="rounded-circle" width="45">
-												</div>
-												<div class="chat-content d-inline-block pl-3">
-													<h6 class="font-weight-medium">홍길동 사장</h6>
-													<div class="msg p-2 d-inline-block mb-1">반가워요</div>
-												</div>
-												<div class="chat-time d-block font-10 mt-1 mr-0 mb-3">10:57am</div>
-											</li>
-											<!--chat Row -->
-											<li class="chat-item odd list-style-none mt-3">
-												<div class="chat-content text-right d-inline-block pl-3">
-													<div class="box msg p-2 d-inline-block mb-1">I would love to join the team.</div>
-													<br>
-												</div>
-											</li>
-											<!--chat Row -->
-											<li class="chat-item odd list-style-none mt-3">
-												<div class="chat-content text-right d-inline-block pl-3">
-													<div class="box msg p-2 d-inline-block mb-1 box">
-														Whats budget of the new project.</div>
-													<br>
-												</div>
-												<div
-													class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3">
-													10:59 am</div>
-											</li>
 										</ul>
 									</div>
 									<div class="card-body border-top">
@@ -355,7 +298,7 @@
         		},
         		dataType:'JSON',
         		success:function(data){
-        			console.log(data);
+        			findAllRoom();
         		},
         		error:function(e){
         			console.log(e);
@@ -368,6 +311,7 @@
 	findAllRoom();
     
     function findAllRoom() {
+    	$('.message-center').html('');
     	 $.ajax({
      		url:'/chat/rooms',
      		method:'get',
@@ -389,9 +333,11 @@
     
     function enterRoom(roomId) {
     	var sender = '${loginInfo.name}';
+    	var emp_no = '${loginInfo.emp_no}';
         if(sender != "") {
             localStorage.setItem('wschat.sender',sender);
             localStorage.setItem('wschat.roomId',roomId);
+            localStorage.setItem('wschat.emp_no',emp_no);
             $.ajax({
          		url:'/chat/room/enter/' + roomId,
          		method:'get',
@@ -416,20 +362,37 @@
     function sendMessage() {
     	var roomId = localStorage.getItem('wschat.roomId');
         var sender = localStorage.getItem('wschat.sender');
+        var emp_no = localStorage.getItem('wschat.emp_no');
         var message = $('#textarea1').val();
     	
-        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, message:message}));
+        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, emp_no:emp_no,message:message}));
         message = '';
 	}
     
     var messages = [];
     function recvMessage(recv) {
+    	
+    	var emp_no = '${loginInfo.emp_no}';
+    	
     	console.log(recv);
     	var content = '';
-		content += '<li class="chat-item odd list-style-none mt-3"><div class="chat-content text-right d-inline-block pl-3"><div class="box msg p-2 d-inline-block mb-1 box">';
-		content += recv.message + '</div><br></div><div class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3">10:59 am</div></li>';
-		messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
-		$('#chatContent').append(content);
+    	if (recv.emp_no != emp_no) {
+			content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/assets/images/users/1.jpg" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
+			content += '<h6 class="font-weight-medium">'+recv.sender+'</h6>';
+			content += '<div class="msg p-2 d-inline-block mb-1">'+recv.message+'</div></div>';
+			content += '<div class="chat-time d-block font-10 mt-1 mr-0 mb-3"></div></li>';
+		} else {
+			content += '<li class="chat-item odd list-style-none mt-3">';
+			content += '<div class="chat-content text-right d-inline-block pl-3">';
+			content += '<div class="box msg p-2 d-inline-block mb-1">'+recv.message+'</div><br></div>';
+			content += '<div class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3"></div></li>';
+		}
+		messages.unshift({"type":recv.type,"sender":recv.sender,"emp_no":recv.emp_no,"message":recv.message})
+		if (recv.type != 'ENTER') {
+			$('#chatContent').append(content);	
+			$('#textarea1').val('');
+		}
+		content = '';
 	}
     
     function findRoom(roomId) {
@@ -442,6 +405,7 @@
         			sock = new SockJS("/ws_stomp");
         		    ws = Stomp.over(sock);
         		    reconnect = 0;
+        		    drawChatContent(roomId);
         			connect();
         		},
         		error:function(e){
@@ -454,13 +418,13 @@
     function connect() {
     	var roomId = localStorage.getItem('wschat.roomId');
         var sender = localStorage.getItem('wschat.sender');
-        console.log('123123');
+        var emp_no = localStorage.getItem('wschat.emp_no');
         ws.connect({}, function(frame) {
             ws.subscribe("/sub/chat/room/"+roomId, function(message) {
                 var recv = JSON.parse(message.body);
                 recvMessage(recv);
             });
-            ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:roomId, sender:sender}));
+            ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:roomId, emp_no:emp_no, sender:sender}));
         },
         function(error) {
             if(reconnect++ <= 5) {
@@ -472,6 +436,37 @@
                 },10*1000);
             }
         });
+	}
+    
+    function drawChatContent(roomId) {
+    	$('#chatContent').html('');	
+    	$.ajax({
+    		url:'/chat/content/' + roomId,
+    		method:'get',
+    		data:{},
+    		dataType:'JSON',
+    		success:function(data){
+    			var emp_no = '${loginInfo.emp_no}';
+    			var content = '';
+    			for (item of data.list) {
+    				if (item.emp_no != emp_no) {
+    					content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/assets/images/users/1.jpg" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
+    					content += '<h6 class="font-weight-medium">'+item.name+'</h6>';
+    					content += '<div class="msg p-2 d-inline-block mb-1">'+item.chat_content+'</div></div>';
+    					content += '<div class="chat-time d-block font-10 mt-1 mr-0 mb-3">'+item.chat_date+'</div></li>';
+					} else {
+						content += '<li class="chat-item odd list-style-none mt-3">';
+						content += '<div class="chat-content text-right d-inline-block pl-3">';
+						content += '<div class="box msg p-2 d-inline-block mb-1">'+item.chat_content+'</div><br></div>';
+						content += '<div class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3">'+item.chat_date+'</div></li>';
+					}
+				}
+    			$('#chatContent').append(content);	
+    		},
+    		error:function(e){
+    			console.log(e);
+    		}
+    	})
 	}
     
 </script>

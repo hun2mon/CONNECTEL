@@ -2,28 +2,44 @@ package com.connec.tel.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import com.connec.tel.dto.ChatMessage;
+import com.connec.tel.service.ChatRoomRepository;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 @Controller
 public class ChatController {
 	
 	private final SimpMessageSendingOperations messagingTemplate;
+	
+	public ChatController(SimpMessageSendingOperations messagingTemplate){
+		this.messagingTemplate = messagingTemplate;
+	}
+	
 	Logger logger = LoggerFactory.getLogger(getClass());
+	@Autowired ChatRoomRepository crRepository;
 	
 	@MessageMapping("/chat/message")
 	public void message(ChatMessage message) {
-		if (ChatMessage.MessegeType.ENTER.equals(message.getType())) {
-			logger.info("sdfsdf");
-			message.setMessage(message.getSender() + "님이 입장하였습니다.");
+		logger.info("======roomId : {}======", message.getRoomId());
+		logger.info("======sender : {}======", message.getSender());
+		logger.info("======emp_no : {}======", message.getEmp_no());
+		logger.info("======emp_no : {}======", message.getType());
+		String roomId = message.getRoomId();
+		String emp_no = message.getEmp_no();
+		String sendMessage = message.getMessage();
+		
+		if (ChatMessage.MessegeType.TALK.equals(message.getType())) {
+			crRepository.addMsg(roomId, emp_no, sendMessage);
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-		logger.info("123");
 		messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
 	}
 }

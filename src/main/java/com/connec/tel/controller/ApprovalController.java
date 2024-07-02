@@ -1,8 +1,5 @@
 package com.connec.tel.controller;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -21,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.service.ApprovalService;
-import com.connec.tel.service.CommonService;
 
 @Controller
 public class ApprovalController {

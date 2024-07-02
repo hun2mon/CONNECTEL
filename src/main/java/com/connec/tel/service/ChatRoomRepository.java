@@ -1,13 +1,8 @@
 package com.connec.tel.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,34 +18,38 @@ public class ChatRoomRepository {
 	@Autowired MessengerDAO msgDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
 
- private Map<String, ChatRoom> chatRoomMap;
+	 public List<ChatRoom> findAllRoom() {
+	     List<ChatRoom> chatRooms = msgDAO.chatRoomList();
+	     return chatRooms;
+	 }
+	
+	 public Map<String, ChatRoom> findRoomById(String id) {
+		 Map<String, ChatRoom> map = new HashMap<String, ChatRoom>();
+		 ChatRoom chatRoom = msgDAO.getChatRoom(id);
+		 map.put("chatRoom", chatRoom);
+	     return map;
+	 }
+	
+	 public ChatRoom createChatRoom(String name, String emp_no) {
+		 logger.info("emp_no : {}", emp_no);
+	     ChatRoom chatRoom = ChatRoom.create(name);
+	     String roomId = chatRoom.getRoomId();
+	     
+	     msgDAO.createRoom(roomId, name, emp_no);
+	     
+	     return chatRoom;
+	 }
+	
+	public void addMsg(String roomId, String emp_no, String sendMessage) {
+		msgDAO.addMsg(roomId, emp_no, sendMessage);
+	}
 
- @PostConstruct
- private void init() {
-     chatRoomMap = new LinkedHashMap<>();
- }
+	public Map<String, Object> contentsCall(String roomId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<ChatRoom> list = msgDAO.contentsCall(roomId);
+		map.put("list", list);
+		return map;
+	}
 
- public List<ChatRoom> findAllRoom() {
-     // 채팅방 생성순서 최근 순으로 반환
-     List chatRooms = new ArrayList<>(chatRoomMap.values());
-     Collections.reverse(chatRooms);
-     return chatRooms;
- }
 
- public Map<String, ChatRoom> findRoomById(String id) {
-	 Map<String, ChatRoom> map = new HashMap<String, ChatRoom>();
-	 map.put("chatRoom", chatRoomMap.get(id));
-     return map;
- }
-
- public ChatRoom createChatRoom(String name, String emp_no) {
-	 logger.info("emp_no : {}", emp_no);
-     ChatRoom chatRoom = ChatRoom.create(name);
-     String roomId = chatRoom.getRoomId();
-     
-     msgDAO.createRoom(roomId, name, emp_no);
-     chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
-     
-     return chatRoom;
- }
 }

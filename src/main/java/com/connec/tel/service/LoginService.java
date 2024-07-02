@@ -30,7 +30,7 @@ public class LoginService {
 		if (dto != null) {
 			if (encoder.matches(pw, dto.getPassword())) {
 				logger.info("일치");
-				float leftOver = loginDAO.leftOver(dto.getEmp_no());
+				Float leftOver = loginDAO.leftOver(dto.getEmp_no());
 				session.setAttribute("loginInfo", dto);
 				session.setAttribute("leftOver", leftOver);
 			} else {
