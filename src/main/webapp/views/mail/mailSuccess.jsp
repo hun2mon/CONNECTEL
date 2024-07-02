@@ -39,6 +39,26 @@
         margin: 20px 0;
     }
 
+	 .success-message {
+        text-align: center;
+        margin-top: 200px;
+        margin-bottom: 300px;
+    }
+
+    .success-icon {
+        font-size: 100px;
+        color: #28a745;
+    }
+
+    .success-text {
+        font-size: 24px;
+        margin-top: 20px;
+    }
+
+    .list-button {
+        margin-top: 30px;
+    }
+	
 </style>
 </head>
 <body>
@@ -52,7 +72,12 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        
+                        <div class="success-message">
+                            <i class="fas fa-paper-plane success-icon"></i>
+                            <div class="success-text">메일을 성공적으로 전송하였습니다.</div>
+                            <a href="/mail/sendMailList.go" class="btn btn-primary list-button">리스트로 가기</a>
+                            <a href="/mail/sendMail.go" class="btn btn-primary list-button">새메일 보내기</a>
+                        </div>
                     </div>
                 </div>
             </div>

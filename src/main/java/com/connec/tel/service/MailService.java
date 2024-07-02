@@ -1,6 +1,9 @@
 package com.connec.tel.service;
 
-import java.util.Iterator;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.connec.tel.dao.MailDAO;
+import com.connec.tel.dto.MailDTO;
+import com.connec.tel.dto.RoomDTO;
 
 @Service
 public class MailService {
@@ -29,23 +34,50 @@ public class MailService {
 	@Value("${spring.mail.username}")
     private String senderEmail;
 	
-	
+	public String file_root = "C:/upload/";
 
-	public void mail(Map<String, String> param, String[] receiverList, List<MultipartFile> files) {
+	public void mail(MailDTO mailDTO, String[] receiverList, List<MultipartFile> files) {
 		for (String email : receiverList) {
-            sendEmail(param, email.trim(), files);
+            sendEmail(mailDTO, email.trim(), files);
         }	
+		
+		// 그리고 이메일 데이터 디비에 저장(mail)
+        mailDAO.mailSave(mailDTO);
+        
+        // 여기서 파일이나 이미지 이름 저장 (포토테이블)
+        for (MultipartFile file : files) {
+        	String oriName = file.getOriginalFilename();
+        	 if (!oriName.equals("")) {
+ 	            String ext = oriName.substring(oriName.lastIndexOf("."));
+ 	            
+ 	            String newFileName = System.currentTimeMillis() +ext;
+ 	            logger.info(oriName +" -> "+newFileName);
+ 	            
+ 	            try {
+ 	               byte[] bytes = file.getBytes();
+ 	               Path path = Paths.get(file_root+newFileName);
+ 	               Files.write(path, bytes);
+ 	               //mypageDAO.introFileCreate(newFileName,userId);
+ 	               mailDAO.fileUpload(newFileName,oriName,mailDTO.getMail_no());
+ 	               Thread.sleep(1);
+ 	            } catch (Exception e) {
+ 	               
+ 	               e.printStackTrace();
+ 	            }
+ 	   
+ 	         }
+        }
 	}
 
-	private void sendEmail(Map<String, String> param, String email, List<MultipartFile> files) {
+	private void sendEmail(MailDTO mailDTO, String email, List<MultipartFile> files) {
 		MimeMessage message = javaMailSender.createMimeMessage();	
 			
 		try {
 	            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 	            helper.setFrom(senderEmail); // 발신자 이메일 주소 설정
 	            helper.setTo(email); // 수신자 이메일 주소 설정
-	            helper.setSubject(param.get("subject")); // 제목 설정
-	            helper.setText(param.get("content"), true); // 내용 설정
+	            helper.setSubject(mailDTO.getMail_subject()); // 제목 설정
+	            helper.setText(mailDTO.getMail_content(), true); // 내용 설정
 	            
 	            // 파일 첨부
 	            for (MultipartFile file : files) {
@@ -57,11 +89,39 @@ public class MailService {
 	            
 	            javaMailSender.send(message); // 이메일 전송
 	            logger.info("메일 전송 완료: {}", email);
+	                      
+	            
 		} catch (Exception e) {
 			 logger.error("메일 전송 실패: {}", e.getMessage());
 			e.printStackTrace();
 		}
 		
+	}
+
+	public Map<String, Object> sendMailList(String search, String page, String cnt, String emp_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = mailDAO.totalPage(search, cntt,emp_no);
+		
+		List<RoomDTO> list = mailDAO.sendMailList(search, start, cntt,emp_no);
+		
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
+		return map;
+	}
+
+	public MailDTO mailDetail(String mail_no) {
+		
+		return mailDAO.mailDetail(mail_no);
 	}
 
 	

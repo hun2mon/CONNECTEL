@@ -64,15 +64,15 @@
                 <div class="card">
                     <div class="card-body">                    
                         <div class="compose-content">
-                            <form action="/mail/mail.do" method="post" enctype="multipart/form-data">
+                            <form id="emailForm" action="/mail/mail.do" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <input type="text" class="form-control bg-transparent" name="email" placeholder="받는사람">
+                                    <input type="text" id="email" class="form-control bg-transparent" name="mail_receiver" placeholder="받는사람">
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control bg-transparent" name="subject" placeholder="제목">
+                                    <input type="text" id="subject" class="form-control bg-transparent" name="mail_subject" placeholder="제목">
                                 </div>
                                 <div class="form-group">
-                                    <textarea id="email-compose-editor" class="textarea_editor form-control bg-transparent" rows="15" name="content" placeholder="내용"></textarea>
+                                    <textarea id="content" class="textarea_editor form-control bg-transparent" rows="15" name="mail_content" placeholder="내용"></textarea>
                                 </div>
                                 <div class="fallback w-100">
                                     <input type="file" class="dropify" multiple="multiple" name="multipartFiles" />
@@ -92,6 +92,27 @@
 </div>    
 </body>
 <script>
-
+$(document).ready(function() {
+    $('#emailForm').on('submit', function(event) {
+        var email = $('#email').val().trim();
+        var subject = $('#subject').val().trim();
+        var content = $('#content').val().trim();
+	
+        if (email ==="") {
+        	alert("받는사람을 입력하세요.");
+            $('#email').focus();  
+            event.preventDefault();
+    	} else if (subject === "") {
+            alert("제목을 입력하세요.");
+            $('#subject').focus();
+            event.preventDefault();
+        } else if (content === "") {
+            alert("내용을 입력하세요.");
+            $('#content').focus();
+            event.preventDefault();
+        }
+    });
+});
 </script>
+
 </html>
