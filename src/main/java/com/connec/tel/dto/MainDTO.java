@@ -1,5 +1,6 @@
 package com.connec.tel.dto;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import org.apache.ibatis.type.Alias;
@@ -12,6 +13,21 @@ public class MainDTO {
 	private LocalDateTime cal_start;
 	private LocalDateTime cal_end;
 	private String emp_no;
+	public Date getDate_str() {
+		return date_str;
+	}
+	public void setDate_str(Date date_str) {
+		this.date_str = date_str;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	private Date date_str;
+	private int count;
+	
 	
 	public String getCal_no() {
 		return cal_no;

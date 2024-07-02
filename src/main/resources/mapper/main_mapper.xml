@@ -7,20 +7,39 @@
 	
 
     <select id="getThisWeek" resultType="main">
-        SELECT * FROM calendar
-        WHERE DATE(cal_start) BETWEEN #{param1} AND #{param2}
+        SELECT distinct * FROM calendar c left JOIN calendar_share cs
+        ON cs.cal_no = c.cal_no
+        WHERE DATE(c.cal_start) BETWEEN #{param1} AND #{param2} AND c.emp_no = #{param3}
     </select>
 
     <select id="getToday" resultType="main">
-        SELECT * FROM calendar
-        WHERE DATE(cal_start) = #{param1}
+        SELECT distinct * FROM calendar c left JOIN calendar_share cs
+        ON cs.cal_no = c.cal_no
+        WHERE DATE(cal_start) = #{param1} AND c.emp_no = #{param2}
     </select>
 
     <select id="getTomorrow" resultType="main">
-        SELECT * FROM calendar
-        WHERE DATE(cal_start) = #{param1}
+        SELECT distinct * FROM calendar c left JOIN calendar_share cs
+        ON cs.cal_no = c.cal_no
+        WHERE DATE(cal_start) = #{param1} AND c.emp_no = #{param2}
+    </select>
+    
+    <select id = "totalReserve" resultType = "int">
+    	SELECT COUNT(res_no) as count FROM reservation WHERE in_date = #{param1} AND division = 'A'
+    </select>
+    
+    <select id = "nowaReserve" resultType = "main">
+		SELECT
+				DATE_FORMAT(in_date, '%Y-%m-%d') AS date_str,
+		    COUNT(res_no) AS count
+				FROM reservation
+				WHERE in_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND CURDATE()
+				GROUP BY date_str
+				ORDER BY date_str ASC
     </select>
 
+
+	
 	
 	
 </mapper>
