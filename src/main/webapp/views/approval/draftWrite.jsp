@@ -234,7 +234,7 @@ th{
 	    <div class="modal-dialog">
 	        <div class="modal-content">
 	            <div class="modal-header modal-colored-header bg-info">
-	                <h4 class="modal-title" id="info-header-modalLabel">Modal Heading</h4>
+	                <h4 class="modal-title" id="info-header-modalLabel">참조자/조회자 지정</h4>
 	                <button type="button" class="close" data-dismiss="modal"
 	                    aria-hidden="true">×</button>
 	            </div>
@@ -351,7 +351,7 @@ th{
 	
 		    var daysDiff = timeDiff / (1000 * 3600 * 24) + 1;
 	
-		    if (daysDiff > '${dto.leftOver}') {
+		    if (daysDiff > '${leftOver}') {
 		    	$('.noti').html('보유 연차가 부족합니다.');
 				$('.appNoti').modal('show');
 				$('.endDate').val('');

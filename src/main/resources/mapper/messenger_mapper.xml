@@ -4,6 +4,11 @@
 >
 
 <mapper namespace="com.connec.tel.dao.MessengerDAO">
+
+	<insert id="createRoom" parameterType="String">
+		INSERT INTO chat_room(chat_no,emp_no,chat_name)
+			VALUES (#{roomId}, #{emp_no}, #{name})
+	</insert>
 	
 	
 </mapper>
