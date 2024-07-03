@@ -1,6 +1,7 @@
 package com.connec.tel.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,6 +20,16 @@ public interface MailDAO {
 	List<RoomDTO> sendMailList(String search, int start, int cntt, String emp_no);
 
 	MailDTO mailDetail(String mail_no);
+
+	void mail_delete(String mail_no);
+
+	List<String> mailFile(String mail_no);
+
+	void mailTempSave(Map<String, Object> param);
+
+	int tempTotalPage(String search, int cntt, String emp_no);
+
+	List<RoomDTO> TempMailList(String search, int start, int cntt, String emp_no);
 
 	
 

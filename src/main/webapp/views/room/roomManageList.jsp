@@ -145,8 +145,6 @@ thead {
 	                                            </div>
 	                                        </td>
 	                                    </tr>  	                                     
-								  	
-                                    </tbody>
                                 </table>     
                                 <button class="btn btn-primary" id="create" onclick="goWrite()">등록하기</button>                             
                             </div>

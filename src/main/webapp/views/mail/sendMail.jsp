@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="text-right mt-4 mb-5">
                                     <button class="btn btn-primary btn-sl-sm mr-3" type="submit"><span class="mr-2"><i class="fa fa-paper-plane"></i></span> 전송</button>
-                                    <button class="btn btn-dark btn-sl-sm" type="button"><span class="mr-2"><i
+                                    <button class="btn btn-dark btn-sl-sm" onclick="temp_save()" type="button"><span class="mr-2"><i
                                                     class="fas fa-archive" aria-hidden="true"></i></span> 임시저장</button>
                                 </div>
                             </form>                         
@@ -97,7 +97,9 @@ $(document).ready(function() {
         var email = $('#email').val().trim();
         var subject = $('#subject').val().trim();
         var content = $('#content').val().trim();
-	
+		
+
+        
         if (email ==="") {
         	alert("받는사람을 입력하세요.");
             $('#email').focus();  
@@ -113,6 +115,34 @@ $(document).ready(function() {
         }
     });
 });
-</script>
 
+	function temp_save(){
+		if (!confirm('임시 저장시 파일 저장은 불가능합니다. 임시저장 하시겠습니까?')) {
+	        return; // 사용자가 취소를 선택하면 함수 종료
+	    }
+		var mail_receiver = $('#email').val();
+		var mail_subject = $('#subject').val();
+		var mail_content = $('#content').val();
+		
+		console.log(mail_receiver,mail_subject,mail_content);
+		$.ajax({
+			type:'POST',
+			url:'/mail/mailTempSave.ajax',
+			data:{
+				mail_receiver:mail_receiver,
+				mail_subject:mail_subject,
+				mail_content:mail_content
+			},
+			dataType:'JSON',
+			success:function(data){
+				location.href='/mail/mailTempSave.go';
+			},
+			error:function(e){
+				console.log(e);
+				alert('임시저장에 실패하였습니다.');
+			}
+			
+		});
+	}
+</script>
 </html>
