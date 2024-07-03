@@ -87,7 +87,7 @@
 				 r.cos_phone ,s.stay_check_in ,s.stay_check_out 
 			FROM reservation r LEFT JOIN stay s using(res_no) 
 			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param4}
-			ORDER BY s.stay_check_in DESC
+			ORDER BY s.stay_check_out , s.stay_check_in DESC
 			LIMIT #{param2}, #{param3}
 		</if>
 		
@@ -96,7 +96,7 @@
 				 r.cos_phone ,s.stay_check_in ,s.stay_check_out 
 			FROM reservation r LEFT JOIN stay s using(res_no) 
 			WHERE DATE_FORMAT(s.stay_check_in,'%Y-%m-%d') = #{param4} AND cos_name LIKE CONCAT('%', #{param1}, '%')
-			ORDER BY s.stay_check_in DESC
+			ORDER BY s.stay_check_out ,s.stay_check_in DESC
 			LIMIT #{param2}, #{param3}
 		</if>
 	</select>

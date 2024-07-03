@@ -104,6 +104,11 @@
 	    border: 0px;
 	    border-color: white; 
 	}
+	
+	#allDelete{
+		margin-left: 94%;
+	}
+	
 </style>
 </head>
 <body>
@@ -145,6 +150,11 @@
                                     </td>
                                 </tr>
                             </table>
+
+							    <button id="allDelete" onclick="allDelete()" class="btn btn-danger btn-delete">
+							        <i class="fa fa-trash"></i> 삭제
+							    </button>
+
                         </div>    
                     </div>
                 </div>
@@ -163,6 +173,32 @@
         listCall(showPage);
     });
 
+    function allDelete() {
+    	  var checkedIds = [];
+    	    $('.checkout-room-checkbox:checked').each(function() {
+    	        checkedIds.push($(this).val());
+    	    });
+    	    console.log('checkedIds : ',checkedIds);
+    	    $.ajax({
+    	    	type:'POST',
+    	    	url:'/mail/mail_all_delete.ajax',
+    	    	contentType: 'application/json',
+    	    	data:JSON.stringify({
+    	    		mail_no:checkedIds
+    	    	}),
+    	    	dataType:'JSON',
+    	    	success:function(data){
+    	    		console.log(data);
+    	    		listCall(showPage);
+    	    	},
+    	    	error:function(e){
+    	    		console.log(e);
+    	    	}
+    	    });
+    	    
+    }
+    
+    
     function search() {
         $('#pagination').twbsPagination('destroy');
         listCall(showPage);
@@ -215,10 +251,10 @@
             var remainingReceivers = receivers.length - 1;
             var displayText = remainingReceivers > 0 ? displayReceiver + ' 외 ' + remainingReceivers + '명' : displayReceiver;
             
-            content += '<tr class="trHover" onclick="mailDetail(' + item.mail_no + ')">';
+            content += '<tr class="trHover">';
             content += '<td><input type="checkbox" class="checkout-room-checkbox" value="' + item.mail_no + '"></td>';
             content += '<td>' + displayText + '</td>';
-            content += '<td>' + item.mail_subject + '</td>';
+            content += '<td ><a href="#" onclick="mailDetail(' + item.mail_no + ')">' + item.mail_subject + '</a></td>';
             content += '<td>' + item.send_date + '</td>';     
             content += '<td><a href="#" onclick="deleteMail(' + item.mail_no + ')"><i class="fas fa-trash-alt"></i></a></td>';     
             content += '</tr>';

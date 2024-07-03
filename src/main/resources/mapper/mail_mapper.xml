@@ -17,28 +17,64 @@
 <select id="totalPage" resultType="int">
 
 		<if test="param1 == ''">
-			SELECT CEIL(COUNT(mail_no)/#{param2}) AS pages FROM mail WHERE emp_no = #{param3}
+			SELECT CEIL(COUNT(mail_no)/#{param2}) AS pages FROM mail WHERE emp_no = #{param3} AND status = 'S'
 		</if>
 	
 		<if test="param1 != null">
 			SELECT CEIL(COUNT(mail_no)/#{param2}) AS pages FROM mail
-				WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param3}
+				WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param3} AND status = 'S'
+		</if>
+		
+</select>
+
+<select id="tempTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(mail_no)/#{param2}) AS pages FROM mail WHERE emp_no = #{param3} AND status = 'T'
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(mail_no)/#{param2}) AS pages FROM mail
+				WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param3} AND status = 'T'
 		</if>
 		
 </select>
 
 <select id="sendMailList" resultType="com.connec.tel.dto.MailDTO">
 		<if test="param1 == ''">
-			SELECT*FROM mail WHERE emp_no = #{param4} ORDER BY send_date DESC  LIMIT #{param2}, #{param3}
+			SELECT*FROM mail WHERE emp_no = #{param4} AND status = 'S' ORDER BY send_date DESC  LIMIT #{param2}, #{param3}
 		</if>
 		
 		<if test="param1 != null">
-			SELECT* FROM mail  WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param4} ORDER BY send_date DESC LIMIT #{param2}, #{param3}
+			SELECT* FROM mail  WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param4} AND status = 'S' ORDER BY send_date DESC LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	<select id="TempMailList" resultType="com.connec.tel.dto.MailDTO">
+		<if test="param1 == ''">
+			SELECT*FROM mail WHERE emp_no = #{param4} AND status = 'T' ORDER BY send_date DESC  LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT* FROM mail  WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param4} AND status = 'T' ORDER BY send_date DESC LIMIT #{param2}, #{param3}
 		</if>
 	</select>
 	
 	<select id="mailDetail" resultType="com.connec.tel.dto.MailDTO">
 		SELECT * FROM mail WHERE mail_no= #{mail_no}
 	</select>
+	
+	<delete id="mail_delete">
+		DELETE FROM mail WHERE mail_no = #{mail_no}
+	</delete>
+	
+	<select id="mailFile" resultType="com.connec.tel.dto.MailDTO">
+		SELECT ori_file_name,file_name FROM file WHERE ref_idx = #{mail_no}
+	</select>
+	
+	<insert id="mailTempSave">
+		INSERT INTO mail(emp_no,mail_receiver,mail_subject,mail_content,status,send_date)
+			VALUES(#{emp_no},#{mail_receiver},#{mail_subject},#{mail_content},'T',NOW())
+	</insert>
 
 </mapper>

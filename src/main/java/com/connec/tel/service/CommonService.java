@@ -41,7 +41,7 @@ public class CommonService {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired CommonDAO commonDAO;
-	static String root = "/Users/junmo/Desktop/photo/";
+	static String root = "C:/upload/";
 	
 	public Map<String, Object> treeCall(String word) {
 		Map<String, Object> map = new HashMap<String, Object>();
