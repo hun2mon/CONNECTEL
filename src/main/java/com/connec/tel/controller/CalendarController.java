@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.connec.tel.dto.CalendarDTO;
 import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.service.CalendarService;
 
@@ -83,6 +84,16 @@ public class CalendarController {
 	public List<Map<String, Object>> getEvents(@RequestParam("emp_no") String emp_no) {
 		logger.info("ㅎㅇㅎㅇ~");
 		List<Map<String, Object>> events = calService.getEvents(emp_no);
+
+		return events;
+	}
+	
+	@RequestMapping(value = "/getDays", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Map<String, Object>> getDays(@RequestParam("cal_no") String cal_no) {
+		logger.info("ㅎㅇㅎㅇ~");
+		List<Map<String, Object>> events = calService.getDays(cal_no);
+		logger.info("events : {}",events);
 
 		return events;
 	}

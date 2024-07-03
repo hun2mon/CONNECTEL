@@ -144,7 +144,6 @@ h2 {
             <br><br><br><br><br>
             
             <h2>${sessionScope.loginInfo.name}님의 프로필</h2>
-            <br><br>
             <div class="content">
                 <table class="employee-card">
                     <tr>

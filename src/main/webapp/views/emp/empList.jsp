@@ -8,6 +8,12 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style>
+	.searchType{
+		border-radius: 30%;
+	}
+	#searchText{
+		width: 30%;
+	}
 	.searchdd{
 		display : flex;
 		text-align:right;
@@ -91,22 +97,39 @@
 					<select id="searchType" class="searchType">
 						<option value="1" class="searchType">이름</option>
 						<option value="2" class="searchType">재직상태</option>
-						<input type="text" id="searchText">
-						<img src="/scss/icons/search.png" id="search" height="20px" width="20px" onclick="search()" class="searchIcon">				
+						<input aria-label="Search" type="search" class="form-control custom-shadow custom-radius bg-white" type="text" id="searchText" onkeyup="search()" placeholder : "내용을 입력해주세요">
 					</select>
 				</div>
 				</div><br>
 				
-				<div class = "btnss">
-					<button value="1" onclick="setCategory(1)" class = "active">전체</button>
-					<button value="2" onclick="setCategory(2)">인사팀</button>
-					<button value="3" onclick="setCategory(3)">시설팀</button>
-					<button value="4" onclick="setCategory(4)">고객팀</button>
-				</div>
-				<br>
-
+							<ul class="nav nav-tabs mb-3">
+								<li class="nav-item" onclick="setCategory(1)">
+									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active">
+										<input type="hidden" value="T">
+										<i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+										<span class="d-none d-lg-block">전체</span>
+									</a>
+								</li>
+								<li class="nav-item" onclick="setCategory(2)">
+									<a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link">
+										 <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i> 
+										 <span class="d-none d-lg-block">인사팀</span>
+									</a>
+								</li>
+								<li class="nav-item" onclick="setCategory(3)">
+									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link"> 
+										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i> 
+										<span class="d-none d-lg-block">시설팀</span>
+									</a>
+								</li>
+								<li class="nav-item"  onclick="setCategory(4)">
+									<a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
+										<i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+										<span class="d-none d-lg-block">고객팀</span>
+									</a>
+								</li>
+							</ul>
 			</section>
-			<br>
 			<table id="showlist" class="table">
 				<thead>
 					<tr class="listhead">

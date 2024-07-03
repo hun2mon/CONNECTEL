@@ -120,5 +120,17 @@ public class MainService {
 		
 		return list;
 	}
+
+	public void totalApproval(String emp_no, Model model) {
+		int waiting = mainDAO.totalApproval(emp_no);
+		
+		int draft = mainDAO.draft(emp_no);
+		
+		model.addAttribute("wait",waiting);
+		model.addAttribute("draft",draft);
+		
+		
+		
+	}
 	
 }

@@ -46,6 +46,7 @@ public class ChatRoomRepository {
  public ChatRoom createChatRoom(String name, String emp_no) {
 	 logger.info("emp_no : {}", emp_no);
      ChatRoom chatRoom = ChatRoom.create(name);
+     ChatRoom chatRoom1 = new ChatRoom();
      String roomId = chatRoom.getRoomId();
      
      msgDAO.createRoom(roomId, name, emp_no);

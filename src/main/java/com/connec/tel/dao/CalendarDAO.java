@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.connec.tel.dto.CalendarDTO;
+
 import io.opentelemetry.sdk.trace.data.EventData;
 
 
@@ -38,6 +40,8 @@ public interface CalendarDAO {
 	void partyShare(int cal_no);
 
 	void deleteShare(Long id);
+
+	List<Map<String, Object>> getDays(String cal_no);
 
 
 

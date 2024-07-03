@@ -73,7 +73,9 @@
 		UPDATE calendar SET shared_status = 0 WHERE cal_no = #{param1}
 	</update>
 	
-	
+	<select id = "getDays" resultType = "map">
+		SELECT * from calendar WHERE cal_no = #{param1}
+	</select>
 
 
 	<update id ="deptShare">

@@ -192,7 +192,7 @@
 								<img src="/assets/images/users/profile-pic.jpg" alt="user"
 								class="rounded-circle" width="40"> <span
 								class="ml-2 d-none d-lg-inline-block"><span>Hello,</span>
-									<span class="text-dark">홍길동</span> <i
+									<span class="text-dark">${sessionScope.loginInfo.name}</span> <i
 									data-feather="chevron-down" class="svg-icon"></i></span>
 						</a>
 							<div

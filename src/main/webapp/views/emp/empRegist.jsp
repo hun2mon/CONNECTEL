@@ -132,8 +132,7 @@
             </div>
             <div class="form-group">
                 <span class="subject">우편번호</span>
-                <input type="text"  name = "post_no" class="form-control" id="sample6_postcode" placeholder="우편번호" required>
-				<img id="postBtn" src="/scss/icons/search.png" alt="우편번호 찾기" onclick="sample6_execDaumPostcode()" style="cursor: pointer;">
+                <input type="text"  name = "post_no" class="form-control" id="sample6_postcode" placeholder="이 란을 클릭해주세요!" onclick="sample6_execDaumPostcode()" required>
                 <span class="subject">전화번호</span>
                 <input type="text" class="form-control" id="phone" name="phone" required>
             </div>
