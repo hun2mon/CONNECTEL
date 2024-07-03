@@ -94,29 +94,36 @@
         font-weight: bold;
     }
 
-    .pagination-container {
-        text-align: center;
-        margin-top: 20px;
-    }
+  .pagination-container {
+    text-align: center; /* 페이징 중앙 정렬 */
+    margin-top: 20px;
+}
 
-    .pagination li {
-        display: inline-block;
-        margin: 0 5px;
-    }
+.pagination {
+    display: inline-block; /* 페이징 중앙 정렬 */
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
 
-    .pagination li a {
-        display: block;
-        padding: 5px 10px;
-        border: 1px solid #ddd;
-        color: #333;
-        text-decoration: none;
-    }
+.pagination li {
+    display: inline-block; /* 각 페이지 번호를 가로로 배열 */
+    margin: 0 5px; /* 페이지 번호 간 간격 조정 */
+}
 
-    .pagination li.active a {
-        background-color: steelblue;
-        color: white;
-        border-color: steelblue;
-    }
+.pagination li a {
+    display: block;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    color: #333;
+    text-decoration: none;
+}
+
+.pagination li.active a {
+    background-color: steelblue;
+    color: white;
+    border-color: steelblue;
+}
 
     .list-title {
     display: flex;
@@ -145,11 +152,11 @@
      <%@ include file="topheader.jsp" %>
 
     <!-- 메인부분 -->
-    <h2>공지사항</h2>
+    <h2 style="margin-top:10px;">공지사항</h2>
     <hr width="50%">
     <!-- 검색 -->
     <div class="search">
-        <input type="text" id="searchInput" placeholder=" 제목">
+        <input type="text" id="searchInput" placeholder=" 제목을 입력하세요">
         <button id="searchButton">검색</button>
     </div>
 

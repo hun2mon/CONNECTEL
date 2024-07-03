@@ -71,8 +71,19 @@ public class CustomerService {
 	public Map<String, Object> reserveListCall(Map<String, Object> param) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+
 		List<GuestManageDTO> resList = customerDAO.room_info();
 		map.put("resList", resList);
+		
+		map.put("standard_detail", customerDAO.standard_detail());
+		map.put("superior_detail", customerDAO.superior_detail());
+		map.put("delux_detail", customerDAO.delux_detail());
+		map.put("suite_detail", customerDAO.suite_detail());
+		
+		map.put("standard_extent", customerDAO.standard_extent());
+		map.put("superior_extent", customerDAO.superior_extent());
+		map.put("delux_extent", customerDAO.delux_extent());
+		map.put("suite_extent", customerDAO.suite_extent());
 		
 	
 		

@@ -316,7 +316,7 @@ button:hover {
         };
 
         // 기본으로 열리는 탭 설정
-        document.getElementById("defaultOpen").click();
+        	
 
         // 삭제 기능
         $('#deletebutton').click(function() {

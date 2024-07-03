@@ -11,7 +11,6 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
         margin: 0;
         padding: 0;
     }
@@ -66,6 +65,12 @@
 </head>
 <body>
      <%@ include file="topheader.jsp" %>
+     <h2 style="margin-top:10px;">예약조회</h2>
+     <hr style="width:50%;">
+     
+     
+     
+     
 
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
