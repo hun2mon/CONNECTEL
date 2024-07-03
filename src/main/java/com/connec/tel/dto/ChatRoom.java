@@ -21,4 +21,10 @@ public class ChatRoom {
 		chatRoom.name = name;
 		return chatRoom;
 	}
+
+
+	public String getRoomId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

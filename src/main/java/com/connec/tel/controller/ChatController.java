@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class ChatController {
 	
-	private final SimpMessageSendingOperations messagingTemplate;
+	private final SimpMessageSendingOperations messagingTemplate = null;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@MessageMapping("/chat/message")

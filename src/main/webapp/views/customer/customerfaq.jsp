@@ -15,33 +15,62 @@ body {
     margin: 0;
     padding: 0;
 }
-.btn-info.active {
+.btn-inpo.active {
     background-color: white;
     color: black;
     border: none;
 }
 
-.btn-info a.active{
+.btn-inpo:focus {
+    /* color: #fff; */
+    /* background-color: #138496; */
+    /* border-color: #117a8b; */
+    box-shadow: none
+}
+.btn-inpo a.active{
 	background-color: white;
 	color: black;
 	border: none;
 }
 
-.btn-info {
+.btn-inpo{
     background-color: white;
     color: black;
     border: none;
 }
 
-.btn-info:hover {
+.btn-inpo:hover {
     background-color: white;
     color: black;
+    border:none;
+    text-decoration:none;
 }
 
-.btn-info.active {
+.collapse.active {
     background-color: white;
     color: black;
+    border: none;
 }
+
+.collapse a.active{
+	background-color: white;
+	color: black;
+	border: none;
+}
+
+.btn-inpo{
+    background-color: white;
+    color: black;
+    border: none;
+}
+
+.btn-inpo:hover {
+    background-color: white;
+    color: black;
+    border:none
+}
+
+
 
 h2 {
     margin-bottom: -1px;
@@ -125,7 +154,7 @@ button:hover {
 .faq-list th, .faq-list td {
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: left;
+    text-align: center;
 }
 
 .faq-list th {
@@ -167,7 +196,8 @@ button:hover {
 <body>
     <%@ include file="topheader.jsp" %>
 
-    <h2>FAQ</h2>
+    <h2 style="margin-top:10px;">FAQ</h2>
+    <hr width="50%">
 
     <!-- 검색 -->
     <div class="search">
@@ -227,9 +257,9 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', '.faq-item .btn-info', function() {
+    $(document).on('click', '.faq-item .btn-inpo', function() {
         $('.collapse').collapse('hide'); // 모든 FAQ 항목을 닫음
-        $('.btn-info').removeClass('active'); // 모든 버튼의 active 클래스 제거
+        $('.btn-inpo').removeClass('active'); // 모든 버튼의 active 클래스 제거
         $(this).addClass('active'); // 클릭된 버튼에 active 클래스 추가
         $($(this).attr('href')).collapse('show'); // 클릭한 항목을 엶
     });
@@ -265,9 +295,9 @@ $(document).ready(function() {
             var faqId = 'collapse' + i; // 고유 ID 생성
             content += '<tr class="faq-item">';
             content += '<td>' + data[i].faq_no + '</td>';
-            content += '<td><a class="btn btn-info" data-toggle="collapse" href="#' + faqId + '" aria-expanded="false" aria-controls="' + faqId + '">' + data[i].faq_subject + '</a></td>';
+            content += '<td><a class="btn-inpo" data-toggle="collapse" href="#' + faqId + '" aria-expanded="false" aria-controls="' + faqId + '">' + data[i].faq_subject + '</a></td>';
             content += '</tr>';
-            content += '<tr class="collapse" id="' + faqId + '"><td colspan="2">' + data[i].faq_content + '</td></tr>';
+            content += '<tr class="collapse" style="text-align:left" id="' + faqId + '"><td colspan="2" style="text-align:left;">' + data[i].faq_content + '</td></tr>';
         }
         $('#faqList').html(content); // FAQ 목록 업데이트
     }
@@ -322,6 +352,7 @@ $(document).ready(function() {
         listCall(1, tabName); // 해당 탭의 첫 번째 페이지 데이터를 호출
         $('#pagination').twbsPagination('destroy');
     };
+    document.getElementById("defaultOpen").click();
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
