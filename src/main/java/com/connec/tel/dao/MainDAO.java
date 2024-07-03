@@ -23,5 +23,9 @@ public interface MainDAO {
 
 	List<MainDTO> nowaReserve();
 
+	int totalApproval(String emp_no);
+
+	int draft(String emp_no);
+
 
 }

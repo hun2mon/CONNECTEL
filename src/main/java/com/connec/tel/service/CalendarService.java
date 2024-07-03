@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.connec.tel.dao.CalendarDAO;
+import com.connec.tel.dto.CalendarDTO;
 
 import io.opentelemetry.sdk.trace.data.EventData;
 
@@ -102,6 +103,10 @@ public class CalendarService {
 
 	public Map<String, Object> getEvent(String cal_no, String emp_no) {
 		return calendarDAO.getEvent(cal_no,emp_no);
+	}
+
+	public List<Map<String, Object>> getDays(String cal_no) {
+		return calendarDAO.getDays(cal_no);
 	}
 
 

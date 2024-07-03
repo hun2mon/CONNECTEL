@@ -51,5 +51,4 @@ public class ChatRoomRepository {
 		return map;
 	}
 
-
 }

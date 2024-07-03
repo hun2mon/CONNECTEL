@@ -25,7 +25,7 @@
 	margin-left : 10px;
 }
 .annContent{
-	margin-top :200px;
+	margin-top :150px;
 	background-color:white;
 }
 .list-title, .ann-list {
@@ -78,7 +78,8 @@
 	text-align : center;
 }
 .card-date{
-	font-size : 12px;width: 40%;
+	font-size : 12px;
+	width: 40%;
 	text-align : center;
 }
 
@@ -96,7 +97,7 @@
 	background-color: white;
 	height: auto;
 	text-align: center;
-	width: 81%;
+	width: 95%;
 	margin-left: 30px;
 }
 
@@ -210,7 +211,7 @@ th {
 	background-color : white;
 	margin-bottom:30px;
 	margin-left: 30px;
-	width: 80%;
+	width: 95%;
 	border: 1px solid #ddd;
 	padding: 20px;
 	text-align: center;
@@ -242,7 +243,7 @@ th {
 }
 #scraped-content{
 	overflow-y : scroll;
-	height : 700px;
+	height : 840px;
 }
 
 </style>
@@ -308,12 +309,15 @@ th {
 					<span style = "font-size: 20px; font-weight:bold;">전자결재</span>
 					<br><br>
 						<div id="wait">
-							<span class="arrr"><img id="approvalImg"
-								src="/scss/icons/approve.png"> 전자결재(대기)</span> 0건
-						</div><br><br>
+						<span class="arrr" onclick="window.location.href='/approval/myApproval.go?emp_no=${sessionScope.loginInfo.emp_no}'" style="cursor: pointer;">
+							<img id="approvalImg"
+								src="/scss/icons/approve.png"> 기안중인 문서</span> ${draft}건
+						</div><br>
+						
 						<div id="refer">
-							<span class="arrr"><img id="approvalImg"
-								src="/scss/icons/approve.png"> 전자결재(참조)</span> 0건
+						<span class="arrr" onclick="window.location.href='/approval/requestApproval.go?emp_no=${sessionScope.loginInfo.emp_no}'" style="cursor: pointer;">
+								<img id="approvalImg"
+									src="/scss/icons/approve.png"> 결제대기 문서 </span> ${wait}건
 						</div>
 					</div>
 					<br>

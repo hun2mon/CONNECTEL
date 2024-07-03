@@ -9,19 +9,19 @@
     <select id="getThisWeek" resultType="main">
         SELECT distinct * FROM calendar c left JOIN calendar_share cs
         ON cs.cal_no = c.cal_no
-        WHERE DATE(c.cal_start) BETWEEN #{param1} AND #{param2} AND c.emp_no = #{param3}
+        WHERE DATE(c.cal_start) BETWEEN #{param1} AND #{param2} AND c.emp_no = #{param3} group by c.cal_no desc
     </select>
 
     <select id="getToday" resultType="main">
         SELECT distinct * FROM calendar c left JOIN calendar_share cs
         ON cs.cal_no = c.cal_no
-        WHERE DATE(cal_start) = #{param1} AND c.emp_no = #{param2}
+        WHERE DATE(cal_start) = #{param1} AND c.emp_no = #{param2} group by c.cal_no desc
     </select>
 
     <select id="getTomorrow" resultType="main">
         SELECT distinct * FROM calendar c left JOIN calendar_share cs
         ON cs.cal_no = c.cal_no
-        WHERE DATE(cal_start) = #{param1} AND c.emp_no = #{param2}
+        WHERE DATE(cal_start) = #{param1} AND c.emp_no = #{param2} group by c.cal_no desc
     </select>
     
     <select id = "totalReserve" resultType = "int">
@@ -36,6 +36,23 @@
 				WHERE in_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND CURDATE()
 				GROUP BY date_str
 				ORDER BY date_str ASC
+    </select>
+    
+    <select id = "totalApproval">
+    	SELECT 
+			COUNT(dr.draft_no)
+			FROM draft dr JOIN approver ap 
+			ON dr.draft_no = ap.draft_no 
+				WHERE 
+			ap.emp_no = #{param1}
+			AND (SELECT a.app_date FROM approver a WHERE a.draft_no = dr.draft_no AND a.app_procedure = ap.app_procedure - 1) is not null
+			AND dr.draft_status = 'W'
+			AND ap.app_date is null
+    </select>
+    
+    <select id = "draft">
+    	SELECT COUNT(draft_no) FROM draft d
+    		 WHERE register = #{param1} AND draft_status = 'W'
     </select>
 
 

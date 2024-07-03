@@ -34,11 +34,15 @@ public class MainController {
 
 	// 메인 페이지 이동
 	@RequestMapping(value = "/main")
-	public String mainss(Model model) throws IOException {
+	public String mainss(Model model, HttpSession session) throws IOException {
 		mainService.totalReserve(model);
 	    String url = "https://www.sukbakmagazine.com/news/articleList.html?sc_sub_section_code=S2N10&view_type=sm"; // 페이지 번호를 쿼리 파라미터로 추가
 	    Document doc = Jsoup.connect(url).get();
 	    mainService.scrapeContent(doc, model);
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+	    
+	    mainService.totalApproval(empDTO.getEmp_no(),model);
+	    
 	    
 	    return "main/main";
 	}
