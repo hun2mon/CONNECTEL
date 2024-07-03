@@ -8,6 +8,14 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 
+   body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+
 .draftTitle {
 	width: 10%;
 }
@@ -41,9 +49,10 @@ form {
 }
 
 .appContent{
-	margin-top: 96px;
-    margin-left: 100px;
-    width: 100%;
+	flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    margin-top: 81px;
 }
 
 .table{
@@ -102,6 +111,10 @@ form {
 	width: 60px;
 }
 
+.card{
+	width: 1415px;
+}
+
 </style>
 </head>
 <body>
@@ -114,7 +127,6 @@ form {
 				<div>
 					<div class="card">
 						<div class="card-body">
-
 							<h4 class="card-title mb-3">내 기안문서</h4>
 
 							<ul class="nav nav-tabs mb-3">

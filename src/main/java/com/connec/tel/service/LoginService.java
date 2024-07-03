@@ -27,10 +27,16 @@ public class LoginService {
 		
 		String page = "redirect:/main";
 		
+		Float leftOver = (float) 0;
 		if (dto != null) {
 			if (encoder.matches(pw, dto.getPassword())) {
 				logger.info("일치");
-				Float leftOver = loginDAO.leftOver(dto.getEmp_no());
+				try {
+					leftOver = loginDAO.leftOver(dto.getEmp_no()) ;					
+				} catch (Exception e) {
+					leftOver = (float) 0;
+				}
+				
 				session.setAttribute("loginInfo", dto);
 				session.setAttribute("leftOver", leftOver);
 			} else {

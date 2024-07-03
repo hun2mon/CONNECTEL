@@ -126,8 +126,7 @@
 									<div><i class="fa-solid fa-bell" id="bells"></i></div>
 									<div><i class="fa-solid fa-bars" id="bars" onclick="open_side_bar()"></i></div>
 								</div>
-									<div class="chat-box scrollable position-relative"
-										style="height: calc(100vh - 111px);">
+									<div class="chat-box scrollable position-relative" style="height: calc(100vh - 111px);" id="chatBody">
 										<!--chat Row -->
 										<ul class="chat-list list-style-none px-3 pt-3" id="chatContent">
 										</ul>
@@ -392,6 +391,7 @@
 			$('#chatContent').append(content);	
 			$('#textarea1').val('');
 		}
+		$('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
 		content = '';
 	}
     
@@ -406,6 +406,7 @@
         		    ws = Stomp.over(sock);
         		    reconnect = 0;
         		    drawChatContent(roomId);
+        		    $('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
         			connect();
         		},
         		error:function(e){
@@ -468,6 +469,5 @@
     		}
     	})
 	}
-    
 </script>
 </html>

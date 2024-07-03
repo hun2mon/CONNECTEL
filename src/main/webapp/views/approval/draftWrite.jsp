@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
@@ -657,6 +657,8 @@ th{
 		$('.endDate').val(end_date);
 	}
 
+    
+    //기안서 작성
 	function writeDraft(saveDivision){
 		var param = {
 			"register":'${loginInfo.emp_no}'
@@ -711,7 +713,10 @@ th{
 		}else if (content.length > (5 * 1024 * 1024)) {
 			$('.noti').html('파일 용량이 초과되었습니다.');
 			$('.appNoti').modal('show');
-		} else {
+		} else if($('input[name="totalDay"]').val() > '${leftOver}'){
+			$('.noti').html('잔여 연차 일수가 부족합니다.');
+			$('.appNoti').modal('show');	
+		}else{
 			$.ajax({
 	    		url:'/approval/draftWrite.ajax',
 	    		method:'post',
@@ -803,6 +808,7 @@ th{
     	})
 	}
 	
+	// 임시저장 삭제
 	function delDraft(draft_no){
 		$.ajax({
     		url:'/approval/delDraft.ajax',

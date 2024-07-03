@@ -207,9 +207,12 @@
 				ON dr.draft_no = vr.draft_no 
 				WHERE 
 					(vr.emp_no = #{param3} OR vr.dept_code = #{param5}) 
-			        <if test="param4.equals('V')">
+			        <if test='param4.equals("V")'>
 			            AND dr.draft_status = 'Y'
 			        </if>
+			        <if test='!param4.equals("V")'>
+		 				AND dr.draft_status != 'T'				
+					</if>
 						AND vr.view_reffer_division = #{param4}
 						AND dr.draft_subject LIKE #{param1};
 	</select>
@@ -229,6 +232,10 @@
 			<if test='param5.equals("V")'>
 				AND 
 			dr.draft_status = 'Y'
+			</if>
+			<if test='!param5.equals("V")'>
+		 		AND
+		 	dr.draft_status != 'T'				
 			</if>
 		 		AND 
 		 	vr.view_reffer_division = #{param5}

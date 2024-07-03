@@ -41,9 +41,10 @@ form {
 }
 
 .appContent{
-	margin-top: 96px;
-    margin-left: 100px;
-    width: 100%;
+	flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    margin-top: 81px;
 }
 
 .table{
@@ -53,6 +54,11 @@ form {
 .subject{
 	width: 450px;
 }
+
+.card{
+	width: 1415px;
+}
+
 </style>
 </head>
 <body>

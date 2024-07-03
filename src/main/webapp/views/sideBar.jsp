@@ -45,10 +45,11 @@
 }
 
 .content{
-    margin-top: 96px;
-    margin-left: 20px;
-    width: 90%;
-    }
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    margin-top: 81px;
+}
 
 .parent{
 	display: flex;
@@ -192,7 +193,7 @@
 								<img src="/assets/images/users/profile-pic.jpg" alt="user"
 								class="rounded-circle" width="40"> <span
 								class="ml-2 d-none d-lg-inline-block"><span>Hello,</span>
-									<span class="text-dark">홍길동</span> <i
+									<span class="text-dark">${loginInfo.name}</span> <i
 									data-feather="chevron-down" class="svg-icon"></i></span>
 						</a>
 							<div
