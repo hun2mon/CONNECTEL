@@ -38,7 +38,7 @@
 	
 	<select id="checkInInfo" resultType="com.connec.tel.dto.RoomDTO">
 		SELECT res_no,stay_check_in  FROM stay 
-			WHERE room_no = #{room_no} ORDER BY stay_check_in DESC;
+			WHERE room_no = #{room_no} ORDER BY stay_check_in DESC limit 1;
 	</select>
 	
 	<update id="checkOut" parameterType="String">

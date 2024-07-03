@@ -119,10 +119,61 @@ public class MailService {
 		return map;
 	}
 
+	public Map<String, Object> TempMailList(String search, String page, String cnt, String emp_no) {
+Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = mailDAO.tempTotalPage(search, cntt,emp_no);
+		
+		List<RoomDTO> list = mailDAO.TempMailList(search, start, cntt,emp_no);
+		
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
+		return map;
+	}
+	
 	public MailDTO mailDetail(String mail_no) {
 		
 		return mailDAO.mailDetail(mail_no);
 	}
+
+	public void mail_delete(String mail_no) {
+		mailDAO.mail_delete(mail_no);
+		
+	}
+
+	public List<String> mailFile(String mail_no) {
+		
+		return mailDAO.mailFile(mail_no);
+	}
+
+	public Map<String, Object> mail_all_delete(List<String> mail_nos) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (String mail_no : mail_nos) {
+			mailDAO.mail_delete(mail_no);
+		}
+
+		return map;
+	}
+
+	public Map<String, Object> mailTempSave(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		mailDAO.mailTempSave(param);
+		
+		return map;
+	}
+
+	
 
 	
 }
