@@ -12,10 +12,17 @@
 .hidden {
     display: none; /* 화면에서 보이지 않음 */
 }
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 900px;
+        margin: 1.75rem auto;
+    }
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     padding: 0;
 }
 .reserve1 {
@@ -42,7 +49,7 @@ body {
 .reserve1 input[type="submit"] {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007BFF;
+    background-color: #1862a6;
     color: white;
     border: none;
     border-radius: 5px;
@@ -51,7 +58,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 .reserve1 input[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #0a4377;
 }
 .booking-info {
     white-space: nowrap; /* 텍스트가 너무 길어지면 줄 바꿈 방지 */
@@ -137,7 +144,7 @@ body {
         </tr>
     </table>  
     <div class="card-body" style="text-align:center">
-        <h3 id="selectDateMessage">예약을 원하시는 날짜를 선택해주세요.</h3>
+        <h3 id="selectDateMessage" style="font-size:20px;">예약을 원하시는 날짜를 선택해주세요.</h3>
         <table class="resTable" id="resTable"></table>                        
     </div>
 
@@ -151,8 +158,9 @@ body {
 			<button type="button" class="close" data-dismiss="modal"aria-hidden="true">×</button>
 		</div>
 		<div class="modal-body">
-			<img id= "standard_img" style="width:100%; height:300px;">
-			<p id="standard_info">왜안돼</p>
+			<img id= "standard_img" style="width:100%; height:500px;">
+			<p id="standard_info"></p>
+			<p id="standard_extent"></p>
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -168,7 +176,9 @@ body {
 			<button type="button" class="close" data-dismiss="modal"aria-hidden="true">×</button>
 		</div>
 		<div class="modal-body">
-			<h5>슈페리얼룸 정보</h5>
+			<img id= "superior_img" style="width:100%; height:500px;">
+			<p id="superior_info"></p>
+			<p id="superior_extent"></p>			
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -185,7 +195,9 @@ body {
 			<button type="button" class="close" data-dismiss="modal"aria-hidden="true">×</button>
 		</div>
 		<div class="modal-body">
-			<h5>디럭스룸 정보</h5>
+			<img id= "delux_img" style="width:100%; height:500px;">
+			<p id="delux_info"></p>
+			<p id="delux_extent"></p>
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -202,7 +214,9 @@ body {
 			<button type="button" class="close" data-dismiss="modal"aria-hidden="true">×</button>
 		</div>
 		<div class="modal-body">
-			<h5>스위트룸 정보</h5>
+			<img id= "suite_img" style="width:100%; height:500px;">
+			<p id="suite_info"></p>
+			<p id="delux_extent"></p>
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -308,58 +322,68 @@ body {
             roomContainer.empty();
             
             $('#standard_img').attr('src','/photo/'+data.standard_image);
-            $('#standard_info').html(data.resList);
+            $('#standard_info').html(data.standard_detail);
+            $('#standard_extent').html(data.standard_extent);
             $('#superior_img').attr('src','/photo/'+data.superior_image);
-
+            $('#superior_info').html(data.superior_detail);
+            $('#superior_extent').html(data.superior_extent);
+            $('#delux_img').attr('src','/photo/'+data.delux_image);
+            $('#delux_info').html(data.delux_detail);
+            $('#delux_extent').html(data.delux_extent);
+            $('#suite_img').attr('src','/photo/'+data.suite_image);
+            $('#suite_info').html(data.suite_detail);
+            $('#suite_extent').html(data.suite_extent);
+            
+            
             var content = '';
             for (var item of data.resList) {
                 var adults = parseInt(document.getElementsByName('r_adults')[0].value);
                 var kids = parseInt(document.getElementsByName('r_kids')[0].value);
                 var totalGuests = adults + kids;
-                content += '<tr>';
+                content += '<tr style="">';
 
                 if (item.type_code === 1001){
-                    content += '<th> <img src="/photo/'+data.standard_image+'" data-toggle="modal"data-target="#standardmodal" style="width:300px; height:200px; max-width:300px; max-height:200px;"></th>'
-                    content += '<th>Standard Room</th>';
+                    content += '<th> <img src="/photo/'+data.standard_image+'"data-toggle="modal"data-target="#standardmodal" style="width:300px; height:200px; max-width:300px; max-height:200px; cursor:pointer"></th>'
+                    content += '<th> :: Standard Room ::<br>(스탠다드룸)</th>';
                     content += '<td>' + item.room_view + ' | 최대인원 ' + item.room_capacity + '명 | ' + item.room_bed + '</td>';
                     content += '<td>' + formatNumber(data.minStandardPrice) + ' KRW 부터~</td>';
 
 					
                     if (data.standard_num >= 40 || item.room_capacity < totalGuests) {
-                        content += '<td style="color:rightgray;"> 현재 남은 객실이 없습니다.</td>';
+                        content += '<td style="color:gray;"> 현재 남은 객실이 없습니다.</td>';
                     } else {
                         content += '<td class="reservation-button-cell"><button onclick="reserve(\'스탠다드룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.standard + ')">예약</button></td>';
                     }
                 } else if (item.type_code === 1002) {
                     content += '<th> <img src="/photo/'+data.superior_image+'" data-toggle="modal"data-target="#superiormodal" style="width:300px; height:200px; max-width:300px; max-height:200px;"></th>'
-                	content += '<th>Superior Room</th>';
+                	content += '<th> :: Superior Room ::<br>(슈페리얼룸)</th>';
                     content += '<td>' + item.room_view + ' | 최대인원 ' + item.room_capacity + '명 | ' + item.room_bed + '</td>';
                     content += '<td>' + formatNumber(data.minSuperiorPrice) + ' KRW 부터~</td>';
 
                     if (data.superior_num >= 20) {
-                        content += '<td style="color:red;">예약불가</td>';
+                        content += '<td style="color:red;">현재 남은 객실이 없습니다</td>';
                     } else {
                         content += '<td class="reservation-button-cell"><button onclick="reserve(\'슈페리어룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.superior + ')">예약</button></td>';
                     }
                 } else if (item.type_code === 1003) {
                     content += '<th> <img src="/photo/'+data.delux_image+'" data-toggle="modal"data-target="#deluxmodal" style="width:300px; height:200px; max-width:300px; max-height:200px;"></th>'
-                	content += '<th>Delux Room</th>';
+                	content += '<th> :: Delux Room ::<br>(디럭스룸)</th>';
                     content += '<td>' + item.room_view + ' | 최대인원 ' + item.room_capacity + '명 | ' + item.room_bed + '</td>';
                     content += '<td>' + formatNumber(data.minDeluxePrice) + ' KRW 부터~</td>';
 
                     if (data.delux_num >= 20) {
-                        content += '<td style="color:red;">예약불가</td>';
+                        content += '<td style="color:red;">현재 남은 객실이 없습니다</td>';
                     } else {
                         content += '<td class="reservation-button-cell"><button onclick="reserve(\'디럭스룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.delux + ')">예약</button></td>';
                     }
                 } else {
                     content += '<th> <img src="/photo/'+data.suite_image+'" data-toggle="modal"data-target="#suitemodal" style="width:300px; height:200px; max-width:300px; max-height:200px;"></th>'
-                	content += '<th>Suite Room</th>';
+                	content += '<th>:: Suite Room :: <br>(스위트룸)</th>';
                     content += '<td>' + item.room_view + ' | 최대인원 ' + item.room_capacity + '명 | ' + item.room_bed + '</td>';
                     content += '<td>' + formatNumber(data.minSuitePrice) + ' KRW 부터~</td>';
 
                     if (data.suite_num >= 20) {
-                        content += '<td style="color:red;">예약불가</td>';
+                        content += '<td style="color:red;">현재 남은 객실이 없습니다</td>';
                     } else {
                         content += '<td class="reservation-button-cell"><button onclick="reserve(\'스위트룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.suite + ')">예약</button></td>';
                     }

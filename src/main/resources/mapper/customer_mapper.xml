@@ -83,6 +83,10 @@
 </select>
 
 
+<!-- 고객 페이지  -->
+
+
+
 <select id="room_info" resultType="com.connec.tel.dto.GuestManageDTO">
 		SELECT * FROM room_information
 	</select>
@@ -130,6 +134,43 @@
 <select id="suitephoto" resultType="String">
 	SELECT pho_name FROM photo where ref_idx = 1004 and pho_division = 'I'
 </select>
+
+
+
+<select id="standard_detail" resultType="String">
+	SELECT room_detail FROM room_information WHERE type_code = 1001
+ </select>
+
+<select id="superior_detail" resultType="String">
+	SELECT room_detail FROM room_information WHERE type_code = 1002
+ </select>
+
+<select id="delux_detail" resultType="String">
+	SELECT room_detail FROM room_information WHERE type_code = 1003
+ </select>
+
+<select id="suite_detail" resultType="String">
+	SELECT room_detail FROM room_information WHERE type_code = 1004
+ </select>
+ 
+ 
+
+<select id="standard_extent" resultType="String">
+	SELECT room_extent FROM room_information WHERE type_code = 1001
+ </select>
+
+<select id="superior_extent" resultType="String">
+	SELECT room_extent FROM room_information WHERE type_code = 1002
+ </select>
+
+<select id="delux_extent" resultType="String">
+	SELECT room_extent FROM room_information WHERE type_code = 1003
+ </select>
+
+<select id="suite_extent" resultType="String">
+	SELECT room_extent FROM room_information WHERE type_code = 1004
+ </select>
+
 
 
 

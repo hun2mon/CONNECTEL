@@ -63,5 +63,4 @@ public class ChatRoomController {
 	 public Map<String, Object> contentsCall(@PathVariable String roomId) {
 	     return chatRoomRepository.contentsCall(roomId);
 	 }
-	 
 }
