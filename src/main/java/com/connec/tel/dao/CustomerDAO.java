@@ -47,6 +47,22 @@ public interface CustomerDAO {
 	Object deluxphoto(String delux_no);
 
 	Object suitephoto(String suite_no);
+
+	Object standard_detail();
+
+	Object superior_detail();
+
+	Object delux_detail();
+
+	Object suite_detail();
+
+	Object standard_extent();
+
+	Object superior_extent();
+
+	Object delux_extent();
+
+	Object suite_extent();
 	
 	
 	
