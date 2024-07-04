@@ -242,6 +242,11 @@ public class RoomController {
 		
 		return roomService.changeCheckIn(param);
 	}
+	
+	
+	
+	
+	
 
 	@PostMapping(value = "/room/updateDayRoomPrice.ajax")
 	@ResponseBody

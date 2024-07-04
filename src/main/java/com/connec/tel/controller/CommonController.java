@@ -68,6 +68,7 @@ public class CommonController {
 
 		return res;
 	}
+		
 	
 	//결제 성공시
 	@RequestMapping(value ="/common/success" )

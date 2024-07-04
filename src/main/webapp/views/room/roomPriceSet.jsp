@@ -277,20 +277,20 @@ function drawList(list) {
     // 리스트 데이터 채우기
     for (var item of list) {
         if (item.dd_division === 'A') {
-            $('#standardA').val(item.standard);
-            $('#superiorA').val(item.superior);
-            $('#deluxA').val(item.delux);
-            $('#suiteA').val(item.suite);
+            $('#standardA').val(item.standard).prop('defaultValue', item.standard);
+            $('#superiorA').val(item.superior).prop('defaultValue', item.superior);
+            $('#deluxA').val(item.delux).prop('defaultValue', item.delux);
+            $('#suiteA').val(item.suite).prop('defaultValue', item.suite);
         } else if (item.dd_division === 'B') {
-            $('#standardB').val(item.standard);
-            $('#superiorB').val(item.superior);
-            $('#deluxB').val(item.delux);
-            $('#suiteB').val(item.suite);
+            $('#standardB').val(item.standard).prop('defaultValue', item.standard);
+            $('#superiorB').val(item.superior).prop('defaultValue', item.superior);
+            $('#deluxB').val(item.delux).prop('defaultValue', item.delux);
+            $('#suiteB').val(item.suite).prop('defaultValue', item.suite);
         } else if (item.dd_division === 'C') {
-            $('#standardC').val(item.standard);
-            $('#superiorC').val(item.superior);
-            $('#deluxC').val(item.delux);
-            $('#suiteC').val(item.suite);
+            $('#standardC').val(item.standard).prop('defaultValue', item.standard);
+            $('#superiorC').val(item.superior).prop('defaultValue', item.superior);
+            $('#deluxC').val(item.delux).prop('defaultValue', item.delux);
+            $('#suiteC').val(item.suite).prop('defaultValue', item.suite);
         }
     }
     $('input[type="text"]').focusin(function(){
@@ -299,11 +299,6 @@ function drawList(list) {
     
 
     $('input[type="text"]').focusout(handleChange);
-    $('input[type="text"]').keydown(function(e) {
-        if (e.key === 'Enter') {
-            handleChange.call(this, e);
-        }
-    });
 
     function handleChange(e) {
         $(this).css({"background-color": "lightgray"});
@@ -316,8 +311,14 @@ function drawList(list) {
 
         console.log('서버에 변경 요청', $(this));
 
-        if (e.target.defaultValue != e.target.value) {
-            reqUpdate(column, value, ddDivision);
+        if (e.target.defaultValue != e.target.value && e.target.defaultValue !='' && e.target.defaultValue != 0) {
+            if (confirm('값을 변경하시면 이미 개별 설정한 날짜의 가격도 변동됩니다.         변경하시겠습니까?')) {
+                reqUpdate(column, value, ddDivision);
+            } else {
+                $(this).val(e.target.defaultValue);
+            }
+        }else{
+        	reqUpdate(column, value, ddDivision);
         }
     }
    

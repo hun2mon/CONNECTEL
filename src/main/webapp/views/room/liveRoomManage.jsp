@@ -125,12 +125,13 @@
 		text-align: center;
 	}
 	
-	#change_check_in{
-		margin-left: 86%;
-	}
 	
 	.table-striped{
 		text-align: center;
+	}
+	
+	#btn-container{
+		 text-align: right;
 	}
 	
 </style>
@@ -146,7 +147,9 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                    	<button class="btn btn-sm btn-success btn-sl-sm" id="change_check_in" onclick="change_check_in_modal()">체크인 준비 완료</button>
+                    	<div id="btn-container">
+                    		<button class="btn btn-sm btn-info btn-sl-sm" id="change_check_in" onclick="change_check_in_modal()">체크인 준비 완료</button>
+                        </div>
                         <div class="read-content" id="roomContainer">
 
                         </div>
@@ -733,48 +736,98 @@ function changeCheckIn(){
 	    var room_no = $('#checkOutHeader').text().replace('Room ', '');
 	    var res_no = $('#res_no').text().replace('예약번호 : ', '');
 		var changeRoom_no = $('#availableRooms').val();
-	    
+
+		
 		if (!changeRoom_no) {
 			alert('변경할 객실을 선택해주세요!!');
 			return
 		}
 		
+		
 		console.log(room_no);
 		console.log(res_no);
 		console.log(changeRoom_no);
 		
-		$.ajax({
-	        type: 'POST',
-	        url: '/room/changeCheckIn.ajax',
-	        data: {
-	            room_no: room_no,
-	            res_no: res_no,
-	            changeRoom_no:changeRoom_no
-	        },
-	        dataType: 'JSON',
-	        success: function(data) {
-	            console.log(data);
-	            if (data.status === 'success') {
-		            $('#changeCheckIn').modal('hide');
-		            $('#danger-header-modal').modal('hide');
-		            listCall();
-					
-				}else{
-					alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');
-					$('#changeCheckIn').modal('hide');
-		            $('#danger-header-modal').modal('hide');
-		            listCall();
-				}
-	            
-	            
-	        },
-	        error: function(e) {
-	            console.log(e);
-	        }
-	    });
+		var curr_no = room_no.toString().substring(0,1);
+		var after_no = changeRoom_no.toString().substring(0,1);
 		
+		console.log('curr_no',curr_no);
+		console.log('after_no',after_no);
+		
+		if (((curr_no === '3' || curr_no === '4') && (after_no === '3' || after_no === '4')) || after_no === curr_no) {
+		    // 같은 스탠다드 룸인 경우
+			$.ajax({
+		           type: 'POST',
+		           url: '/room/changeCheckIn.ajax',
+		           data: {
+		               room_no: room_no,
+		               res_no: res_no,
+		               changeRoom_no:changeRoom_no
+		           },
+		           dataType: 'JSON',
+		           success: function(data) {
+			               console.log(data);
+			               if (data.status === 'success') {
+			                  $('#changeCheckIn').modal('hide');
+			                  $('#danger-header-modal').modal('hide');
+			                  listCall();
+		               
+			            }else{
+			               alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');
+			               $('#changeCheckIn').modal('hide');
+			                  $('#danger-header-modal').modal('hide');
+			                  listCall();
+			            }
+		               
+		               
+		           },
+		           error: function(e) {
+		               console.log(e);
+		           }
+		       });
+		} else if (parseInt(curr_no) < parseInt(after_no)) {
+			console.log('업그레이드');	
+
+			var currentDate = getCurrentDateFormatted();
+			
+			
+			 $.ajax({
+			    	type:'POST',
+			    	url:'/common/ready',
+			    	data:{
+			    		item_name: '호텔 더 쉴라 추가결제',
+			    		quantity: 1, 
+			    		tax_free_amount: 0,
+			    		current_date: currentDate,
+			    		room_no:room_no,
+			    		res_no: res_no,
+			            changeRoom_no:changeRoom_no			    		
+			    	},
+			    	dataType:'JSON',
+			    	success:function(res) {
+			    		location.href = res.next_redirect_pc_url;      
+			    	},
+			    	error: function(e) {
+			            console.error("Error occurred:", e);
+			            alert("결제 준비 중 오류가 발생했습니다. 다시 시도해주세요.");
+			        }
+			    })
+			
+		    
+		   
+		} else {
+		    alert("다운그레이드는 결제 전액 환불 후 다시 예약!!");
+		}
+			
 }
 
+function getCurrentDateFormatted() {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ('0' + (date.getMonth() + 1)).slice(-2); // 월을 2자리로 포맷
+    var day = ('0' + date.getDate()).slice(-2); // 일을 2자리로 포맷
+    return year + '-' + month + '-' + day;
+}
 
 
 </script>
