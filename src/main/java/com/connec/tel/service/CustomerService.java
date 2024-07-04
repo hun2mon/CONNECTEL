@@ -85,6 +85,19 @@ public class CustomerService {
 		map.put("delux_extent", customerDAO.delux_extent());
 		map.put("suite_extent", customerDAO.suite_extent());
 		
+		map.put("standard_amenity", customerDAO.standard_amenity());
+		map.put("superior_amenity", customerDAO.superior_amenity());
+		map.put("delux_amenity", customerDAO.delux_amenity());
+		map.put("suite_amenity", customerDAO.suite_amenity());
+		
+
+		
+		map.put("standard_roomview", customerDAO.standard_roomview());
+		map.put("superior_roomview", customerDAO.superior_roomview());
+		map.put("delux_roomview", customerDAO.delux_roomview());
+		map.put("suite_roomview", customerDAO.suite_roomview());
+		
+		
 	
 		
 		String in_date = (String) param.get("in_date");
