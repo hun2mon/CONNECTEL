@@ -231,7 +231,7 @@ $(document).ready(() => {
     $('#checkInDate').on('change', () => {
         var checkInDate = $('#checkInDate').val();
         $('#checkOutDate').attr('min', new Date(new Date(checkInDate).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
-        
+        handleSearch();
         if (new Date($('#checkOutDate').val()) <= new Date(checkInDate)) {
             $('#checkOutDate').val('');
             $('#nightCount').text('1박');
@@ -259,6 +259,10 @@ function updateNightCount() {
         $('#nightCount').text('1박');
     }
 }
+
+$('#checkOutDate').on('change', () => {
+	handleSearch();
+});
 
 
 function submitReservation() {
@@ -335,19 +339,23 @@ function validateDates() {
 
     if (!checkInDate) {
         alert("체크인 날짜를 선택하세요.");
+
         return false;
     }
 
     if (!checkOutDate) {
         alert("체크아웃 날짜를 선택하세요.");
+
         return false;
     }
 
     if (new Date(checkOutDate) <= new Date(checkInDate)) {
         alert("체크아웃 날짜는 체크인 날짜보다 이후여야 합니다.");
+
         return false;
     }
-
+	   
+    
     return true;
 }
 
@@ -363,6 +371,7 @@ function handleSearch() {
 }
 
 function listCall(checkInDate, checkOutDate) {
+	
     $.ajax({
         type: 'POST',
         url: '/guest/reserveListCall.ajax',

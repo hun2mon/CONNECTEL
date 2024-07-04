@@ -243,9 +243,14 @@ function listCall() {
         initialView: 'dayGridMonth', 
         events: function(fetchInfo, successCallback, failureCallback) {
         	 var yearMonth = new Date(fetchInfo.startStr);
-             yearMonth.setMonth(yearMonth.getMonth() + 1); 	
-
-            
+             if (yearMonth.getDate() === 1  ) {
+            	 yearMonth.setMonth(yearMonth.getMonth()); 	
+			}else{
+        	 yearMonth.setMonth(yearMonth.getMonth() + 1); 					
+			}
+			
+             console.log(yearMonth.getFullYear() + '-' + ('0' + (yearMonth.getMonth() + 1)).slice(-2));
+            console.log(fetchInfo);
             $.ajax({
                 type: 'POST',
                 url: '/room/roomPriceCalendarList.ajax', 
