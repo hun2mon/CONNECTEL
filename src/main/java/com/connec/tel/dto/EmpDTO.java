@@ -1,6 +1,7 @@
 package com.connec.tel.dto;
 
 import java.sql.Date;
+
 import org.apache.ibatis.type.Alias;
 
 @Alias("emp")
@@ -42,7 +43,7 @@ public class EmpDTO {
 	// 연차정보
 	private int annual;
 	private String leave_division;
-	private int draft_no;
+	private String draft_no;
 	private String leave_cate;
 	private float leave_use;
 	private Date leave_start;
@@ -50,10 +51,17 @@ public class EmpDTO {
 	private String total_leave;
 	private String use_leave;
 	private String balance_leave;
+	private Date app_date;
 	
 	
 	
 	
+	public Date getApp_date() {
+		return app_date;
+	}
+	public void setApp_date(Date app_date) {
+		this.app_date = app_date;
+	}
 	public String getTotal_leave() {
 		return total_leave;
 	}
@@ -84,10 +92,10 @@ public class EmpDTO {
 	public void setLeave_division(String leave_division) {
 		this.leave_division = leave_division;
 	}
-	public int getDraft_no() {
+	public String getDraft_no() {
 		return draft_no;
 	}
-	public void setDraft_no(int draft_no) {
+	public void setDraft_no(String draft_no) {
 		this.draft_no = draft_no;
 	}
 	public String getLeave_cate() {

@@ -36,6 +36,7 @@ public class ExcelDownloadServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<EmpDTO> employees = empService.excelList();
+        
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Employees");
 
@@ -45,15 +46,32 @@ public class ExcelDownloadServlet extends HttpServlet {
         headerRow.createCell(1).setCellValue("이름");
         headerRow.createCell(2).setCellValue("부서");
         headerRow.createCell(3).setCellValue("직급");
-        headerRow.createCell(4).setCellValue("재직상태");
+        headerRow.createCell(4).setCellValue("이메일");
+        headerRow.createCell(5).setCellValue("생년월일");
+        headerRow.createCell(6).setCellValue("연락처");
+        headerRow.createCell(7).setCellValue("주소");
+        headerRow.createCell(8).setCellValue("재직상태");
 
         for (EmpDTO emp : employees) {
             Row row = sheet.createRow(rowIdx++);
+    	    int rank_code = emp.getRank_code();
+    	    String rank = getRankDescription(rank_code);
+
+
+    	    // 부서 코드 변환
+    	    int dept_code = emp.getDept_code();
+    	    String dept = getDeptDescription(dept_code);
+    	    
+    	    
             row.createCell(0).setCellValue(emp.getEmp_no());
             row.createCell(1).setCellValue(emp.getName());
-            row.createCell(2).setCellValue(emp.getDept_code());
-            row.createCell(3).setCellValue(emp.getRank_code());
-            row.createCell(4).setCellValue(emp.getStatus_division());
+            row.createCell(2).setCellValue(dept);
+            row.createCell(3).setCellValue(rank);
+            row.createCell(4).setCellValue(emp.getEmail());
+            row.createCell(5).setCellValue(emp.getBirth());
+            row.createCell(6).setCellValue(emp.getPhone());
+            row.createCell(7).setCellValue(emp.getAddress());
+            row.createCell(8).setCellValue(emp.getStatus_division());
         }
 
         try {
@@ -67,4 +85,26 @@ public class ExcelDownloadServlet extends HttpServlet {
             workbook.close();
         }
     }
+    
+	private String getRankDescription(int rank_code) {
+	    switch (rank_code) {
+	        case 1: return "사장";
+	        case 2: return "이사";
+	        case 3: return "팀장";
+	        case 4: return "과장";
+	        case 5: return "대리";
+	        case 6: return "사원";
+	        default: return "알 수 없음";
+	    }
+	}
+
+	// 부서 코드를 설명으로 변환하는 메서드
+	private String getDeptDescription(int dept_code) {
+	    switch (dept_code) {
+	        case 11: return "인사팀";
+	        case 22: return "시설팀";
+	        case 33: return "고객팀";
+	        default: return "알 수 없음";
+	    }
+	}
 }

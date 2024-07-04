@@ -131,10 +131,11 @@
 				<br>
 				<div class="upload">
 					<input type="file" name="photos" id="imgUpload" />
+					
 				</div>
 				<br>
 				<br> <input type="hidden" name="emp_no" value="${emp.emp_no}">
-				<div class="form-group">
+				<div class="form-group" >
 					<span class="subject">이름</span> <input type="text"
 						class="form-control" id="name" name="name" value="${emp.name}"
 						required> <span class="subject">이메일</span> <input
@@ -142,9 +143,11 @@
 						value="${emp.email}" required>
 				</div>
 				<div class="form-group">
-					<span class="subject">우편번호</span> <input type="text" name="post_no"
-						class="form-control" id="sample6_postcode" placeholder="우편번호"
-						value="${emp.post_no}" onclick="sample6_execDaumPostcode()" required> 
+					<span class="subject">우편번호</span>
+					 <input type="text" name="post_no" class="form-control" id="sample6_postcode"
+               			placeholder="우편번호" value="${emp.post_no}"  required>
+        			<img src="/scss/icons/search.png" onclick="sample6_execDaumPostcode()" style="width: 35px;  height: 33px;">
+					
 					<span class="subject">전화번호</span> <input type="text"
 						class="form-control" id="phone" name="phone" value="${emp.phone}"
 						required>
@@ -205,7 +208,7 @@
 						class="form-control" id="account_no" name="account_no"
 						value="${emp.account_no}" required> <span class="subject">입사일</span>
 					<input type="date" class="form-control" id="join_date"
-						name="join_date" value="${emp.join_date}" required>
+						name="join_date" value="${emp.join_date}" readonly>
 				</div>
 				<br>
 				<br>
@@ -217,6 +220,64 @@
 		</div>
 	</form>
 	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+	    // 전화번호 입력 필드에 입력되는 값을 xxx-xxxx-xxxx 형식으로 제한하기
+	    var phoneInput = document.getElementById('phone');
+
+	    phoneInput.addEventListener('input', function() {
+	        // 입력된 내용에서 숫자만 남기기
+	        var cleaned = phoneInput.value.replace(/\D/g, '');
+	        
+	        // xxx-xxxx-xxxx 형식으로 포맷팅
+	        var formatted = '';
+	        if (cleaned.length > 0) {
+	            formatted = cleaned.substring(0, 3);
+	        }
+	        if (cleaned.length > 3) {
+	            formatted += '-' + cleaned.substring(3, 7);
+	        }
+	        if (cleaned.length > 7) {
+	            formatted += '-' + cleaned.substring(7, 11);
+	        }
+
+	        // 형식에 맞는 전화번호를 입력 필드에 설정
+	        phoneInput.value = formatted;
+	    });
+	});
+	
+	
+	$('#imgUpload').change(function (){
+	    var files = this.files;
+	    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+
+	    // Check if the file count exceeds the limit
+	    if (files.length > 1) {
+	        alert("이미지 파일 첨부는 1개까지 가능합니다.");
+	        $('#imgPreview').attr('src', '#');
+	        this.value = '';
+	        return;
+	    }
+
+	    // Validate each file
+	    for (var i = 0; i < files.length; i++) {
+	        var file = files[i];
+	        if (!allowedExtensions.exec(file.name)) {
+	            alert("이미지 파일 첨부만 가능합니다.");
+	            this.value = '';
+	            $('#imgPreview').attr('src', '#');
+	            return;
+	        }
+	    }
+
+	    // Display the selected image
+	    if (files.length > 0) {
+	        var reader = new FileReader();
+	        reader.onload = function(e) {
+	            $('#imgPreview').attr('src', e.target.result);
+	        };
+	        reader.readAsDataURL(files[0]);
+	    }
+	});
 		function sample6_execDaumPostcode() {
 			new daum.Postcode(
 					{
@@ -297,8 +358,7 @@
 			var phone = document.getElementById('phone').value;
 			var address = document.getElementById('sample6_address').value;
 			var department = document.getElementById('dept_code').value;
-			var detailAddress = document
-					.getElementById('sample6_detailAddress').value;
+			var detailAddress = document.getElementById('sample6_detailAddress').value;
 			var position = document.getElementById('rank_code').value;
 			var bank = document.getElementById('bank_name').value;
 			var permission = document.getElementById('authority').value;

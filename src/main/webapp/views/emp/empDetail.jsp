@@ -15,7 +15,8 @@
 }
 
 .employee-card {
-	margin-left: 100px;
+	height: 400px;
+    width: 90%;
 }
 
 .parent {
@@ -37,10 +38,9 @@
 	padding: 20px;
 }
 
-.content {
-	flex: 1;
-	padding: 20px;
-	width: 700px;
+.contentt {
+    padding: 20px;
+    width: 100%;
 }
 
 .subTitle2 {
@@ -95,6 +95,7 @@ button {
 }
 
 .photo {
+	text-align : left;
 	width: 150px;
 }
 
@@ -156,10 +157,10 @@ h2 {
 			<br>
 			<br>
 			<br>
-			<div class="content">
+			<div class="contentt">
 				<table class="employee-card">
 					<tr>
-						<td class="photo" rowspan="5"><c:choose>
+						<td class="photo" rowspan="8" colspan = "1"><c:choose>
 								<c:when test="${empty P.pho_name}">
 									<div id="photo"
 										style="width: 45%; height: 20%; margin-right: 50px; text-align: center;">
@@ -168,25 +169,25 @@ h2 {
 								<c:otherwise>
 									<img
 										src="${pageContext.request.contextPath}/photo/${P.pho_name}"
-										alt="사진" id="photo" style="width: 100%; height: auto;">
+										alt="사진" id="photo" style="width: 100%; height: 100%;">
 								</c:otherwise>
 							</c:choose></td>
-						<td class="photo" id="qq">이름</td>
-						<td class="photo" id="qq">직책</td>
+						<td class="titles" id="qq">이름</td>
+						<td class="photo" style = "text-align : left;">${emp.name}</td>						
+						<td class="titles" id="qq">직책</td>
+						<td class="photo" style = "text-align : left;">${rank}</td>
+					</tr>
+					<tr>
 						<td class="titles" id="qq">소속</td>
-						<td class="subContent2" id="dept_display"></td>
+						<td class="subContent2">${dept}</td>
 						<td class="titles" id="qq">사번</td>
 						<td class="subContent2">${emp.emp_no}</td>
 					</tr>
 					<tr>
-						<td class="photo" rowspan="4">${emp.name}</td>
-						<td class="photo" rowspan="4" id="rank_display"></td>
 						<td class="titles" id="qq">이메일</td>
-						<td class="subContent" colspan="6">${emp.email}</td>
-					</tr>
-					<tr>
+						<td class="subContent" colspan="1">${emp.email}</td>
 						<td class="titles" id="qq">전화번호</td>
-						<td class="subContent" colspan="6">${emp.phone}</td>
+						<td class="subContent" colspan="1">${emp.phone}</td>
 					</tr>
 					<tr>
 						<td class="titles" id="qq">성별</td>
@@ -198,25 +199,25 @@ h2 {
 						<td class="titles" id="qq">권한레벨</td>
 						<td class="subContent2">${emp.authority}</td>
 						<td class="titles" id="qq">재직상태</td>
-						<td class="subContent2" colspan="6">${emp.status_division}</td>
+						<td class="subContent2" colspan="1">${emp.status_division}</td>
 					</tr>
 					<tr>
 						<td class="titles" id="qq">입사일</td>
-						<td class="subContent" colspan="2">${emp.join_date}</td>
+						<td class="subContent" colspan="1">${emp.join_date}</td>
 						<td class="titles" id="qq">우편번호</td>
 						<td class="subContent2" colspan="6">${emp.post_no}</td>
 					</tr>
 					<tr>
 						<td class="titles" id="qq">은행</td>
-						<td class="subContent" colspan="2">${emp.bank_name}</td>
+						<td class="subContent" colspan="1">${emp.bank_name}</td>
 						<td class="titles" id="qq">주소</td>
-						<td class="subContent2" colspan="6">${emp.address}</td>
+						<td class="subContent2" colspan="7">${emp.address}</td>
 					</tr>
 					<tr>
 						<td class="titles" id="qq">계좌번호</td>
-						<td class="subContent" colspan="2">${emp.account_no}</td>
+						<td class="subContent" colspan="1">${emp.account_no}</td>
 						<td class="titles" id="qq">상세주소</td>
-						<td class="subContent2" colspan="6">${emp.detail_address}</td>
+						<td class="subContent2" colspan="7">${emp.detail_address}</td>
 					</tr>
 				</table>
 				<br>
@@ -318,29 +319,8 @@ h2 {
         $('#info-alert-modal').modal('show');
     }
 	
-	const rankCode = $
-	{
-		emp.rank_code
-	};
-
-	// rank_code에 해당하는 텍스트를 매핑합니다.
-	const rankMap = {
-		6 : '사원',
-		5 : '대리',
-		4 : '과장',
-		3 : '팀장',
-		2 : '이사',
-		1 : '사장'
-	};
 
 	// rank_code에 해당하는 텍스트를 찾아서 표시합니다.
-	const rankDisplay = document.getElementById('rank_display');
-	rankDisplay.textContent = rankMap[rankCode] || '대기 상태';
-
-	const deptCode = $
-	{
-		emp.dept_code
-	};
 
 	// dept_code에 해당하는 텍스트를 매핑합니다.
 	const deptMap = {
@@ -359,7 +339,7 @@ h2 {
 			url : '/leaveList.ajax',
 			data : {
 				'page' : page,
-				'emp_no' : '${emp.emp_no}' // emp_no를 추가하여 전송
+				'emp_no' : '${emp.emp_no}'
 			},
 			dataType : 'json',
 			success : function(data) {
@@ -397,7 +377,7 @@ h2 {
 					+ ' ~ ' + emp.leave_end + '</td>';
 			content += '<td style="text-align: center;">' + emp.leave_use
 					+ '</td>';
-			content += '<td style="text-align: center;">' + emp.regist_date
+			content += '<td style="text-align: center;">' + emp.app_date
 					+ '</td>';
 			content += '<td style="text-align: center;">' + emp.register
 					+ '</td>';

@@ -14,7 +14,7 @@
 	<select id="getShare" resultType="map">
 	    SELECT distinct c.cal_no, c.cal_content, c.cal_start, c.cal_end, c.shared_status
 	   		FROM calendar c LEFT JOIN calendar_share cs ON c.cal_no = cs.cal_no
-	   			WHERE c.emp_no = #{param1}
+	   			Where c.emp_no = #{param1} or cs.emp_no = #{param1}
 	</select>
 	
 	<select id="getEvent" resultType = "map">
@@ -45,6 +45,21 @@
 		JOIN emp e ON e.emp_no = cs.emp_no
 		WHERE cs.cal_no = #{param1}
 	</select>
+	
+	
+	<delete id="removeMem" parameterType="map">
+		DELETE FROM calendar_share
+		WHERE cal_no = #{param1} AND emp_no IN (
+		    SELECT e.emp_no
+		    FROM emp e
+		    JOIN calendar_share cs ON e.emp_no = cs.emp_no
+		    WHERE e.name = #{param2}
+		)
+
+    </delete>
+	
+	
+	
 	
 	<insert id = "deptInsert">
     INSERT INTO calendar_share (cal_no, emp_no)

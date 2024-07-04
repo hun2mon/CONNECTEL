@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -9,7 +10,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet" />
 <link href="/css/jquery-explr-1.4.css" rel="stylesheet" type="text/css">
 <style>
-
 
 #calendar{
 	width: 100%;
@@ -81,36 +81,47 @@
 			</div>
 				<input type="hidden" id="emp_no" name="emp_no" value="${sessionScope.loginInfo.emp_no}">
 			
-			<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="addEventModalLabel">일정 추가</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<form id="addEventForm">
-								<input type="hidden" id="emp_no" name="emp_no" value="${sessionScope.loginInfo.emp_no}">
-								<div class="form-group">
-									<label for="eventTitle">제목</label> <input type="text" class="form-control" id="eventTitle" placeholder="일정 제목 입력">
-								</div>
-								<div class="form-group">
-									<label for="eventStart">시작 시간</label> <input type="datetime-local" class="form-control" id="eventStart">
-								</div>
-								<div class="form-group">
-									<label for="eventEnd">종료 시간</label> <input type="datetime-local" class="form-control" id="eventEnd">
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-							<button type="button" class="btn btn-primary" id="saveEventBtn">저장</button>
-						</div>
-					</div>
-				</div>
-			</div>
+<!-- 일정 추가 모달 -->
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEventModalLabel">일정 추가</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addEventForm">
+                    <input type="hidden" id="emp_no" name="emp_no" value="${sessionScope.loginInfo.emp_no}">
+                    <div class="form-group">
+                        <label for="eventTitle">제목</label>
+                        <input type="text" class="form-control" id="eventTitle" placeholder="일정 제목 입력">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventStart">시작 시간</label>
+                        <input type="datetime-local" class="form-control" id="eventStart">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventEnd">종료 시간</label>
+                        <input type="datetime-local" class="form-control" id="eventEnd">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="allDayCheckbox">
+                        <label class="form-check-label" for="allDayCheckbox">
+                            종일 이벤트
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="saveEventBtn">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 			<!-- 일정 상세 보기 모달 -->
 			<div class="modal fade" id="viewEventModal" tabindex="-1" aria-labelledby="viewEventModalLabel" aria-hidden="true">
@@ -483,23 +494,11 @@
 	                var eventStart = new Date(event.cal_start);
 	                var eventEnd = new Date(event.cal_end);
 	                var eventTitle = event.cal_content;
-	
-	                // 시작일과 종료일을 datetime-local 형식으로 포맷팅합니다.
-	                var formattedStartDate = eventStart.getFullYear() + '-' +
-	                    ('0' + (eventStart.getMonth() + 1)).slice(-2) + '-' +
-	                    ('0' + eventStart.getDate()).slice(-2) + 'T' +
-	                    ('0' + eventStart.getHours()).slice(-2) + ':' +
-	                    ('0' + eventStart.getMinutes()).slice(-2);
-	
-	                var formattedEndDate = eventEnd.getFullYear() + '-' +
-	                    ('0' + (eventEnd.getMonth() + 1)).slice(-2) + '-' +
-	                    ('0' + eventEnd.getDate()).slice(-2) + 'T' +
-	                    ('0' + eventEnd.getHours()).slice(-2) + ':' +
-	                    ('0' + eventEnd.getMinutes()).slice(-2);
+
 	
 	                // datetime-local 필드에 시작일과 종료일을 설정합니다.
-	                $('#eventStart').val(formattedStartDate);
-	                $('#eventEnd').val(formattedEndDate);
+	                $('#eventStart').val();
+	                $('#eventEnd').val();
 	
 	                // 제목을 설정합니다.
 	                $('#eventTitle').val(eventTitle);
@@ -722,18 +721,11 @@
 			},				
 
 			dateClick: function(info) {
-			    var date = info.date; // 클릭한 날짜와 시간 객체
+				    var date = info.dateStr; // 클릭한 날짜 가져오기
 
-			    // 클릭한 날짜와 시간을 datetime-local 형식으로 포맷팅
-			    var formattedDate = date.getFullYear() + '-' +
-			                        ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
-			                        ('0' + date.getDate()).slice(-2) + 'T' +
-			                        ('0' + date.getHours()).slice(-2) + ':' +
-			                        ('0' + date.getMinutes()).slice(-2);
-
-			    // datetime-local 필드에 클릭한 날짜와 시간 설정
-			    $('#eventStart').val(formattedDate);
-			    $('#eventEnd').val(formattedDate);
+				    // 클릭한 날짜를 시작일과 종료일 입력 필드에 설정
+				    $('#eventStart').val(date);
+				    $('#eventEnd').val(date);
 
 			    $('#selectedParticipantsList').empty(); // 선택된 인원 목록 초기화
 
@@ -744,13 +736,12 @@
 			    });
 
 			    if (!hasEvent) {
-			        // 이벤트가 없는 경우에만 모달 창 열기
 			        $('#addEventModal').modal('show');
 			    } else {
 			        // 이벤트가 있는 경우에는 이벤트 상세 정보 모달 열기
-			        var event = calendar.getEvents().find(function(event) {
-			            return event.startStr === date.toISOString(); // 현재 사용하는 캘린더 라이브러리의 포맷에 따라 적절히 수정
-			        });
+		        var event = calendar.getEvents().find(function(event) {
+		            return event.startStr === date;
+		        });
 
 			        $('#eventDetailsTitle').text(event.title);
 			        $('#eventDetailsStart').text(event.startStr);
@@ -822,26 +813,47 @@
 		        console.log('추가 데이터 가져오기 오류:', e);
 		    }
 		});
-	    if (eventId) {
-	        $.ajax({
-	            type: 'GET',
-	            url: '/getEventParticipants',
-	            data: { id: eventId },
-	            success: function(data) {
-	                $('#sharedParticipantsList').empty(); // 기존 목록을 비웁니다.
+		if (eventId) {
+		    $.ajax({
+		        type: 'GET',
+		        url: '/getEventParticipants',
+		        data: { id: eventId },
+		        success: function(data) {
+		            $('#sharedParticipantsList').empty(); // 기존 목록을 비웁니다.
+				
+		            // 컨트롤러에서 전달받은 data 배열을 직접 사용합니다.
+		            data.forEach(function(name) {
+		                var listItem = '<li>' + name + ' <button type="button" style = "background-color : white; border : white; color:red;" class="btn btn-danger btn-sm removeParticipantBtn">x</button></li>';
+		                $('#sharedParticipantsList').append(listItem);
+		            });
 
-	                // 컨트롤러에서 전달받은 data 배열을 직접 사용합니다.
-	                data.forEach(function(name) {
-	                    var listItem = '<li>' + name + '</li>';
-	                    $('#sharedParticipantsList').append(listItem);
-	                });
-	            },
-	            error: function(e) {
-	                console.log(e);
-	                alert('일정 공유된 인원을 불러오는 중 오류가 발생했습니다.');
-	            }
-	        });
-	    }
+		            // 각 삭제 버튼에 클릭 이벤트를 추가합니다.
+		            $('.removeParticipantBtn').click(function() {
+		    			var eventId = $('#viewEventModal').data('eventId');
+		                var participantName = $(this).parent().text().replace(' x', ''); // 이름 추출
+		                $(this).parent().remove(); // 리스트 항목 제거
+		                console.log(empNo, eventId);
+		                // 서버에 삭제 요청을 보낼 수 있습니다.
+		                $.ajax({
+		                    type: 'POST',
+		                    url: '/removeEventParticipant',
+		                    data: { eventId: eventId, name: participantName},
+		                    success: function(response) {
+		                        console.log('참가자가 성공적으로 삭제되었습니다.');
+		                    },
+		                    error: function(e) {
+		                        console.log(e);
+		                        alert('참가자를 삭제하는 중 오류가 발생했습니다.');
+		                    }
+		                });
+		            });
+		        },
+		        error: function(e) {
+		            console.log(e);
+		            alert('일정 공유된 인원을 불러오는 중 오류가 발생했습니다.');
+		        }
+		    });
+		}
 			    
 			}
 		});
@@ -856,10 +868,18 @@
 		    var eventStart = $('#eventStart').val();
 		    var eventEnd = $('#eventEnd').val();
 		    var empNo = $('#emp_no').val();
+		    var isAllDay = $('#allDayCheckbox').prop('checked'); // 종일 이벤트 체크 여부
+
 
 		    // 시작일과 종료일을 Date 객체로 변환
 		    var startDate = new Date(eventStart);
 		    var endDate = new Date(eventEnd);
+		    
+		    // 종일 이벤트인 경우 시간 정보를 제거
+		    if (isAllDay) {
+		        start.setHours(0, 0, 0, 0); // 시작일의 시간을 00:00:00으로 설정
+		        end.setHours(23, 59, 59, 999); // 종료일의 시간을 23:59:59.999로 설정
+		    }
 
 		    if (eventTitle && eventStart && eventEnd && empNo) {
 		        // 시작일이 종료일보다 클 경우 경고창 띄우기

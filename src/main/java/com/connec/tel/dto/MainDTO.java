@@ -13,6 +13,8 @@ public class MainDTO {
 	private LocalDateTime cal_start;
 	private LocalDateTime cal_end;
 	private String emp_no;
+	
+	
 	public Date getDate_str() {
 		return date_str;
 	}

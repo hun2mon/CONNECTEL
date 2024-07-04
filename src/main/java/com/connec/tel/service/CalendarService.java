@@ -34,9 +34,8 @@ public class CalendarService {
 	public List<Map<String, Object>> getEvents(String emp_no) {
 	    List<Map<String, Object>> events = new ArrayList<>();
 
-	    // 두 번째 리스트 가져오기
 	    List<Map<String, Object>> shareList = calendarDAO.getShare(emp_no);
-	    events.addAll(shareList); // 리스트 합치기
+	    events.addAll(shareList);
 
 	    return events;
 	}
@@ -107,6 +106,10 @@ public class CalendarService {
 
 	public List<Map<String, Object>> getDays(String cal_no) {
 		return calendarDAO.getDays(cal_no);
+	}
+
+	public boolean removeEventParticipant(int eventId, String name) {
+		return calendarDAO.removeMem(eventId,name);
 	}
 
 
