@@ -63,6 +63,22 @@ public interface CustomerDAO {
 	Object delux_extent();
 
 	Object suite_extent();
+
+	Object standard_amenity();
+
+	Object superior_amenity();
+
+	Object delux_amenity();
+
+	Object suite_amenity();
+
+	Object standard_roomview();
+
+	Object superior_roomview();
+
+	Object delux_roomview();
+
+	Object suite_roomview();
 	
 	
 	

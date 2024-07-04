@@ -521,6 +521,7 @@ function getDate() {
         }
     });
 }
+
 </script>
 
 </html>
