@@ -136,7 +136,7 @@ body {
         </tr>
         <tr align="center">
             <td><input type="date" id="checkin" name="r_checkin" onchange="setMinCheckoutDate()" /></td>
-            <td><input type="date" id="checkout" name="r_checkout" onchange="calculateNights()" /></td>
+            <td><input type="date" id="checkout" name="r_checkout" onchange="calculateNights()"/></td>
             <td id="nights" class="booking-info"></td>
             <td><input type="number" name="r_adults" min="1" value="1"/></td>
             <td><input type="number" name="r_kids" value="0" min="0" /></td>
@@ -144,7 +144,7 @@ body {
         </tr>
     </table>  
     <div class="card-body" style="text-align:center">
-        <h3 id="selectDateMessage" style="font-size:20px;">예약을 원하시는 날짜를 선택해주세요.</h3>
+        <h3 id="selectDateMessage" style="">예약을 원하시는 날짜를 선택해주세요.</h3>
         <table class="resTable" id="resTable"></table>                        
     </div>
 
@@ -161,6 +161,8 @@ body {
 			<img id= "standard_img" style="width:100%; height:500px;">
 			<p id="standard_info"></p>
 			<p id="standard_extent"></p>
+			<p id="standard_amenity"></p>
+			<p id="standard_roomview"></p>
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -179,6 +181,8 @@ body {
 			<img id= "superior_img" style="width:100%; height:500px;">
 			<p id="superior_info"></p>
 			<p id="superior_extent"></p>			
+			<p id="superior_amenity"></p>
+			<p id="superior_roomview"></p>
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -198,6 +202,8 @@ body {
 			<img id= "delux_img" style="width:100%; height:500px;">
 			<p id="delux_info"></p>
 			<p id="delux_extent"></p>
+			<p id="delux_amenity"></p>
+			<p id="delux_roomview"></p>
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -216,7 +222,9 @@ body {
 		<div class="modal-body">
 			<img id= "suite_img" style="width:100%; height:500px;">
 			<p id="suite_info"></p>
-			<p id="delux_extent"></p>
+			<p id="suite_extent"></p>
+			<p id="suite_amenity"></p>
+			<p id="suite_roomview"></p>
 		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -257,8 +265,7 @@ body {
             var mm = String(nextDay.getMonth() + 1).padStart(2, '0');
             var dd = String(nextDay.getDate()).padStart(2, '0');
             var nextDayStr = yyyy + '-' + mm + '-' + dd;
-
-            document.getElementById('checkout').setAttribute('min', nextDayStr);
+			console.log(nextDayStr);
             document.getElementById('checkout').value = nextDayStr; // 체크아웃 날짜를 체크인 다음 날짜로 설정
 
             calculateNights(); // 박수 계산
@@ -285,6 +292,17 @@ body {
                 alert("체크인 및 체크아웃 날짜를 선택해주세요.");
                 return false;
             }
+
+            // 체크아웃 날짜가 체크인 날짜보다 이전인지 확인
+            var checkinDateObj = new Date(checkInDate);
+            var checkoutDateObj = new Date(checkOutDate);
+
+            if (checkoutDateObj <= checkinDateObj) {
+                alert("체크아웃 날짜는 체크인 날짜보다 늦어야 합니다.");
+                return false;
+            }
+            
+         
 
             listCall(checkInDate, checkOutDate);
             return false; // 폼 제출 방지
@@ -324,15 +342,30 @@ body {
             $('#standard_img').attr('src','/photo/'+data.standard_image);
             $('#standard_info').html(data.standard_detail);
             $('#standard_extent').html(data.standard_extent);
+            $('#standard_amenity').html(data.standard_amenity);
+            $('#standard_roomview').html(data.standard_roomview); 
+            
+            
             $('#superior_img').attr('src','/photo/'+data.superior_image);
             $('#superior_info').html(data.superior_detail);
             $('#superior_extent').html(data.superior_extent);
+            $('#superior_amenity').html(data.superior_amenity);
+            $('#superior_amenity').html(data.superior_roomview);
+            
+            
             $('#delux_img').attr('src','/photo/'+data.delux_image);
             $('#delux_info').html(data.delux_detail);
             $('#delux_extent').html(data.delux_extent);
+            $('#delux_amenity').html(data.delux_amenity);
+            $('#delux_amenity').html(data.delux_roomview);
+            
             $('#suite_img').attr('src','/photo/'+data.suite_image);
             $('#suite_info').html(data.suite_detail);
             $('#suite_extent').html(data.suite_extent);
+            $('#suite_amenity').html(data.suite_amenity);
+            $('#suite_roomview').html(data.suite_roomview);            
+            
+            
             
             
             var content = '';
@@ -393,6 +426,79 @@ body {
             }
             $('#resTable').html(content);
         }
+        
+        
+        function getKoreanDate() {
+            let now = new Date();
+            now.setHours(now.getHours() + 9); // UTC+9 시간대 반영
+            return now.toISOString().split('T')[0];
+        }
+
+        function addDays(date, days) {
+            let result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result.toISOString().split('T')[0];
+        }
+
+
+        getDate();
+        function getDate() {
+        	var today = getKoreanDate();
+        	
+            $.ajax({
+                type: 'POST',
+                url: "/guest/getDate.ajax",
+                data: {
+                	today:today      	
+                },
+                dataType: 'JSON',
+                success: function(response) {
+                    console.log(response); // 날짜 배열 확인
+
+                    if (response.list && response.list.length > 1) {
+                        let availableDates = response.list;
+
+                
+
+                        // 사용자가 선택할 수 있는 날짜 범위 설정
+                        $('#checkin').attr('min', availableDates[0]);
+                        $('#checkin').attr('max', availableDates[availableDates.length - 1]);
+                       
+                        // 체크아웃 날짜의 최대값을 하루 뒤로 설정
+                        let checkOutMaxDate = addDays(availableDates[availableDates.length - 1], 1);
+                        $('#checkout').attr('min', availableDates[0]);
+                        $('#checkout').attr('max', checkOutMaxDate);
+                    } else {
+                        console.error("유효한 날짜 데이터가 없습니다.");
+                    }
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+            });
+        }
+        
+        
+        function reserve(roomType, checkin, checkout, price, room_view, image, capacity, room_bed) {
+            // 세션 저장소에 방의 유형과 날짜를 저장하는 예제
+            sessionStorage.setItem('roomType', roomType);
+            sessionStorage.setItem('checkinDate', checkin);
+            sessionStorage.setItem('checkoutDate', checkout);
+            sessionStorage.setItem('price', price);
+            sessionStorage.setItem('roomview', room_view);
+            sessionStorage.setItem('capacity', capacity);
+            sessionStorage.setItem('image', superior_image);
+            sessionStorage.setItem('room_bed', room_bed);
+
+            // 예약 정보를 처리하는 추가적인 로직을 추가할 수 있습니다.
+
+            // 예약 후 결제 페이지로 이동하는 예제
+            window.location.href = '/customer/payment.go';
+        }
+        
+        
+        
+        
 </script>
 </body>
 </html>

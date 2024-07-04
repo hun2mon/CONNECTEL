@@ -173,6 +173,40 @@
 
 
 
+<select id="standard_amenity" resultType="String">
+	SELECT room_amenities FROM room_information WHERE type_code = 1001
+ </select>
+ <select id="superior_amenity" resultType="String">
+	SELECT room_amenities FROM room_information WHERE type_code = 1002
+ </select>
+ <select id="delux_amenity" resultType="String">
+	SELECT room_amenities FROM room_information WHERE type_code = 1003
+ </select>
+ <select id="suite_amenity" resultType="String">
+	SELECT room_amenities FROM room_information WHERE type_code = 1004
+ </select>
+ 
+
+
+<select id="standard_roomview" resultType="String">
+	SELECT room_view FROM room_information WHERE type_code = 1001
+ </select>
+ <select id="superior_roomview" resultType="String">
+	SELECT room_view FROM room_information WHERE type_code = 1002
+ </select>
+ <select id="delux_roomview" resultType="String">
+	SELECT room_view FROM room_information WHERE type_code = 1003
+ </select>
+ <select id="suite_roomview" resultType="String">
+	SELECT room_view FROM room_information WHERE type_code = 1004
+ </select>
+ 
+
+ 
+ 
+ 
+
+
 
 
 </mapper>
