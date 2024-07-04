@@ -75,6 +75,13 @@ public class CustomerController {
 		
 	}
 	
+	//결제페이지 이
+	@RequestMapping(value="/customer/payment.go")
+	public String payment(String checkin) {
+		
+		return "/customer/payment";
+	}
+	
 	
 	
 	

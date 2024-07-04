@@ -512,6 +512,7 @@ function getDate() {
         }
     });
 }
+
 </script>
 
 </html>
