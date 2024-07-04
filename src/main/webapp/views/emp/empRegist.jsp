@@ -43,6 +43,11 @@
             align-items: center;
             margin-bottom: 10px;
         }
+        .form-groups {
+		display: flex;
+		align-items: center;
+		margin-bottom: 10px;
+	}
         .form-control {
             flex: 1;
         }
@@ -130,12 +135,16 @@
                 <span class="subject">이메일</span>
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
-            <div class="form-group">
-                <span class="subject">우편번호</span>
-                <input type="text"  name = "post_no" class="form-control" id="sample6_postcode" placeholder="이 란을 클릭해주세요!" onclick="sample6_execDaumPostcode()" required>
-                <span class="subject">전화번호</span>
-                <input type="text" class="form-control" id="phone" name="phone" required>
-            </div>
+				<div class="form-group">
+					<span class="subject">우편번호</span>
+					 <input type="text" name="post_no" class="form-control" id="sample6_postcode"
+               			placeholder="우편번호" value="${emp.post_no}"  required>
+        			<img src="/scss/icons/search.png" onclick="sample6_execDaumPostcode()" style="width: 35px; height: 33px;">
+					
+					<span class="subject">전화번호</span> <input type="text"
+						class="form-control" id="phone" name="phone" value="${emp.phone}"
+						required>
+				</div>
             <div class="form-group">
                 <span class="subject">주소</span>
                 <input class="form-control" name = "address" type="text" id="sample6_address" placeholder="주소" required>
@@ -194,6 +203,32 @@
     </div>
 </form>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 전화번호 입력 필드에 입력되는 값을 xxx-xxxx-xxxx 형식으로 제한하기
+    var phoneInput = document.getElementById('phone');
+
+    phoneInput.addEventListener('input', function() {
+        // 입력된 내용에서 숫자만 남기기
+        var cleaned = phoneInput.value.replace(/\D/g, '');
+        
+        // xxx-xxxx-xxxx 형식으로 포맷팅
+        var formatted = '';
+        if (cleaned.length > 0) {
+            formatted = cleaned.substring(0, 3);
+        }
+        if (cleaned.length > 3) {
+            formatted += '-' + cleaned.substring(3, 7);
+        }
+        if (cleaned.length > 7) {
+            formatted += '-' + cleaned.substring(7, 11);
+        }
+
+        // 형식에 맞는 전화번호를 입력 필드에 설정
+        phoneInput.value = formatted;
+    });
+});
+
+
 function sample6_execDaumPostcode() {
     new daum.Postcode({
         oncomplete: function(data) {
@@ -231,31 +266,35 @@ function sample6_execDaumPostcode() {
 }
 
 $('#imgUpload').change(function (){
-	var count = $(this)[0].files.length;
-	var files = this.files;
-	var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-	/* console.log(count); */
-	if (count > 1) {
-		alert("이미지 파일 첨부는 1개까지 가능합니다.");
-		$('#imgPreview').attr('src', 'resources/img/basic_user.png');
-		this.value = '';
-	}
+    var files = this.files;
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+
+    // Check if the file count exceeds the limit
+    if (files.length > 1) {
+        alert("이미지 파일 첨부는 1개까지 가능합니다.");
+        $('#imgPreview').attr('src', '#');
+        this.value = '';
+        return;
+    }
+
+    // Validate each file
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
         if (!allowedExtensions.exec(file.name)) {
             alert("이미지 파일 첨부만 가능합니다.");
             this.value = '';
-            $('#imgPreview').attr('src', 'resources/img/basic_user.png');
+            $('#imgPreview').attr('src', '#');
             return;
         }
     }
-	
-    if (file) {
-    var reader = new FileReader();
-        reader.onload = function (){
-            $('#imgPreview').attr('src', reader.result);
+
+    // Display the selected image
+    if (files.length > 0) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#imgPreview').attr('src', e.target.result);
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(files[0]);
     }
 });
 

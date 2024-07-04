@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.service.ProfileService;
 
 @Controller
@@ -26,10 +27,9 @@ public class ProfileController {
 	    String page = "profile/profile";
 
 	    // 세션에서 emp_no 가져오기
-	    String emp_no = (String) session.getAttribute("loginInfo.emp_no");
-	    logger.info("emp_no: " + emp_no);
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
 	    
-	    profileService.leaveList(model, emp_no);
+	    profileService.leaveList(model, empDTO.getEmp_no());
 	    
 	    // 페이지 이름 반환
 	    return page;

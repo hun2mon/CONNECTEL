@@ -59,6 +59,21 @@ public class CalendarController {
 	       return result;
 	   }
 	
+	
+	
+    @PostMapping("/removeEventParticipant")
+    @ResponseBody
+    public Map<String, String> removeEventParticipant(@RequestParam("eventId") int eventId, @RequestParam("name") String name) {
+    	logger.info("삭제 ㄲㄲㄲㄱ");
+        boolean isRemoved = calService.removeEventParticipant(eventId, name);
+        if (isRemoved) {
+            return Map.of("status", "success");
+        } else {
+            return Map.of("status", "error");
+        }
+    }
+	
+	
 	@RequestMapping(value = "/getEventParticipants")
 	public ResponseEntity<List<String>> getEventParticipants(@RequestParam("id") int id) {
 	    try {

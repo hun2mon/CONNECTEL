@@ -43,6 +43,8 @@ public interface CalendarDAO {
 
 	List<Map<String, Object>> getDays(String cal_no);
 
+	boolean removeMem(int eventId, String emp_no);
+
 
 
 }

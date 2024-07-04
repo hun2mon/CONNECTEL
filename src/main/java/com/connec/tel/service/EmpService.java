@@ -134,14 +134,55 @@ public class EmpService {
 	}
 
 	public EmpDTO empDetail(String emp_no, Model model) {
-		logger.info("emp_no " + emp_no);
-		EmpDTO photos = empDAO.UserPhotoLoad(emp_no);
-		EmpDTO leave  = empDAO.leaveDetail(emp_no);
-		model.addAttribute("P",photos);
-		
-		model.addAttribute("leave",leave);
-		
-		return empDAO.empDetail(emp_no);
+	    logger.info("emp_no " + emp_no);
+	    
+	    // 사진 정보와 휴가 정보를 가져와 모델에 추가
+	    EmpDTO photos = empDAO.UserPhotoLoad(emp_no);
+	    EmpDTO leave  = empDAO.leaveDetail(emp_no);
+	    model.addAttribute("P", photos);
+	    model.addAttribute("leave", leave);
+
+	    // 직원 상세 정보를 가져오기
+	    EmpDTO dto = empDAO.empDetail(emp_no);
+
+	    // 직급 코드 변환
+	    int rank_code = dto.getRank_code();
+	    String rank = getRankDescription(rank_code);
+	    logger.info("rank: " + rank);
+	    model.addAttribute("rank", rank);
+
+	    // 부서 코드 변환
+	    int dept_code = dto.getDept_code();
+	    String dept = getDeptDescription(dept_code);
+	    logger.info("dept: " + dept);
+	    model.addAttribute("dept", dept);
+
+	    // dto를 모델에 추가하고 반환
+	    model.addAttribute("empDetail", dto);
+	    return dto;
+	}
+
+	// 직급 코드를 설명으로 변환하는 메서드
+	private String getRankDescription(int rank_code) {
+	    switch (rank_code) {
+	        case 1: return "사장";
+	        case 2: return "이사";
+	        case 3: return "팀장";
+	        case 4: return "과장";
+	        case 5: return "대리";
+	        case 6: return "사원";
+	        default: return "알 수 없음";
+	    }
+	}
+
+	// 부서 코드를 설명으로 변환하는 메서드
+	private String getDeptDescription(int dept_code) {
+	    switch (dept_code) {
+	        case 11: return "인사팀";
+	        case 22: return "시설팀";
+	        case 33: return "고객팀";
+	        default: return "알 수 없음";
+	    }
 	}
 
 	public void resetPw(String emp_no) {

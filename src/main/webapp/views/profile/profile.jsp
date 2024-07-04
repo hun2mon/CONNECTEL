@@ -40,6 +40,10 @@
     padding: 20px;
     width: 700px;
 }
+.contentt{    
+	width: 90%;
+    margin-top: 100px;
+   }
 
 .subTitle2 {
     flex: 1;
@@ -149,6 +153,7 @@ h2 {
             
             <h2>${sessionScope.loginInfo.name}님의 프로필</h2>
             <div class="content_body">
+            <div class="contentt">
                 <table class="employee-card">
                     <tr>
                         <td class="photo" rowspan="5">
@@ -379,7 +384,7 @@ h2 {
             content += '<tr style="border-bottom: 1px solid #ddd; height: 50px;">';
             content += '<td style="text-align: center;">' + emp.leave_start + ' ~ ' + emp.leave_end + '</td>';
             content += '<td style="text-align: center;">' + emp.leave_use + '</td>';
-            content += '<td style="text-align: center;">' + emp.regist_date + '</td>';
+            content += '<td style="text-align: center;">' + emp.app_date + '</td>';
             content += '<td style="text-align: center;">' + emp.register + '</td>';
             content += '</tr>';
         }

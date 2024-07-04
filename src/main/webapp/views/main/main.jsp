@@ -25,7 +25,7 @@
 	margin-left : 10px;
 }
 .annContent{
-	margin-top :150px;
+	margin-top : 30%;
 	background-color:white;
 }
 .list-title, .ann-list {

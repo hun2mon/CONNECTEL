@@ -178,34 +178,63 @@
 	</update>
 	
 	<select id = "leaveList" resultType = "emp">
-		SELECT lm.leave_start,lm.leave_end, lm.leave_use ,a.app_date as regist_date, e.name as register
-			FROM leave_management lm JOIN approver a ON lm.draft_no = a.draft_no 
-				JOIN emp e ON e.emp_no = a.emp_no
-					WHERE a.emp_no = #{param3}
+		WITH RankedData AS (
+		    SELECT 
+		        lm.emp_no,
+		        lm.leave_cate,
+		        lm.leave_use,
+		        lm.leave_start,
+		        lm.leave_end,
+		        DATE(a.app_date) AS app_date,
+		        a.app_procedure,
+		        a.draft_no,
+		        e.name, -- 추가: emp 테이블에서 이름 필드
+		        ROW_NUMBER() OVER (PARTITION BY a.draft_no ORDER BY a.app_date DESC) AS rn
+		    FROM 
+		        leave_management lm
+		    JOIN 
+		        approver a ON lm.draft_no = a.draft_no
+		    JOIN 
+		        emp e ON e.emp_no = a.emp_no -- emp 테이블 조인
+		    WHERE 
+		        lm.emp_no = #{param3} AND lm.draft_status = 'Y'
+		)
+		SELECT 
+		    emp_no,
+		    leave_cate,
+		    leave_use,
+		    leave_start,
+		    leave_end,
+		    app_date,
+		    app_procedure,
+		    draft_no,
+		    name as register -- 추가: emp 테이블에서 가져온 이름 필드
+		FROM 
+		    RankedData r
+		WHERE 
+		    rn = 1
+		ORDER BY 
+		    app_date DESC
 	    				LIMIT #{param1}, #{param2}	
 	</select>
 	
-	<select id = "leaveAllCount" resultType = "int">
-	SELECT CEIL (COUNT(lh.emp_no)/#{param1}) AS pages FROM leave_history lh
-		 JOIN leave_management lm ON lh.emp_no = lm.emp_no WHERE lh.emp_no = #{param2}
+	<select id="leaveAllCount" resultType="int">
+ 	 SELECT CEIL(COUNT(*) / #{param1}) AS pages 
+		FROM leave_history lh
+		JOIN leave_management lm ON lh.emp_no = lm.emp_no 
+		WHERE lh.emp_no = #{param2} AND lm.draft_status = 'Y'
 	</select>
 	
 	<select id = "leaveDetail" resultType = "emp">
-	SELECT 
-	    lh.emp_no,
-	    lh.annual AS total_leave,
-	    COALESCE(SUM(lm.leave_use), 0) AS use_leave,
-	    lh.annual - COALESCE(SUM(lm.leave_use), 0) AS balance_leave
-	FROM 
-	    leave_history lh
-	LEFT JOIN 
-	    leave_management lm ON lh.emp_no = lm.emp_no
-	GROUP BY 
-	    lh.emp_no, lh.annual order by '총휴가일' limit 1
+		SELECT 
+		    SUM(CASE WHEN leave_division = '+' THEN annual ELSE 0 END) AS total_leave,
+		    SUM(CASE WHEN leave_division = '-' THEN annual ELSE 0 END) AS use_leave,
+		    SUM(CASE WHEN leave_division = '+' THEN annual ELSE 0 END)- SUM(CASE WHEN leave_division = '-' THEN annual ELSE 0 END) as balance_leave
+		FROM leave_history WHERE emp_no = #{param1}
 	</select>
 	
 	<select id = "excelList" resultType = "emp">
-	    SELECT e.emp_no,e.name ,e.dept_code ,e.rank_code, es.status_division FROM emp e JOIN emp_status es ON es.emp_no = e.emp_no
+	    SELECT e.emp_no,e.name ,e.dept_code ,e.rank_code,e.email,e.birth,e.phone,e.address, es.status_division FROM emp e JOIN emp_status es ON es.emp_no = e.emp_no
 	</select>
 
 
