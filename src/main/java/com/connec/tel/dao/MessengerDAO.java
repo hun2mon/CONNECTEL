@@ -1,6 +1,7 @@
 package com.connec.tel.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,10 +14,12 @@ public interface MessengerDAO {
 
 	ChatRoom getChatRoom(String id);
 
-	List<ChatRoom> chatRoomList();
+	List<ChatRoom> chatRoomList(String emp_no);
 
 	void addMsg(String roomId, String emp_no, String sendMessage);
 
 	List<ChatRoom> contentsCall(String roomId);
+
+	void addMember(String roomId, String member);
 
 }

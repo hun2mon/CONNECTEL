@@ -240,11 +240,11 @@ function listCall() {
     console.log("listCall 실행");
     var calendarEl = $('#calendar')[0];
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth', 
+        initialView: 'dayGridMonth',
         events: function(fetchInfo, successCallback, failureCallback) {
         	 var yearMonth = new Date(fetchInfo.startStr);
              yearMonth.setMonth(yearMonth.getMonth() + 1); 	
-
+             console.log(fetchInfo.startStr);
             
             $.ajax({
                 type: 'POST',

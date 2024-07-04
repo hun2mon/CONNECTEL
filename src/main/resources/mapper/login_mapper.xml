@@ -14,11 +14,16 @@
 	</select>
 	
 	<select id="leftOver" resultType="float">
-		SELECT 
+		SELECT
+			CASE 
+			WHEN 
+			(SELECT SUM(annual) FROM leave_history lh WHERE leave_division = '-' AND emp_no = #{param1}) IS NULL THEN 0	
+			ELSE 
 			(SELECT SUM(annual) FROM leave_history lh WHERE leave_division = '+' AND emp_no = #{param1})
 				-
-			(SELECT SUM(annual) from leave_history lh WHERE leave_division = '-' AND emp_no = #{param1}) as leftover
-		FROM leave_history lh2 LIMIT 1;
+			(SELECT SUM(annual) FROM leave_history lh WHERE leave_division = '-' and emp_no = #{param1})
+			END AS leftover
+		FROM leave_history lh2 GROUP BY leftover
 	</select>
 	
 	

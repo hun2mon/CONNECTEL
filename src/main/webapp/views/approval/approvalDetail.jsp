@@ -117,7 +117,6 @@
 
 .table_title {
 	width: 10px;
-	max-width: 10px;
 }
 
 th {
@@ -134,6 +133,10 @@ th {
 
 #bottom{
 	display: flex;
+}
+
+.emp_name{
+	width: 210px;
 }
 </style>
 </head>
@@ -185,7 +188,7 @@ th {
 											<td class="draftTitle">휴가종류</td>
 											<td>${dto.leave_cate}</td>
 											<td>보유 연차일수</td>
-											<td>${leftOver}일</td>
+											<td>${dto.leftOver}일</td>
 										</tr>
 										<tr>
 											<td class="draftTitle">기간</td>
@@ -230,7 +233,7 @@ th {
 										<th class="title">이름</th>
 										<td class="table_content">${dto.name }</td>
 										<th class="title">보유 연차일수</th>
-										<td class="table_content">${leftOver}일</td>
+										<td class="table_content">${dto.leftOver}일</td>
 									</tr>
 									<tr>
 										<th class="title">부서</th>

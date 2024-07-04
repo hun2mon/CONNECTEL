@@ -95,8 +95,16 @@
 	</select>
 		
 	<select id="draftDetail" resultType="app">
-		SELECT 
-			d.draft_no
+		SELECT
+			CASE 
+			WHEN 
+			(SELECT SUM(annual) FROM leave_history lh WHERE leave_division = '-' AND lh.emp_no = d.register) IS NULL THEN 0	
+			ELSE 
+			(SELECT SUM(annual) FROM leave_history lh WHERE leave_division = '+' AND lh.emp_no = d.register)
+				-
+			(SELECT SUM(annual) FROM leave_history lh WHERE leave_division = '-' AND lh.emp_no = d.register)
+			END AS leftOver 
+			,d.draft_no
 			,d.register
 			,(SELECT name FROM emp e WHERE e.emp_no = d.register) AS name
 			,(SELECT cc.code_name FROM common_code cc JOIN emp e WHERE e.emp_no = d.register AND e.dept_code = cc.code_no) AS dept_name

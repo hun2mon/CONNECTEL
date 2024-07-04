@@ -18,8 +18,8 @@ public class ChatRoomRepository {
 	@Autowired MessengerDAO msgDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	 public List<ChatRoom> findAllRoom() {
-	     List<ChatRoom> chatRooms = msgDAO.chatRoomList();
+	 public List<ChatRoom> findAllRoom(String emp_no) {
+	     List<ChatRoom> chatRooms = msgDAO.chatRoomList(emp_no);
 	     return chatRooms;
 	 }
 	
@@ -30,12 +30,21 @@ public class ChatRoomRepository {
 	     return map;
 	 }
 	
-	 public ChatRoom createChatRoom(String name, String emp_no) {
-		 logger.info("emp_no : {}", emp_no);
+	 public ChatRoom createChatRoom(String name, List<String> memberList) {
 	     ChatRoom chatRoom = ChatRoom.create(name);
+	     
 	     String roomId = chatRoom.getRoomId();
 	     
-	     msgDAO.createRoom(roomId, name, emp_no);
+	     String emp_no =  (String) memberList.get(0);
+	     
+	     logger.info("emp_on : {}", emp_no);
+	     msgDAO.createRoom(roomId, name,emp_no);
+	     
+	     for (String member : memberList) {
+			msgDAO.addMember(roomId,member);
+		}
+	     
+	     
 	     
 	     return chatRoom;
 	 }

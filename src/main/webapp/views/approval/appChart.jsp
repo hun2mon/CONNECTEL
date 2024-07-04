@@ -489,13 +489,15 @@ function drawList(appVal) {
 	var index = 1;
 	content = '';
 	for(item of appVal){
-		content += '<tr class="validation">';
-		content += '<td><input type="checkbox" class="check" value="' + item.emp_no + '"></td>';
-		content += '<th scope="row" class="thIndex">'+index+'</th>';
-		content += '<td>'+item.dept_name+'</td>';
-		content += '<td>'+item.eName+'</td>';
-		content += '<td>'+item.rank_name+'</td>';
-		content += '</tr>';	
+		if (item.emp_no != '${loginInfo.emp_no}') {
+			content += '<tr class="validation">';
+			content += '<td><input type="checkbox" class="check" value="' + item.emp_no + '"></td>';
+			content += '<th scope="row" class="thIndex">'+(index-1) +'</th>';
+			content += '<td>'+item.dept_name+'</td>';
+			content += '<td>'+item.eName+'</td>';
+			content += '<td>'+item.rank_name+'</td>';
+			content += '</tr>';				
+		}
 		index += 1;
 	}
 	$('.appBody').html('');

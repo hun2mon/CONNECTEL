@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,14 +35,19 @@ public class ChatRoomController {
 	 // 모든 채팅방 목록 반환
 	 @GetMapping("/rooms")
 	 @ResponseBody
-	 public List<ChatRoom> room() {
-	     return chatRoomRepository.findAllRoom();
+	 public List<ChatRoom> room(String emp_no) {
+	     return chatRoomRepository.findAllRoom(emp_no);
 	 }
 	 // 채팅방 생성
 	 @PostMapping("/room")
 	 @ResponseBody
-	 public ChatRoom createRoom(@RequestParam String name, @RequestParam String emp_no) {
-	     return chatRoomRepository.createChatRoom(name, emp_no);
+	 public ChatRoom createRoom(@RequestBody Map<String, Object> params) {
+		 String name = (String) params.get("name");
+		 
+		 @SuppressWarnings("unchecked")
+		 List<String> memberList = (List<String>) params.get("memberList");
+	     
+		 return chatRoomRepository.createChatRoom(name, memberList);
 	 }
 	 // 채팅방 입장 화면
 	 @GetMapping("/room/enter/{roomId}")

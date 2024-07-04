@@ -25,18 +25,12 @@
 	cursor: pointer;
 }
 
-#chat_content{
-	display: grid;
-}
 
 #createRoom{
     text-align: end;
     padding: 9px;
 }
 
-.modal-body{
-	display: flex;
-}
 
 .modal_table{
 	margin: 0 auto;	
@@ -67,9 +61,6 @@
 	width: 200px;
 }
 
-#treeSearch{
-	width: 120%;
-}
 
 #right_modal{
 	height: 50%;
@@ -93,6 +84,30 @@
 	display: ruby;
 }
 
+.msg{
+	max-width: 500px;
+}
+
+.content{
+	overflow: unset;
+}
+
+#chat_left{
+	height: 650px;
+}
+
+button[name="modalBtn"]{
+	display: none;
+	margin: 5px;
+}
+
+#modalBtn{
+	display: flex;
+}
+
+#room_subject{
+	display: none;
+}
 
 </style>
 </head>
@@ -111,8 +126,7 @@
 									<div class="card-body border-bottom" id="createRoom">
 										<i class="fa-solid fa-comment-medical" id="create_icon" onclick="createRoomModal()"></i>
 									</div>
-									<div class="scrollable position-relative"
-										style="height: calc(100vh - 111px);">
+									<div class="scrollable position-relative"  id="chat_left">
 										<ul class="mailbox list-style-none">
 											<li>
 												<div class="message-center">
@@ -126,7 +140,7 @@
 									<div><i class="fa-solid fa-bell" id="bells"></i></div>
 									<div><i class="fa-solid fa-bars" id="bars" onclick="open_side_bar()"></i></div>
 								</div>
-									<div class="chat-box scrollable position-relative" style="height: calc(100vh - 111px);" id="chatBody">
+									<div class="chat-box scrollable position-relative" style="height: calc(76vh - 111px);" id="chatBody">
 										<!--chat Row -->
 										<ul class="chat-list list-style-none px-3 pt-3" id="chatContent">
 										</ul>
@@ -163,9 +177,16 @@
 	                <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">×</button>
 	            </div>
 	            <div class="modal-body">
-					<div>
-	            		<input type="text" class="form-control" id="roomName">
-	            		<button type="button" class="btn btn-info btn-sm" onclick="createRoom()">채팅방 개설</button>
+	            	<input type="text" class="form-control" name="search" placeholder="검색어를 입력해주세요." onkeyup="treeCall()" id="treeSearch">
+	            	<input type="text" class="form-control" name="room_subject" placeholder="채팅방 이름을 입력해 주세요." id="room_subject">
+					<ul id="tree">
+						<li class="card2"></li>
+						<li class="customers"></li>
+						<li class="config"></li>
+					</ul>
+					<div id="modalBtn">
+						<button type="button" class="btn btn-info btn-sm" name="modalBtn" onclick="returnBtn()">이전</button>
+						<button type="button" class="btn btn-info btn-sm" name="modalBtn" onclick="createRoom()">확인</button>
 					</div>
 	            </div>
 	        </div><!-- /.modal-content -->
@@ -202,7 +223,7 @@
 		treeCall();
 	});
 	
-	var start = 0;
+	var division = 0;
 	function treeCall() {
 		var search = $('#treeSearch').val();
 		
@@ -216,14 +237,10 @@
     		success:function(data){
     			drawTree(data.list);
     			console.log(data);
-    			if (start == 0 && search == '') {
-    				start += 1;
-	    			console.log(start);
-    				$("#tree").explr();
-				} else if (search == '') {
-					$("#tree").explr('destroy');
-					$("#tree").explr();
-				}
+    			if (division == 0) {
+					$("#tree").explr(); 					
+	    			division = 1;
+    			}
     		},
     		error:function(e){
     			console.log(e);
@@ -241,21 +258,21 @@
 	    	for(item of list){
 	    		if (item.dept_name == '인사팀') {
 	    			team[index] = item;
-	    			card += '<li class="user" onclick="addReferrer('+index+')">';
+	    			card += '<li class="user" onclick="addMember('+index+')">';
 	    			card += '<a href="#">' + item.name +'</a></li>';
 	    			index += 1;
 	    		}
 	    		
 	    		if (item.dept_name == '고객팀') {
 	    			team[index] = item;
-	    			customer += '<li class="customers" onclick="addReferrer('+index+')">';
+	    			customer += '<li class="customers" onclick="addMember('+index+')">';
 	    			customer += '<a href="#">' + item.name +'</a></li>';
 	    			index += 1;
 	    		}
 	    		
 	    		if (item.dept_name == '시설팀') {
 	    			team[index] = item;
-	    			config += '<li class="config" onclick="addReferrer('+index+')">';
+	    			config += '<li class="config" onclick="addMember('+index+')">';
 	    			config += '<a href="#">' + item.name +'</a></li>';
 	    			index += 1;
 	    		}
@@ -271,8 +288,30 @@
     }
     
     
+    function addMember(index) {
+    	memberList.push(team[index].emp_no);
+		$('#tree').css("display","none");
+		$('#treeSearch').css("display","none");
+		$('button[name="modalBtn"]').css("display","block");
+		$('#room_subject').css("display","block");
+		$('#room_subject').val(team[index].name);
+		console.log(memberList);
+	}
+    
+    function returnBtn() {
+    	memberList = ['${loginInfo.emp_no}'];
+		$('#tree').css("display","block");
+		$('#treeSearch').css("display","block");
+		$('button[name="modalBtn"]').css("display","none");
+		$('#room_subject').css("display","none");
+		$('#room_subject').val('');
+		  console.log(memberList);
+	}
+    
+    
     
     function createRoomModal() {
+    	returnBtn();
 		$('#bs-example-modal-sm').modal('show');
 	}
     
@@ -283,27 +322,34 @@
 		$('#right-modal').modal('show');
 	}
     
+    
+    var memberList = ['${loginInfo.emp_no}'];
+    console.log(memberList);
     function createRoom() {
-    	if($('#roomName').val() == '') {
-            alert("방 제목을 입력해 주십시요.");
-            return;
-        } else {
-            $.ajax({
-        		url:'/chat/room',
-        		method:'post',
-        		data:{
-        			name:$('#roomName').val(),
-        			emp_no:'${loginInfo.emp_no}'
-        		},
-        		dataType:'JSON',
-        		success:function(data){
-        			findAllRoom();
-        		},
-        		error:function(e){
-        			console.log(e);
-        		}
-        	})
-        }
+    	console.log(memberList);
+    	
+    	params = {
+    			name:$('#room_subject').val(),
+    			memberList:memberList
+    	}
+    	
+    	if ($('#room_subject').val() == '') {
+			alert('채팅방 제목을 입력해 주세요.');
+		}else{
+			$.ajax({
+	       		url:'/chat/room',
+	       		method:'post',
+	       		data:JSON.stringify(params),
+	       		contentType:'application/json; charset = UTF-8',
+	       		dataType:'JSON',
+	       		success:function(data){
+	       			findAllRoom();
+	       		},
+	       		error:function(e){
+	       			console.log(e);
+	       		}
+	       	})			
+		}
 	}
 
 
@@ -314,7 +360,9 @@
     	 $.ajax({
      		url:'/chat/rooms',
      		method:'get',
-     		data:{},
+     		data:{
+     			emp_no:'${loginInfo.emp_no}'
+     		},
      		dataType:'JSON',
      		success:function(data){
      			var content = '';
@@ -395,6 +443,7 @@
 		content = '';
 	}
     
+
     function findRoom(roomId) {
       	 $.ajax({
         		url:'/chat/room/' + roomId,
@@ -406,7 +455,6 @@
         		    ws = Stomp.over(sock);
         		    reconnect = 0;
         		    drawChatContent(roomId);
-        		    $('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
         			connect();
         		},
         		error:function(e){
@@ -417,6 +465,7 @@
     
     
     function connect() {
+	    $('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
     	var roomId = localStorage.getItem('wschat.roomId');
         var sender = localStorage.getItem('wschat.sender');
         var emp_no = localStorage.getItem('wschat.emp_no');

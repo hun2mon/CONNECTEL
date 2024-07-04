@@ -133,6 +133,10 @@ h2 {
 	text-align : center;
 }
 
+.content_body{
+	 width: 1280px;
+}
+
 </style>
 </head>
 <body>
@@ -144,7 +148,7 @@ h2 {
             <br><br><br><br><br>
             
             <h2>${sessionScope.loginInfo.name}님의 프로필</h2>
-            <div class="content">
+            <div class="content_body">
                 <table class="employee-card">
                     <tr>
                         <td class="photo" rowspan="5">

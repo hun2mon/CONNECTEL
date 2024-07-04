@@ -30,6 +30,7 @@ public class ApprovalDTO {
 	private Float leave_use;
 	private Date leave_start;
 	private Date leave_end;
+	private Float leftOver;
 	
 	private String name;
 	private Timestamp app_date;
@@ -38,6 +39,7 @@ public class ApprovalDTO {
 	private String dept_name;
 	private String app_status;
 	private String dept_code;
+	
 	
 	
 	
@@ -184,6 +186,12 @@ public class ApprovalDTO {
 	}
 	public void setDept_code(String dept_code) {
 		this.dept_code = dept_code;
+	}
+	public Float getLeftOver() {
+		return leftOver;
+	}
+	public void setLeftOver(Float leftOver) {
+		this.leftOver = leftOver;
 	}
 
 }

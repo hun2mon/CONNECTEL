@@ -318,10 +318,7 @@ h2 {
         $('#info-alert-modal').modal('show');
     }
 	
-	const rankCode = $
-	{
-		emp.rank_code
-	};
+	const rankCode = ${emp.rank_code};
 
 	// rank_code에 해당하는 텍스트를 매핑합니다.
 	const rankMap = {
@@ -337,10 +334,7 @@ h2 {
 	const rankDisplay = document.getElementById('rank_display');
 	rankDisplay.textContent = rankMap[rankCode] || '대기 상태';
 
-	const deptCode = $
-	{
-		emp.dept_code
-	};
+	const deptCode = ${emp.dept_code};
 
 	// dept_code에 해당하는 텍스트를 매핑합니다.
 	const deptMap = {

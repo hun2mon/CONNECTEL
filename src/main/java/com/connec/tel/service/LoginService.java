@@ -31,12 +31,7 @@ public class LoginService {
 		if (dto != null) {
 			if (encoder.matches(pw, dto.getPassword())) {
 				logger.info("일치");
-				try {
-					leftOver = loginDAO.leftOver(dto.getEmp_no()) ;					
-				} catch (Exception e) {
-					leftOver = (float) 0;
-				}
-				
+				leftOver = loginDAO.leftOver(dto.getEmp_no()) ;			
 				session.setAttribute("loginInfo", dto);
 				session.setAttribute("leftOver", leftOver);
 			} else {

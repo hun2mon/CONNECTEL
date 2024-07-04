@@ -50,6 +50,14 @@ form {
 	border-radius: 5px;
 }
 
+.delBtn{
+	background: tomato;
+	border: tomato;
+	color: white;
+	height: 40px;
+	border-radius: 5px;
+}
+
 .table-bordered {
 	text-align: center;
 }
@@ -60,7 +68,7 @@ form {
 
 .bottomBtn{
 	margin: 0 auto;
-    width: 31.5%;
+    width: 460px;
 }
 
 .botBtn{
@@ -71,12 +79,9 @@ form {
 	width: 10px;
 }
 
-th{
-	width: 100px;
-}
-
 .top_div{
 	width: 260px;
+	margin-left: auto !important;
 }
 
 .modal-body{
@@ -108,20 +113,19 @@ th{
 		</div>
 		<div class="content">
 			<div class="container-fluid">
-			<input type="button" class="appBtn" value="결재선 지정" onclick="popup()">
 				<div class="row top_div">
 					<div class="col-12">
 						<div class="card">
+							<input type="button" class="appBtn" value="결재선 지정" onclick="popup()">
 							<div class="card-body">
 								<div class="table-responsive">
 									<table class="table table-bordered app_line">
 										<tbody>
 											<tr class="appName">
-												<th scope="col" rowspan="3" class="table_title">신청자</th>
+												<th scope="col" rowspan="3" class="table_title validation">결재자</th>
 												<th scope="col" class="emp_name">
 													${name } ${dto.name}
 												</th>
-												<th scope="col" rowspan="3" class="table_title validation">결재자</th>
 											</tr>
 											<tr class="rankName">
 												<td>${rank_name} ${dto.rank_name}</td>
@@ -212,7 +216,8 @@ th{
 				<div class="bottomBtn">
 					<input type="hidden" name="draft_status">
 					<c:if test="${dto.draft_status == 'T'}">
-						<input type="button" class="appBtn botBtn" value="삭제" onclick="delDraft('${dto.draft_no}')">
+						<input type="button" class="delBtn botBtn" value="삭제" onclick="delDraft('${dto.draft_no}')">
+						<input type="button" class="appBtn botBtn" value="임시저장" onclick="writeDraft('1')">
 					</c:if>
 					<c:if test="${dto.draft_status != 'T'}">
 						<input type="button" class="appBtn botBtn" value="임시저장" onclick="writeDraft('1')">					
@@ -332,6 +337,7 @@ th{
 	});
 
     $('input[name="deadline"]').attr('min', getTodayDate());
+    /* $('.top_div').css("margin-left",'auto'); */
 	
 
     // 휴가 기간 설정
@@ -385,8 +391,8 @@ th{
 	// 결재자 출력
 	var approvers = [];
     function drawAppList(appVal) {
-    	$('.appName').html('<th scope="col" rowspan="3" class="table_title">신청자</th><th scope="col" class="emp_name"><br>${name }${dto.name}</th><th scope="col" rowspan="3" class="table_title validation">결재자</th>');
-		$('.rankName').html('<td>${rank_name}${dto.rank_name}</td>');
+    	$('.appName').html('<th scope="col" rowspan="3" class="table_title validation">결재자</th>');
+		$('.rankName').html('');
 		$('.top_div').css('width','800px');
 		var content = '';
 		var rankName = '';

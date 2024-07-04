@@ -19,9 +19,9 @@
 	
 	<select id="chatRoomList" resultType="chatRoom">
 		SELECT 
-			chat_no AS roomId,
-			chat_name AS name
-		FROM chat_room
+			cm.chat_no AS roomId,
+			cr.chat_name AS name
+		FROM chat_member cm join chat_room cr on cm.chat_no = cr.chat_no where cm.emp_no = #{param1};
 	</select>
 	
 	<insert id="addMsg" parameterType="String">
@@ -37,5 +37,9 @@
 			,c.emp_no
 		FROM chat_detail c JOIN emp e ON c.emp_no = e.emp_no WHERE chat_no = #{param1} ORDER BY content_no
 	</select>
+	
+	<insert id="addMember">
+		INSERT INTO chat_member(chat_no, emp_no) VALUES (#{param1}, #{param2})
+	</insert>
 	
 </mapper>
