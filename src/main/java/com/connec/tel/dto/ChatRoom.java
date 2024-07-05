@@ -1,6 +1,6 @@
 package com.connec.tel.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.apache.ibatis.type.Alias;
@@ -9,13 +9,15 @@ import org.apache.ibatis.type.Alias;
 public class ChatRoom {
 	private String roomId;
 	private String name;
-	
+	private String room_name;
 	private String content_no;
 	private String chat_no;
 	private String emp_no;
 	private String chat_content;
 	private String eName;
-	private Date chat_date;
+	private Timestamp chat_date;
+	private String msg_type;
+	private String profile_img;
 	
 
 	public static ChatRoom create(String name) {
@@ -96,12 +98,42 @@ public class ChatRoom {
 	}
 
 
-	public Date getChat_date() {
+	public Timestamp getChat_date() {
 		return chat_date;
 	}
 
 
-	public void setChat_date(Date chat_date) {
+	public void setChat_date(Timestamp chat_date) {
 		this.chat_date = chat_date;
+	}
+
+
+	public String getMsg_type() {
+		return msg_type;
+	}
+
+
+	public void setMsg_type(String msg_type) {
+		this.msg_type = msg_type;
+	}
+
+
+	public String getProfile_img() {
+		return profile_img;
+	}
+
+
+	public void setProfile_img(String profile_img) {
+		this.profile_img = profile_img;
+	}
+
+
+	public String getRoom_name() {
+		return room_name;
+	}
+
+
+	public void setRoom_name(String room_name) {
+		this.room_name = room_name;
 	}
 }

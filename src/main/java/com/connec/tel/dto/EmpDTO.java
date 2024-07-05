@@ -31,6 +31,7 @@ public class EmpDTO {
 	private String eName;
 	private String rank_name;
 	private int app_procedure;
+	private String profile_img;
 	// 사진 정보
 	private int pho_no;
 	private String ori_pho_name;
@@ -302,6 +303,12 @@ public class EmpDTO {
 	}
 	public void setApp_procedure(int app_procedure) {
 		this.app_procedure = app_procedure;
+	}
+	public String getProfile_img() {
+		return profile_img;
+	}
+	public void setProfile_img(String profile_img) {
+		this.profile_img = profile_img;
 	}
 
 }

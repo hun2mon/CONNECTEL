@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,15 +16,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.connec.tel.dao.MessengerDAO;
 import com.connec.tel.dto.ChatRoom;
 import com.connec.tel.service.ChatRoomRepository;
+import com.connec.tel.service.CommonService;
 
 @Controller
 @RequestMapping("/chat")
 public class ChatRoomController {
 
+	@Autowired MessengerDAO msgDAO;
 	 private final ChatRoomRepository chatRoomRepository;
+	 Logger logger = LoggerFactory.getLogger(getClass());
 	 
 	 public ChatRoomController(ChatRoomRepository chatRoomRepository) {
 		 this.chatRoomRepository = chatRoomRepository;
@@ -43,11 +51,11 @@ public class ChatRoomController {
 	 @ResponseBody
 	 public ChatRoom createRoom(@RequestBody Map<String, Object> params) {
 		 String name = (String) params.get("name");
-		 
+		 String registerName = (String) params.get("registerName");
 		 @SuppressWarnings("unchecked")
 		 List<String> memberList = (List<String>) params.get("memberList");
 	     
-		 return chatRoomRepository.createChatRoom(name, memberList);
+		 return chatRoomRepository.createChatRoom(name, memberList, registerName);
 	 }
 	 // 채팅방 입장 화면
 	 @GetMapping("/room/enter/{roomId}")
@@ -69,4 +77,54 @@ public class ChatRoomController {
 	 public Map<String, Object> contentsCall(@PathVariable String roomId) {
 	     return chatRoomRepository.contentsCall(roomId);
 	 }
+	 
+	 @PostMapping("/sendImg")
+	 @ResponseBody
+	 public Map<String, Object> sendImg(MultipartFile img){
+		 Map<String, Object> map = new HashMap<String, Object>();
+		 
+		 String oriFileName = img.getOriginalFilename();
+		 	
+		String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
+		String newFileName = System.currentTimeMillis() + ext;
+		CommonService.upload(img, newFileName);
+		
+		map.put("newFileName", newFileName);
+		
+		return map;
+	 }
+	 
+	 @PostMapping("/sendFile")
+	 @ResponseBody
+	 public Map<String, Object> sendFile(MultipartFile file){
+		 Map<String, Object> map = new HashMap<String, Object>();
+		 
+		 String oriFileName = file.getOriginalFilename();
+		 	
+		String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
+		String newFileName = System.currentTimeMillis() + "_" + oriFileName;
+		CommonService.upload(file, newFileName);
+		
+		map.put("newFileName", newFileName);
+		
+		return map;
+	 }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 }

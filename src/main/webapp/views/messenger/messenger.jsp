@@ -109,6 +109,52 @@ button[name="modalBtn"]{
 	display: none;
 }
 
+.text_center{
+	text-align: center;
+}
+
+#chat_body_bottom{
+	display: flex;
+}
+
+#file, #img {
+  display: none;
+}
+
+#plusBtnDiv{
+	font-size: x-large;
+	padding-top: 7px;
+}
+
+#plusBtnDiv:hover{
+	color:cornflowerblue;
+	cursor: pointer;
+}
+
+#imgFileModal{
+	position: absolute;
+    bottom: 78px;
+    width: 140px;
+    height: auto;
+    background-color: white;
+    padding: 5px;
+    border-radius: 10px;
+    display: none;
+}
+
+.btn-upload{
+	font-size: large;
+	margin-bottom: 0px !important; 
+}
+
+.btn-upload:hover{
+	color:cornflowerblue;
+	cursor: pointer;
+}
+
+.chat_img{
+	width: 100%;
+}
 </style>
 </head>
 <body>
@@ -129,7 +175,7 @@ button[name="modalBtn"]{
 									<div class="scrollable position-relative"  id="chat_left">
 										<ul class="mailbox list-style-none">
 											<li>
-												<div class="message-center">
+												<div class="message-center" id="chat_body">
 												</div>
 											</li>
 										</ul>
@@ -148,9 +194,27 @@ button[name="modalBtn"]{
 									<div class="card-body border-top">
 										<div class="row">
 											<div class="col-9">
-												<div class="input-field mt-0 mb-0">
-													<input id="textarea1" placeholder="Type and enter"
-														class="form-control border-0" type="text">
+												<div id="imgFileModal">
+													<div>
+														<label for="img" class="btn-upload">
+														  	<i class="fa-solid fa-image"></i>&nbsp&nbsp이미지 전송
+														</label>
+														<form id="imgForm">
+															<input type="file" name="img" id="img" onchange="sendImg()" accept="image/gif, image/jpeg, image/png, image/webp">														
+														</form>
+													</div>
+													<div>
+														<label for="file" class="btn-upload">
+														  	&nbsp<i class="fa-solid fa-file"></i>&nbsp&nbsp파일 전송
+														</label>
+														<input type="file" name="file" id="file" onchange="sendFile()">
+													</div>
+												</div>
+												<div class="input-field mt-0 mb-0" id="chat_body_bottom">
+													<div id="plusBtnDiv" onclick="imgFileModal()">
+														<i class="fa-solid fa-plus"></i>
+													</div>													
+													<input id="textarea1" placeholder="Type and enter" class="form-control border-0" type="text" onkeyup="keyCheck()">
 												</div>
 											</div>
 											<div class="col-3">
@@ -167,6 +231,7 @@ button[name="modalBtn"]{
 			</div>
 		</div>
 	</div>
+	<img src="" id="base64-output">
 	
 	<div class="modal fade" id="bs-example-modal-sm" tabindex="-1" role="dialog"
 	    aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -214,6 +279,26 @@ button[name="modalBtn"]{
 	        </div><!-- /.modal-content -->
 	    </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+	
+	
+	<div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal"
+	                    aria-hidden="true">×</button>
+	            </div>
+	            <div class="modal-body" id="imgModal">
+	                
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+	
+	
+	
+	
 </body>
 <script src="/js/jquery-explr-1.4.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
@@ -330,7 +415,8 @@ button[name="modalBtn"]{
     	
     	params = {
     			name:$('#room_subject').val(),
-    			memberList:memberList
+    			memberList:memberList,
+    			registerName:'${loginInfo.name}'
     	}
     	
     	if ($('#room_subject').val() == '') {
@@ -356,7 +442,7 @@ button[name="modalBtn"]{
 	findAllRoom();
     
     function findAllRoom() {
-    	$('.message-center').html('');
+    	$('#chat_body').html('');
     	 $.ajax({
      		url:'/chat/rooms',
      		method:'get',
@@ -367,10 +453,10 @@ button[name="modalBtn"]{
      		success:function(data){
      			var content = '';
      			for (item of data) {
-     				content += '<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2"><div class="user-img"><img src="/assets/images/users/1.jpg" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-right"></span></div><div class="w-75 d-inline-block v-middle pl-2">';
-					content += '<h6 class="message-title mb-0 mt-1">'+item.name+'</h6></div></a>';
+     				content += '<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2"><div class="user-img"><img src="/photo/'+item.profile_img+'" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-right"></span></div><div class="w-75 d-inline-block v-middle pl-2">';
+					content += '<h6 class="message-title mb-0 mt-1">'+item.room_name+'</h6></div></a>';
 				}
-     			$('.message-center').append(content);
+     			$('#chat_body').append(content);
      		},
      		error:function(e){
      			console.log(e);
@@ -411,30 +497,124 @@ button[name="modalBtn"]{
         var sender = localStorage.getItem('wschat.sender');
         var emp_no = localStorage.getItem('wschat.emp_no');
         var message = $('#textarea1').val();
+        
+        console.log('sdfsdf');
     	
-        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, emp_no:emp_no,message:message}));
+        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, emp_no:emp_no,message:message,msg_type:'text',profile_img:'${loginInfo.profile_img}'}));
         message = '';
+	}
+    
+    function sendImg() {
+    	
+    	$('.btn-upload').css('display','none');
+    	
+    	var formData = new FormData();
+		var inputFile = $("#img");
+		var file = inputFile[0].files;
+		console.log(file);
+		formData.append("img", file[0]);
+    	
+    	
+    	 $.ajax({
+     		url:'/chat/sendImg',
+     		method:'post',
+     		data:formData,
+     		dataType:'JSON',
+     		contentType:false,
+     		processData:false,
+     		success:function(data){
+     			console.log(data.newFileName);
+     			
+     			var roomId = localStorage.getItem('wschat.roomId');
+     	        var sender = localStorage.getItem('wschat.sender');
+     	        var emp_no = localStorage.getItem('wschat.emp_no');
+     	        
+     	    	
+     	        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, emp_no:emp_no, message:data.newFileName, msg_type:'image', profile_img:'${loginInfo.profile_img}'}));
+     			
+     		},
+     		error:function(e){
+     			console.log(e);
+     		}
+     	})
+	}
+    
+ function sendFile() {
+    	
+    	$('#imgFileModal').css('display','none');
+    	
+    	var formData = new FormData();
+		var inputFile = $("#file");
+		var file = inputFile[0].files;
+		console.log(file);
+		formData.append("file", file[0]);
+		
+    	var maxSize = 5 * 1024 * 1024; //* 5MB 사이즈 제한
+		var fileSize = file[0].size;//업로드한 파일용량
+		
+		
+		
+		if(fileSize > maxSize){
+			alert("파일첨부 사이즈는 5MB 이내로 가능합니다.");
+			$(inputFile).val(''); //업로드한 파일 제거
+			return; 
+		} else {
+	    	 $.ajax({
+	     		url:'/chat/sendFile',
+	     		method:'post',
+	     		data:formData,
+	     		dataType:'JSON',
+	     		contentType:false,
+	     		processData:false,
+	     		success:function(data){
+	     			console.log(data.newFileName);
+	     			
+	     			var roomId = localStorage.getItem('wschat.roomId');
+	     	        var sender = localStorage.getItem('wschat.sender');
+	     	        var emp_no = localStorage.getItem('wschat.emp_no');
+	     	        
+	     	    	
+	     	        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, emp_no:emp_no,message:data.newFileName,msg_type:'file', profile_img:'${loginInfo.profile_img}'}));
+	     			
+	     		},
+	     		error:function(e){
+	     			console.log(e);
+	     		}
+	     	})	
+		}
 	}
     
     var messages = [];
     function recvMessage(recv) {
-    	
+    	var nowDate = new Date();
     	var emp_no = '${loginInfo.emp_no}';
     	
     	console.log(recv);
     	var content = '';
     	if (recv.emp_no != emp_no) {
-			content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/assets/images/users/1.jpg" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
+			content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/photo/'+recv.profile_img+'" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
 			content += '<h6 class="font-weight-medium">'+recv.sender+'</h6>';
-			content += '<div class="msg p-2 d-inline-block mb-1">'+recv.message+'</div></div>';
-			content += '<div class="chat-time d-block font-10 mt-1 mr-0 mb-3"></div></li>';
+			if (recv.msg_type == 'file') {
+				content += '<div class="msg p-2 d-inline-block mb-1"><a href="/download/'+recv.message+'"><i class="fa-solid fa-download"></i>&nbsp'+recv.message+'</a></div></div>';				
+			} else if (recv.msg_type == 'text') {
+				content += '<div class="msg p-2 d-inline-block mb-1">'+recv.message+'</div></div>';				
+			} else {
+				content += '<div class="msg p-2 d-inline-block mb-1"><img src="/photo/'+recv.message+'" class="chat_img" onclick="imgDetail(\''+recv.message+'\')"></div></div>';
+			}
+			content += '<div class="chat-time d-block font-10 mt-1 mr-0 mb-3">'+nowDate.toLocaleString()+'</div></li>';
 		} else {
 			content += '<li class="chat-item odd list-style-none mt-3">';
 			content += '<div class="chat-content text-right d-inline-block pl-3">';
-			content += '<div class="box msg p-2 d-inline-block mb-1">'+recv.message+'</div><br></div>';
-			content += '<div class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3"></div></li>';
+			if (recv.msg_type == 'file') {
+				content += '<div class="msg p-2 d-inline-block mb-1"><a href="/download/'+recv.message+'"><i class="fa-solid fa-download"></i>&nbsp'+recv.message+'</a></div></div>';				
+			} else if (recv.msg_type == 'text') {
+				content += '<div class="msg p-2 d-inline-block mb-1">'+recv.message+'</div></div>';				
+			} else {
+				content += '<div class="msg p-2 d-inline-block mb-1"><img src="/photo/'+recv.message+'" class="chat_img" onclick="imgDetail(\''+recv.message+'\')"></div></div>';
+			}
+			content += '<div class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3">'+nowDate.toLocaleString()+'</div></li>';
 		}
-		messages.unshift({"type":recv.type,"sender":recv.sender,"emp_no":recv.emp_no,"message":recv.message})
+		messages.unshift({"type":recv.type,"sender":recv.sender,"emp_no":recv.emp_no,"message":recv.message, profile_img:'${loginInfo.profile_img}'})
 		if (recv.type != 'ENTER') {
 			$('#chatContent').append(content);	
 			$('#textarea1').val('');
@@ -489,6 +669,8 @@ button[name="modalBtn"]{
 	}
     
     function drawChatContent(roomId) {
+    	var date;
+    	var nowDate = new Date();
     	$('#chatContent').html('');	
     	$.ajax({
     		url:'/chat/content/' + roomId,
@@ -497,18 +679,34 @@ button[name="modalBtn"]{
     		dataType:'JSON',
     		success:function(data){
     			var emp_no = '${loginInfo.emp_no}';
+    			console.log(data.list);
     			var content = '';
     			for (item of data.list) {
     				if (item.emp_no != emp_no) {
-    					content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/assets/images/users/1.jpg" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
+    					date = new Date(item.chat_date);
+    					content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/photo/'+item.profile_img+'" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
     					content += '<h6 class="font-weight-medium">'+item.name+'</h6>';
-    					content += '<div class="msg p-2 d-inline-block mb-1">'+item.chat_content+'</div></div>';
-    					content += '<div class="chat-time d-block font-10 mt-1 mr-0 mb-3">'+item.chat_date+'</div></li>';
+    					console.log('123 : ',item.msg_type);
+    					if (item.msg_type == 'file') {
+    						content += '<div class="msg p-2 d-inline-block mb-1"><a href="/download/'+item.chat_content+'"><i class="fa-solid fa-download"></i>&nbsp'+item.chat_content+'</a></div></div>';
+						} else if (item.msg_type == 'text') {
+    						content += '<div class="msg p-2 d-inline-block mb-1">'+item.chat_content+'</div></div>';			
+    					} else {
+    						content += '<div class="msg p-2 d-inline-block mb-1"><img src="/photo/'+item.chat_content+'" class="chat_img" onclick="imgDetail(\''+item.chat_content+'\')"></div></div>';
+    					}
+    					content += '<div class="chat-time d-block font-10 mt-1 mr-0 mb-3">'+date.toLocaleString()+'</div></li>';
 					} else {
+						date = new Date(item.chat_date);
 						content += '<li class="chat-item odd list-style-none mt-3">';
 						content += '<div class="chat-content text-right d-inline-block pl-3">';
-						content += '<div class="box msg p-2 d-inline-block mb-1">'+item.chat_content+'</div><br></div>';
-						content += '<div class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3">'+item.chat_date+'</div></li>';
+						if (item.msg_type == 'file') {
+    						content += '<div class="msg p-2 d-inline-block mb-1"><a href="/download/'+item.chat_content+'"><i class="fa-solid fa-download"></i>&nbsp'+item.chat_content+'</a></div></div>';
+						} else if (item.msg_type == 'text') {
+    						content += '<div class="msg p-2 d-inline-block mb-1">'+item.chat_content+'</div></div>';				
+    					} else {
+    						content += '<div class="msg p-2 d-inline-block mb-1"><img src="/photo/'+item.chat_content+'" class="chat_img" onclick="imgDetail(\''+item.chat_content+'\')"></div></div>';
+    					}
+						content += '<div class="chat-time text-right d-block font-10 mt-1 mr-0 mb-3">'+date.toLocaleString()+'</div></li>';
 					}
 				}
     			$('#chatContent').append(content);	
@@ -518,5 +716,30 @@ button[name="modalBtn"]{
     		}
     	})
 	}
+    
+    $(document).mouseup(function (e){
+    	var layerPopup = $("#imgFileModal");
+    	if(layerPopup.has(e.target).length === 0){
+    		$('#imgFileModal').css('display','none');
+    	}
+    });
+    
+    function imgFileModal() {
+		$('#imgFileModal').css('display','block');
+	}
+    
+    function imgDetail(imgName) {
+    	$('#imgModal').html('');
+    	$('#imgModal').html('<img src="/photo/'+imgName+'" class="chat_img">');
+    	$('#centermodal').modal('show');
+		console.log(imgName);
+	}
+    
+    function keyCheck() {
+    	if (window.event.keyCode == 13 && $('#textarea1').val() != '') {
+    		sendMessage();
+        }
+	}
+    
 </script>
 </html>

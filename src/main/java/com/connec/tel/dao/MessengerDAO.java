@@ -10,16 +10,16 @@ import com.connec.tel.dto.ChatRoom;
 @Mapper
 public interface MessengerDAO {
 
-	void createRoom(String roomId, String name, String emp_no);
+	void createRoom(String roomId, String emp_no);
 
 	ChatRoom getChatRoom(String id);
 
 	List<ChatRoom> chatRoomList(String emp_no);
 
-	void addMsg(String roomId, String emp_no, String sendMessage);
+	void addMsg(String roomId, String emp_no, String sendMessage, String msg_type);
 
 	List<ChatRoom> contentsCall(String roomId);
 
-	void addMember(String roomId, String member);
+	void addMember(String roomId, String member, String name, String registerName, int index);
 
 }

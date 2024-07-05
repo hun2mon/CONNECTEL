@@ -30,18 +30,20 @@ public class ChatRoomRepository {
 	     return map;
 	 }
 	
-	 public ChatRoom createChatRoom(String name, List<String> memberList) {
+	 public ChatRoom createChatRoom(String name, List<String> memberList, String registerName) {
 	     ChatRoom chatRoom = ChatRoom.create(name);
 	     
 	     String roomId = chatRoom.getRoomId();
 	     
 	     String emp_no =  (String) memberList.get(0);
-	     
+	     logger.info("registerName : {}", registerName);
 	     logger.info("emp_on : {}", emp_no);
-	     msgDAO.createRoom(roomId, name,emp_no);
+	     msgDAO.createRoom(roomId, emp_no);
 	     
+	     int index = 1;
 	     for (String member : memberList) {
-			msgDAO.addMember(roomId,member);
+			msgDAO.addMember(roomId,member,name,registerName,index);
+			index += 1;
 		}
 	     
 	     
@@ -49,8 +51,8 @@ public class ChatRoomRepository {
 	     return chatRoom;
 	 }
 	
-	public void addMsg(String roomId, String emp_no, String sendMessage) {
-		msgDAO.addMsg(roomId, emp_no, sendMessage);
+	public void addMsg(String roomId, String emp_no, String sendMessage, String msg_type) {
+		msgDAO.addMsg(roomId, emp_no, sendMessage, msg_type);
 	}
 
 	public Map<String, Object> contentsCall(String roomId) {

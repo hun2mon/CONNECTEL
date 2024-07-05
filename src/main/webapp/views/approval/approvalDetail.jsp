@@ -138,6 +138,10 @@ th {
 .emp_name{
 	width: 210px;
 }
+
+.top_div{
+	margin-left: auto !important;
+}
 </style>
 </head>
 <body>

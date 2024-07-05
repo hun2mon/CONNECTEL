@@ -28,12 +28,13 @@ public class ChatController {
 		logger.info("======sender : {}======", message.getSender());
 		logger.info("======emp_no : {}======", message.getEmp_no());
 		logger.info("======emp_no : {}======", message.getType());
+		logger.info("======msg_type : {}======", message.getMsg_type());
 		String roomId = message.getRoomId();
 		String emp_no = message.getEmp_no();
 		String sendMessage = message.getMessage();
-		
+		String msg_type = message.getMsg_type();
 		if (ChatMessage.MessegeType.TALK.equals(message.getType())) {
-			crRepository.addMsg(roomId, emp_no, sendMessage);
+			crRepository.addMsg(roomId, emp_no, sendMessage, msg_type);
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {

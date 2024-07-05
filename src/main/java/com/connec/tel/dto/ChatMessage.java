@@ -10,6 +10,8 @@ public class ChatMessage {
 	private String sender;
 	private String emp_no;
 	private String message;
+	private String msg_type;
+	private String profile_img;
 	
 	public MessegeType getType() {
 		return type;
@@ -41,4 +43,17 @@ public class ChatMessage {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	public String getMsg_type() {
+		return msg_type;
+	}
+	public void setMsg_type(String msg_type) {
+		this.msg_type = msg_type;
+	}
+	public String getProfile_img() {
+		return profile_img;
+	}
+	public void setProfile_img(String profile_img) {
+		this.profile_img = profile_img;
+	}
+
 }

@@ -23,7 +23,7 @@ import com.connec.tel.dto.EmpDTO;
 
 @Service
 public class EmpService {
-	public String file_root = "C:/upload/";
+	public String file_root = "/Users/jeounghun/upload/connectel/file/";
 	@Autowired EmpDAO empDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	

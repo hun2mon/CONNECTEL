@@ -9,7 +9,8 @@
 		SELECT
 		 *,
 		 (SELECT code_name FROM common_code cc WHERE e.dept_code = cc.code_no) AS dept_name,
-		 (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no) AS rank_name
+		 (SELECT code_name FROM common_code cc WHERE e.rank_code = cc.code_no) AS rank_name,
+		 (SELECT p.pho_name FROM photo p WHERE p.ref_idx = e.emp_no) AS profile_img
 		FROM emp e WHERE email=#{param1}
 	</select>
 	

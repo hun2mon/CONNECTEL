@@ -6,27 +6,27 @@
 <mapper namespace="com.connec.tel.dao.MessengerDAO">
 
 	<insert id="createRoom" parameterType="String">
-		INSERT INTO chat_room(chat_no,emp_no,chat_name)
-			VALUES (#{roomId}, #{emp_no}, #{name})
+		INSERT INTO chat_room(chat_no,emp_no)
+			VALUES (#{roomId}, #{emp_no})
 	</insert>
 	
 	<select id="getChatRoom" resultType="chatRoom">
 		SELECT 
-			chat_no AS roomId,
-			chat_name AS name
+			chat_no AS roomId
 		FROM chat_room WHERE chat_no = #{param1}
 	</select>
 	
 	<select id="chatRoomList" resultType="chatRoom">
 		SELECT 
 			cm.chat_no AS roomId,
-			cr.chat_name AS name
-		FROM chat_member cm join chat_room cr on cm.chat_no = cr.chat_no where cm.emp_no = #{param1};
+			(SELECT p.pho_name FROM photo p WHERE p.ref_idx = cr.emp_no) AS profile_img,
+			cm.room_name
+		FROM chat_member cm JOIN chat_room cr ON cm.chat_no = cr.chat_no WHERE cm.emp_no = #{param1}
 	</select>
 	
 	<insert id="addMsg" parameterType="String">
-		INSERT INTO chat_detail(chat_no, emp_no, chat_content)
-			VALUES(#{roomId},#{emp_no}, #{sendMessage})
+		INSERT INTO chat_detail(chat_no, emp_no, chat_content, msg_type)
+			VALUES(#{roomId},#{emp_no}, #{sendMessage}, #{msg_type})
 	</insert>
 	
 	<select id="contentsCall" resultType="chatRoom">
@@ -35,11 +35,19 @@
 			,c.chat_date
 			,e.name
 			,c.emp_no
+			,c.msg_type
+			,(SELECT p.pho_name from photo p WHERE p.ref_idx = c.emp_no) as profile_img
 		FROM chat_detail c JOIN emp e ON c.emp_no = e.emp_no WHERE chat_no = #{param1} ORDER BY content_no
 	</select>
 	
 	<insert id="addMember">
-		INSERT INTO chat_member(chat_no, emp_no) VALUES (#{param1}, #{param2})
+		INSERT INTO chat_member(chat_no, emp_no, room_name)
+			<if test="param5 == 1">
+				VALUES (#{param1}, #{param2}, #{param3})			
+			</if> 
+			<if test="param5 != 1">
+				VALUES (#{param1}, #{param2}, #{param4})
+			</if>
 	</insert>
 	
 </mapper>
