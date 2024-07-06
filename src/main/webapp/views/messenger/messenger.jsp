@@ -25,6 +25,10 @@
 	cursor: pointer;
 }
 
+#create_icon:hover, #bells:hover, #bars:hover{
+	color: cornflowerblue;
+}
+
 
 #createRoom{
     text-align: end;
@@ -96,19 +100,6 @@
 	height: 650px;
 }
 
-button[name="modalBtn"]{
-	display: none;
-	margin: 5px;
-}
-
-#modalBtn{
-	display: flex;
-}
-
-#room_subject{
-	display: none;
-}
-
 .text_center{
 	text-align: center;
 }
@@ -155,6 +146,39 @@ button[name="modalBtn"]{
 .chat_img{
 	width: 100%;
 }
+
+#textarea1[readonly]{
+	background-color: white !important;
+}
+
+#noChatRoom{
+	margin: 0 auto;
+    margin-top: 265px;
+}
+
+#memberModal{
+	width: 160% !important;
+}
+
+#modal-body{
+	display: flex;
+}
+
+#modal_right{
+	margin: 0 auto;
+}
+
+#modalBtn{
+	float: right;
+}
+
+#room_subject{
+	margin-bottom: 10px;
+}
+
+#downloadBtn{
+	width: 100%;
+}
 </style>
 </head>
 <body>
@@ -170,7 +194,7 @@ button[name="modalBtn"]{
 							<div class="row no-gutters">
 								<div class="col-lg-3 col-xl-2 border-right">
 									<div class="card-body border-bottom" id="createRoom">
-										<i class="fa-solid fa-comment-medical" id="create_icon" onclick="createRoomModal()"></i>
+										<i class="fa-solid fa-comment-medical" id="create_icon" onclick="createRoomModal('C')"></i>
 									</div>
 									<div class="scrollable position-relative"  id="chat_left">
 										<ul class="mailbox list-style-none">
@@ -180,6 +204,9 @@ button[name="modalBtn"]{
 											</li>
 										</ul>
 									</div>
+								</div>
+								<div id="noChatRoom">
+									<img src="/assets/images/CONNECTEL-logo.png" width="500px">
 								</div>
 								<div class="col-lg-9  col-xl-10" id="chat_content">
 								<div id="chat_top">
@@ -214,7 +241,7 @@ button[name="modalBtn"]{
 													<div id="plusBtnDiv" onclick="imgFileModal()">
 														<i class="fa-solid fa-plus"></i>
 													</div>													
-													<input id="textarea1" placeholder="Type and enter" class="form-control border-0" type="text" onkeyup="keyCheck()">
+													<input id="textarea1" placeholder="Type and enter" class="form-control border-0" type="text" onkeyup="keyCheck()" readonly="readonly">
 												</div>
 											</div>
 											<div class="col-3">
@@ -236,22 +263,29 @@ button[name="modalBtn"]{
 	<div class="modal fade" id="bs-example-modal-sm" tabindex="-1" role="dialog"
 	    aria-labelledby="mySmallModalLabel" aria-hidden="true">
 	    <div class="modal-dialog modal-sm">
-	        <div class="modal-content">
+	        <div class="modal-content" id="memberModal">
 	            <div class="modal-header">
 	                <h4 class="modal-title" id="mySmallModalLabel">채팅 상대 지정</h4>
 	                <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">×</button>
 	            </div>
-	            <div class="modal-body">
-	            	<input type="text" class="form-control" name="search" placeholder="검색어를 입력해주세요." onkeyup="treeCall()" id="treeSearch">
-	            	<input type="text" class="form-control" name="room_subject" placeholder="채팅방 이름을 입력해 주세요." id="room_subject">
-					<ul id="tree">
-						<li class="card2"></li>
-						<li class="customers"></li>
-						<li class="config"></li>
-					</ul>
-					<div id="modalBtn">
-						<button type="button" class="btn btn-info btn-sm" name="modalBtn" onclick="returnBtn()">이전</button>
-						<button type="button" class="btn btn-info btn-sm" name="modalBtn" onclick="createRoom()">확인</button>
+	            <div class="modal-body" id="modal-body">
+	            	<div id="modal_left">
+		            	<input type="text" class="form-control" name="search" placeholder="검색어를 입력해주세요." onkeyup="treeCall()" id="treeSearch">
+						<ul id="tree">
+							<li class="card2"></li>
+							<li class="customers"></li>
+							<li class="config"></li>
+						</ul>
+	            	</div>
+					<div id="modal_right">
+						<input type="text" class="form-control" name="room_subject" placeholder="채팅방 이름을 입력해 주세요." id="room_subject">
+						 대화상대
+						 <ul id="chatMemberUl">
+						 </ul>
+						 <div id="modalBtn">
+							<button type="button" class="btn btn-info btn-sm" name="modalBtn" data-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-info btn-sm" name="modalBtn" onclick="createRoom()">확인</button>
+						 </div>
 					</div>
 	            </div>
 	        </div><!-- /.modal-content -->
@@ -263,17 +297,10 @@ button[name="modalBtn"]{
 	    <div class="modal-dialog modal-sm modal-right">
 	        <div class="modal-content">
 	            <div class="modal-body" id="modal_body">
-	                <div class="text-center">
-	                    <p>김정훈 사원(인사팀)</p><hr>
-	                    <p>김정훈 사원(인사팀)</p><hr>
-	                    <p>김정훈 사원(인사팀)</p><hr>
-	                    <p>김정훈 사원(인사팀)</p><hr>
-	                    <p>김정훈 사원(인사팀)</p><hr>
+	                <div class="text-center" id="chatMemberList">
 	                    <p>김정훈 사원(인사팀)</p><hr>
 	                </div>
 					<div class="btn-group">
-				        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">대화 상대 추가</button>
-				        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">채팅방 나가기</button>
 				    </div>
 	            </div>
 	        </div><!-- /.modal-content -->
@@ -306,6 +333,8 @@ button[name="modalBtn"]{
 <script>
 	$(document).ready(function(){
 		treeCall();
+		
+		$('#chat_content').css('display','none');
 	});
 	
 	var division = 0;
@@ -373,30 +402,65 @@ button[name="modalBtn"]{
     }
     
     
+    var plusMemberList = [];
+    // 대화상대 추가
     function addMember(index) {
-    	memberList.push(team[index].emp_no);
-		$('#tree').css("display","none");
-		$('#treeSearch').css("display","none");
-		$('button[name="modalBtn"]').css("display","block");
-		$('#room_subject').css("display","block");
-		$('#room_subject').val(team[index].name);
+    	for (emp of memberList) {
+			if (emp == team[index].emp_no) {
+				alert('이미 선택한 직원입니다.');
+				return;
+			}
+		}
+    	
+    	if (option == 'C') {
+	    	memberList.push(team[index].emp_no);			
+		} else {
+			memberList.push(team[index].emp_no);	
+			plusMemberList.push(team[index].emp_no);
+		}
+    	
+    	var content = '<li onclick="delMember(\''+team[index].emp_no+'\', this)">'+team[index].name+'  <a href="#">삭제</a></li>'
+  
+    	
+    	$('#chatMemberUl').append(content);
 		console.log(memberList);
+	}
+    
+    function delMember(emp_no, item) {
+    	
+    	for (var i = 0; i < memberList.length; i++) {
+			if (memberList[i] == emp_no) {
+	    		delete memberList[i];				
+			}	
+		}
+    	if (option == 'P') {
+    		for (var i = 0; i < plusMemberList.length; i++) {
+    			if (plusMemberList[i] == emp_no) {
+    	    		delete plusMemberList[i];				
+    			}	
+    		}
+		}
+    	console.log(item);
+    	$(item).remove();
+    	console.log(memberList);
 	}
     
     function returnBtn() {
     	memberList = ['${loginInfo.emp_no}'];
-		$('#tree').css("display","block");
-		$('#treeSearch').css("display","block");
-		$('button[name="modalBtn"]').css("display","none");
-		$('#room_subject').css("display","none");
+    	plusMemberList = [];
 		$('#room_subject').val('');
-		  console.log(memberList);
+		$('#chatMemberUl').html('');
+		console.log(memberList);
+		$('#room_subject').attr("readonly",false);  
 	}
     
     
     
-    function createRoomModal() {
-    	returnBtn();
+    function createRoomModal(division) {
+    	if (division == 'C') {
+	    	returnBtn();		
+	    	option = 'C';
+		}
 		$('#bs-example-modal-sm').modal('show');
 	}
     
@@ -410,7 +474,15 @@ button[name="modalBtn"]{
     
     var memberList = ['${loginInfo.emp_no}'];
     console.log(memberList);
+    
     function createRoom() {
+    	
+    	$('#bs-example-modal-sm').modal('hide');
+    	
+    	memberList = memberList.filter(function(item) {
+			return item !== null && item !== undefined && item !== '';
+		});	
+    	
     	console.log(memberList);
     	
     	params = {
@@ -422,19 +494,54 @@ button[name="modalBtn"]{
     	if ($('#room_subject').val() == '') {
 			alert('채팅방 제목을 입력해 주세요.');
 		}else{
-			$.ajax({
-	       		url:'/chat/room',
-	       		method:'post',
-	       		data:JSON.stringify(params),
-	       		contentType:'application/json; charset = UTF-8',
-	       		dataType:'JSON',
-	       		success:function(data){
-	       			findAllRoom();
-	       		},
-	       		error:function(e){
-	       			console.log(e);
-	       		}
-	       	})			
+			if (option == 'C') {
+				
+				params = {
+		    			name:$('#room_subject').val(),
+		    			memberList:memberList,
+		    			registerName:'${loginInfo.name}'
+		    	}
+				
+				$.ajax({
+		       		url:'/chat/room',
+		       		method:'post',
+		       		data:JSON.stringify(params),
+		       		contentType:'application/json; charset = UTF-8',
+		       		dataType:'JSON',
+		       		success:function(data){
+		       			findAllRoom();
+		       		},
+		       		error:function(e){
+		       			console.log(e);
+		       		}
+		       	})							
+			} else {
+				
+				if (plusMemberList.length == 0) {
+					alert('추가할 사원을 선택해 주세요');
+					return;
+				}
+				
+				params = {
+		    			chat_no:chat_no,
+		    			plusMemberList:plusMemberList,
+		    			room_name:$('#room_subject').val()
+		    	}
+				
+				$.ajax({
+		       		url:'/chat/plusMember',
+		       		method:'post',
+		       		data:JSON.stringify(params),
+		       		contentType:'application/json; charset = UTF-8',
+		       		dataType:'JSON',
+		       		success:function(data){
+		       			console.log(data);
+		       		},
+		       		error:function(e){
+		       			console.log(e);
+		       		}
+		       	})
+			}
 		}
 	}
 
@@ -464,9 +571,16 @@ button[name="modalBtn"]{
      	})
 	}
     
+    var chatMemberList;
     function enterRoom(roomId) {
     	var sender = '${loginInfo.name}';
     	var emp_no = '${loginInfo.emp_no}';
+    	$('#chatMemberList').html('');
+    	
+    	$('#textarea1').prop('readonly', false);
+    	$('#chat_content').css('display','block');
+    	$('#noChatRoom').css('display','none');
+    	
         if(sender != "") {
             localStorage.setItem('wschat.sender',sender);
             localStorage.setItem('wschat.roomId',roomId);
@@ -478,12 +592,58 @@ button[name="modalBtn"]{
          		dataType:'JSON',
          		success:function(data){
          			findRoom(data.roomId);
+         			chatMemberList = data.chatMemberList;
+         			
+         			var content = '';
+         			var button = '';
+         			
+         			console.log(chatMemberList);
+         			
+         			for (item of chatMemberList) {
+         				content += '<p>'+item.name+' '+item.rank_name+'('+item.dept_name+')</p><hr>';
+					}
+         			
+         			button += '<button type="button" class="btn btn-info btn-sm" onclick="memberPlus()">대화 상대 추가</button>';
+			        button += '<button type="button" class="btn btn-danger btn-sm">채팅방 나가기</button>';
+         			
+			        $('#chatMemberList').html(content);
+			        $('.btn-group').html(button);
          		},
          		error:function(e){
          			console.log(e);
          		}
          	})
         }
+	}
+    
+    
+    var option = 'C';
+    var chat_no = '';
+    function memberPlus() {
+    	
+    	option = 'P';
+    	
+    	memberList = [];
+    	plusMemberList = [];
+    	$('#chatMemberUl').html('');
+    	$('#bs-example-modal-sm').modal('show');
+    	$('#right-modal').modal('hide');
+    	
+    	$('#room_subject').val();
+    	
+		console.log(chatMemberList);
+		var idx = 0;
+		var content = '';
+		for (item of chatMemberList) {
+			$('#room_subject').val(item.room_name);
+			memberList.push(item.emp_no);
+			content = '<li>'+item.name +' '+item.rank_name+'</li>';
+			$('#chatMemberUl').append(content);
+			chat_no = item.chat_no;
+		}
+		
+		$('#room_subject').attr("readonly",true);
+		
 	}
     
     
@@ -498,9 +658,12 @@ button[name="modalBtn"]{
         var emp_no = localStorage.getItem('wschat.emp_no');
         var message = $('#textarea1').val();
         
-        console.log('sdfsdf');
+        
+        if ($('#textarea1').val() != '') {
+	        console.log('sdfsdf');
+	        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, emp_no:emp_no,message:message,msg_type:'text',profile_img:'${loginInfo.profile_img}'}));
+		}
     	
-        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:roomId, sender:sender, emp_no:emp_no,message:message,msg_type:'text',profile_img:'${loginInfo.profile_img}'}));
         message = '';
 	}
     
@@ -730,9 +893,13 @@ button[name="modalBtn"]{
     
     function imgDetail(imgName) {
     	$('#imgModal').html('');
-    	$('#imgModal').html('<img src="/photo/'+imgName+'" class="chat_img">');
+    	$('#imgModal').html('<img src="/photo/'+imgName+'" class="chat_img"><button type="button" class="btn btn-info btn-sm" onclick="download(\''+imgName+'\')" id="downloadBtn">다운로드</button>');
     	$('#centermodal').modal('show');
 		console.log(imgName);
+	}
+    
+    function download(name) {
+		location.href="/download/"+name;
 	}
     
     function keyCheck() {

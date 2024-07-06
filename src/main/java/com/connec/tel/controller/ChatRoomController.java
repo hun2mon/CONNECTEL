@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.connec.tel.dao.MessengerDAO;
 import com.connec.tel.dto.ChatRoom;
+import com.connec.tel.dto.EmpDTO;
 import com.connec.tel.service.ChatRoomRepository;
 import com.connec.tel.service.CommonService;
 
@@ -51,17 +52,18 @@ public class ChatRoomController {
 	 @ResponseBody
 	 public ChatRoom createRoom(@RequestBody Map<String, Object> params) {
 		 String name = (String) params.get("name");
-		 String registerName = (String) params.get("registerName");
 		 @SuppressWarnings("unchecked")
 		 List<String> memberList = (List<String>) params.get("memberList");
 	     
-		 return chatRoomRepository.createChatRoom(name, memberList, registerName);
+		 return chatRoomRepository.createChatRoom(name, memberList);
 	 }
 	 // 채팅방 입장 화면
 	 @GetMapping("/room/enter/{roomId}")
 	 @ResponseBody
 	 public Map<String, Object> roomDetail(Model model, @PathVariable String roomId) {
 		 Map<String, Object> map = new HashMap<String, Object>();
+		 List<EmpDTO> chatMemberList = chatRoomRepository.chatMemberList(roomId);
+		 map.put("chatMemberList", chatMemberList);
 		 map.put("roomId", roomId);
 	     return map;
 	 }
@@ -108,6 +110,12 @@ public class ChatRoomController {
 		map.put("newFileName", newFileName);
 		
 		return map;
+	 }
+	 
+	 @PostMapping("/plusMember")
+	 @ResponseBody
+	 public Map<String, Object> plusMember(@RequestBody Map<String, Object> params){
+		 return chatRoomRepository.plusMember(params);
 	 }
 	 
 	 

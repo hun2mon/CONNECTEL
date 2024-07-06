@@ -54,7 +54,8 @@ public class EmpDTO {
 	private String balance_leave;
 	private Date app_date;
 	
-	
+	private String room_name;
+	private String chat_no;
 	
 	
 	public Date getApp_date() {
@@ -309,6 +310,18 @@ public class EmpDTO {
 	}
 	public void setProfile_img(String profile_img) {
 		this.profile_img = profile_img;
+	}
+	public String getRoom_name() {
+		return room_name;
+	}
+	public void setRoom_name(String room_name) {
+		this.room_name = room_name;
+	}
+	public String getChat_no() {
+		return chat_no;
+	}
+	public void setChat_no(String chat_no) {
+		this.chat_no = chat_no;
 	}
 
 }

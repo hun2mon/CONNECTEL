@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.connec.tel.dao.MessengerDAO;
 import com.connec.tel.dto.ChatRoom;
+import com.connec.tel.dto.EmpDTO;
 
 @Repository
 public class ChatRoomRepository {
@@ -30,20 +31,17 @@ public class ChatRoomRepository {
 	     return map;
 	 }
 	
-	 public ChatRoom createChatRoom(String name, List<String> memberList, String registerName) {
+	 public ChatRoom createChatRoom(String name, List<String> memberList) {
 	     ChatRoom chatRoom = ChatRoom.create(name);
 	     
 	     String roomId = chatRoom.getRoomId();
 	     
 	     String emp_no =  (String) memberList.get(0);
-	     logger.info("registerName : {}", registerName);
 	     logger.info("emp_on : {}", emp_no);
 	     msgDAO.createRoom(roomId, emp_no);
 	     
-	     int index = 1;
 	     for (String member : memberList) {
-			msgDAO.addMember(roomId,member,name,registerName,index);
-			index += 1;
+			msgDAO.addMember(roomId,member,name);
 		}
 	     
 	     
@@ -59,6 +57,26 @@ public class ChatRoomRepository {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<ChatRoom> list = msgDAO.contentsCall(roomId);
 		map.put("list", list);
+		return map;
+	}
+
+	public List<EmpDTO> chatMemberList(String roomId) {
+		return msgDAO.chatMemberList(roomId);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> plusMember(Map<String, Object> params) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<String> plusMemberList = (List<String>) params.get("plusMemberList");
+		String chat_no = (String) params.get("chat_no");
+		String room_name = (String) params.get("room_name");
+		
+		for (String member : plusMemberList) {
+			msgDAO.addMember(chat_no, member, room_name);
+		}
+		
+		map.put("msg", "인원이 추가되었습니다.");
+		
 		return map;
 	}
 

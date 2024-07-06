@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.connec.tel.dto.ChatRoom;
+import com.connec.tel.dto.EmpDTO;
 
 @Mapper
 public interface MessengerDAO {
@@ -20,6 +21,8 @@ public interface MessengerDAO {
 
 	List<ChatRoom> contentsCall(String roomId);
 
-	void addMember(String roomId, String member, String name, String registerName, int index);
+	void addMember(String roomId, String member, String name);
+
+	List<EmpDTO> chatMemberList(String roomId);
 
 }

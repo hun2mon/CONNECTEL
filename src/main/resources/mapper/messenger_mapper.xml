@@ -41,13 +41,24 @@
 	</select>
 	
 	<insert id="addMember">
-		INSERT INTO chat_member(chat_no, emp_no, room_name)
-			<if test="param5 == 1">
-				VALUES (#{param1}, #{param2}, #{param3})			
-			</if> 
-			<if test="param5 != 1">
-				VALUES (#{param1}, #{param2}, #{param4})
-			</if>
+		INSERT INTO chat_member(chat_no, emp_no, room_name)	
+			VALUES (#{param1}, #{param2}, #{param3})
 	</insert>
+	
+	<select id="chatMemberList" resultType="emp">
+		SELECT 
+			e.emp_no,
+			cm.room_name,
+			cm.chat_no,
+			e.name,
+			cc.code_name AS rank_name,
+			(SELECT cc2.code_name FROM common_code cc2 WHERE cc2.code_no = e.dept_code) AS dept_name
+		FROM chat_member cm 
+		JOIN emp e 
+		JOIN common_code cc 
+		ON e.rank_code = cc.code_no
+		ON cm.emp_no = e.emp_no
+		WHERE cm.chat_no = #{param1} ORDER BY e.rank_code ASC
+	</select>
 	
 </mapper>
