@@ -10,9 +10,79 @@ public class MailDTO {
 	private String send_date;
 	private String ori_file_name;
 	private String file_name;
+	private int client_add_no;
+	private String client_name;
+	private String client_email;
+	private String client_phone;
+	private int add_no;
+	private String add_name;
+	private String add_email;
+	private String belong;
+	private String add_phone;
+	private String add_favorite;
 	
 	
 	
+	public int getAdd_no() {
+		return add_no;
+	}
+	public void setAdd_no(int add_no) {
+		this.add_no = add_no;
+	}
+	public String getAdd_name() {
+		return add_name;
+	}
+	public void setAdd_name(String add_name) {
+		this.add_name = add_name;
+	}
+	public String getAdd_email() {
+		return add_email;
+	}
+	public void setAdd_email(String add_email) {
+		this.add_email = add_email;
+	}
+	public String getBelong() {
+		return belong;
+	}
+	public void setBelong(String belong) {
+		this.belong = belong;
+	}
+	public String getAdd_phone() {
+		return add_phone;
+	}
+	public void setAdd_phone(String add_phone) {
+		this.add_phone = add_phone;
+	}
+	public String getAdd_favorite() {
+		return add_favorite;
+	}
+	public void setAdd_favorite(String add_favorite) {
+		this.add_favorite = add_favorite;
+	}
+	public int getClient_add_no() {
+		return client_add_no;
+	}
+	public void setClient_add_no(int client_add_no) {
+		this.client_add_no = client_add_no;
+	}
+	public String getClient_name() {
+		return client_name;
+	}
+	public void setClient_name(String client_name) {
+		this.client_name = client_name;
+	}
+	public String getClient_email() {
+		return client_email;
+	}
+	public void setClient_email(String client_email) {
+		this.client_email = client_email;
+	}
+	public String getClient_phone() {
+		return client_phone;
+	}
+	public void setClient_phone(String client_phone) {
+		this.client_phone = client_phone;
+	}
 	public String getStatus() {
 		return status;
 	}

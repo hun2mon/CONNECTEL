@@ -27,6 +27,32 @@
 		
 </select>
 
+<select id="clentTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(client_add_no)/#{param2}) AS pages FROM client_address
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(client_add_no)/#{param2}) AS pages FROM client_address
+				WHERE (client_name LIKE #{param1} OR client_email LIKE #{param1})
+		</if>
+		
+</select>
+
+<select id="myAddressTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(add_no)/#{param2}) AS pages FROM address WHERE emp_no = #{param3}
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(add_no)/#{param2}) AS pages FROM address
+				WHERE (add_name LIKE #{param1} OR add_email LIKE #{param1})  AND emp_no = #{param3}
+		</if>
+		
+</select>
+
 <select id="tempTotalPage" resultType="int">
 
 		<if test="param1 == ''">
@@ -50,6 +76,17 @@
 		</if>
 	</select>
 	
+	<select id="clentList" resultType="com.connec.tel.dto.MailDTO">
+		<if test="param1 == ''">
+			SELECT*FROM client_address WHERE ORDER BY client_add_no DESC  LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT* FROM client_address  WHERE (client_name LIKE #{param1} OR client_email LIKE #{param1}) ORDER BY client_add_no DESC LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	
 	<select id="TempMailList" resultType="com.connec.tel.dto.MailDTO">
 		<if test="param1 == ''">
 			SELECT*FROM mail WHERE emp_no = #{param4} AND status = 'T' ORDER BY send_date DESC  LIMIT #{param2}, #{param3}
@@ -60,12 +97,22 @@
 		</if>
 	</select>
 	
+	<select id="myAddressList" resultType="com.connec.tel.dto.MailDTO">
+		<if test="param1 == ''">
+			SELECT*FROM address WHERE emp_no = #{param4} ORDER BY add_no DESC  LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT* FROM address  WHERE (add_name LIKE #{param1} OR add_email LIKE #{param1})  AND emp_no = #{param4} ORDER BY add_no DESC LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
 	<select id="mailDetail" resultType="com.connec.tel.dto.MailDTO">
 		SELECT * FROM mail WHERE mail_no= #{mail_no}
 	</select>
 	
 	<delete id="mail_delete">
-		DELETE FROM mail WHERE mail_no = #{mail_no}
+		UPDATE mail SET show = 'N' WHERE mail_no = #{mail_no}
 	</delete>
 	
 	<select id="mailFile" resultType="com.connec.tel.dto.MailDTO">
@@ -75,6 +122,15 @@
 	<insert id="mailTempSave">
 		INSERT INTO mail(emp_no,mail_receiver,mail_subject,mail_content,status,send_date)
 			VALUES(#{emp_no},#{mail_receiver},#{mail_subject},#{mail_content},'T',NOW())
+	</insert>
+	
+	<select id="clientAddListCall" resultType="com.connec.tel.dto.MailDTO">
+		SELECT * FROM client_address 
+	</select>
+
+	<insert id="addAddress" parameterType="map">
+		INSERT INTO address(emp_no,add_name,add_email,belong,add_phone,add_favorite)
+			VALUES(#{emp_no},#{add_name},#{add_email},#{belong},#{add_phone},#{isStarred})
 	</insert>
 
 </mapper>

@@ -46,6 +46,12 @@ public interface GuestManageDAO {
 
 	List<String> getDate(String today);
 
+	int selectAmount(String res_no);
+
+	int noChecklTotalPage(String search, int cntt, String searchDate);
+
+	List<GuestManageDTO> noCheckList(String search, int start, int cntt, String searchDate);
+
 
 	
 

@@ -36,8 +36,8 @@ public class MailService {
 	
 	public String file_root = "C:/upload/";
 
-	public void mail(MailDTO mailDTO, String[] receiverList, List<MultipartFile> files) {
-		for (String email : receiverList) {
+	public void mail(MailDTO mailDTO, List<String> emailList, List<MultipartFile> files) {
+		for (String email : emailList) {
             sendEmail(mailDTO, email.trim(), files);
         }	
 		
@@ -170,6 +170,63 @@ Map<String, Object> map = new HashMap<String, Object>();
 		
 		mailDAO.mailTempSave(param);
 		
+		return map;
+	}
+
+	public Map<String, Object> clientAddListCall() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<MailDTO> list = mailDAO.clientAddListCall();
+		map.put("list", list);
+		return map;
+	}
+
+	public Map<String, Object> addAddress(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		mailDAO.addAddress(param);
+		
+		return map;
+	}
+
+	public Map<String, Object> myAddressList(String search, String page, String cnt, String emp_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = mailDAO.myAddressTotalPage(search, cntt,emp_no);
+		
+		List<RoomDTO> list = mailDAO.myAddressList(search, start, cntt,emp_no);
+		
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
+		return map;
+	}
+
+	public Map<String, Object> clentList(String search, String page, String cnt) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = mailDAO.clentTotalPage(search, cntt);
+		
+		List<RoomDTO> list = mailDAO.clentList(search, start, cntt);
+		
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
 		return map;
 	}
 

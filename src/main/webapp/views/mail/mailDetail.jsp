@@ -88,7 +88,12 @@
                                         <h5 class="text-primary">수신자 : ${info.mail_receiver}</h5>
                                         
                                         <!-- 날짜 -->
+                                        <c:if test="${info.status eq 'S' }">
                                         <p class="mb-0">발신 날짜 : ${info.send_date} </p>
+                                        </c:if>
+                                        <c:if test="${info.status eq 'T' }">
+                                        <p class="mb-0">저장 날짜 : ${info.send_date} </p>
+                                        </c:if>
                                     </div>                                                                                                            
                                      <!-- 삭제 -->
                                     <div class="mail-actions">

@@ -1,5 +1,6 @@
 package com.connec.tel.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,14 +33,28 @@ public class MailController {
 	public String mail(@ModelAttribute MailDTO mailDTO,
 			@RequestParam("multipartFiles") List<MultipartFile> files, HttpSession session) {
 		
+		// 실해시켜보고
+		
 		logger.info("mail 전송 요청");
 		logger.info("mailDTO : {}",mailDTO);
 		String[] receiverList = mailDTO.getMail_receiver().split(",");
+		List<String> emailList = new ArrayList<String>();
+
+	    for (String receiver : receiverList) {
+	        int start = receiver.indexOf('"');
+	        int end = receiver.indexOf('"', start + 1);
+	        if (start != -1 && end != -1) {
+	            String email = receiver.substring(start + 1, end);
+	            emailList.add(email);
+	        }
+	    }
+
+	    logger.info("추출된 이메일 주소 : {}", emailList);
 		
 		EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
 		String emp_no = emp.getEmp_no();
 		mailDTO.setEmp_no(emp_no);
-		mailService.mail(mailDTO,receiverList,files);
+		mailService.mail(mailDTO,emailList,files);
 
 		
 		return "/mail/mailSuccess";
@@ -100,6 +115,18 @@ public class MailController {
 		return "/mail/sendMailList";
 	}
 	
+	@GetMapping(value = "/mail/sendMail")
+	public String sendMailGO(@RequestParam List<String> receivers ,Model model) {
+		logger.info("sendMailGO 요청!");
+		logger.info("receivers : {}", receivers);
+		
+
+		model.addAttribute("receivers", receivers);
+		
+		
+		return "/mail/sendMail";
+	}
+	
 	@PostMapping(value = "/mail/mail_all_delete.ajax")
 	@ResponseBody
 	public Map<String, Object> mail_all_delete(@RequestBody Map<String, Object> param) {
@@ -123,6 +150,54 @@ public class MailController {
 		param.put("emp_no", emp_no);
 		
 		return mailService.mailTempSave(param);
+	}
+	
+	@PostMapping(value = "/mail/clientAddListCall.ajax")
+	@ResponseBody
+	public Map<String, Object> clientAddListCall() {
+		logger.info("고객주소록 요청!!");
+		
+		return mailService.clientAddListCall();
+	}
+	
+	@PostMapping(value = "/mail/addAddress.ajax")
+	@ResponseBody
+	public Map<String, Object> addAddress(@RequestParam Map<String, Object> param, HttpSession session) {
+		logger.info("addAddress!! 요청");
+		logger.info("param : {}" ,param);
+		
+		EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
+		String emp_no = emp.getEmp_no();
+		
+		param.put("emp_no", emp_no);
+		
+		return mailService.addAddress(param);
+	}
+	
+	@PostMapping(value = "/mail/myAddressList.ajax")
+	@ResponseBody
+	public Map<String, Object> myAddressList(String search, String page, String cnt, HttpSession session) {
+		logger.info("sendMailList 요청!");
+		logger.info("search : "+ search);
+		logger.info("search : "+ page);
+		logger.info("search : "+ cnt);		
+		
+		EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
+		String emp_no = emp.getEmp_no();
+		
+		return mailService.myAddressList(search,page,cnt,emp_no);
+	}
+	
+	@PostMapping(value = "/mail/clentList.ajax")
+	@ResponseBody
+	public Map<String, Object> clentList(String search, String page, String cnt) {
+		logger.info("clentList 요청!");
+		logger.info("search : "+ search);
+		logger.info("search : "+ page);
+		logger.info("search : "+ cnt);		
+
+		
+		return mailService.clentList(search,page,cnt);
 	}
 	
 

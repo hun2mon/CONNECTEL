@@ -65,9 +65,14 @@
                     <div class="card-body">                    
                         <div class="compose-content">
                             <form id="emailForm" action="/mail/mail.do" method="post" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <input type="text" id="email" class="form-control bg-transparent" name="mail_receiver" placeholder="받는사람">
-                                </div>
+                                <div class="form-group row">
+						            <div class="col">
+						                <input type="text" id="email" class="form-control bg-transparent" name="mail_receiver" placeholder="받는사람">
+						            </div>
+						            <div class="col-auto">
+						                <button type="button" class="btn btn-success btn-sl-sm" onclick="openAddressBook()"><i class="fas fa-address-book"></i> 주소록</button>
+						            </div>
+						        </div>
                                 <div class="form-group">
                                     <input type="text" id="subject" class="form-control bg-transparent" name="mail_subject" placeholder="제목">
                                 </div>
@@ -92,6 +97,15 @@
 </div>    
 </body>
 <script>
+
+var receivers = `${receivers}`;
+
+if (receivers) {
+    var receiver = receivers.slice(1, -1);
+    $('#email').val(receiver);
+}
+
+
 $(document).ready(function() {
     $('#emailForm').on('submit', function(event) {
         var email = $('#email').val().trim();
@@ -115,6 +129,38 @@ $(document).ready(function() {
         }
     });
 });
+	
+function openAddressBook() {
+    // 팝업 창의 URL 설정 (addressbook.jsp의 실제 경로로 변경)
+    var popupUrl = '/mail/addressBook.go';
+    
+    // 팝업 창의 너비와 높이 설정
+    var popupWidth = 1200;
+    var popupHeight = 800;
+    
+    // 화면 너비와 높이 계산
+    var screenWidth = window.screen.width;
+    var screenHeight = window.screen.height;
+    
+    // 팝업 창 위치 계산 (화면 오른쪽 상단)
+    var popupLeft = screenWidth - popupWidth - 10; // 팝업과 오른쪽 여백 10px
+    var popupTop = 10; // 화면 상단과의 여백 10px
+    
+    // 팝업 창 열기
+    var popupWindow = window.open(popupUrl, 'addressBookPopup', 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + popupTop + ',left=' + popupLeft);
+    
+    // 팝업 차단 여부 확인
+    if (popupWindow) {
+        popupWindow.focus(); // 팝업 창을 활성화
+    } else {
+        alert('팝업 창이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+    }
+}
+	
+	
+	
+	
+
 
 	function temp_save(){
 		if (!confirm('임시 저장시 파일 저장은 불가능합니다. 임시저장 하시겠습니까?')) {

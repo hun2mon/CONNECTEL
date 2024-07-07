@@ -46,6 +46,46 @@
 	
 	</select>
 	
+	<select id="noChecklTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(r.res_no)/#{param2}) AS pages 
+			FROM reservation r 
+			LEFT JOIN stay s ON r.res_no = s.res_no 
+			WHERE s.res_no IS NULL AND r.division ='A' AND DATE_FORMAT(r.in_date , '%Y-%m-%d') = #{param3};
+			ORDER BY out_date desc
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(r.res_no)/#{param2}) AS pages 
+			FROM reservation r 
+			LEFT JOIN stay s ON r.res_no = s.res_no
+		    WHERE s.res_no IS NULL AND r.cos_name LIKE CONCAT('%', #{param1}, '%') AND DATE_FORMAT(r.in_date , '%Y-%m-%d') = #{param3} AND r.division ='A'
+			ORDER BY out_date desc
+		</if>
+	
+	</select>
+	
+	<select id="noCheckList" resultType="com.connec.tel.dto.GuestManageDTO" parameterType="map">
+		
+		<if test="param1 == ''">
+			SELECT r.res_no,r.cos_name ,r.cos_phone,r.type_code  
+			FROM reservation r 
+			LEFT JOIN stay s ON r.res_no = s.res_no 
+			WHERE s.res_no IS NULL AND r.division ='A' AND DATE_FORMAT(r.in_date , '%Y-%m-%d') = #{param4};
+		</if>
+		
+		<if test="param1 != null">
+			SELECT  r.res_no,r.cos_name ,r.cos_phone,r.type_code 
+			FROM reservation r
+			LEFT JOIN stay s ON r.res_no = s.res_no
+		    WHERE s.res_no IS NULL AND r.cos_name LIKE CONCAT('%', #{param1}, '%') AND DATE_FORMAT(r.in_date , '%Y-%m-%d') = #{param4} AND r.division ='A'
+		    ORDER BY r.res_no DESC
+		    LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	
 	<select id="cancelList" resultType="com.connec.tel.dto.GuestManageDTO" parameterType="map">
 		
 		<if test="param1 == ''">
@@ -148,6 +188,9 @@
 	<select id="getDate" resultType="String">
 		SELECT date  FROM room_price  WHERE date <![CDATA[ >= ]]> #{today}
 	</select>
-
+	
+	<select id="selectAmount">
+		SELECT res_price FROM reservation WHERE res_no = #{res_no}
+	</select>
 	
 </mapper>

@@ -48,5 +48,19 @@
 	SELECT res_no FROM reservation 
 	WHERE SUBSTRING(res_no,1,6) =#{currDate} ORDER BY res_no DESC limit 1
 </select>
+
+<select id="price">
+	SELECT res_price FROM reservation WHERE res_no = #{param1}
+</select>
+	
+<select id="plus_price">
+	SELECT ${change_room_type} - ${price} as Plus_Price FROM room_price WHERE date = #{date}
+</select>	
+
+<update id="changeRoom">
+	UPDATE stay SET room_no = #{change_room},
+		plus_price = #{plus_price}
+	WHERE res_no = #{res_no}
+</update>
 	
 </mapper>

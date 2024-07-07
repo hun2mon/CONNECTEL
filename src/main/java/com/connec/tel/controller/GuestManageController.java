@@ -44,6 +44,18 @@ public class GuestManageController {
 		return res;
 	}
 	
+	@PostMapping(value = "/guest/reserveAllCancel.ajax")
+	@ResponseBody
+	public kakaoPayCancelDTO reserveAllCancel(String res_no){
+		logger.info("reserveAllCancel.axax 요청!!!");
+		logger.info("res_no : "+ res_no);
+		
+		kakaoPayCancelDTO res = guestMngService.reserveAllCancel(res_no);
+		return res;
+	}
+	
+	
+	
 	@PostMapping(value = "/guest/stayList.ajax")
 	@ResponseBody
 	public Map<String, Object> stayList(String search,
@@ -68,6 +80,19 @@ public class GuestManageController {
 		logger.info("searchDate : "+ searchDate);
 		
 		return guestMngService.cancelList(search, page, cnt, searchDate);
+	}
+	
+	@PostMapping(value = "/guest/noCheckListCall.ajax")
+	@ResponseBody
+	public Map<String, Object> noCheckListCall(String search,
+			String page, String cnt,String searchDate){
+		logger.info("noCheckListCall.axax 요청!!!");
+		logger.info("search : "+ search);
+		logger.info("page : "+ page);
+		logger.info("cnt : "+ cnt);
+		logger.info("searchDate : "+ searchDate);
+		
+		return guestMngService.noCheckListCall(search, page, cnt, searchDate);
 	}
 	
 	@PostMapping(value = "/guest/resCancelDate.ajax")
