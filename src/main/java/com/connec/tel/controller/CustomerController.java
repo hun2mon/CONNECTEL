@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.connec.tel.service.CustomerService;
+import java.util.Random;
+
+import javax.servlet.http.HttpSession;
+
+
 
 @Controller
 public class CustomerController {
@@ -75,11 +80,20 @@ public class CustomerController {
 		
 	}
 	
-	//결제페이지 이
+	//결제페이지 이동
 	@RequestMapping(value="/customer/payment.go")
 	public String payment(String checkin) {
 		
 		return "/customer/payment";
+	}
+	
+	
+	//호텔소개 페이지 이동
+	@RequestMapping(value="/customer/hotelpreiview.go")
+	public String preview_go(){
+		
+		
+		return"/customer/hotelpreview";
 	}
 	
 	
@@ -128,6 +142,40 @@ public class CustomerController {
 		return customerService.reserveListCall(param);
 	}
 	
+	
+	//고객 결제 이메일인증 ajax
+	@PostMapping(value="/customer/emailsend.ajax")
+	@ResponseBody
+	public String emailcode(String email, HttpSession session ){
+		logger.info("이메일 :{}", email);
+
+		
+		int random = (int) (Math.random() * 999999) + 0;
+		String Code = String.format("%06d", random);
+
+        logger.info("인증 코드 :{}", Code);
+
+        // 세션에 인증 코드 저장
+        session.setAttribute("Code", Code);
+
+        // 이메일 전송
+        customerService.emailcode(email, Code);
+
+        return "인증코드가 이메일로 전송되었습니다.";
+    }
+	
+	@PostMapping("/customer/codeconfirm.ajax")
+    @ResponseBody
+    public String confirmEmailCode(@RequestParam("confirm") String confirm, HttpSession session) {
+        // 세션에서 인증 코드 가져오기
+        String storedCode = (String) session.getAttribute("Code");
+        logger.info("세션 코드 "+storedCode);
+        if (confirm.equals(storedCode)) {
+            return "이메일 인증이 완료되었습니다.";
+        } else {
+            return "유효하지 않은 인증 코드입니다.";
+        }
+    }
 	
 	
 	

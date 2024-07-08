@@ -221,8 +221,12 @@ var ann_date = ''; // regist_date 변수 정의
 var cnt = 10;
 var data = [];
 
+var urlParams = new URLSearchParams(window.location.search);
+var pageParam = urlParams.get('page');
+var defaultPage = (pageParam !== null) ? parseInt(pageParam) : 1;
+
 $(document).ready(function(){
-    listCall(showPage);
+    listCall(defaultPage);
 
     $('#freebutton').on('click', function() {
     	$('#pagination').twbsPagination('destroy');
@@ -277,7 +281,7 @@ $(document).ready(function(){
             dataType: 'json',
             success: function(data) {
           
-                drawList(data.list);
+                drawList(data.list,page);
                 totalPages = data.totalPages;
                 initializePagination(totalPages, page);
             },
@@ -287,7 +291,7 @@ $(document).ready(function(){
         });
     }
 
-    function drawList(data) {
+    function drawList(data,page) {
         var content = '';
         for (var i = 0; i < data.length; i++) {
             content += '<div class="ann-list">';
@@ -296,7 +300,7 @@ $(document).ready(function(){
             } else {
                 content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
             }
-            content += '<div class="ann-list-subject"><a href="/empannDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
+            content += '<div class="ann-list-subject"><a href="/empannDetail.go?ann_no=' + data[i].ann_no + '&page='+ page +'">' + data[i].ann_subject + '</a></div>';
             
             // updater가 존재할 경우 updater 표시, 그렇지 않으면 register 표시
             var nameToShow = data[i].updater ? data[i].updater : data[i].register;
