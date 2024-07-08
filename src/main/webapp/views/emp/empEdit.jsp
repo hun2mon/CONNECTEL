@@ -6,8 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script
-	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <style>
 .btn waves-effect waves-light btn-primary {
@@ -130,7 +129,7 @@
 				</div>
 				<br>
 				<div class="upload">
-					<input type="file" name="photos" id="imgUpload" />
+					<input type="file" name="photos" id="imgUpload" accept="image/*" />
 					
 				</div>
 				<br>
@@ -350,43 +349,38 @@
 				});
 
 		function validateForm() {
-			var name = document.getElementById('name').value;
-			var gender = document.querySelector('input[name="gender"]:checked');
-			var dob = document.getElementById('birth').value;
-			var email = document.getElementById('email').value;
-			var postcode = document.getElementById('sample6_postcode').value;
-			var phone = document.getElementById('phone').value;
-			var address = document.getElementById('sample6_address').value;
-			var department = document.getElementById('dept_code').value;
-			var detailAddress = document.getElementById('sample6_detailAddress').value;
-			var position = document.getElementById('rank_code').value;
-			var bank = document.getElementById('bank_name').value;
-			var permission = document.getElementById('authority').value;
-			var account = document.getElementById('account_no').value;
-			var joinDate = document.getElementById('join_date').value;
+		    var name = document.getElementById('name').value;
+		    var email = document.getElementById('email').value;
+		    var postcode = document.getElementById('sample6_postcode').value;
+		    var phone = document.getElementById('phone').value;
+		    var address = document.getElementById('sample6_address').value;
+		    var department = document.getElementById('dept_code').value;
+		    var detailAddress = document.getElementById('sample6_extraAddress').value;
+		    var position = document.getElementById('rank_code').value;
+		    var bank = document.getElementById('bank_name').value;
+		    var permission = document.getElementById('authority').value;
+		    var account = document.getElementById('account_no').value;
 
-			if (name == "" || !gender || dob == "" || email == ""
-					|| postcode == "" || phone == "" || address == ""
-					|| department == "" || detailAddress == ""
-					|| position == "" || bank == "" || permission == ""
-					|| account == "" || joinDate == "") {
-				alert("모든 필드를 작성해 주세요.");
-				return false;
-			}
+		    if (name == "" || email == "" || postcode == "" || phone == "" || address == ""
+		        || department == "" || detailAddress == "" || position == "" || bank == "" || permission == ""
+		        || account == "") {
+		        alert("모든 필드를 작성해 주세요.");
+		        return false;
+		    }
 
-			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailPattern.test(email)) {
-				alert("유효한 이메일 주소를 입력해 주세요.");
-				return false;
-			}
+		    var phonePattern = /^\d{3}-\d{3,4}-\d{4}$/;
+		    if (!phonePattern.test(phone)) {
+		        alert("유효한 전화번호를 입력해주세요 (ex: xxx-xxxx-xxxx).");
+		        return false;
+		    }
 
-			var phonePattern = /^\d{10,11}$/;
-			if (!phonePattern.test(phone)) {
-				alert("유효한 전화번호를 입력해 주세요.");
-				return false;
-			}
+		    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		    if (!emailPattern.test(email)) {
+		        alert("유효한 이메일 주소를 입력해 주세요 (ex: xxxx@naver.com).");
+		        return false;
+		    }
 
-			return true;
+		    return true;
 		}
 	</script>
 </body>

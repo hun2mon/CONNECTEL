@@ -162,9 +162,9 @@ h2 {
 					<tr>
 						<td class="photo" rowspan="8" colspan = "1"><c:choose>
 								<c:when test="${empty P.pho_name}">
-									<div id="photo"
-										style="width: 45%; height: 20%; margin-right: 50px; text-align: center;">
-										사진 X</div>
+									<img
+										src="/scss/icons/account_box.png"
+										id="photo" style="width: 100%; height: 100%;">
 								</c:when>
 								<c:otherwise>
 									<img

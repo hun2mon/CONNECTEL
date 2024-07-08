@@ -10,6 +10,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 
+.rara{
+	background-color : #6076E8;
+	text-align : center;	
+}
+.aa{
+	font-size : 15px;
+}
 
 #list{
 	background-color : white;
@@ -29,7 +36,7 @@
 	background-color:white;
 }
 .list-title, .ann-list {
-   flex-basis: 20%;
+    flex-basis: 20%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -171,11 +178,13 @@ body {
 }
 
 #mySchedule {
+	overflow-y : scroll;
 	width: 100%;
 	background-color: #fff;
 	border: 1px solid #ddd;
 	padding: 20px;
 	margin-bottom: 50px;
+	height: 300px;
 }
 
 #setBtn {
@@ -263,22 +272,37 @@ th {
 			</div>
 			<div id="content-wrapper">
 				<section id="left">
-					<div id="mySchedule">
-						<div id="setBtn">
-							<button class="cate" value="금주" onclick="setDays('금주')">금주</button>
-							<button class="cate" value="오늘" onclick="setDays('오늘')">오늘</button>
-							<button class="cate" value="내일" onclick="setDays('내일')">내일</button>
-						</div>
-						<br> <br>
+					<div id="mySchedule">				
+						    <ul clabss="nav nav-tabs justify-content-center mb-3">
+						        <li class="nav-item" onclick="setDays('금주')">
+						            <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active">
+						                <input type="hidden" value="T">
+						                <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+						                <span class="d-none d-lg-block">금주</span>
+						            </a>
+						        </li>
+						        <li class="nav-item" onclick="setDays('오늘')">
+						            <a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link">
+						                <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+						                <span class="d-none d-lg-block">오늘</span>
+						            </a>
+						        </li>
+						        <li class="nav-item" onclick="setDays('내일')">
+						            <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
+						                <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+						                <span class="d-none d-lg-block">내일</span>
+						            </a>
+						        </li>
+						    </ul>
 						<table>
-							<thead>
+							<thead class="bg-info text-white">
 								<tr>
-									<th>제목</th>
-									<th>시작일</th>
-									<th>종료일</th>
+									<th class = "rara">제목</th>
+									<th class = "rara">시작일</th>
+									<th class = "rara">종료일</th>
 								</tr>
 							</thead>
-							<tbody id="table-body">
+							<tbody id="table-body" class = "table">
 								<!-- 필터링된 이벤트가 여기에 추가될 것입니다 -->
 							</tbody>
 						</table>
@@ -332,32 +356,52 @@ th {
 					</div>
 					<br>
 					<br>
-					<div id="scraped-content">
-						<h1>News List</h1>
-						<c:forEach var="article" items="${scrapedContent}">
-							<table class="card">
-								<thead class="card-title">
-									<tr>
-										<td class = "card-card" style = "display : flex; width: 100%;"><a class="card-link" href="${article.link}"
-											target="_blank">${article.title}</a></td>
-											<td class="card-date">${article.date}</td>
-											
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td class="card-desc">${article.desc}</td>
-									</tr>
-									<tr>
-									</tr>
-								</tbody>
-							</table>
-						</c:forEach>
-					</div>
+						<div id="scraped-content">
+							<h1>News List</h1>
+							<c:forEach var="article" items="${scrapedContent}">
+								<table class="card">
+									<thead class="card-title">
+										<tr>
+											<td class = "card-card" style = "display : flex; width: 100%;"><a class="card-link" href="${article.link}"
+												target="_blank">${article.title}</a></td>
+												<td class="card-date">${article.date}</td>		
+										</tr>
+									</thead>
+										<tbody>
+											<tr>
+												<td class="card-desc">${article.desc}</td>
+											</tr>
+											<tr>
+											</tr>
+										</tbody>
+								</table>
+							</c:forEach>
+						</div>			
 				</section>
 			</div>
 		</div>
 	</header>
+	
+		<!-- 모달 -->
+	<div class="modal fade" id="viewEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">이벤트 상세 정보</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- 이곳에 이벤트 상세 정보가 표시될 것입니다 -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 
 	<!-- 차트 링크 -->
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -365,8 +409,20 @@ th {
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 		crossorigin="anonymous"></script>
-
-	<script>
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+	<script src="/js/jquery-explr-1.4.js"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>	<script>
+	$.noConflict();
+	
+	function formatDateTime(dateTimeString) {
+		var dateTime = new Date(dateTimeString);
+		var year = dateTime.getFullYear();
+		var month = ('0' + (dateTime.getMonth() + 1)).slice(-2);
+		var date = ('0' + dateTime.getDate()).slice(-2);
+		var hours = ('0' + dateTime.getHours()).slice(-2);
+		var minutes = ('0' + dateTime.getMinutes()).slice(-2);
+		return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes;
+	}
 	var showPage = 1;
 	var ann_fixed = 'N';
 	var ann_division = 'E';
@@ -374,9 +430,11 @@ th {
 	var ann_date = ''; // regist_date 변수 정의
 	var cnt = 10;
 	var data = [];
+
+
 	
 	
-	$(document).ready(function(){
+	jQuery(document).ready(function($) {
 	    listCall(showPage);
 	    setDays('오늘');
 	    
@@ -402,7 +460,7 @@ th {
 	            },
 	            error: function(error) {
 	                console.log('리스트 출력 실패:', error);
-	            }
+	            }	
 	        });
 	    }
 
@@ -489,36 +547,47 @@ th {
 	        const row = document.createElement('tr');
 
 	        const titleCell = document.createElement('td');
+	        titleCell.classList.add('aa');
 	        const titleLink = document.createElement('a');
-	        titleLink.href = '/calendar/calendar.go'; // 이 부분을 원하는 URL로 변경하세요
+	        titleLink.href = "/calendar/mainDetail?cal_no=" +encodeURIComponent(event.cal_no); // 캘린더 페이지로 이동하도록 href 설정
+	        titleLink.classList.add('calendar-link');
 	        titleLink.textContent = event.cal_content;
 	        titleCell.appendChild(titleLink);
 	        row.appendChild(titleCell);
 
 	        const startCell = document.createElement('td');
+	        startCell.classList.add('aa');
 	        startCell.textContent = formatDateTime(event.cal_start);
 	        row.appendChild(startCell);
 
 	        const endCell = document.createElement('td');
+	        endCell.classList.add('aa');
 	        endCell.textContent = formatDateTime(event.cal_end);
 	        row.appendChild(endCell);
 
 	        tableBody.appendChild(row);
 	    });
+
+	    // 이벤트 핸들러 재등록
+	    $(document).on('click', '.calendar-link', function(e) {
+	        var calNo = $(this).attr('href').split('cal_no=')[1];
+	        window.location.href = '/calendar/mainDetail?cal_no=' + calNo;
+
+	    });
 	}
+
+	
+
+	
 
 	function formatDateTime(dateTimeString) {
 	    // T를 공백 두 개로 변경
 	    const dateTimeFormatted = dateTimeString.replace('T', '  ');
 	    return dateTimeFormatted;
 	}
-
         document.addEventListener('DOMContentLoaded', function() {
             const maxCapacity = 100;
-            const reservedGuests = ${total}; // 예약된 손님 수 (예시로 75명을 사용)
-
-			            
-            
+            const reservedGuests = ${total}; // 예약된 손님 수 (예시로 75명을 사용)     
             const data = {
                 labels: ['이용중', '예약가능'],
                 datasets: [{
@@ -528,7 +597,6 @@ th {
                     hoverBackgroundColor: ['#FF6384', '#36A2EB']
                 }]
             };
-
             const config = {
                 type: 'doughnut',
                 data: data,

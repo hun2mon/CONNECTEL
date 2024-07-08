@@ -117,7 +117,7 @@
 		    </div>
 		    <br>
 		    <div class="upload">
-		        <input type="file" name="photos" id="imgUpload"/>
+		        <input type="file" name="photos" id="imgUpload" accept="image/*"/>
 		    </div>
             <br><br>
             <div class="form-group">
@@ -139,7 +139,7 @@
 					<span class="subject">우편번호</span>
 					 <input type="text" name="post_no" class="form-control" id="sample6_postcode"
                			placeholder="우편번호" value="${emp.post_no}"  required>
-        			<img src="/scss/icons/search.png" onclick="sample6_execDaumPostcode()" style="width: 35px; height: 33px;">
+        			<img src="/scss/icons/search.png" onclick="sample6execDaumPostcode()" style="width: 35px;  height: 33px;">
 					
 					<span class="subject">전화번호</span> <input type="text"
 						class="form-control" id="phone" name="phone" value="${emp.phone}"
@@ -203,6 +203,46 @@
     </div>
 </form>
 <script>
+
+function validateForm() {
+    var name = document.getElementById('name').value;
+    var gender = document.querySelector('input[name="gender"]:checked');
+    var dob = document.getElementById('birth').value;
+    var email = document.getElementById('email').value;
+    var postcode = document.getElementById('sample6_postcode').value;
+    var phone = document.getElementById('phone').value;
+    var address = document.getElementById('sample6_address').value;
+    var department = document.getElementById('dept_code').value;
+    var detailAddress = document.getElementById('sample6_extraAddress').value;
+    var position = document.getElementById('rank_code').value;
+    var bank = document.getElementById('bank_name').value;
+    var permission = document.getElementById('authority').value;
+    var account = document.getElementById('account_no').value;
+    var joinDate = document.getElementById('join_date').value;
+
+    // 정규식 패턴 설정 (010-xxxx-xxxx 형식)
+
+    if (name == "" || !gender || dob == "" || email == "" || postcode == "" || phone == "" || address == "" ||
+        department == "" || detailAddress == "" || position == "" || bank == "" || permission == "" || account == "" || joinDate == "") {
+        alert("모든 필드를 작성해 주세요.");
+        return false;
+    }
+
+    var phonePattern = /\d{3}-\d{3,4}-\d{4}/;
+    if (!phonePattern.test(phone)) {
+        alert("유효한 전화번호를 입력해주세요 ex) 010-xxxx-xxxx.");
+        return false;
+    }
+    
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        alert("유효한 이메일 주소를 입력해 주세요." ex) xxxx@naver.com);
+        return false;
+    }
+
+    return true;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // 전화번호 입력 필드에 입력되는 값을 xxx-xxxx-xxxx 형식으로 제한하기
     var phoneInput = document.getElementById('phone');
@@ -229,111 +269,59 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function sample6_execDaumPostcode() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-            var addr = ''; // 주소 변수
-            var extraAddr = ''; // 참고항목 변수
+function sample6execDaumPostcode() {
+	new daum.Postcode(
+			{
+				oncomplete : function(data) {
+					var addr = ''; // 주소 변수
+					var extraAddr = ''; // 참고항목 변수
 
-            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                addr = data.roadAddress;
-            } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                addr = data.jibunAddress;
-            }
+					//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+					if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+						addr = data.roadAddress;
+					} else { // 사용자가 지번 주소를 선택했을 경우(J)
+						addr = data.jibunAddress;
+					}
 
-            // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-            if(data.userSelectedType === 'R'){
-                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                    extraAddr += data.bname;
-                }
-                if(data.buildingName !== '' && data.apartment === 'Y'){
-                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                }
-                if(extraAddr !== ''){
-                    extraAddr = ' (' + extraAddr + ')';
-                }
-                document.getElementById("sample6_extraAddress").value = extraAddr;
-            
-            } else {
-                document.getElementById("sample6_extraAddress").value = '';
-            }
+					// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+					if (data.userSelectedType === 'R') {
+						if (data.bname !== ''
+								&& /[동|로|가]$/g.test(data.bname)) {
+							extraAddr += data.bname;
+						}
+						if (data.buildingName !== ''
+								&& data.apartment === 'Y') {
+							extraAddr += (extraAddr !== '' ? ', '
+									+ data.buildingName
+									: data.buildingName);
+						}
+						if (extraAddr !== '') {
+							extraAddr = ' (' + extraAddr + ')';
+						}
+						document.getElementById("sample6_extraAddress").value = extraAddr;
 
-            document.getElementById('sample6_postcode').value = data.zonecode;
-            document.getElementById("sample6_address").value = addr;
-        }
-    }).open();
+					} else {
+						document.getElementById("sample6_extraAddress").value = '';
+					}
+
+					document.getElementById('sample6_postcode').value = data.zonecode;
+					document.getElementById("sample6_address").value = addr;
+				}
+			}).open();
 }
 
-$('#imgUpload').change(function (){
-    var files = this.files;
-    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+document.getElementById('imgUpload').onchange = function (e) {
+    var input = e.target;
+    var reader = new FileReader();
+    reader.onload = function () {
+        var dataURL = reader.result;
+        var output = document.getElementById('imgPreview');
+        output.src = dataURL;
+    };
+    reader.readAsDataURL(input.files[0]);
+};
 
-    // Check if the file count exceeds the limit
-    if (files.length > 1) {
-        alert("이미지 파일 첨부는 1개까지 가능합니다.");
-        $('#imgPreview').attr('src', '#');
-        this.value = '';
-        return;
-    }
-
-    // Validate each file
-    for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        if (!allowedExtensions.exec(file.name)) {
-            alert("이미지 파일 첨부만 가능합니다.");
-            this.value = '';
-            $('#imgPreview').attr('src', '#');
-            return;
-        }
-    }
-
-    // Display the selected image
-    if (files.length > 0) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            $('#imgPreview').attr('src', e.target.result);
-        };
-        reader.readAsDataURL(files[0]);
-    }
-});
-
-function validateForm() {
-    var name = document.getElementById('name').value;
-    var gender = document.querySelector('input[name="gender"]:checked');
-    var dob = document.getElementById('birth').value;
-    var email = document.getElementById('email').value;
-    var postcode = document.getElementById('sample6_postcode').value;
-    var phone = document.getElementById('phone').value;
-    var address = document.getElementById('sample6_address').value;
-    var department = document.getElementById('dept_code').value;
-    var detailAddress = document.getElementById('sample6_detailAddress').value;
-    var position = document.getElementById('rank_code').value;
-    var bank = document.getElementById('bank_name').value;
-    var permission = document.getElementById('authority').value;
-    var account = document.getElementById('account_no').value;
-    var joinDate = document.getElementById('join_date').value;
-
-    if (name == "" || !gender || dob == "" || email == "" || postcode == "" || phone == "" || address == "" ||
-        department == "" || detailAddress == "" || position == "" || bank == "" || permission == "" || account == "" || joinDate == "") {
-        alert("모든 필드를 작성해 주세요.");
-        return false;
-    }
-
-    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-        alert("유효한 이메일 주소를 입력해 주세요.");
-        return false;
-    }
-
-    var phonePattern = /^\d{10,11}$/;
-    if (!phonePattern.test(phone)) {
-        alert("유효한 전화번호를 입력해 주세요.");
-        return false;
-    }
-
-    return true;
-}
+    
 </script>
 </body>
 </html>

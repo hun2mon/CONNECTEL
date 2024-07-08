@@ -37,9 +37,11 @@ public class MainService {
     
 
     
-    public List<MainDTO> getAllSchedules() {
+    public List<MainDTO> getAllSchedules(Model model) {
     	
-        return mainDAO.getAllSchedules();
+    	List<MainDTO> list = mainDAO.getAllSchedules();
+    	model.addAttribute("event",list);
+        return list;
     }
 
     public List<MainDTO> getThisWeek(String emp_no) {

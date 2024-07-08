@@ -112,5 +112,9 @@ public class CalendarService {
 		return calendarDAO.removeMem(eventId,name);
 	}
 
+	public List<CalendarDTO> calendarDetail(String cal_no) {	
+		return calendarDAO.calendarDetail(cal_no);
+	}
+
 
 }

@@ -45,6 +45,8 @@ public interface CalendarDAO {
 
 	boolean removeMem(int eventId, String emp_no);
 
+	List<CalendarDTO> calendarDetail(String cal_no);
+
 
 
 }

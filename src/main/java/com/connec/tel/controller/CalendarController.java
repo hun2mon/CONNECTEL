@@ -12,12 +12,12 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import com.connec.tel.dto.CalendarDTO;
 import com.connec.tel.dto.EmpDTO;
@@ -28,6 +28,15 @@ import io.opentelemetry.sdk.trace.data.EventData;
 @Controller
 public class CalendarController {
 
+    private final NoticeController noticeController;
+
+	
+    @Autowired
+    public CalendarController(NoticeController noticeController) {
+        this.noticeController = noticeController;
+    }
+	
+	
 	@Autowired
 	CalendarService calService;
 	Logger logger = LoggerFactory.getLogger(getClass());
@@ -59,6 +68,24 @@ public class CalendarController {
 	       return result;
 	   }
 	
+    @RequestMapping(value = "/calendar/mainDetail", method = RequestMethod.GET)
+    public String calendarDetail(@RequestParam("cal_no") String cal_no, Model model) {
+        String page = "calendar/calendar";
+        model.addAttribute("cal_no", cal_no);
+        logger.info("Calendar ID: " + cal_no);
+        List<CalendarDTO> event = calService.calendarDetail(cal_no);
+        model.addAttribute("event", event);
+        
+        return page;
+    }
+    
+    
+    @RequestMapping(value = "/calendar/getDetail", method = RequestMethod.GET)
+    @ResponseBody
+    public CalendarDTO getCalendarDetail(@RequestParam("cal_no") String cal_no) {
+        return calService.calendarDetail(cal_no).get(0);  // List의 첫 번째 항목 반환
+    }
+	
 	
 	
     @PostMapping("/removeEventParticipant")
@@ -66,6 +93,7 @@ public class CalendarController {
     public Map<String, String> removeEventParticipant(@RequestParam("eventId") int eventId, @RequestParam("name") String name) {
     	logger.info("삭제 ㄲㄲㄲㄱ");
         boolean isRemoved = calService.removeEventParticipant(eventId, name);
+
         if (isRemoved) {
             return Map.of("status", "success");
         } else {
@@ -78,6 +106,7 @@ public class CalendarController {
 	public ResponseEntity<List<String>> getEventParticipants(@RequestParam("id") int id) {
 	    try {
 	        List<String> participants = calService.getParties(id);
+	        
 	        return ResponseEntity.ok(participants);
 	    } catch (Exception e) {
 	        logger.error("Error occurred while fetching event participants", e);
@@ -89,8 +118,35 @@ public class CalendarController {
 	@RequestMapping(value = "/updateParticipants.ajax", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> updateParty(@RequestBody Map<String, Object> param) {
+        String notificationContent = "일정이 공유 되었습니다.";
+        @SuppressWarnings("unchecked")
+		List<Map<String, String>> participants = (List<Map<String, String>>) param.get("participants");
+
+        if (participants != null) {
+            for (Map<String, String> participant : participants) {
+                // 각 participant에서 `emp_no` 추출
+                String emp_no = participant.get("emp_no");
+                String name = participant.get("name");
+
+                // `emp_no`가 null이 아닌지 확인 후 처리
+                if (emp_no != null) {
+                    // 필요한 로직 수행 (예: 알림 전송)
+                    System.out.println("Emp No: " + emp_no + ", Name: " + name);
+
+                    noticeController.sendShare(emp_no, notificationContent);
+
+                }
+            }
+        } else {
+            // participants가 null일 때의 처리 로직
+            System.out.println("Participants list is null.");
+        }
+        
+
+
 		return calService.updateParty(param);
-	}
+    }
+
 
 		
 	
