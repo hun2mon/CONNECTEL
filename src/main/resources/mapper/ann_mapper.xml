@@ -279,5 +279,19 @@
         WHERE ref_idx = #{ann_no} and file_division = 'A'
     </update>
     
+    <delete id="deletephoto" parameterType="String">
+    	DELETE FROM
+    		photo WHERE ref_idx = #{ann_no} and pho_division = 'A'
+    
+    </delete>
+
+
+	    <delete id="deletefile" parameterType="String">
+    	DELETE FROM
+    		file WHERE ref_idx = #{ann_no} and file_division = 'A'
+    
+    </delete>
+    
+    
 
 </mapper>

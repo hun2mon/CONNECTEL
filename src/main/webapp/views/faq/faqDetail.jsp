@@ -154,7 +154,7 @@ a:hover {
             <td colspan="2">
                 <div class="buttons">
                     <div class="exit">
-                        <a href="/faq/faqList.go"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
+                         <a href="/faq/faqList.go?page=${param.page}"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
                     </div>
                     <div class="update">
                         <button onclick="location.href='/faqupdate.go?faq_no=${dto.FAQ_no}'">수정</button>

@@ -97,6 +97,12 @@ public interface AnnDAO {
 	void updatenewfile(Map<String, String> paramMap);
 
 
+	void deletephoto(String ann_no);
+
+
+	void deletefile(String ann_no);
+
+
 
 
 	

@@ -171,7 +171,9 @@ public void empupdatefileSave(String ann_no, MultipartFile[] newphoto) {
     for (MultipartFile photo : newphoto) {
         String fileName = photo.getOriginalFilename();
         logger.info("upload file name : " + fileName);
-        if (!fileName.equals("")) {
+        if(fileName.equals("")) {
+        	annDAO.deletephoto(ann_no);
+        }else if (!fileName.equals("")) {
             String ext = fileName.substring(fileName.lastIndexOf("."));
             String newFileName = System.currentTimeMillis() + ext;
             logger.info(fileName + " -> " + newFileName);
@@ -200,7 +202,9 @@ public void empupdateannfile(MultipartFile[] newfile, String ann_no) {
     for (MultipartFile files : newfile) {
         String fileName = files.getOriginalFilename();
         logger.info("upload file name : " + fileName);
-        if (!fileName.equals("")) {
+        if(fileName.equals("")) {
+        	annDAO.deletefile(ann_no);
+        }else if (!fileName.equals("")) {
             String ext = fileName.substring(fileName.lastIndexOf("."));
             String newFileName = System.currentTimeMillis() + ext;
             logger.info(fileName + " -> " + newFileName);
@@ -282,6 +286,7 @@ public void annfilewrite(MultipartFile[] file, String ann_no) {
 		// 1. 업로드할 파일명이 있는가?
 		String fileName = files.getOriginalFilename();
 		logger.info("upload file name : "+fileName);
+		
 		if(!fileName.equals("")) {
 			String ext = fileName.substring(fileName.lastIndexOf("."));
 			// 2. 새파일명 생성
@@ -380,14 +385,18 @@ public String updateAnn(AnnDTO annDTO, MultipartFile[] newphoto, MultipartFile[]
         logger.info("데이터 업데이트 성공");
         page = "redirect:/ann/annList.go";
         
-        // 새로운 사진 업데이트
-        if (newphoto != null && newphoto.length > 0) {
-            updatefileSave(ann_no, newphoto);
+        // 기존 사진 삭제 처리
+        if (newphoto == null || newphoto.length == 0) {
+            annDAO.deletephoto(ann_no);
+        } else {
+            updatefileSave(ann_no, newphoto); // 새로운 사진 업로드
         }
         
-        // 새로운 파일 업데이트
-        if (newfile != null && newfile.length > 0) {
-            updateAnnFile(newfile, ann_no);
+        // 기존 파일 삭제 처리
+        if (newfile == null || newfile.length == 0) {
+            annDAO.deletefile(ann_no);
+        } else {
+            updateAnnFile(newfile, ann_no); // 새로운 파일 업로드
         }
     } else {
         logger.info("데이터 업데이트 실패");
@@ -400,8 +409,11 @@ public String updateAnn(AnnDTO annDTO, MultipartFile[] newphoto, MultipartFile[]
 public void updatefileSave(String ann_no, MultipartFile[] newphoto) {
     for (MultipartFile photo : newphoto) {
         String fileName = photo.getOriginalFilename();
-        logger.info("upload file name : " + fileName);
-        if (!fileName.equals("")) {
+        logger.info("upload 사 name : " + fileName);
+        if(fileName.equals("")) {
+        	annDAO.deletephoto(ann_no);
+        }
+        else if (!fileName.equals("")) {
             String ext = fileName.substring(fileName.lastIndexOf("."));
             String newFileName = System.currentTimeMillis() + ext;
             logger.info(fileName + " -> " + newFileName);
@@ -414,7 +426,9 @@ public void updatefileSave(String ann_no, MultipartFile[] newphoto) {
                 paramMap.put("pho_name", newFileName);
                 paramMap.put("ann_no", ann_no);
                 if(annDAO.photoname(ann_no)== null) {
+                	
                 	annDAO.annfileWrite(fileName, newFileName, ann_no);
+                
                 }else {
                 annDAO.updatefileWrite(paramMap);
                 }
@@ -423,14 +437,18 @@ public void updatefileSave(String ann_no, MultipartFile[] newphoto) {
                 e.printStackTrace();
             }
         }
+  
+        
     }
 }
 
 public void updateAnnFile(MultipartFile[] newfile, String ann_no) {
     for (MultipartFile file : newfile) {
         String fileName = file.getOriginalFilename();
-        logger.info("upload file name : " + fileName);
-        if (!fileName.equals("")) {
+        logger.info("upload 파일 name : " + fileName);
+        if(fileName.equals("")) {
+        	annDAO.deletefile(ann_no);
+        }else if (!fileName.equals("")) {
             String ext = fileName.substring(fileName.lastIndexOf("."));
             String newFileName = System.currentTimeMillis() + ext;
             logger.info(fileName + " -> " + newFileName);

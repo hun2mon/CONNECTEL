@@ -14,6 +14,13 @@
         margin: 0;
         padding: 0;
     }
+    
+    .page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #b76312;
+    border-color: #ae520d;
+}
 
     h2 {
         margin-bottom: -1px;
@@ -30,11 +37,11 @@
         padding-bottom: 10px;
         margin-left: 30%;
         margin-right: 30%;
-        background-color: #efeff1;
+        background-color: #ffefbe;
         text-align: center;
     }
     button {
-        background-color: steelblue;
+        background-color:#9d6314;
         border: solid 1px black;
         color: white;
         padding: 5px 10px;
@@ -48,7 +55,7 @@
     }
 
     button:hover {
-        background-color: midnightblue; /* 마우스 오버 시 배경색 변화 */
+        background-color: #673d05; /* 마우스 오버 시 배경색 변화 */
     }
     
     #searchInput {
@@ -82,6 +89,7 @@
     .notice .notice-list-hit {
         flex: 1;
         text-align: center;
+        
     }
 
     .notice .notice-list-subject {
@@ -126,15 +134,16 @@
 }
 
     .list-title {
-    display: flex;
+display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 2px solid #9a9a9a;
+    border-top: 1.4px solid #7d3e00;
     padding: 10px 0;
-    background-color: #e7e7e7;
+    background-color: #ffe0b6;
     font-weight: bold;
     margin-top: 20px;
-    border-bottom: 1px solid #9a9a9a;
+    border-bottom: 1px solid #7d3e00;
+    color: #7d3e00;
     }
 
     .list-title div {
@@ -279,13 +288,13 @@
                 if (data[i].ann_fixed === 'Y') {
                     content += '<div class="notice-list-no ann-notice">[공지]</div>';
                 } else {
-                    content += '<div class="notice-list-no">' + data[i].ann_no + '</div>';
+                    content += '<div class="notice-list-no" style="">' + data[i].ann_no + '</div>';
                 }
-                content += '<div class="notice-list-subject"><a href="/customer/noticeDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
+                content += '<div class="notice-list-subject"><a style = "color:#7d3e00"href="/customer/noticeDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
                 
                 // updater가 존재할 경우 updater 표시, 그렇지 않으면 register 표시
                 var nameToShow = data[i].updater ? data[i].updater : data[i].register;
-                content += '<div class="notice-list-name">' + nameToShow + '</div>';
+                content += '<div class="notice-list-name style="color:black">' + nameToShow + '</div>';
                 
                 // update_date가 존재할 경우 update_date 표시, 그렇지 않으면 ann_date 표시
                 var dateToShow = data[i].update_date ? data[i].update_date : data[i].ann_date;

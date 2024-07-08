@@ -156,7 +156,7 @@ table th {
             <td colspan="3">
                 <div class="buttons">
                     <div class="exit">
-                        <a href="ann/empAnnList.go"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
+                        <a href="ann/empAnnList.go?page=${param.page}"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
                     </div>
                     <div class="update">
                         <button onclick="location.href='/empannupdate.go?ann_no=${dto.ann_no}'">수정</button>
