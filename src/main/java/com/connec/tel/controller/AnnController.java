@@ -88,7 +88,7 @@ public class AnnController {
 
 	    // 상단고정된 공지사항이 5개 이상인 경우 등록을 막음
 	    if ("Y".equals(dto.getAnn_fixed()) && countann_fixed >= 5) {
-	        model.addAttribute("error", "최대 5개까지 등록이 가능합니다. 목록에서 지우고 다시 시도해주세요.");
+	        model.addAttribute("error", "상단고정갯수가 5개를 초과입니다. 일반으로 등록 후 상태변경을 진행해 주세요.");
 	        model.addAttribute("ann_subject", param.get("ann_subject"));
 	        model.addAttribute("textcontent", param.get("textcontent"));
 	        model.addAttribute("ann_division", param.get("ann_division"));
@@ -258,7 +258,7 @@ public class AnnController {
 
  	    // 상단고정된 공지사항이 5개 이상인 경우 등록을 막음
  	    if ("Y".equals(dto.getAnn_fixed()) && countann_fixed >= 5) {
- 	        model.addAttribute("error", "최대 5개까지 등록이 가능합니다. 목록에서 지우고 다시 시도해주세요.");
+ 	        model.addAttribute("error","상단고정갯수가 5개를 초과입니다. 일반으로 등록 후 상태변경을 진행해 주세요.");
  	        model.addAttribute("ann_subject", param.get("ann_subject"));
  	        model.addAttribute("textcontent", param.get("textcontent"));
  	        model.addAttribute("ann_division", param.get("ann_division"));

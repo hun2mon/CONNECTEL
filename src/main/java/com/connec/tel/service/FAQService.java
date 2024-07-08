@@ -25,13 +25,16 @@ public class FAQService {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
-	public Map<String, Object> list(int currPage, int pagePerCnt, String category) {
+	public Map<String, Object> list(int currPage, int pagePerCnt, String category, String page) {
 		Map<String, Object>result = new HashMap<String, Object>();
 		List<FaqDTO>list =faqDAO.list(pagePerCnt, currPage,category);
 		result.put("list", list);
 		result.put("currPage", currPage);
 		result.put("totalPages", faqDAO.allCount(pagePerCnt,category));
 		result.put("category", category);
+		result.put("page", page);
+		
+		logger.info("currPage ::::", currPage);
 		
 		
 		return result;

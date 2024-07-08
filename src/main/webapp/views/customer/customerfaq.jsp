@@ -35,41 +35,28 @@ body {
 
 .btn-inpo{
     background-color: white;
-    color: black;
+    color: #7d3e00;
     border: none;
 }
 
 .btn-inpo:hover {
     background-color: white;
-    color: black;
+    color: #7d3e00;
     border:none;
     text-decoration:none;
 }
 
 .collapse.active {
     background-color: white;
-    color: black;
+    color: #7d3e00;
     border: none;
 }
 
 .collapse a.active{
 	background-color: white;
-	color: black;
+	color: #7d3e00;
 	border: none;
 }
-
-.btn-inpo{
-    background-color: white;
-    color: black;
-    border: none;
-}
-
-.btn-inpo:hover {
-    background-color: white;
-    color: black;
-    border:none
-}
-
 
 
 h2 {
@@ -89,12 +76,12 @@ hr {
     padding-bottom: 10px;
     margin-left: 30%;
     margin-right: 30%;
-    background-color: #efeff1;
+    background-color: #ffefbe;
     text-align: center;
 }
 
 button {
-    background-color: steelblue;
+    background-color: #9d6314;
     border: solid 1px black;
     color: white;
     padding: 5px 10px;
@@ -108,7 +95,7 @@ button {
 }
 
 button:hover {
-    background-color: midnightblue; /* 마우스 오버 시 배경색 변화 */
+    background-color: #673d05; /* 마우스 오버 시 배경색 변화 */
 }
 
 #searchInput {
@@ -121,13 +108,13 @@ button:hover {
 .tab {
     overflow: hidden;
     border-bottom: 1px solid #ccc;
-    background-color: #5E94B1;
+    background-color: #a9680d;
     margin-top: 20px;
     font-size: 24px;
 }
 
 .tab button {
-    background-color: inherit;
+    background-color: #a9680d;
     float: left;
     border: none;
     outline: none;
@@ -138,16 +125,17 @@ button:hover {
 }
 
 .tab button:hover {
-    background-color: #325c7f;
+    background-color:#825111;
 }
 
 .tab button.active {
-    background-color: #325c7f;
+    background-color: #825111;
 }
 
 .faq-list {
-    width: 80%;
+    width: 100%;
     margin: 10px auto;
+    margin-top: 0px;
     border-collapse: collapse;
 }
 
@@ -158,12 +146,19 @@ button:hover {
 }
 
 .faq-list th {
-    background-color: #f2f2f2;
+    background-color: #ffe0b6;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #b76312;
+    border-color: #ae520d;
 }
 
 .pagination-container {
-    text-align: center; /* 페이징 중앙 정렬 */
     margin-top: 20px;
+    text-align:center;
 }
 
 .pagination {
@@ -218,8 +213,8 @@ button:hover {
     <table class="faq-list">
         <thead>
             <tr>
-                <th style="width: 10%;">번호</th>
-                <th style="width: 80%;">제목</th>
+                <th style="width: 5%; color:#a9680d;">번호</th>
+                <th style="width: 80%; color:#a9680d;">제목</th>
             </tr>
         </thead>
         <tbody id="faqList">
@@ -294,7 +289,7 @@ $(document).ready(function() {
         for (var i = 0; i < data.length; i++) {
             var faqId = 'collapse' + i; // 고유 ID 생성
             content += '<tr class="faq-item">';
-            content += '<td>' + data[i].faq_no + '</td>';
+            content += '<td style= "color:#a9680d;">' + data[i].faq_no + '</td>';
             content += '<td><a class="btn-inpo" data-toggle="collapse" href="#' + faqId + '" aria-expanded="false" aria-controls="' + faqId + '">' + data[i].faq_subject + '</a></td>';
             content += '</tr>';
             content += '<tr class="collapse" style="text-align:left" id="' + faqId + '"><td colspan="2" style="text-align:left;">' + data[i].faq_content + '</td></tr>';

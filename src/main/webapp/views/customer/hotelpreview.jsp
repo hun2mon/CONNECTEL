@@ -7,6 +7,8 @@
 <meta charset="UTF-8">
 <title>최고의 호텔 'Connectel' 호텔에 오신걸 환영합니다!</title>
 <!-- Leaflet CSS 및 JavaScript CDN 추가 -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -191,88 +193,29 @@
         <h2 style="font-family:Bodoni Moda SC, serif;">The Sheilla Hotel</h2>
     </div>
     
-    <hr id="custom-hr">
-     <div style="width: 15%;
-        margin-left: 84%;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        text-align: center;
-        margin-right: 40px;
-        background-color: #ffe290;
-        border: 2px solid #7d3e00;
-        box-shadow: 2px 3px 1px rgb(130 130 130 / 50%);">
-        <a href="/customer/reservation.go" style="color: #673d05; font-size: 20px;"> 예약서비스 바로가기.</a>
+    <hr id="custom-hr">	
+    <!-- 지도를 표시할 div -->
+    <div id="hotelmap">
+        <p style="font-size: 15px; color: #5d1212;text-align: right; font-family: 'Noto Serif KR', serif; padding-right:330px">오시는 길</p>
+        <div id="custom-map" style="text-align: left;"></div>
     </div>
-    <div style="font-size: 30px; text-align:center; margin-top:10px; color: #5d1212; font-family: 'Noto Serif KR', serif;">'The Sheilla Hotel'에서 최고의 편안함을 누려보세요.</div>
-    <div style="font-size: 18px; text-align:center; margin-top:-5px; color: #5d1212; font-family: 'Noto Serif KR', serif;">Enjoy the best comfort in 'The Sheila Hotel'</div>
-    <div style="flex: 1; margin-left: 5%; margin-right: 5%; font-size: 20px;">
-        <div class="image-container">
-            <div class="image-item">
-                <img src="/client_image/standard.jpg" alt="Standard Room">
-                <p>&lt;Standard Room&gt;</p>
-            </div>
-            <div class="image-item">
-                <img src="/client_image/superier.jpg" alt="Superier Room">
-                <p>&lt;Superier Room&gt;</p>
-            </div>
-            <div class="image-item">
-                <img src="/client_image/delux.jpg" alt="Delux Room">
-                <p>&lt;Delux Room&gt;</p>
-            </div>
-            <div class="image-item">
-                <img src="/client_image/suite.jpg" alt="Suite Room">
-                <p>&lt;Suite Room&gt;</p>
-            </div>
-        </div>
-    </div>
-    <hr id="custom-hr" style="width: 60%">
-    <div style="font-size: 30px; text-align:center; color: #5d1212; font-family: 'Noto Serif KR', serif;">호텔의 특별한 음식들을 즐겨보세요.</div>
-    <div style="font-size: 18px; text-align:center; margin-top:-5px; color: #5d1212; font-family: 'Noto Serif KR', serif;">Enjoy the special food of the hotel.</div>
+    <hr id="custom-hr" style="margin-top:40px;">
 
-    <div style="display: flex; justify-content: center; padding: 20px;">
-        <div style="flex: 1; text-align: center;">
-            <img src="/client_image/food1.jpg" style="width: 600px; height: auto; box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5); margin-right:50px;" alt="The Sheila Hotel Food 1">
-            <img src="/client_image/food2.jpg" style="width: 600px; height: auto; box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5); margin-top: 20px;" alt="The Sheila Hotel Food 2">
-        </div>
-    </div>
-        <div style="text-align: center;">
-        	<img src="/client_image/food3.jpg" style="width: 600px; height: auto; box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5); margin-top: 20px;">
-        </div>
-        
-        <hr id="custom-hr" style="width: 60%;margin-top:50px;">
-        <div style="font-size: 30px; text-align:center; color: #5d1212; font-family: 'Noto Serif KR', serif;">멤버쉽별 등급 혜택을 누려보세요.</div>
-        <div style="font-size: 18px; text-align:center; margin-top:-5px; color: #5d1212; font-family: 'Noto Serif KR', serif;">Enjoy the rating benefits for each member.</div>
-        <div onclick="showAlert()" style="cursor:pointer;">
-            <img src="/client_image/membership.png" style="width:900px; height: auto; margin-left:23%;">
-        </div>
-        
-        
-        
-        
-        
-    <hr id="custom-hr" style="margin-top: 80px; margin-bottom: 10px;">
-	<div id ="customer-footer" style="padding-left:20px; text-align:center;">
-	<p style="font-size:28px;font-family:Bodoni Moda SC, serif; color:#a45d1d; text-align:center;">The Sheilla Hotel</p>
-	<div id="1page" style="padding: 10px; padding-left:0px; padding-top: 0px; color:#ba6b6b">
-    <a href="/customer/hotelpreiview.go" style="padding: 10px; padding-left:0px; margin-right: 10px; color:#ba6b6b">호텔소개</a>
-    <a href="#" style="margin-right: 20px; color:#ba6b6b">개인정보처리방침</a>
-    <a href="#" style="margin-right: 20px;color:#ba6b6b">이용약관</a>
-    <a href="#" style="margin-right: 20px;color:#ba6b6b">SNS</a>
-     <a href="#" style="margin-right: 20px;color:#ba6b6b">고객지원센터</a>
-      <a href="#" style="margin-right: 20px;color:#ba6b6b">1:1문의</a>
-</div>
-	</div>
-	<div style="margin-left:20px; font-size:14px; color:#ccc; text-align:center;">(주)The Sheilla Hotel 경상북도 포항시 남구 호미곶면 나보리 177길 대표이사: 김정훈 사업자등록번호:000-00-12312<br>
-	서버호스팅제공:AWS The Sheilla 본사위치 서울특별시 관악구 관천로 292-21신라빌딩 99층 102호 전화번호:010-2424-9594<br>
-	copyright&copy; 2024 The Sheilla Hotel.  All Rights Reserved. By_ParkJunmo@
-	 </div>
 
 </body>
 <script>
     var slideIndex = 1;
     var slideInterval;
-   
+    var map = L.map('custom-map').setView([36.072720680387306, 129.54110971926934], 16); //위도 / 경도 / 줌상태
 
+    //지도 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    
+    var beachMarker = L.marker([36.072720680387306, 129.54110971926934]).addTo(map); 
+    beachMarker.bindPopup("<b>The SheillaHotel</b><br>");
         
     showSlides(slideIndex);
     startSlideShow();
@@ -298,10 +241,6 @@
         clearInterval(slideInterval);
         showSlides(slideIndex += n);
         startSlideShow();
-    }
-    
-    function showAlert() {
-        alert("준비 중입니다.");
     }
 </script>
 </html>
