@@ -27,6 +27,43 @@
 		
 </select>
 
+<select id="clentTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation WHERE cos_email != '현장예약'
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(res_no)/#{param2}) AS pages FROM reservation
+				WHERE (cos_email LIKE #{param1} OR cos_name LIKE #{param1}) AND cos_email != '현장예약'
+		</if>
+		
+</select>
+
+<select id="clentList" resultType="com.connec.tel.dto.MailDTO">
+		<if test="param1 == ''">
+			SELECT res_no,cos_name,cos_phone,cos_email FROM reservation WHERE cos_email != '현장예약' ORDER BY res_no DESC  LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT res_no,cos_name,cos_phone,cos_email FROM reservation  WHERE (cos_name LIKE #{param1} OR cos_email LIKE #{param1}) AND cos_email != '현장예약' ORDER BY res_no DESC LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+
+
+<select id="myAddressTotalPage" resultType="int">
+
+		<if test="param1 == ''">
+			SELECT CEIL(COUNT(add_no)/#{param2}) AS pages FROM address WHERE emp_no = #{param3}
+		</if>
+	
+		<if test="param1 != null">
+			SELECT CEIL(COUNT(add_no)/#{param2}) AS pages FROM address
+				WHERE (add_name LIKE #{param1} OR add_email LIKE #{param1})  AND emp_no = #{param3}
+		</if>
+		
+</select>
+
 <select id="tempTotalPage" resultType="int">
 
 		<if test="param1 == ''">
@@ -50,6 +87,8 @@
 		</if>
 	</select>
 	
+	
+	
 	<select id="TempMailList" resultType="com.connec.tel.dto.MailDTO">
 		<if test="param1 == ''">
 			SELECT*FROM mail WHERE emp_no = #{param4} AND status = 'T' ORDER BY send_date DESC  LIMIT #{param2}, #{param3}
@@ -57,6 +96,16 @@
 		
 		<if test="param1 != null">
 			SELECT* FROM mail  WHERE (mail_receiver LIKE #{param1} OR mail_subject LIKE #{param1})  AND emp_no = #{param4} AND status = 'T' ORDER BY send_date DESC LIMIT #{param2}, #{param3}
+		</if>
+	</select>
+	
+	<select id="myAddressList" resultType="com.connec.tel.dto.MailDTO">
+		<if test="param1 == ''">
+			SELECT*FROM address WHERE emp_no = #{param4} ORDER BY add_no DESC  LIMIT #{param2}, #{param3}
+		</if>
+		
+		<if test="param1 != null">
+			SELECT* FROM address  WHERE (add_name LIKE #{param1} OR add_email LIKE #{param1})  AND emp_no = #{param4} ORDER BY add_no DESC LIMIT #{param2}, #{param3}
 		</if>
 	</select>
 	
@@ -76,5 +125,54 @@
 		INSERT INTO mail(emp_no,mail_receiver,mail_subject,mail_content,status,send_date)
 			VALUES(#{emp_no},#{mail_receiver},#{mail_subject},#{mail_content},'T',NOW())
 	</insert>
+	
+	<select id="clientAddListCall" resultType="com.connec.tel.dto.MailDTO">
+	
+		<if test="param1 == ''">
+			SELECT * FROM reservation WHERE cos_email != '현장예약'
+		</if>
+		
+		<if test="param1 != null">
+			SELECT * FROM reservation WHERE cos_email != '현장예약' AND (cos_name LIKE #{param1} OR cos_email LIKE #{param1})
+		</if>
+		
+	</select>
+
+	<insert id="addAddress" parameterType="map">
+		INSERT INTO address(emp_no,add_name,add_email,belong,add_phone,add_favorite)
+			VALUES(#{emp_no},#{add_name},#{add_email},#{belong},#{add_phone},#{add_favorite})
+	</insert>
+	
+	<update id="updateFavoriteStatus" parameterType="map">
+		UPDATE address SET add_favorite = #{isFavorite} WHERE add_no = #{addNo}
+	</update>
+	
+	<select id="myAddList" resultType="com.connec.tel.dto.MailDTO">
+	
+	<if test="param2 == ''">
+			SELECT * FROM address WHERE emp_no = #{param1}
+		</if>
+		
+		<if test="param2 != null">
+			SELECT * FROM address WHERE emp_no = #{param1} AND (add_name LIKE #{param2} OR add_email LIKE #{param2})
+		</if>
+
+	</select>
+	
+	<select id="myFavoriteList" resultType="com.connec.tel.dto.MailDTO">
+	
+	<if test="param2 == ''">
+			SELECT * FROM address WHERE emp_no = #{param1} AND add_favorite = 'true'
+		</if>
+		
+		<if test="param2 != null">
+			SELECT * FROM address WHERE emp_no = #{param1} AND add_favorite = 'true' AND (add_name LIKE #{param2} OR add_email LIKE #{param2})
+		</if>
+	
+	</select>
+	
+	<select id="reWrite" resultType="com.connec.tel.dto.MailDTO">
+		SELECT * FROM mail WHERE mail_no = #{mail_no}
+	</select>
 
 </mapper>

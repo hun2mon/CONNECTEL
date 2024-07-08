@@ -136,8 +136,9 @@ public class CommonService {
 			payParmas.add("payment_method_type","MONEY"); // 현금과 카드 중 현금만 가능
 			payParmas.add("fail_url", "http://localhost:8080/common/fail"); //실패할 경우 주소
 			
+
 			HttpEntity<Map> request = new HttpEntity<Map>(payParmas, headers);
-			
+			logger.info("payParams : {}",payParmas);
 			RestTemplate template = new RestTemplate();
 			String url = "https://kapi.kakao.com/v1/payment/ready";
 			
@@ -164,39 +165,62 @@ public class CommonService {
 			session.setAttribute("params", params);
 			
 			return res;
-		}else {
+		}else {// 추가결제
 			
 			String date = (String) params.get("current_date");
 			int room_no = Integer.parseInt((String)params.get("room_no")) ;
 			int changeRoom_no = Integer.parseInt((String) params.get("changeRoom_no")) ;
-			
+			int curr_no = Integer.parseInt((String)params.get("curr_no")) ;
+			int after_no = Integer.parseInt((String)params.get("after_no")) ;
 			logger.info("date : " +date);
 			logger.info("room_no : " +room_no);
-			logger.info("changeRoom_no : " +changeRoom_no);
+			logger.info("changeRoom_no : " +changeRoom_no);			
+			logger.info("curr_no : " +curr_no);
+			logger.info("after_no : " +after_no);
+			
+			String room_type="";
+			String change_room_type="";
+
 			// 이제 jsp 에서 보낸 날짜에 현재 room_no 과 변경할 changeRoom_no이 각각 무슨 룸인지 구하고 
 			// 쿼리문으로 빼기를 할 번에구 해서 가져오기
-			/*if (room_no) {
-				
-			}*/
+			
+			int price = commonDAO.price(params.get("res_no"));
+			logger.info("price : " + price);
+
+			if (after_no == 3 || after_no == 4) {
+				change_room_type="standard";
+			}else if (after_no == 5) {
+				change_room_type="superior";
+			}else if (after_no == 6) {
+				change_room_type="delux";
+			}else {
+				change_room_type="suite";
+			}
+			
+			int total_price = commonDAO.plus_price(date,price,change_room_type);
+			logger.info("total_price : " +total_price);
+			
 			
 			
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", "KakaoAK "+ "c1217d95033551b5bbf6b58300e28030"); //발급받은 adminkey
-			MultiValueMap<String, Object> payParmas = new LinkedMultiValueMap<String, Object>();
+			MultiValueMap<String, Object> payParam = new LinkedMultiValueMap<String, Object>();
 			
-			payParmas.add("cid", "TC0ONETIME"); //가맹점 코드,10자
-			payParmas.add("partner_order_id", params.get("res_no")); //가맹점 주문번호(테이블 pk값=res_no) String 타입이어야 해서 ""더함
-			payParmas.add("partner_user_id", "kakaopayTest"); //회원ID 이나 우리는 회원 관리를 따로 하지 않으니 X
-			payParmas.add("item_name", params.get("item_name")); //객실타입 ex)스탠다드룸
-			payParmas.add("quantity", params.get("quantity")); // 개수 그냥 1개 고정값(몇박 주기 귀찮음ㅋ)
-			// 계산후 payParmas.add("total_amount", ); //결제금액
-			payParmas.add("tax_free_amount", params.get("tax_free_amount")); // 상품 비과세 금액 우리는 0
-			payParmas.add("approval_url", "http://localhost:8080/common/plusSuccess"); // 성공할 경우 요청할 주소
-			payParmas.add("cancel_url", "http://localhost:8080/common/cancel"); // 취소할 경우 요청할 주소
-			payParmas.add("payment_method_type","MONEY"); // 현금과 카드 중 현금만 가능
-			payParmas.add("fail_url", "http://localhost:8080/common/fail"); //실패할 경우 주소
+			payParam.add("cid", "TC0ONETIME"); //가맹점 코드,10자
+			payParam.add("partner_order_id", "KA020230318001"); //가맹점 주문번호(테이블 pk값=res_no) String 타입이어야 해서 ""더함
+			payParam.add("partner_user_id", "kakaopayTest"); //회원ID 이나 우리는 회원 관리를 따로 하지 않으니 X
+			payParam.add("item_name", params.get("item_name")); //객실타입 ex)스탠다드룸
+			payParam.add("quantity", params.get("quantity")); // 개수 그냥 1개 고정값(몇박 주기 귀찮음ㅋ)
+			payParam.add("total_amount",total_price); //결제금액
+			payParam.add("tax_free_amount", params.get("tax_free_amount")); // 상품 비과세 금액 우리는 0
+			payParam.add("approval_url", "http://localhost:8080/common/plusSuccess"); // 성공할 경우 요청할 주소
+			payParam.add("cancel_url", "http://localhost:8080/common/cancel"); // 취소할 경우 요청할 주소
+			payParam.add("payment_method_type","MONEY"); // 현금과 카드 중 현금만 가능
+			payParam.add("fail_url", "http://localhost:8080/common/fail"); //실패할 경우 주소
 			
-			HttpEntity<Map> request = new HttpEntity<Map>(payParmas, headers);
+			logger.info("payParam : {}",payParam);
+			
+			HttpEntity<Map> request = new HttpEntity<Map>(payParam, headers);
 			
 			RestTemplate template = new RestTemplate();
 			String url = "https://kapi.kakao.com/v1/payment/ready";
@@ -204,8 +228,12 @@ public class CommonService {
 			kakaoPayReadyDTO res = template.postForObject(url, request,kakaoPayReadyDTO.class);
 			
 			// 여기에 업데이트할 값들 세션 저장
+			String tid = res.getTid();
 			
-			
+			session.setAttribute("res_no", params.get("res_no"));
+			session.setAttribute("plus_price", total_price);
+			session.setAttribute("changeRoom_no", changeRoom_no);
+			session.setAttribute("tid", tid);
 			return res;
 		}
 		
@@ -233,6 +261,35 @@ public class CommonService {
 		kakaoPayApproveDTO res = template.postForObject(url, request, kakaoPayApproveDTO.class);
 		
 		commonDAO.reservation(param); // 예약 테이블에 추가
+		
+		
+		return res;
+	}
+
+	public kakaoPayApproveDTO plusSuccess(String pgToken, HttpSession session) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "KakaoAK "+ "c1217d95033551b5bbf6b58300e28030" );
+		headers.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		
+		MultiValueMap<String, Object> payParams = new LinkedMultiValueMap<String, Object>();
+		
+		payParams.add("cid","TC0ONETIME");
+		payParams.add("tid",session.getAttribute("tid"));
+		payParams.add("partner_order_id", session.getAttribute("res_no"));
+		payParams.add("partner_user_id", "kakaopayTest");
+		payParams.add("pg_token", pgToken);
+		
+		HttpEntity<Map> request = new HttpEntity<Map>(payParams,headers);
+		
+		RestTemplate template = new RestTemplate();
+		String url = "https://kapi.kakao.com/v1/payment/approve";
+		
+		kakaoPayApproveDTO res = template.postForObject(url, request, kakaoPayApproveDTO.class);
+		
+		int res_no = Integer.parseInt((String) session.getAttribute("res_no")) ;
+		int change_room = Integer.parseInt((String) session.getAttribute("changeRoom_no")) ;
+		int plus_price = Integer.parseInt((String) session.getAttribute("total_price")) ;
+		commonDAO.changeRoom(res_no,change_room,plus_price); // 예약 테이블에 update
 		
 		
 		return res;

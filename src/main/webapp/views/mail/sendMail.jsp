@@ -65,22 +65,40 @@
                     <div class="card-body">                    
                         <div class="compose-content">
                             <form id="emailForm" action="/mail/mail.do" method="post" enctype="multipart/form-data">
+                                <div class="form-group row">
+						            <div class="col">
+						                <input type="text" id="email" class="form-control bg-transparent" name="mail_receiver" placeholder="받는사람" value="${info.mail_receiver}">
+						            </div>
+						            <div class="col-auto">
+						                <button type="button" class="btn btn-success btn-sl-sm" onclick="openAddressBook()"><i class="fas fa-address-book"></i> 주소록</button>
+						            </div>
+						        </div>
                                 <div class="form-group">
-                                    <input type="text" id="email" class="form-control bg-transparent" name="mail_receiver" placeholder="받는사람">
+                                    <input type="text" id="subject" class="form-control bg-transparent" name="mail_subject" placeholder="제목" value="${info.mail_subject}">
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" id="subject" class="form-control bg-transparent" name="mail_subject" placeholder="제목">
-                                </div>
-                                <div class="form-group">
-                                    <textarea id="content" class="textarea_editor form-control bg-transparent" rows="15" name="mail_content" placeholder="내용"></textarea>
+                                    <textarea id="content" class="textarea_editor form-control bg-transparent" rows="15" name="mail_content" placeholder="내용">${info.mail_content}</textarea>
                                 </div>
                                 <div class="fallback w-100">
                                     <input type="file" class="dropify" multiple="multiple" name="multipartFiles" />
                                 </div>
                                 <div class="text-right mt-4 mb-5">
-                                    <button class="btn btn-primary btn-sl-sm mr-3" type="submit"><span class="mr-2"><i class="fa fa-paper-plane"></i></span> 전송</button>
-                                    <button class="btn btn-dark btn-sl-sm" onclick="temp_save()" type="button"><span class="mr-2"><i
-                                                    class="fas fa-archive" aria-hidden="true"></i></span> 임시저장</button>
+                                	<div class="row">
+								        <div class="col-12">
+								        
+								        	<c:if test="${!empty info.mail_no}">
+											    <button class="btn btn-danger btn-sl-sm mr-3" onclick="back()" type="button">
+											        <span class="mr-1"><i class="fas fa-arrow-alt-circle-left"></i></span>취소
+											    </button>
+											</c:if>
+								            <button class="btn btn-primary btn-sl-sm mr-3" type="submit">
+								                <span class="mr-2"><i class="fa fa-paper-plane"></i></span> 전송
+								            </button>
+								            <button class="btn btn-dark btn-sl-sm" onclick="temp_save()" type="button">
+								                <span class="mr-2"><i class="fas fa-archive" aria-hidden="true"></i></span> 임시저장
+								            </button>
+								        </div>
+								    </div>
                                 </div>
                             </form>                         
                         </div>
@@ -92,37 +110,110 @@
 </div>    
 </body>
 <script>
+
+var receivers = `${receivers}`;
+
+if (receivers) {
+    var receiver = receivers.slice(1, -1);
+    $('#email').val(receiver);
+}
+
+function back() {
+	location.href='/mail/tempMailList.go';
+}
+
+
 $(document).ready(function() {
     $('#emailForm').on('submit', function(event) {
         var email = $('#email').val().trim();
         var subject = $('#subject').val().trim();
         var content = $('#content').val().trim();
-		
-
         
-        if (email ==="") {
+        var mail_receiver = $('#email').val();
+		var mail_subject = $('#subject').val();
+		var mail_content = $('#content').val();
+		
+		if (mail_receiver ==="") {
         	alert("받는사람을 입력하세요.");
             $('#email').focus();  
             event.preventDefault();
-    	} else if (subject === "") {
+            return;
+    	} else if (mail_subject === "") {
             alert("제목을 입력하세요.");
             $('#subject').focus();
             event.preventDefault();
-        } else if (content === "") {
+            return;
+        } else if (mail_content === "") {
             alert("내용을 입력하세요.");
             $('#content').focus();
             event.preventDefault();
+            return;
         }
+		    
+        
     });
+    
+    
 });
+	
+function openAddressBook() {
+    // 팝업 창의 URL 설정 (addressbook.jsp의 실제 경로로 변경)
+    var popupUrl = '/mail/addressBook.go';
+    
+    // 팝업 창의 너비와 높이 설정
+    var popupWidth = 1200;
+    var popupHeight = 800;
+    
+    // 화면 너비와 높이 계산
+    var screenWidth = window.screen.width;
+    var screenHeight = window.screen.height;
+    
+    // 팝업 창 위치 계산 (화면 오른쪽 상단)
+    var popupLeft = screenWidth - popupWidth - 10; // 팝업과 오른쪽 여백 10px
+    var popupTop = 10; // 화면 상단과의 여백 10px
+    
+    // 팝업 창 열기
+    var popupWindow = window.open(popupUrl, 'addressBookPopup', 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + popupTop + ',left=' + popupLeft);
+    
+    // 팝업 차단 여부 확인
+    if (popupWindow) {
+        popupWindow.focus(); // 팝업 창을 활성화
+    } else {
+        alert('팝업 창이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+    }
+}
+	
+	
+	
+	
+
 
 	function temp_save(){
-		if (!confirm('임시 저장시 파일 저장은 불가능합니다. 임시저장 하시겠습니까?')) {
-	        return; // 사용자가 취소를 선택하면 함수 종료
-	    }
+		
 		var mail_receiver = $('#email').val();
 		var mail_subject = $('#subject').val();
 		var mail_content = $('#content').val();
+		
+		if (mail_receiver ==="") {
+        	alert("받는사람을 입력하세요.");
+            $('#email').focus();  
+            event.preventDefault();
+            return;
+    	} else if (mail_subject === "") {
+            alert("제목을 입력하세요.");
+            $('#subject').focus();
+            event.preventDefault();
+            return;
+        } else if (mail_content === "") {
+            alert("내용을 입력하세요.");
+            $('#content').focus();
+            event.preventDefault();
+            return;
+        }
+		
+		if (!confirm('임시 저장시 파일 저장은 불가능합니다. 임시저장 하시겠습니까?')) {
+	        return; // 사용자가 취소를 선택하면 함수 종료
+	    }
 		
 		console.log(mail_receiver,mail_subject,mail_content);
 		$.ajax({

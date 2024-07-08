@@ -1,7 +1,6 @@
 package com.connec.tel.service;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +82,27 @@ public class GuestManageService {
 		map.put("totalPages", totalpage);
 		return map;
 	}
+	
+	public Map<String, Object> noCheckListCall(String search, String page, String cnt, String searchDate) {
+Map<String, Object> map = new HashMap<String, Object>();
+		
+		int currPage = Integer.parseInt(page);
+		int cntt = Integer.parseInt(cnt);
+		
+		int start = (currPage-1) * cntt;
+		
+		search = "%" + search + "%";
+		
+		int totalpage = geustMngDAO.noChecklTotalPage(search, cntt,searchDate);
+		
+		List<GuestManageDTO> list = geustMngDAO.noCheckList(search, start, cntt,searchDate);
+		
+		map.put("list", list);
+		map.put("currPage", currPage);
+		map.put("totalPages", totalpage);
+		return map;
+	}
+	
 	public Map<String, Object> resCancelDate(String date) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -129,6 +149,39 @@ public class GuestManageService {
 		// 예약 구분 C로 바꿈
 		geustMngDAO.reserveCancel(res_no);
 		
+		geustMngDAO.insert_res_cancel(res_no,cancelPrice);
+		
+		return res;
+	}
+	
+	public kakaoPayCancelDTO reserveAllCancel(String res_no) {
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.set("Authorization", "KakaoAK " + "c1217d95033551b5bbf6b58300e28030");
+		headers.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		
+		String tid = geustMngDAO.selectTid(res_no);
+		int cancel_amount = geustMngDAO.selectAmount(res_no);
+		
+		kakaoPayCancelDTO res = null;
+		
+		
+		MultiValueMap<String, Object> payParams = new LinkedMultiValueMap<String, Object>();
+		
+		payParams.add("cid","TC0ONETIME");
+		payParams.add("tid",tid);
+		payParams.add("cancel_amount",cancel_amount);
+		payParams.add("cancel_tax_free_amount",0);
+		
+		HttpEntity<Map> request = new HttpEntity<Map>(payParams,headers);
+		
+		RestTemplate template = new RestTemplate();
+		String url = "https://kapi.kakao.com/v1/payment/cancel";
+		
+		res = template.postForObject(url, request, kakaoPayCancelDTO.class);
+		
+		geustMngDAO.reserveCancel(res_no);
+		String cancelPrice = cancel_amount+"";
 		geustMngDAO.insert_res_cancel(res_no,cancelPrice);
 		
 		return res;
@@ -182,5 +235,9 @@ public class GuestManageService {
 		map.put("list", list);
 		return map;
 	}
+
+	
+
+	
 
 }
