@@ -70,25 +70,14 @@ button {
 }
 
 .freetextbox {
-    border: 2px solid #6076E8;
-    border-radius: 4px;
-    padding: 3px;
-    font-size: 14px;
-    color: #333;
-    outline: none;
-    width: 30vh;
-    margin-right: 15px;
-}
-
-.freetextbox {
     border: 2px solid #6076E8; 
     border-radius: 4px; 
     padding: 3px; 
     font-size: 14px; 
     color: #333;
     outline: none; 
-    width: 30vh;
-    margin-right: 15px;
+    width: 30vh; /* 중복 정의된 속성 */
+    margin-right: 15px; /* 중복 정의된 속성 */
 }
 
 .freetextbox:focus {
@@ -223,9 +212,15 @@ var ann_date = '';
 var cnt = 10;
 var totalPages = 1;
 
+var urlParams = new URLSearchParams(window.location.search);
+var pageParam = urlParams.get('page');
+var defaultPage = (pageParam !== null) ? parseInt(pageParam) : 1;
+
+
+
 $(document).ready(function() {
     // 초기 페이지 로드
-    listCall(showPage);
+    listCall(defaultPage);
 
     // 검색 버튼 클릭 이벤트
     $('#freebutton').on('click', function() {
@@ -253,8 +248,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-          
-                drawList(data.list);
+                drawList(data.list,page);
                 totalPages = data.totalPages;
                 initializePagination(totalPages, page);
             },
@@ -276,7 +270,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-                drawList(data.list);
+                drawList(data.list,page);
                 totalPages = data.totalPages;
                 $('#pagination').twbsPagination({
                     totalPages: totalPages,
@@ -307,7 +301,7 @@ $(document).ready(function() {
     }
 
     // 리스트 그리기 함수
-    function drawList(data) {
+    function drawList(data,page) {
         var content = '';
         for (var i = 0; i < data.length; i++) {
             content += '<div class="ann-list">';
@@ -316,7 +310,7 @@ $(document).ready(function() {
             } else {
                 content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
             }
-            content += '<div class="ann-list-subject"><a href="/annDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
+            content += '<div class="ann-list-subject"><a href="/annDetail.go?ann_no=' + data[i].ann_no + '&page=' + page +'">' + data[i].ann_subject + '</a></div>';
             content += '<div class="ann-list-name">' + data[i].register + '</div>';
             content += '<div class="ann-list-date">' + data[i].ann_date + '</div>';
             

@@ -3,10 +3,16 @@ package com.connec.tel.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,6 +26,13 @@ public class CustomerService {
 	
 	@Autowired CustomerDAO customerDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	private JavaMailSender javaMailSender; 
+	
+	
+	@Value("${spring.mail.username}")
+    private String senderEmail;
 	
 	
 	
@@ -156,5 +169,43 @@ public class CustomerService {
 		
 		return map;
 	}
+
+	
+	
+	
+	
+	/*           메일인증                */
+
+
+	public void emailcode(String email, String code) {
+		sendEmail(email,code);
+	}
+	
+	private void sendEmail(String email, String code) {
+		MimeMessage message = javaMailSender.createMimeMessage();
+				
+		try {
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			helper.setFrom(senderEmail); // 발신자 이메일 주소 설정
+			 helper.setTo(email); // 수신자 이메일 주소 설정
+			 helper.setSubject("이메일 인증코드입니다.");
+			 helper.setText("이메일 인증코드입니다. :"+code +"을 입력해주세요.", true); // 내용 설정
+		
+		
+			 javaMailSender.send(message); // 이메일 전송
+	            logger.info("메일 전송 완료: {}", email);
+		
+		} catch (Exception e) {
+			logger.error("메일 전송 실패: {}", e.getMessage());
+			
+			e.printStackTrace();
+		}		
+		
+	}
+
+	
+	
+	
+	
 
 }

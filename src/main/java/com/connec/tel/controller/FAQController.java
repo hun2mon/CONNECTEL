@@ -42,7 +42,7 @@ public class FAQController {
 		int pagePerCnt = Integer.parseInt(cnt);
 		
 		
-		return faqService.list(currPage,pagePerCnt,category);
+		return faqService.list(currPage,pagePerCnt,category,page);
 	}
 
 
