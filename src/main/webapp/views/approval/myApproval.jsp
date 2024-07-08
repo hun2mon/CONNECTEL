@@ -8,14 +8,6 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 
-   body {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
-    }
-
 .draftTitle {
 	width: 10%;
 }

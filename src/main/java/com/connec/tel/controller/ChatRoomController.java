@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +72,8 @@ public class ChatRoomController {
 	 // 특정 채팅방 조회
 	 @GetMapping("/room/{roomId}")
 	 @ResponseBody
-	 public Map<String, ChatRoom> roomInfo(@PathVariable String roomId) {
-	     return chatRoomRepository.findRoomById(roomId);
+	 public Map<String, ChatRoom> roomInfo(@PathVariable String roomId, HttpSession session) {
+	     return chatRoomRepository.findRoomById(roomId, session);
 	 }
 	 
 	 @GetMapping("/content/{roomId}")
@@ -118,6 +120,19 @@ public class ChatRoomController {
 		 return chatRoomRepository.plusMember(params);
 	 }
 	 
+	 @PostMapping("/roomNameChange")
+	 @ResponseBody
+	 public Map<String, Object> roomNameChange(@RequestParam Map<String, Object> param){
+		 logger.info("param : {}", param);
+		 return chatRoomRepository.roomNameChange(param);
+	 }
+	 
+	 @PostMapping("/outRoom")
+	 @ResponseBody
+	 public Map<String, Object> outRoom(@RequestParam Map<String, Object> param){
+		 logger.info("param : {}", param);
+		 return chatRoomRepository.outRoom(param);
+	 }
 	 
 	 
 	 

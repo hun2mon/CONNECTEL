@@ -61,4 +61,16 @@
 		WHERE cm.chat_no = #{param1} ORDER BY e.rank_code ASC
 	</select>
 	
+	<update id="roomNameChange" parameterType="map">
+		UPDATE chat_member SET room_name = #{room_name} WHERE chat_no = #{chat_no} AND emp_no = #{emp_no}
+	</update>
+	
+	<delete id="outRoom">
+		DELETE FROM chat_member WHERE chat_no = #{chat_no} AND emp_no = #{emp_no}
+	</delete>
+	
+	<update id="updateEnterDate">
+		UPDATE chat_member SET enter_date = now() WHERE chat_no = #{param1} AND emp_no = #{emp_no}
+	</update>
+	
 </mapper>

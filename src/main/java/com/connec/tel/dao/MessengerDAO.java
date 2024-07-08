@@ -25,4 +25,10 @@ public interface MessengerDAO {
 
 	List<EmpDTO> chatMemberList(String roomId);
 
+	int roomNameChange(Map<String, Object> param);
+
+	void outRoom(Map<String, Object> param);
+
+	void updateEnterDate(String id, String emp_no);
+
 }

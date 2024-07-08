@@ -179,6 +179,36 @@
 #downloadBtn{
 	width: 100%;
 }
+
+#chatMemberUl{
+	height: 400px;
+    overflow: auto;
+}
+
+#subject_change_div{
+	display: flex;
+	margin-right: auto !important;
+    margin-left: 20px;
+}
+
+#room_subject_change{
+	border: 1px solid #e9ecef;
+}
+
+#chatMemberList p{
+	margin-top: 5px !important;
+}
+
+ #roomSubject{
+ 	 font-size: larger;
+ 	 font-weight: 800;
+ }
+ 
+ #cancel{
+ 	display: none;
+ }
+ 
+
 </style>
 </head>
 <body>
@@ -210,6 +240,9 @@
 								</div>
 								<div class="col-lg-9  col-xl-10" id="chat_content">
 								<div id="chat_top">
+									<div id="subject_change_div">
+										<p id="roomSubject"></p>
+						        	</div>
 									<div><i class="fa-solid fa-bell" id="bells"></i></div>
 									<div><i class="fa-solid fa-bars" id="bars" onclick="open_side_bar()"></i></div>
 								</div>
@@ -226,9 +259,7 @@
 														<label for="img" class="btn-upload">
 														  	<i class="fa-solid fa-image"></i>&nbsp&nbsp이미지 전송
 														</label>
-														<form id="imgForm">
-															<input type="file" name="img" id="img" onchange="sendImg()" accept="image/gif, image/jpeg, image/png, image/webp">														
-														</form>
+														<input type="file" name="img" id="img" onchange="sendImg()" accept="image/gif, image/jpeg, image/png, image/webp">														
 													</div>
 													<div>
 														<label for="file" class="btn-upload">
@@ -297,8 +328,12 @@
 	    <div class="modal-dialog modal-sm modal-right">
 	        <div class="modal-content">
 	            <div class="modal-body" id="modal_body">
+	            	<div>
+						<input type="text" name="room_subject" id="room_subject_change">
+						<input type="hidden" name="subject">
+						<button type="button" class="btn btn-info btn-sm" name="modalBtn" onclick="changeRoomSubject()">수정</button>
+	            	</div>
 	                <div class="text-center" id="chatMemberList">
-	                    <p>김정훈 사원(인사팀)</p><hr>
 	                </div>
 					<div class="btn-group">
 				    </div>
@@ -317,6 +352,22 @@
 	            </div>
 	            <div class="modal-body" id="imgModal">
 	                
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+	<div id="info-alert-modal" class="modal fade" tabindex="-1" role="dialog"
+	    aria-hidden="true">
+	    <div class="modal-dialog modal-sm">
+	        <div class="modal-content">
+	            <div class="modal-body p-4">
+	                <div class="text-center" id="alert_body">
+	                    <i class="dripicons-information h1 text-info"></i>
+	                    <p class="mt-3" id="alert_content"></p>
+	                    <button type="button" class="btn btn-info my-2" data-dismiss="modal" id="submitBtn">확인</button>
+	                    <button type="button" class="btn btn-info my-2" data-dismiss="modal" id="cancel">취소</button>
+	                </div>
 	            </div>
 	        </div><!-- /.modal-content -->
 	    </div><!-- /.modal-dialog -->
@@ -407,7 +458,9 @@
     function addMember(index) {
     	for (emp of memberList) {
 			if (emp == team[index].emp_no) {
-				alert('이미 선택한 직원입니다.');
+				$('#cancel').css('display','none');
+				$('#alert_content').html('이미 선택한 직원입니다.');
+				$('#info-alert-modal').modal('show');
 				return;
 			}
 		}
@@ -477,7 +530,11 @@
     
     function createRoom() {
     	
-    	$('#bs-example-modal-sm').modal('hide');
+
+    	
+    	plusMemberList = plusMemberList.filter(function(item) {
+			return item !== null && item !== undefined && item !== '';
+		});	
     	
     	memberList = memberList.filter(function(item) {
 			return item !== null && item !== undefined && item !== '';
@@ -492,9 +549,12 @@
     	}
     	
     	if ($('#room_subject').val() == '') {
-			alert('채팅방 제목을 입력해 주세요.');
+    		$('#cancel').css('display','none');
+    		$('#alert_content').html('채팅방 제목을 입력해 주세요.');
+			$('#info-alert-modal').modal('show');
 		}else{
 			if (option == 'C') {
+		    	$('#bs-example-modal-sm').modal('hide');
 				
 				params = {
 		    			name:$('#room_subject').val(),
@@ -518,9 +578,12 @@
 			} else {
 				
 				if (plusMemberList.length == 0) {
-					alert('추가할 사원을 선택해 주세요');
+					$('#cancel').css('display','none');
+					$('#alert_content').html('추가할 사원을 선택해 주세요.');
+					$('#info-alert-modal').modal('show');
 					return;
 				}
+				$('#bs-example-modal-sm').modal('hide');
 				
 				params = {
 		    			chat_no:chat_no,
@@ -560,7 +623,7 @@
      		success:function(data){
      			var content = '';
      			for (item of data) {
-     				content += '<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2"><div class="user-img"><img src="/photo/'+item.profile_img+'" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-right"></span></div><div class="w-75 d-inline-block v-middle pl-2">';
+     				content += '<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2"><div class="user-img"><img src="/assets/images/chat.png" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-right"></span></div><div class="w-75 d-inline-block v-middle pl-2">';
 					content += '<h6 class="message-title mb-0 mt-1">'+item.room_name+'</h6></div></a>';
 				}
      			$('#chat_body').append(content);
@@ -572,10 +635,14 @@
 	}
     
     var chatMemberList;
+    var room_id = [];
     function enterRoom(roomId) {
     	var sender = '${loginInfo.name}';
     	var emp_no = '${loginInfo.emp_no}';
     	$('#chatMemberList').html('');
+    	
+    	
+    	
     	
     	$('#textarea1').prop('readonly', false);
     	$('#chat_content').css('display','block');
@@ -594,6 +661,10 @@
          			findRoom(data.roomId);
          			chatMemberList = data.chatMemberList;
          			
+         			chat_no = data.roomId;
+         			
+         			
+         			
          			var content = '';
          			var button = '';
          			
@@ -601,10 +672,15 @@
          			
          			for (item of chatMemberList) {
          				content += '<p>'+item.name+' '+item.rank_name+'('+item.dept_name+')</p><hr>';
+         				
+         				if (item.emp_no == '${loginInfo.emp_no}') {							
+	         				$('#roomSubject').html(item.room_name);
+	         				$('#room_subject_change').val(item.room_name);
+						}
 					}
          			
          			button += '<button type="button" class="btn btn-info btn-sm" onclick="memberPlus()">대화 상대 추가</button>';
-			        button += '<button type="button" class="btn btn-danger btn-sm">채팅방 나가기</button>';
+			        button += '<button type="button" class="btn btn-danger btn-sm" onclick="outRoomConfirm()">채팅방 나가기</button>';
          			
 			        $('#chatMemberList').html(content);
 			        $('.btn-group').html(button);
@@ -614,6 +690,54 @@
          		}
          	})
         }
+	}
+    
+    
+    function outRoomConfirm() {
+    	$('#alert_content').html('채팅방을 나가시겠습니까?');
+		$('#info-alert-modal').modal('show');
+		$('#cancel').css('display','inline');
+    	$('#submitBtn').on('click',function(){
+    		$.ajax({
+    			url:'/chat/outRoom',
+    			method:'post',
+    			data:{
+    				chat_no:chat_no,
+    				emp_no:'${loginInfo.emp_no}'
+    			},
+    			dataType:'JSON',
+    			success:function(data){
+    				location.reload(true);
+    			},
+    			error:function(e){
+    				console.log(e);
+    			}
+    		})
+    	});
+	}
+    
+    
+    function changeRoomSubject() {
+    	$.ajax({
+			url:'/chat/roomNameChange',
+			method:'post',
+			data:{
+				chat_no:chat_no,
+				room_name:$('#room_subject_change').val(),
+				emp_no:'${loginInfo.emp_no}'
+			},
+			dataType:'JSON',
+			success:function(data){
+				$('#alert_content').html(data.msg);
+				$('#info-alert-modal').modal('show');
+				$('#roomSubject').html($('#room_subject_change').val());
+				findAllRoom();
+			},
+			error:function(e){
+				console.log(e);
+			}
+		})
+		
 	}
     
     
@@ -669,7 +793,7 @@
     
     function sendImg() {
     	
-    	$('.btn-upload').css('display','none');
+    	$('#imgFileModal').css('display','none');
     	
     	var formData = new FormData();
 		var inputFile = $("#img");
@@ -718,7 +842,8 @@
 		
 		
 		if(fileSize > maxSize){
-			alert("파일첨부 사이즈는 5MB 이내로 가능합니다.");
+			$('#alert_content').html("파일첨부 사이즈는 5MB 이내로 가능합니다.");
+			$('#info-alert-modal').modal('show');
 			$(inputFile).val(''); //업로드한 파일 제거
 			return; 
 		} else {
@@ -782,28 +907,34 @@
 			$('#chatContent').append(content);	
 			$('#textarea1').val('');
 		}
-		$('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
 		content = '';
 	}
     
 
     function findRoom(roomId) {
       	 $.ajax({
-        		url:'/chat/room/' + roomId,
-        		method:'get',
-        		data:{},
-        		dataType:'JSON',
-        		success:function(data){
-        			sock = new SockJS("/ws_stomp");
-        		    ws = Stomp.over(sock);
-        		    reconnect = 0;
-        		    drawChatContent(roomId);
-        			connect();
-        		},
-        		error:function(e){
-        			console.log(e);
-        		}
-        	})
+			url:'/chat/room/' + roomId,
+			method:'get',
+			data:{},
+			dataType:'JSON',
+			success:function(data){
+				sock = new SockJS("/ws_stomp");
+			    ws = Stomp.over(sock);
+			    reconnect = 0;
+			    drawChatContent(roomId);
+			    for (item of room_id) {
+			    	if (item == roomId) {
+						return;
+					}	
+				}
+		    	room_id.push(roomId);
+			    connect();
+			    
+			},
+			error:function(e){
+				console.log(e);
+			}
+		})
    	}
     
     
@@ -873,6 +1004,7 @@
 					}
 				}
     			$('#chatContent').append(content);	
+    			$('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
     		},
     		error:function(e){
     			console.log(e);

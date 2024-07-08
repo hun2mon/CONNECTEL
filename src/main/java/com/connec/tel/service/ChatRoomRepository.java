@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,10 @@ public class ChatRoomRepository {
 	     return chatRooms;
 	 }
 	
-	 public Map<String, ChatRoom> findRoomById(String id) {
+	 public Map<String, ChatRoom> findRoomById(String id, HttpSession session) {
 		 Map<String, ChatRoom> map = new HashMap<String, ChatRoom>();
+		 EmpDTO dto = (EmpDTO) session.getAttribute("loginInfo");
+		 msgDAO.updateEnterDate(id,dto.getEmp_no());
 		 ChatRoom chatRoom = msgDAO.getChatRoom(id);
 		 map.put("chatRoom", chatRoom);
 	     return map;
@@ -76,6 +80,26 @@ public class ChatRoomRepository {
 		}
 		
 		map.put("msg", "인원이 추가되었습니다.");
+		
+		return map;
+	}
+
+	public Map<String, Object> roomNameChange(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int row = msgDAO.roomNameChange(param);
+		
+		if (row > 0) {
+			map.put("msg", "변경이 완료 되었습니다.");
+		}
+		
+		return map;
+	}
+
+	public Map<String, Object> outRoom(Map<String, Object> param) {
+Map<String, Object> map = new HashMap<String, Object>();
+		
+		msgDAO.outRoom(param);
 		
 		return map;
 	}
