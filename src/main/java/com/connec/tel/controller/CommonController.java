@@ -80,6 +80,16 @@ public class CommonController {
 		return "/guest/proxyReserve";
 	}
 	
+	//추가결제 성공시
+		@RequestMapping(value ="/common/plusSuccess" )
+		public String plusSuccess(@RequestParam("pg_token") String pgToken,HttpSession session,Model model) {
+			logger.info("성공");
+			logger.info("pgToken : " +pgToken);
+			kakaoPayApproveDTO res = commonService.plusSuccess(pgToken,session);
+			model.addAttribute("msg", "업그레이드 하였습니다.");
+			return "/room/liveRoomManage";
+		}
+	
 	//카카오페이 결제 중 취소
 	@RequestMapping(value ="/common/cancel" )
 	public String cancel(Model model) {

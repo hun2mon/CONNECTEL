@@ -174,6 +174,7 @@
     });
 
     function allDelete() {
+    	
     	  var checkedIds = [];
     	    $('.checkout-room-checkbox:checked').each(function() {
     	        checkedIds.push($(this).val());
@@ -247,9 +248,31 @@
         var content = '';
         for (var item of list) {
             var receivers = item.mail_receiver.split(',');
-            var displayReceiver = receivers[0];
-            var remainingReceivers = receivers.length - 1;
-            var displayText = remainingReceivers > 0 ? displayReceiver + ' 외 ' + remainingReceivers + '명' : displayReceiver;
+            var displayReceivers = [];
+            var remainingReceivers = 0;
+            
+            for (var receiver of receivers) {
+                receiver = receiver.trim();
+                if (receiver.includes('"')) {
+                    // "이름" <이메일> 형식의 수신자 처리
+                    var emailStart = receiver.indexOf('"');
+                    var emailEnd = receiver.indexOf('"', emailStart + 1);
+                    if (emailStart != -1 && emailEnd != -1) {
+                        var name = receiver.substring(0, emailStart).trim();
+                        var email = receiver.substring(emailStart + 1, emailEnd).trim();
+                        displayReceivers.push(name + ' <' + email + '>');
+                    }
+                } else {
+                    // 단순 이메일 형식의 수신자 처리
+                    displayReceivers.push(receiver);
+                }
+            }
+
+            if (displayReceivers.length > 1) {
+                remainingReceivers = displayReceivers.length - 1;
+            }
+
+            var displayText = remainingReceivers > 0 ? displayReceivers[0] + ' 외 ' + remainingReceivers + '명' : displayReceivers[0];
             
             content += '<tr class="trHover">';
             content += '<td><input type="checkbox" class="checkout-room-checkbox" value="' + item.mail_no + '"></td>';
@@ -265,6 +288,26 @@
             $('.checkout-room-checkbox').prop('checked', this.checked);
         });
     }
+
+    function deleteMail(mail_no) {
+
+    	$.ajax({
+	    	type:'POST',
+	    	url:'/mail/deleteMail.ajax',
+	    	data:{
+	    		mail_no : mail_no
+	    	},
+	    	dataType:'JSON',
+	    	success:function(data){
+	    		console.log(data);
+	    		listCall(showPage);
+	    	},
+	    	error:function(e){
+	    		console.log(e);
+	    	}
+	    });
+	}
+    
     
     function mailDetail(mail_no){
     	location.href="/mail/mailDetail.go?mail_no="+mail_no;

@@ -31,6 +31,26 @@ public interface MailDAO {
 
 	List<RoomDTO> TempMailList(String search, int start, int cntt, String emp_no);
 
+	List<MailDTO> clientAddListCall(String search);
+
+	void addAddress(Map<String, Object> param);
+
+	int myAddressTotalPage(String search, int cntt, String emp_no);
+
+	List<RoomDTO> myAddressList(String search, int start, int cntt, String emp_no);
+
+	int clentTotalPage(String search, int cntt);
+
+	List<RoomDTO> clentList(String search, int start, int cntt);
+
+	void updateFavoriteStatus(Map<String, Object> param);
+
+	List<RoomDTO> myAddList(String emp_no, String search);
+
+	List<RoomDTO> myFavoriteList(String emp_no, String search);
+
+	MailDTO reWrite(String mail_no);
+
 	
 
 }

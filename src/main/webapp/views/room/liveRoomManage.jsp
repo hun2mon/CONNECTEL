@@ -795,13 +795,15 @@ function changeCheckIn(){
 			    	type:'POST',
 			    	url:'/common/ready',
 			    	data:{
-			    		item_name: '호텔 더 쉴라 추가결제',
+			    		item_name: 'Hotel The Sheilla',
 			    		quantity: 1, 
 			    		tax_free_amount: 0,
 			    		current_date: currentDate,
 			    		room_no:room_no,
 			    		res_no: res_no,
-			            changeRoom_no:changeRoom_no			    		
+			            changeRoom_no:changeRoom_no,
+			            curr_no:curr_no,
+			            after_no:after_no
 			    	},
 			    	dataType:'JSON',
 			    	success:function(res) {

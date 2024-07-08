@@ -192,7 +192,7 @@
                                         <span class="mr-2"><i class="fas fa-undo"></i></span>수정
                                     </button>	
                                 </c:if>                         
-                                <c:if test="${item.status eq 'N' && loginInfo.authority eq '2' || loginInfo.authority eq '3'}">
+                                <c:if test="${item.status eq 'N' && (loginInfo.authority eq '2' || loginInfo.authority eq '3')}">
 								    <button class="btn btn-success btn-sl-sm" onclick="successBtn()">
 								        <span class="mr-2"><i class="fas fa-check-circle"></i></span>처리완료
 								    </button>	

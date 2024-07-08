@@ -268,6 +268,7 @@ thead {
 				
              </div>
              <div class="modal-footer">
+             	<button type="button" class="btn btn-danger" onclick="reserveAllCancle()">전액 환불</button>
                  <button type="button" class="btn btn-danger" onclick="reserveDelete()">예약 취소</button>
              </div>
          </div><!-- /.modal-content -->
@@ -543,6 +544,31 @@ function reserveDelete(){
 	        data:{
 	        	res_no:res_no,
 	        	cancelPrice:cancelPrice
+	        },
+	        dataType: 'json',
+	        success: function(res) {            	      
+				console.log(res);
+				 alert("취소하였습니다.");
+				$('#cancelModal').modal('hide');
+				listCall(num);				
+	        },
+	        error: function(e) {
+	        	console.log(e);
+	        	$('#cancelModal').modal('hide');
+				listCall(num);	
+	       }
+	    });  
+	
+}
+
+function reserveAllCancle(){
+	var res_no = $('#cancel_res_no').text().replace('예약번호 : ','');
+	console.log('cancelPrice'+cancelPrice);
+	  $.ajax({
+	        type: 'POST',
+	        url: '/guest/reserveAllCancel.ajax',
+	        data:{
+	        	res_no:res_no,
 	        },
 	        dataType: 'json',
 	        success: function(res) {            	      
