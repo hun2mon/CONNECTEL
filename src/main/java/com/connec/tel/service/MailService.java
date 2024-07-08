@@ -173,10 +173,12 @@ Map<String, Object> map = new HashMap<String, Object>();
 		return map;
 	}
 
-	public Map<String, Object> clientAddListCall() {
+	public Map<String, Object> clientAddListCall(String search) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<MailDTO> list = mailDAO.clientAddListCall();
+		search = "%" + search + "%";
+		
+		List<MailDTO> list = mailDAO.clientAddListCall(search);
 		map.put("list", list);
 		return map;
 	}
@@ -228,6 +230,45 @@ Map<String, Object> map = new HashMap<String, Object>();
 		map.put("currPage", currPage);
 		map.put("totalPages", totalpage);
 		return map;
+	}
+
+	public Map<String, Object> updateFavoriteStatus(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		mailDAO.updateFavoriteStatus(param);
+		
+		return map;
+	}
+
+	public Map<String, Object> myAddList(String emp_no, String search) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		search = "%" + search + "%";
+		
+		List<RoomDTO> list = mailDAO.myAddList(emp_no,search);
+		map.put("list", list);
+		return map;
+	}
+
+	public Map<String, Object> myFavoriteList(String emp_no, String search) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		search = "%" + search + "%";
+		
+		List<RoomDTO> list = mailDAO.myFavoriteList(emp_no,search);
+		map.put("list", list);
+		return map;
+	}
+
+	public Map<String, Object> deleteMail(String mail_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		mailDAO.mail_delete(mail_no);
+		
+		return map;
+	}
+
+	public MailDTO reWrite(String mail_no) {
+		
+		return mailDAO.reWrite(mail_no);
 	}
 
 	

@@ -113,7 +113,7 @@ tr{
 <body>
 <div class="container">
     <h3>메일 주소록</h3>
-    <input type="text" id="" class="form-control bg-transparent" name="mail_receiver" placeholder="이름 또는 이메일을 입력해주세요">
+    <input class="form-control custom-shadow custom-radius bg-white" type="search" placeholder="수신자명 또는 이메일을 선택해주세요" aria-label="Search" onkeyup="search()" id="search">
     <hr>
 
     <div class="row">
@@ -123,15 +123,15 @@ tr{
                     <div class="row">
                         <div class="col-sm-3 mb-2 mb-sm-0">
                             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                <a class="nav-link active show" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                                <a class="nav-link active show"  id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
                                     <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block">내주소록</span>
                                 </a>
-                                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                                <a class="nav-link"  id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
                                     <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block" style="font-size: 14px;">고객주소록</span>
                                 </a>
-                                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+                                <a class="nav-link"  id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
                                     <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block">즐겨찾기</span>
                                 </a>
@@ -238,26 +238,37 @@ tr{
             updateReceiverList();
         });
 
-        $(document).on('change', '.check', function(){
-            updateReceiverList();
-        });
-
-        $(document).on('click', 'tbody tr', function(e) {
-            if (e.target.type !== 'checkbox') {
-                const checkbox = $(this).find('.check');
-                checkbox.prop('checked', !checkbox.prop('checked'));
-                updateReceiverList();
-            }
-        });
-
-        clientAddListCall();
+        // 개별 체크박스의 이벤트 핸들러
+         $(document).on('change', '.check', function() {
+	        var type = $(this).closest('.tab-pane').attr('id'); // 현재 탭의 ID 가져오기 (v-pills-home, v-pills-profile, v-pills-settings)
+	        var addNo = $(this).val(); // 현재 체크된 체크박스의 값 (add_no)
+	        
+	        // 현재 탭 이외의 탭에서 동일한 값의 체크박스를 찾아서 상태를 동기화
+	        $('.tab-pane').not('#' + type).find('[value="' + addNo + '"]').prop('checked', $(this).prop('checked'));
+	        
+	        updateReceiverList();
+	    });
+               
+		listCall();
+		clentListCall();
+        myFavoriteListCall();
     });
+    
+    function search() {
+        listCall();
+        myFavoriteListCall();
+        clentListCall();
+    }
 
-    function clientAddListCall(){
+    function clentListCall(){
+    	 var search = $('#search').val();
+    	
         $.ajax({
             type: 'POST',
             url: '/mail/clientAddListCall.ajax',
-            data: {},
+            data: {
+            	search : search
+            },
             dataType: 'JSON',
             success: function(data){
                 console.log(data);
@@ -265,9 +276,9 @@ tr{
                 var content = '';
                 for(let item of data.list){
                     content += '<tr>';
-                    content += '<td><input type="checkbox" class="check" value="' + item.client_add_no + '"></td>';
-                    content += '<td>' + item.client_name + '</td>';
-                    content += '<td>' + item.client_email + '</td>';
+                    content += '<td><input type="checkbox" class="check" value="' + item.res_no + '"></td>';
+                    content += '<td>' + item.cos_name + '</td>';
+                    content += '<td>' + item.cos_email + '</td>';
                     content += '</tr>';
                 }
                 $('#clientAddList').html(content);
@@ -277,17 +288,88 @@ tr{
             }
         });
     }
+    
+    function listCall(){
+    	
+    	var search = $('#search').val();
+    	
+        $.ajax({
+            type: 'POST',
+            url: '/mail/myAddList.ajax',
+            data: {
+            	search : search
+            },
+            dataType: 'JSON',
+            success: function(data){
+                console.log(data);
 
+                var content = '';
+                for(let item of data.list){
+                    content += '<tr>';
+                    content += '<td><input type="checkbox" class="check" value="' + item.add_no + '"></td>';
+                    content += '<td>' + item.add_name + '</td>';
+                    content += '<td>' + item.add_email + '</td>';
+                    content += '</tr>';
+                }
+                $('#myAddList').html(content);
+            },
+            error: function(e){
+                console.log(e);
+            }
+        });
+    }
+    
+    function myFavoriteListCall(){
+    	
+    	var search = $('#search').val();
+    	
+        $.ajax({
+            type: 'POST',
+            url: '/mail/myFavoriteList.ajax',
+            data: {
+            	search : search
+            },
+            dataType: 'JSON',
+            success: function(data){
+                console.log(data);
+
+                var content = '';
+                for(let item of data.list){
+                    content += '<tr>';
+                    content += '<td><input type="checkbox" class="check" value="' + item.add_no + '"></td>';
+                    content += '<td>' + item.add_name + '</td>';
+                    content += '<td>' + item.add_email + '</td>';
+                    content += '</tr>';
+                }
+                $('#markAddList').html(content);
+            },
+            error: function(e){
+                console.log(e);
+            }
+        });
+    }
+    
     function updateReceiverList(){
         var selected = [];
+        var selectedIds = []; // 선택된 항목의 ID를 저장하는 배열
+        
         $('.check:checked').each(function(){
             var row = $(this).closest('tr');
+            var id = $(this).val(); // 체크박스의 값 (예: add_no)
             var name = row.find('td').eq(1).text();
             var email = row.find('td').eq(2).text();
-            selected.push('' + name + '"' + email + '"');
+            
+            // 이미 선택된 ID가 없는 경우에만 추가
+            if (selectedIds.indexOf(id) === -1) {
+                selectedIds.push(id); // ID 추가
+                selected.push('' + name + ' "' + email + '"'); // 이름과 이메일 추가
+            }
         });
-        $('#receiverList').html(selected.join('<br>'));
+        
+        $('#receiverList').empty(); // 기존 내용을 모두 지우고
+        $('#receiverList').html(selected.join('<br>')); // 새로운 선택된 목록을 추가
     }
+
     
     function confirmAction(){
         var receiverList = $('#receiverList').html();
@@ -303,8 +385,6 @@ tr{
     }
 
     function cancelAction() {
-        // 취소 동작 정의
-        alert('취소 버튼이 클릭되었습니다.');
         window.close(); // 팝업 창 닫기
     }
 </script>

@@ -20,9 +20,44 @@ public class MailDTO {
 	private String belong;
 	private String add_phone;
 	private String add_favorite;
+	private int res_no;
+	private String cos_name;
+	private String cos_phone;
+	private String cos_cos_phone;
+	private String cos_email;
 	
 	
 	
+	public int getRes_no() {
+		return res_no;
+	}
+	public void setRes_no(int res_no) {
+		this.res_no = res_no;
+	}
+	public String getCos_name() {
+		return cos_name;
+	}
+	public void setCos_name(String cos_name) {
+		this.cos_name = cos_name;
+	}
+	public String getCos_phone() {
+		return cos_phone;
+	}
+	public void setCos_phone(String cos_phone) {
+		this.cos_phone = cos_phone;
+	}
+	public String getCos_cos_phone() {
+		return cos_cos_phone;
+	}
+	public void setCos_cos_phone(String cos_cos_phone) {
+		this.cos_cos_phone = cos_cos_phone;
+	}
+	public String getCos_email() {
+		return cos_email;
+	}
+	public void setCos_email(String cos_email) {
+		this.cos_email = cos_email;
+	}
 	public int getAdd_no() {
 		return add_no;
 	}

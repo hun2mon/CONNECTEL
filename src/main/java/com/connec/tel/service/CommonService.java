@@ -220,7 +220,7 @@ public class CommonService {
 			
 			logger.info("payParam : {}",payParam);
 			
-			HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(payParam, headers);
+			HttpEntity<Map> request = new HttpEntity<Map>(payParam, headers);
 			
 			RestTemplate template = new RestTemplate();
 			String url = "https://kapi.kakao.com/v1/payment/ready";

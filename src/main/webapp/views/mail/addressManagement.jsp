@@ -91,7 +91,6 @@ table {
 <div class="sidebar-container">
     <jsp:include page="../sideBar.jsp"></jsp:include>
 </div>
-
 <div class="content-body">
     <div class="container-fluid">
         <div class="row">
@@ -103,19 +102,19 @@ table {
                    		 </div>
                         <ul class="nav nav-tabs mb-3">
                             <li class="nav-item">
-                                <a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                                <a href="#home" onclick="listCall('1')" data-toggle="tab" aria-expanded="true" class="nav-link active">
                                     <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block">내 주소록</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#profile" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                <a href="#profile" onclick="myFavoriteListCall('1')" data-toggle="tab" aria-expanded="false" class="nav-link">
                                     <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block">즐겨찾는 주소록</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#settings" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                <a href="#settings" onclick="clentListCall('1')" data-toggle="tab" aria-expanded="false" class="nav-link">
                                     <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block">고객 주소록</span>
                                 </a>
@@ -155,7 +154,32 @@ table {
 	               					    </div>
                             </div>
                             <div class="tab-pane" id="profile">
-                                즐겨찾는 주소록 내용
+                                 <div class="table-responsive">			                           
+				                           <table class="table my-table my">
+											    <thead>
+											        <tr>
+											            <th><input type="checkbox" id="select-all-checkouts"></th>
+											            <th>즐겨찾기</th>
+											            <th>이름</th>
+											            <th>이메일</th>
+											            <th>전화번호</th>
+											            <th>소속</th>
+											            <th>삭제</th>
+											        </tr>
+											    </thead>
+				                               <tbody id="myFavoriteList">
+				                               </tbody>
+				                                   <tr>
+				                                       <td colspan="7">
+				                                           <div class="pagging">
+				                                               <nav aria-label="Page navigation" style="text-align: center">
+				                                                   <div id="myFavoritePagination"></div>
+				                                               </nav>
+			                                    			</div>
+		                               				  </td>
+		                           					</tr>                                
+	                      					</table>
+	               					    </div>
                             </div>
                             <div class="tab-pane" id="settings">
                                 <div class="table-responsive">			                           
@@ -239,17 +263,21 @@ table {
 var showPage=1;
 var num;
 var clentNum;
+var myFavoriteNum;
 
 	$(document).ready(function(){
 		listCall(showPage);
 		clentListCall(showPage);
+		myFavoriteListCall(showPage);
 	})
 	
 	function search() {
         $('#pagination').twbsPagination('destroy');
         $('#clientPagination').twbsPagination('destroy');
+        $('#myFavoritePagination').twbsPagination('destroy');
         listCall(showPage);
         clentListCall(showPage);
+        myFavoriteListCall(showPage);
     }
 
 	function listCall(showPage){
@@ -271,7 +299,7 @@ var clentNum;
 
                 var totalPages = data.totalPages;
 
-                $('#pagination').twbsPagination({
+                $('#myFavoritePagination').twbsPagination({
                     startPage: startPage, // 시작페이지
                     totalPages: totalPages, // 총 페이지 수
                     visiblePages: 5, // 보여줄 페이지 수 1,2,3,4,5
@@ -323,21 +351,57 @@ var clentNum;
         });
 	}
 	
+	function myFavoriteListCall(showPage){
+		var search = $('#search').val();
+        console.log("리스트콜 호출");
+        $.ajax({
+            type: 'POST',
+            url: '/mail/myAddressList.ajax',
+            data:{
+                search : search,
+                page : showPage,            
+                cnt : 10
+            },
+            dataType: 'json',
+            success: function(data) {            
+                var startPage = data.currPage > data.totalPages ? data.totalPages : data.currPage;
+                myFavoriteDrawList(data.list);
+                console.log(data);
+
+                var totalPages = data.totalPages;
+
+                $('#pagination').twbsPagination({
+                    startPage: startPage, // 시작페이지
+                    totalPages: totalPages, // 총 페이지 수
+                    visiblePages: 5, // 보여줄 페이지 수 1,2,3,4,5
+                    onPageClick: function(evt, pg){ // 페이지 클릭시 실행 함수
+                        console.log(pg); // 클릭한 페이지 번호
+                        myFavoriteNum = pg;
+                        myFavoriteListCall(pg);
+                    }
+                })
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+	}
+	
 	function drawList(list) {
         var roomContainer = $('#myAddressList');
         roomContainer.empty(); 
-        
+      
         var content = '';
         for (var item of list) {
                     
             content += '<tr>';
             content += '<td><input type="checkbox" class="checkout-room-checkbox" value="' + item.add_no + '"></td>';
             if (item.add_favorite === 'true') {
-                content += '<td><div class="star-checkbox" onclick="toggleStar(this)" data-add-no="' + item.add_no + '">';
+            	content += '<td><div class="star-checkbox" onclick="toggleStar(this, ' + item.add_no + ')">';
                 content += '<i class="fas fa-star" id="star-icon"></i>'; // 채워진 별
                 content += '</div></td>';
             } else if (item.add_favorite === 'false') {
-                content += '<td><div class="star-checkbox" onclick="toggleStar(this)" data-add-no="' + item.add_no + '">';
+            	content += '<td><div class="star-checkbox" onclick="toggleStar(this, ' + item.add_no + ')">';
                 content += '<i class="far fa-star" id="star-icon"></i>'; // 빈 별
                 content += '</div></td>';
             }
@@ -348,11 +412,42 @@ var clentNum;
             content += '<td>' + item.belong+ '</td>';
             content += '<td><a href="#" onclick="deleteAddr(' + item.add_no + ')"><i class="fas fa-trash-alt"></i></a></td>';  
             content += '</tr>';
+         
         }
         $('#myAddressList').html(content);
+        
+    }
+	
+	function myFavoriteDrawList(list) {
+        var roomContainer = $('#myFavoriteList');
+        roomContainer.empty(); 
+
+        
+        var content = '';
+        for (var item of list) {                
+            if (item.add_favorite === 'true') {
+            	console.log('item : ' + item);
+            	content += '<tr>';
+            	content += '<td><input type="checkbox" class="checkout-room-checkbox" value="' + item.add_no + '"></td>';
+            	content += '<td><div class="star-checkbox" onclick="toggleStar(this, ' + item.add_no + ')">';
+            	content += '<i class="fas fa-star" id="star-icon"></i>'; // 채워진 별
+            	content += '</div></td>';
+            	content += '<td>' + item.add_name + '</td>';
+            	content += '<td>' + item.add_email + '</td>';
+            	content += '<td>' + item.add_phone  + '</td>';
+            	content += '<td>' + item.belong+ '</td>';
+            	content += '<td><a href="#" onclick="deleteAddr(' + item.add_no + ')"><i class="fas fa-trash-alt"></i></a></td>';  
+            	content += '</tr>';
+			}
+                        
+        }
+        $('#myFavoriteList').html(content);
 
         
     }
+	
+	
+	
 	
 	function clentDrawList(list) {
         var roomContainer = $('#clentList');
@@ -362,9 +457,9 @@ var clentNum;
         for (var item of list) {
                     
             content += '<tr>';       
-            content += '<td>' + item.client_name + '</td>';
-            content += '<td>' + item.client_email + '</td>';
-            content += '<td>' + item.client_phone  + '</td>';
+            content += '<td>' + item.cos_name + '</td>';
+            content += '<td>' + item.cos_email + '</td>';
+            content += '<td>' + item.cos_phone  + '</td>';
             content += '</tr>';
         }
         $('#clentList').html(content);
@@ -390,6 +485,7 @@ var clentNum;
   	    	success:function(data){
   	    		console.log(data);
   	    		listCall(showPage);
+  	    		
   	    	},
   	    	error:function(e){
   	    		console.log(e);
@@ -405,21 +501,55 @@ var clentNum;
         $('#addModal').modal('show');
     }
 
-    function toggleStar(element) {
+    var isFavorite = false;
+    
+    function toggleStar(element, addNo) {
         var icon = $(element).find('i');
         icon.toggleClass('far'); // 빈 별 아이콘 클래스 토글
         icon.toggleClass('fas'); // 채워진 별 아이콘 클래스 토글
+        isFavorite = icon.hasClass('fas');
+        
+        console.log('addNo : ' + addNo);
+        console.log('isFavorite : ' + isFavorite);
+        
+        updateFavoriteStatus(addNo, isFavorite);
     }
+    
+    
+    function updateFavoriteStatus(addNo, isFavorite){
+    	$.ajax({
+  	    	type:'POST',
+  	    	url:'/mail/updateFavoriteStatus.ajax',
+  	    	data:{
+  	    		addNo:addNo,
+  	    		isFavorite:isFavorite
+  	    	},
+  	    	dataType:'JSON',
+  	    	success:function(data){
+  	    		console.log(data);
+  	    		listCall(num);
+  	    		myFavoriteListCall(myFavoriteNum);
+  	    	},
+  	    	error:function(e){
+  	    		console.log(e);
+  	    	}
+  	    });
+    }
+    
+    
+    
+    
 
     function addAddress() {
         var add_name = $('#add_name').val().trim();
         var add_email = $('#add_email').val().trim();
         var belong = $('#belong').val().trim();
         var add_phone = $('#add_phone').val().trim();
-
-        var isStarred = $('#star-icon').hasClass('fas');
+        var add_favorite = isFavorite ? 'true' : 'false';
         
-        console.log('이름: ' + add_name + ', 이메일: ' + add_email + ', 소속: ' + belong + ', 연락처: ' + add_phone + ', 즐겨찾기: ' + isStarred);
+        
+        
+        console.log('이름: ' + add_name + ', 이메일: ' + add_email + ', 소속: ' + belong + ', 연락처: ' + add_phone + ', 즐겨찾기: ' + add_favorite);
         
         // 간단한 예시로 이름과 이메일 주소 유효성 검사
         if (add_name === '') {
@@ -439,7 +569,7 @@ var clentNum;
             return;
         }
 			
-        $.ajax({
+         $.ajax({
         	type:'POST',
         	url:'/mail/addAddress.ajax',
         	data:{
@@ -447,18 +577,19 @@ var clentNum;
         		add_email:add_email,
         		belong:belong,
         		add_phone:add_phone,
-        		isStarred:isStarred
+        		add_favorite:add_favorite
         	},
         	dataType:'JSON',
         	success:function(res) {
         		$('#addModal').modal('hide');
+        		listCall(num);
         		
         	},
         	error: function(e) {
                 console.error("Error occurred:", e);
                 alert("결제 준비 중 오류가 발생했습니다. 다시 시도해주세요.");
             }
-        })
+        }) 
         
     }
 </script>

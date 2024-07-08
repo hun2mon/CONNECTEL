@@ -136,7 +136,7 @@
 							</div>
 							</c:if>
 							 <c:if test="${info.status eq 'T' }">
-							    <button class="btn btn-primary btn-sl-sm mr-3" id="reWrite" type="button">재작성</button>
+							    <button class="btn btn-primary btn-sl-sm mr-3" onclick="reWrite(${info.mail_no})" id="reWrite" type="button">재작성</button>
 							    </c:if>
 							 </div>   
                         </div>
@@ -149,5 +149,10 @@
 		console.log('mail_no : ' + mail_no);
 		location.href='/mail/mail_delete.do?mail_no='+mail_no;
 	}
+	
+	function reWrite(mail_no) {
+		location.href='/mail/reWrite?mail_no='+mail_no;
+	}
+	
 </script>
 </html>
