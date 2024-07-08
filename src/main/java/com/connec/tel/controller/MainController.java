@@ -32,6 +32,16 @@ public class MainController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 
+    private final NoticeController noticeController;
+
+	
+    @Autowired
+    public MainController(NoticeController noticeController) {
+        this.noticeController = noticeController;
+    }
+	
+	
+
 	// 메인 페이지 이동
 	@RequestMapping(value = "/main")
 	public String mainss(Model model, HttpSession session) throws IOException {
@@ -47,6 +57,7 @@ public class MainController {
 	    
 	    return "main/main";
 	}
+	
 	@GetMapping(value = "/reservation/count")
 	@ResponseBody
 	public List<MainDTO> reservess(Model model){
@@ -57,14 +68,16 @@ public class MainController {
 		return event;
 	}
 	
+	
     @GetMapping("/filterEventsByCategory")
     @ResponseBody
     public List<MainDTO> filterEventsByCategory(@RequestParam("category") String category, @RequestParam("emp_no") String emp_no) {
         logger.info("필터링 ㄱㄱ");
         logger.info(category + "ㅇㅇㅇㅇ");
-
+        String content = "테스트야야야~~";
         switch (category) {
             case "금주":
+                noticeController.sendTest(emp_no, content);
                 return mainService.getThisWeek(emp_no); // 금주 일정
             case "오늘":
                 return mainService.getToday(emp_no); // 오늘 일정

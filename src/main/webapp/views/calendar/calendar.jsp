@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>호텔 일정</title>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css"
+	rel="stylesheet" />
 <link href="/css/jquery-explr-1.4.css" rel="stylesheet" type="text/css">
 <style>
-
-#calendar{
+#calendar {
 	width: 100%;
 }
 
@@ -27,36 +28,38 @@
 }
 
 #content {
-    width: 81%;
-    height: 100%;
-    margin-left: 320px;
-    margin-right: 150px;
-    margin-top: 122px;
-    margin-bottom: 250px;
+	width: 81%;
+	height: 100%;
+	margin-left: 320px;
+	margin-right: 150px;
+	margin-top: 122px;
+	margin-bottom: 250px;
 }
+
 .circle-test {
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background-color: blue;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	background-color: blue;
 }
+
 .circle-test1 {
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background-color: skyblue;
-}
-.sssss{
-  display : flex;
-  width : 500px;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	background-color: skyblue;
 }
 
-@media (min-width: 992px) {
-    .container {
-        max-width: 1540px !important;
-    }
+.sssss {
+	display: flex;
+	width: 500px;
 }
 
+@media ( min-width : 992px) {
+	.container {
+		max-width: 1540px !important;
+	}
+}
 </style>
 </head>
 <body>
@@ -66,76 +69,79 @@
 		</div>
 		<div id="content">
 
-			
+
 			<div class="container">
-				<div class = "sssss">
-					<div class = "circle-test">
-					</div>
-					<span>내 일정</span>
-					&nbsp;&nbsp;
-					<div class = "circle-test1">
-					</div>
-					<span>공유 일정</span>			
-					</div>
-						<div id='calendar'></div>
+				<div class="sssss">
+					<div class="circle-test"></div>
+					<span>내 일정</span> &nbsp;&nbsp;
+					<div class="circle-test1"></div>
+					<span>공유 일정</span>
+				</div>
+				<div id='calendar'></div>
 			</div>
-				<input type="hidden" id="emp_no" name="emp_no" value="${sessionScope.loginInfo.emp_no}">
-			
-<!-- 일정 추가 모달 -->
-<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addEventModalLabel">일정 추가</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addEventForm">
-                    <input type="hidden" id="emp_no" name="emp_no" value="${sessionScope.loginInfo.emp_no}">
-                    <div class="form-group">
-                        <label for="eventTitle">제목</label>
-                        <input type="text" class="form-control" id="eventTitle" placeholder="일정 제목 입력">
-                    </div>
-                    <div class="form-group">
-                        <label for="eventStart">시작 시간</label>
-                        <input type="datetime-local" class="form-control" id="eventStart">
-                    </div>
-                    <div class="form-group">
-                        <label for="eventEnd">종료 시간</label>
-                        <input type="datetime-local" class="form-control" id="eventEnd">
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="allDayCheckbox">
-                        <label class="form-check-label" for="allDayCheckbox">
-                            종일 이벤트
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary" id="saveEventBtn">저장</button>
-            </div>
-        </div>
-    </div>
-</div>
+			<input type="hidden" id="emp_no" name="emp_no"
+				value="${sessionScope.loginInfo.emp_no}">
+
+			<!-- 일정 추가 모달 -->
+			<div class="modal fade" id="addEventModal" tabindex="-1"
+				aria-labelledby="addEventModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="addEventModalLabel">일정 추가</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="addEventForm">
+								<input type="hidden" id="emp_no" name="emp_no"
+									value="${sessionScope.loginInfo.emp_no}">
+								<div class="form-group">
+									<label for="eventTitle">제목</label> <input type="text"
+										class="form-control" id="eventTitle" placeholder="일정 제목 입력">
+								</div>
+								<div class="form-group">
+									<label for="eventStart">시작 시간</label> <input
+										type="datetime-local" class="form-control" id="eventStart">
+								</div>
+								<div class="form-group">
+									<label for="eventEnd">종료 시간</label> <input
+										type="datetime-local" class="form-control" id="eventEnd">
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox"
+										id="allDayCheckbox"> <label class="form-check-label"
+										for="allDayCheckbox"> 종일 이벤트 </label>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary" id="saveEventBtn">저장</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
 
 			<!-- 일정 상세 보기 모달 -->
-			<div class="modal fade" id="viewEventModal" tabindex="-1" aria-labelledby="viewEventModalLabel" aria-hidden="true">
+			<div class="modal fade" id="viewEventModal" tabindex="-1"
+				aria-labelledby="viewEventModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<!-- modal-lg: 큰 사이즈 모달 -->
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="viewEventModalLabel">일정 상세 보기</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
-					<input type="hidden" id="editEventId">
-						
+						<input type="hidden" id="editEventId">
+
 						<div class="modal-body">
 							<div id="eventDetails">
 								<h5 id="eventDetailsTitle"></h5>
@@ -146,76 +152,87 @@
 									<strong>종료 시간:</strong> <span id="eventDetailsEnd"></span>
 								</p>
 								<hr>
-			                    <h5>일정 공유된 인원</h5>
-			                    <ul id="sharedParticipantsList"></ul> <!-- 인원 목록을 표시할 ul 요소 -->
+								<h5>일정 공유된 인원</h5>
+								<ul id="sharedParticipantsList"></ul>
+								<!-- 인원 목록을 표시할 ul 요소 -->
 							</div>
 							<!-- 일정 공유 버튼 -->
-							<button type="button" class="btn btn-primary mt-3 mb-3" id="shareEventBtn">인원추가</button>
+							<button type="button" class="btn btn-primary mt-3 mb-3"
+								id="shareEventBtn">인원추가</button>
 							<!-- 선택된 인원 표시할 영역 -->
 							<ul id="selectedParticipantsList"></ul>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" id="deleteEventBtn">삭제</button>
-							<button type="button" class="btn btn-success" id="editParticipantsBtn" style = "display : none;">일정 공유 수정</button>
-			                <button type="button" class="btn btn-success" id="addParticipantsBtn">일정 공유</button>
-							<button type="button" class="btn btn-success" id="editParties">수정</button>			                
+							<button type="button" class="btn btn-success"
+								id="editParticipantsBtn" style="display: none;">일정 공유
+								수정</button>
+							<button type="button" class="btn btn-success"
+								id="addParticipantsBtn">일정 공유</button>
+							<button type="button" class="btn btn-success" id="editParties">수정</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			
-						
-			
-	<!-- 일정 수정 모달 -->
-	<div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="editEventModalLabel">일정 수정</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            
-	            <div class="modal-body">
-	                <form id="editEventForm">
-	                    <input type="hidden" id="editEventId">
-	                    <div class="form-group">
-	                        <label for="editEventTitle">제목</label>
-	                        <input type="text" class="form-control" id="editEventTitle" placeholder="일정 제목 입력">
-	                    </div>
-	                    <div class="form-group">
-	                        <label for="editEventStart">시작 시간</label>
-	                        <input type="datetime-local" class="form-control" id="editEventStart">
-	                    </div>
-	                    <div class="form-group">
-	                        <label for="editEventEnd">종료 시간</label>
-	                        <input type="datetime-local" class="form-control" id="editEventEnd">
-	                    </div>
-	                </form>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary" id="updateEventBtn">저장</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
+
+
+
+			<!-- 일정 수정 모달 -->
+			<div class="modal fade" id="editEventModal" tabindex="-1"
+				aria-labelledby="editEventModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editEventModalLabel">일정 수정</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+
+						<div class="modal-body">
+							<form id="editEventForm">
+								<input type="hidden" id="editEventId">
+								<div class="form-group">
+									<label for="editEventTitle">제목</label> <input type="text"
+										class="form-control" id="editEventTitle"
+										placeholder="일정 제목 입력">
+								</div>
+								<div class="form-group">
+									<label for="editEventStart">시작 시간</label> <input
+										type="datetime-local" class="form-control" id="editEventStart">
+								</div>
+								<div class="form-group">
+									<label for="editEventEnd">종료 시간</label> <input
+										type="datetime-local" class="form-control" id="editEventEnd">
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary" id="updateEventBtn">저장</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<!-- 일정 공유 모달 -->
-			<div class="modal fade" id="shareEventModal" tabindex="-1" aria-labelledby="shareEventModalLabel" aria-hidden="true">
+			<div class="modal fade" id="shareEventModal" tabindex="-1"
+				aria-labelledby="shareEventModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="shareEventModalLabel">일정 공유</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
-						    <button type="button" class="btn btn-primary" id="shareHR">인사팀</button>
-						    <button type="button" class="btn btn-primary" id="shareCustomer">고객팀</button>
-						    <button type="button" class="btn btn-primary" id="shareFacility">시설팀</button>
+							<button type="button" class="btn btn-primary" id="shareHR">인사팀</button>
+							<button type="button" class="btn btn-primary" id="shareCustomer">고객팀</button>
+							<button type="button" class="btn btn-primary" id="shareFacility">시설팀</button>
 							<ul id="tree">
 								<li class="card2">
 									<!-- card2 데이터 여기에 추가 -->
@@ -229,152 +246,217 @@
 							</ul>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" id="deleteParties">일정 참여자 삭제</button>	                
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-primary" id="deleteParties">일정
+								참여자 삭제</button>
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">닫기</button>
 						</div>
 					</div>
 				</div>
-			</div>			
-			
-	<!-- 삭제 확인 모달 -->
-	<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="confirmDeleteModalLabel">일정 삭제 확인</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                <p>일정을 삭제하시겠습니까?</p>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">삭제</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	
-	<!-- 수정 확인 모달 -->
-	<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel" aria-hidden="true">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="editEventModalLabel">일정 수정</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                <form id="editEventForm">
-	                    <div class="form-group">
-	                        <label for="editEventTitle">제목</label>
-	                        <input type="text" class="form-control" id="editEventTitle" placeholder="일정 제목">
-	                    </div>
-	                    <div class="form-group">
-	                        <label for="editEventStart">시작 시간</label>
-	                        <input type="datetime-local" class="form-control" id="editEventStart">
-	                    </div>
-	                    <div class="form-group">
-	                        <label for="editEventEnd">종료 시간</label>
-	                        <input type="datetime-local" class="form-control" id="editEventEnd">
-	                    </div>
-	                    <input type="hidden" id="editEventId">
-	                </form>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-	                <button type="button" class="btn btn-primary" id="updateEventBtn">수정하기</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	
-	<!-- 공유 확인 모달 -->
-	<div class="modal fade" id="confirmShareModal" tabindex="-1" role="dialog" aria-labelledby="confirmShareModalLabel" aria-hidden="true">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="confirmShareModalLabel">일정 공유 확인</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                이 팀과 일정을 공유하시겠습니까?
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary" id="confirmShareBtn">확인</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	
-	<!-- 선택된 인원 알림 모달 -->
-	<div id="alreadySelectedModal" class="modal fade" tabindex="-1" role="dialog">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title">알림</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                <p>이미 선택된 인원입니다!</p>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
+			</div>
 
-		<!-- 선택된 인원 알림 모달 -->
-	<div id="SelectedModal" class="modal fade" tabindex="-1" role="dialog">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title">알림</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                <p id="selectedCountMessage">일정 공유되었습니다!</p>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" id = "addParticipantsBtnn" class="btn btn-primary" data-dismiss="modal">확인</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	
+			<!-- 삭제 확인 모달 -->
+			<div class="modal fade" id="confirmDeleteModal" tabindex="-1"
+				role="dialog" aria-labelledby="confirmDeleteModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="confirmDeleteModalLabel">일정 삭제
+								확인</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>일정을 삭제하시겠습니까?</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">취소</button>
+							<button type="button" id="confirmDeleteBtn"
+								class="btn btn-danger">삭제</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 수정 확인 모달 -->
+			<div class="modal fade" id="editEventModal" tabindex="-1"
+				role="dialog" aria-labelledby="editEventModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editEventModalLabel">일정 수정</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="editEventForm">
+								<div class="form-group">
+									<label for="editEventTitle">제목</label> <input type="text"
+										class="form-control" id="editEventTitle" placeholder="일정 제목">
+								</div>
+								<div class="form-group">
+									<label for="editEventStart">시작 시간</label> <input
+										type="datetime-local" class="form-control" id="editEventStart">
+								</div>
+								<div class="form-group">
+									<label for="editEventEnd">종료 시간</label> <input
+										type="datetime-local" class="form-control" id="editEventEnd">
+								</div>
+								<input type="hidden" id="editEventId">
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-primary" id="updateEventBtn">수정하기</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 공유 확인 모달 -->
+			<div class="modal fade" id="confirmShareModal" tabindex="-1"
+				role="dialog" aria-labelledby="confirmShareModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="confirmShareModalLabel">일정 공유 확인</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">이 팀과 일정을 공유하시겠습니까?</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary"
+								id="confirmShareBtn">확인</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 선택된 인원 알림 모달 -->
+			<div id="alreadySelectedModal" class="modal fade" tabindex="-1"
+				role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">알림</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>이미 선택된 인원입니다!</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary"
+								data-dismiss="modal">확인</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 선택된 인원 알림 모달 -->
+			<div id="SelectedModal" class="modal fade" tabindex="-1"
+				role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">알림</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p id="selectedCountMessage">일정 공유되었습니다!</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" id="addParticipantsBtnn"
+								class="btn btn-primary" data-dismiss="modal">확인</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
-
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 	<script src="/js/jquery-explr-1.4.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>	
+	
 	<script>
-		var selectedParticipants = [];
+	$.noConflict();
 
+	var selectedParticipants = [];
 		// 조직도 불러오기 및 부서별 일정공유 버튼 클릭
-		$(document).ready(function(){
+	jQuery(document).ready(function($) {		
+	    function getParameterByName(name) {
+	        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	            results = regex.exec(location.search);
+	        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	    }
+	    var calNo = getParameterByName('cal_no');
+	    if (calNo) {
+	        $.ajax({
+	            url: '/calendar/mainDetail',
+	            type: 'GET',
+	            data: {
+	                cal_no: calNo
+	            },
+	            success: function(response) {
+	                if (response) {
+	                    // response가 HTML 형식일 때, jQuery를 사용하여 파싱
+	                    var $response = $(response);
+
+	                    // 예시: 특정 클래스나 ID를 기준으로 필요한 데이터 추출
+	                    
+	                    var calContent = $(response.cal_content).text();
+	                    var calStart =  $(response.cal_start).text();
+	                    var calEnd =  $(response.cal_end).text();
+						console.log(calContent);
+						console.log(calStart);
+						console.log(calEnd);
+	                    // 모달에 데이터 설정
+	                    $('#eventDetailsTitle').text(calContent);
+	                    $('#eventDetailsStart').text(calStart);
+	                    $('#eventDetailsEnd').text(calEnd);
+
+	                    // 모달 열기
+	                    $('#viewEventModal').modal('show');
+	                    calendar.render();
+	                }
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('AJAX 요청 실패:', error);
+	            }
+	        });
+	    } else {
+	        console.log('cal_no 파라미터가 없음');
+	    }
+			
+			
 		    $('#eventStart').on('change', function() {
-		        // 시작 시간을 가져옴 (로컬 시간대)
-		        var startDateTime = new Date($('#eventStart').val());
-
-		        // 시작 시간에서 1시간을 더한 후 끝나는 시간을 계산 (로컬 시간대)
-		        var endDateTime = new Date(startDateTime.getTime() + (10 * 60 * 60 * 1000));
-
-		        // 끝나는 시간을 ISO 포맷으로 문자열로 변환 (로컬 시간대)
-		        var endDateTimeISOString = endDateTime.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
-
-		        // 끝나는 시간 입력 필드에 자동으로 설정 (로컬 시간대)
-		        $('#eventEnd').val(endDateTimeISOString);
+		        var startTime = $(this).val();
+		        if (startTime) {
+		            var endTime = new Date('1970-01-01T' + startTime + 'Z');
+		            endTime.setHours(endTime.getHours() + 10);
+		            $('#eventEnd').val(endTime.toISOString().substr(11, 5));
+		        }
 		    });
 		    var eventId;
 		    var departmentId;
@@ -410,9 +492,33 @@
 
 		});
 		
-		$('#viewEventModal').on('show.bs.modal', function() {
-		    $('#selectedParticipantsList').empty(); // 선택된 인원 목록 비우기
-		});
+		   $('#viewEventModal').on('show.bs.modal', function() {
+		        var eventId = $(this).data('eventId');
+		        if (eventId) {
+		            $.ajax({
+		                url: '/calendar/getEventDetails',
+		                type: 'GET',
+		                data: { cal_no: eventId },
+		                success: function(response) {
+		                    if (response) {
+		                        var $response = $(response);
+		                        var calContent = $response.find('.cal_content').text();
+		                        var calStart = $response.find('.cal_start').text();
+		                        var calEnd = $response.find('.cal_end').text();
+
+		                        // 모달에 데이터 설정
+		                        $('#eventDetailsTitle').text(calContent);
+		                        $('#eventDetailsStart').text(calStart);
+		                        $('#eventDetailsEnd').text(calEnd);
+		                    }
+		                },
+		                error: function(xhr, status, error) {
+		                    console.error('AJAX 요청 실패:', error);
+		                }
+		            });
+		        }
+		    });
+
 		
 		// 조직도에서 선택된 사람들 인원추가하기!
 		
@@ -669,301 +775,302 @@
 		}
 
 
-		var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-			initialView: 'dayGridMonth',
-			selectable: true,
-			headerToolbar: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-			},
-			buttonText: {
-				today: '오늘',
-				month: '월',
-				week: '주',
-				day: '일',
-				list: '목록'
-			},
-			events: function(fetchInfo, successCallback, failureCallback) {
-			    // 1. 사용자의 emp_no 값을 가져옵니다.
-				var empNo = $('#emp_no').val();
-				console.log(empNo);
+		document.addEventListener('DOMContentLoaded', function() {
+		    var calendarEl = document.getElementById('calendar');
+		    var calendar = new FullCalendar.Calendar(calendarEl, {
+		        initialView: 'dayGridMonth',
+		        selectable: true,
+		        headerToolbar: {
+		            left: 'prev,next today',
+		            center: 'title',
+		            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+		        },
+		        buttonText: {
+		            today: '오늘',
+		            month: '월',
+		            week: '주',
+		            day: '일',
+		            list: '목록'
+		        },
+		        events: function(fetchInfo, successCallback, failureCallback) {
+		            var empNo = $('#emp_no').val();
+		            $.ajax({
+		                url: '/getEvents',
+		                method: 'GET',
+		                data: { emp_no: empNo },
+		                success: function(response) {
+		                    var events = response.map(function(event) {
+		                        return {
+		                            id: event.cal_no,
+		                            title: event.cal_content,
+		                            start: event.cal_start,
+		                            end: event.cal_end,
+		                            backgroundColor: event.shared_status ? 'skyblue' : '',
+		                            isShared: event.shared_status,
+		                        };
+		                    });
+		                    successCallback(events);
+		                },
+		                error: function(error) {
+		                    console.error('일정 데이터를 가져오는 중 오류가 발생했습니다.', error);
+		                    failureCallback(error);
+		                }
+		            });
+		        },
+		        dayMaxEventRows: true, // 하루에 최대 일정 수를 제한하여 보여줍니다.
+		        dateClick: function(info) {		        	
+		            var date = info.dateStr;
+		            console.log('Clicked date:', date);
+		            		            
+		            $('#allDayCheckbox').prop('checked', false);
 
-				// 2. emp_no 값을 GET 요청 파라미터로 넘겨서 서버에 요청합니다.
-				$.ajax({
-				    url: '/getEvents',
-				    method: 'GET',
-				    data: { emp_no: empNo }, // emp_no를 data 객체에 추가하여 전달합니다.
-				    success: function(response) {
-				        // 3. 서버에서 받아온 데이터를 처리하여 FullCalendar에 전달할 events 배열로 변환합니다.
-				    	var events = response.map(function(event) {
-				    	    return {
-				    	        id: event.cal_no,
-				    	        title: event.cal_content,
-				    	        start: event.cal_start,
-				    	        end: event.cal_end,
-				    	        backgroundColor: event.shared_status ? 'skyblue' : '',
-				    	        isShared: event.shared_status,
-				    	    };
-				    	});
+		            var startDateTime = date + 'T09:00';
+		            var endDateTime = date + 'T10:00';
+		            console.log('Start DateTime:', startDateTime);
+		            $('#eventStart').val(startDateTime);
+		            $('#eventEnd').val(endDateTime);
+		            
+		            // 콘솔에서 입력 필드의 값을 확인
+		            console.log('eventStart value:', $('#eventStart').val());
+		            console.log('eventEnd value:', $('#eventEnd').val());
 
-				    	// successCallback을 호출하여 FullCalendar에 events 배열을 전달합니다.
-				    	successCallback(events);
+		            $('#selectedParticipantsList').empty(); // 선택된 인원 목록 초기화
 
-				    	// events 배열을 순회하면서 isShared  있는 경우 해당 버튼을 비활성화합니다.
-
-			        },
-			        error: function(error) {
-				        console.error('일정 데이터를 가져오는 중 오류가 발생했습니다.', error);
-				        failureCallback(error);
-				    }
-				});
-			},				
-
-			dateClick: function(info) {
-				    var date = info.dateStr; // 클릭한 날짜 가져오기
-
-				    // 클릭한 날짜를 시작일과 종료일 입력 필드에 설정
-				    $('#eventStart').val(date);
-				    $('#eventEnd').val(date);
-
-			    $('#selectedParticipantsList').empty(); // 선택된 인원 목록 초기화
-
-			    var hasEvent = calendar.getEvents().some(function(event) {
-			        var start = event.start;
-			        var end = event.end;
-			        return (start <= date && date <= end) || (event.allDay && start.getDate() === date.getDate());
-			    });
-
-			    if (!hasEvent) {
-			        $('#addEventModal').modal('show');
-			    } else {
-			        // 이벤트가 있는 경우에는 이벤트 상세 정보 모달 열기
-		        var event = calendar.getEvents().find(function(event) {
-		            return event.startStr === date;
-		        });
-
-			        $('#eventDetailsTitle').text(event.title);
-			        $('#eventDetailsStart').text(event.startStr);
-			        $('#eventDetailsEnd').text(event.endStr);
-
-			        // isShared 값에 따라 다른 모달창을 보여줌
-			    }
-			},
-			eventClick: function(info) {
-	            var eventId = info.event.id;
-	            var empNo = $('#emp_no').val(); // emp_no 값을 가져옴
-
-	            
-	            var startDate = new Date(info.event.start).toLocaleString('ko-KR', {
-	                year: 'numeric',
-	                month: '2-digit',
-	                day: '2-digit',
-	                hour: '2-digit',
-	                minute: '2-digit',
-	                hour12: false
-	            }).replace(/\./g, '-').replace(' ', '').replace(/-/g, '-').replace(/\s/g, '');
-
-	            var endDate = new Date(info.event.end).toLocaleString('ko-KR', {
-	                year: 'numeric',
-	                month: '2-digit',
-	                day: '2-digit',
-	                hour: '2-digit',
-	                minute: '2-digit',
-	                hour12: false
-	            }).replace(/\./g, '-').replace(' ', '').replace(/-/g, '-').replace(/\s/g, '');
-	            
-	            
-				$('#eventDetailsTitle').text(info.event.title);
-                $('#eventDetailsStart').text(startDate);
-                $('#eventDetailsEnd').text(endDate);
-			    $('#selectedParticipantsList').empty(); // 선택된 인원 목록을 비우기
-			  
-
-		$.ajax({
-		    type: 'GET',
-		    url: '/getEvent', // 서버에서 cal_no에 해당하는 데이터를 가져오는 엔드포인트
-		    data: { emp_no: empNo, cal_no: eventId }, // cal_no 전송
-		    success: function(data) {
-		        // 받은 데이터로 모달 내용을 업데이트하거나 추가 처리
-		        console.log('추가 데이터:', data);
-		        console.log("ㅎㅇㅎㅇ : " + data.shared_status);
-		        
-		        // shared_status 값이 'true'인지 확인
-				if (data.shared_status === true && data.emp_no != empNo ) {
-                    $('#viewEventModal').modal('show');
-                    $('#viewEventModal').data('eventId', eventId);
-				  $('#deleteEventBtn').prop('disabled', true);
-				  $('#shareEventBtn').prop('disabled', true);  
-				  $('#editParticipantsBtn').prop('disabled', true);
-				  $('#addParticipantsBtn').prop('disabled', true);
-				  $('#editParties').prop('disabled', true);
-				  
-				} else {
-                    $('#viewEventModal').modal('show');
-                    $('#viewEventModal').data('eventId', eventId);
-				  $('#deleteEventBtn').prop('disabled', false);
-				  $('#editParticipantsBtn').prop('disabled', false);
-				  $('#shareEventBtn').prop('disabled', false);  
-				  $('#addParticipantsBtn').prop('disabled', false);
-				  $('#editParties').prop('disabled', false);
-				}
-		    },
-		    error: function(e) {
-		        console.log('추가 데이터 가져오기 오류:', e);
-		    }
-		});
-		if (eventId) {
-		    $.ajax({
-		        type: 'GET',
-		        url: '/getEventParticipants',
-		        data: { id: eventId },
-		        success: function(data) {
-		            $('#sharedParticipantsList').empty(); // 기존 목록을 비웁니다.
-				
-		            // 컨트롤러에서 전달받은 data 배열을 직접 사용합니다.
-		            data.forEach(function(name) {
-		                var listItem = '<li>' + name + ' <button type="button" style = "background-color : white; border : white; color:red;" class="btn btn-danger btn-sm removeParticipantBtn">x</button></li>';
-		                $('#sharedParticipantsList').append(listItem);
+		            var hasEvent = calendar.getEvents().some(function(event) {
+		                var start = event.start;
+		                var end = event.end;
+		                return (start <= date && date <= end) || (event.allDay && start.getDate() === new Date(date).getDate());
 		            });
 
-		            // 각 삭제 버튼에 클릭 이벤트를 추가합니다.
-		            $('.removeParticipantBtn').click(function() {
-		    			var eventId = $('#viewEventModal').data('eventId');
-		                var participantName = $(this).parent().text().replace(' x', ''); // 이름 추출
-		                $(this).parent().remove(); // 리스트 항목 제거
-		                console.log(empNo, eventId);
-		                // 서버에 삭제 요청을 보낼 수 있습니다.
+		            if (!hasEvent) {
+		                $('#addEventModal').modal('show');
+		            } else {
+		                var event = calendar.getEvents().find(function(event) {
+		                    return event.startStr === date;
+		                });
+		                $('#eventDetailsTitle').text(event.title);
+		                $('#eventDetailsStart').text(event.startStr);
+		                $('#eventDetailsEnd').text(event.endStr);
+		            }
+		        },
+                eventClick: function(info) {
+                    var eventId = info.event.id;
+                    var empNo = $('#emp_no').val();
+
+                    var startDate = new Date(info.event.start).toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    }).replace(/\./g, '-').replace(' ', '').replace(/-/g, '-').replace(/\s/g, '');
+
+                    var endDate = new Date(info.event.end).toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    }).replace(/\./g, '-').replace(' ', '').replace(/-/g, '-').replace(/\s/g, '');
+
+                    $('#eventDetailsTitle').text(info.event.title);
+                    $('#eventDetailsStart').text(startDate);
+                    $('#eventDetailsEnd').text(endDate);
+                    $('#selectedParticipantsList').empty(); // 선택된 인원 목록을 비우기
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/getEvent',
+                        data: { emp_no: empNo, cal_no: eventId },
+                        success: function(data) {
+                            console.log('추가 데이터:', data);
+                            if (data.shared_status === true && data.emp_no != empNo) {
+                                $('#viewEventModal').modal('show');
+                                $('#viewEventModal').data('eventId', eventId);
+                                $('#deleteEventBtn').prop('disabled', true);
+                                $('#shareEventBtn').prop('disabled', true);
+                                $('#editParticipantsBtn').prop('disabled', true);
+                                $('#addParticipantsBtn').prop('disabled', true);
+                                $('#editParties').prop('disabled', true);
+                            } else {
+                                $('#viewEventModal').modal('show');
+                                $('#viewEventModal').data('eventId', eventId);
+                                $('#deleteEventBtn').prop('disabled', false);
+                                $('#editParticipantsBtn').prop('disabled', false);
+                                $('#shareEventBtn').prop('disabled', false);
+                                $('#addParticipantsBtn').prop('disabled', false);
+                                $('#editParties').prop('disabled', false);
+                            }
+                        },
+                        error: function(e) {
+                            console.log('추가 데이터 가져오기 오류:', e);
+                        }
+                    });
+                    
+
+                    if (eventId) {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/getEventParticipants',
+                            data: { id: eventId },
+                            success: function(data) {
+                                $('#sharedParticipantsList').empty();
+                                data.forEach(function(name) {
+                                    var listItem = '<li>' + name + ' <button type="button" style="background-color: white; border: white; color:red;" class="btn btn-danger btn-sm removeParticipantBtn">x</button></li>';
+                                    $('#sharedParticipantsList').append(listItem);
+                                });
+
+                                $('.removeParticipantBtn').click(function() {
+                                    var participantName = $(this).parent().text().replace(' x', '');
+                                    $(this).parent().remove();
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/removeEventParticipant',
+                                        data: { eventId: eventId, name: participantName },
+                                        success: function(response) {
+                                            console.log('참가자가 성공적으로 삭제되었습니다.');
+                                        },
+                                        error: function(e) {
+                                            console.log(e);
+                                            alert('참가자를 삭제하는 중 오류가 발생했습니다.');
+                                        }
+                                    });
+                                });
+                            },
+                            error: function(e) {
+                                console.log(e);
+                                alert('일정 공유된 인원을 불러오는 중 오류가 발생했습니다.');
+                            }
+                        });
+                    }
+                }
+            });
+		    window.calendar = calendar;
+            calendar.render();
+            
+            
+            
+            
+            $('#allDayCheckbox').on('change', function() {
+                var isAllDay = $(this).prop('checked'); // 종일 이벤트 체크 여부
+
+                // 시작일과 종료일 입력 필드 값 가져오기
+                var eventStartValue = $('#eventStart').val();
+                var eventEndValue = $('#eventEnd').val();
+
+                if (isAllDay) {
+                    // 종일 이벤트인 경우 시간 정보를 제거
+                    var startDate = new Date(eventStartValue);
+                    startDate.setHours(09, 0, 0, 0); // 시작일의 시간을 00:00:00으로 설정
+                    $('#eventStart').val(startDate.toISOString().slice(0, 16));
+
+                    var endDate = new Date(eventEndValue);
+                    endDate.setHours(32, 59, 59, 999); // 종료일의 시간을 23:59:59.999로 설정
+                    $('#eventEnd').val(endDate.toISOString().slice(0, 16));
+                } else {
+                    // 종일 이벤트가 아닌 경우 기존에 설정된 값으로 초기화
+                    $('#eventStart').val(eventStartValue);
+                    $('#eventEnd').val(eventEndValue);
+                }
+            });
+
+            $('#addEventModal').on('show.bs.modal', function(event) {
+                // 모달이 열릴 때마다 날짜 입력 필드의 값을 초기화
+                var isAllDay = $('#allDayCheckbox').prop('checked'); // 종일 이벤트 체크 여부
+                
+                // 클릭 이벤트에서 설정한 값 가져오기
+                var eventStartValue = $('#eventStart').val();
+                var eventEndValue = $('#eventEnd').val();
+                
+                if (isAllDay) {
+                    // 종일 이벤트인 경우 시간 정보를 제거
+                    var startDate = new Date(eventStartValue);
+                    startDate.setHours(0, 0, 0, 0); // 시작일의 시간을 00:00:00으로 설정
+                    $('#eventStart').val(startDate.toISOString().slice(0, 16));
+
+                    var endDate = new Date(eventEndValue);
+                    endDate.setHours(23, 59, 59, 999); // 종료일의 시간을 23:59:59.999로 설정
+                    $('#eventEnd').val(endDate.toISOString().slice(0, 16));
+                } else {
+                    // 종일 이벤트가 아닌 경우, 기존에 설정된 값으로 초기화
+                    if (eventStartValue && eventEndValue) {
+                        $('#eventStart').val(eventStartValue);
+                        $('#eventEnd').val(eventEndValue);
+                    } else {
+                        $('#eventStart').val('');
+                        $('#eventEnd').val('');
+                    }
+                }
+                
+                // 이벤트 제목 필드는 항상 초기화
+                $('#eventTitle').val('');
+            });
+		    $('#saveEventBtn').on('click', function() {
+		        var eventTitle = $('#eventTitle').val();
+		        var eventStart = $('#eventStart').val();
+		        var eventEnd = $('#eventEnd').val();
+		        var empNo = $('#emp_no').val();
+
+		        // 시작일과 종료일을 Date 객체로 변환
+		        var startDate = new Date(eventStart);
+		        var endDate = new Date(eventEnd);
+
+
+		        if (eventTitle && eventStart && eventEnd && empNo) {
+		            // 시작일이 종료일보다 클 경우 경고창 띄우기
+		            if (startDate > endDate) {
+		                alert('시작일이 종료일보다 클 수 없습니다.');
+		            } else {
 		                $.ajax({
 		                    type: 'POST',
-		                    url: '/removeEventParticipant',
-		                    data: { eventId: eventId, name: participantName},
-		                    success: function(response) {
-		                        console.log('참가자가 성공적으로 삭제되었습니다.');
+		                    url: '/addEvent',
+		                    data: {
+		                        cal_content: eventTitle,
+		                        cal_start: eventStart,
+		                        cal_end: eventEnd,
+		                        emp_no: empNo
+		                    },
+		                    success: function(data) {
+		                        if (data.success) {
+		                            calendar.addEvent({
+		                                title: eventTitle,
+		                                start: eventStart,
+		                                end: eventEnd
+		                            });
+
+		                            $('#addEventModal').modal('hide');
+		                            $('#eventTitle').val('');
+		                            $('#eventStart').val('');
+		                            $('#eventEnd').val('');
+		                        } else {
+		                            alert('일정 추가에 실패했습니다.');
+		                        }
 		                    },
 		                    error: function(e) {
 		                        console.log(e);
-		                        alert('참가자를 삭제하는 중 오류가 발생했습니다.');
+		                        alert('일정 추가 중 오류가 발생했습니다.');
 		                    }
 		                });
-		            });
-		        },
-		        error: function(e) {
-		            console.log(e);
-		            alert('일정 공유된 인원을 불러오는 중 오류가 발생했습니다.');
+		            }
+		        } else {
+		            alert('일정 제목, 시작 시간, 종료 시간을 모두 입력해주세요.');
 		        }
 		    });
-		}
-			    
-			}
-		});
 
-		calendar.render();
-        
-        
+		    $('#deleteParties').on('click', function() {
+		        var eventId = $('#viewEventModal').data('eventId');
 
-		
-		$('#saveEventBtn').on('click', function() {
-		    var eventTitle = $('#eventTitle').val();
-		    var eventStart = $('#eventStart').val();
-		    var eventEnd = $('#eventEnd').val();
-		    var empNo = $('#emp_no').val();
-		    var isAllDay = $('#allDayCheckbox').prop('checked'); // 종일 이벤트 체크 여부
-
-
-		    // 시작일과 종료일을 Date 객체로 변환
-		    var startDate = new Date(eventStart);
-		    var endDate = new Date(eventEnd);
-		    
-		    // 종일 이벤트인 경우 시간 정보를 제거
-		    if (isAllDay) {
-		        start.setHours(0, 0, 0, 0); // 시작일의 시간을 00:00:00으로 설정
-		        end.setHours(23, 59, 59, 999); // 종료일의 시간을 23:59:59.999로 설정
-		    }
-
-		    if (eventTitle && eventStart && eventEnd && empNo) {
-		        // 시작일이 종료일보다 클 경우 경고창 띄우기
-		        if (startDate > endDate) {
-		            alert('시작일이 종료일보다 클 수 없습니다.');
-		        } else {
+		        if (eventId) {
 		            $.ajax({
 		                type: 'POST',
-		                url: '/addEvent',
-		                data: {
-		                    cal_content: eventTitle,
-		                    cal_start: eventStart,
-		                    cal_end: eventEnd,
-		                    emp_no: empNo
-		                },
-		                success: function(data) {
-		                    if (data.success) {
-		                        calendar.addEvent({
-		                            title: eventTitle,
-		                            start: eventStart,
-		                            end: eventEnd
-		                        });
-
-		                        $('#addEventModal').modal('hide');
-		                        $('#eventTitle').val('');
-		                        $('#eventStart').val('');
-		                        $('#eventEnd').val('');
-		                    } else {
-		                        alert('일정 추가에 실패했습니다.');
-		                    }
-		                },
-		                error: function(e) {
-		                    console.log(e);
-		                    alert('일정 추가 중 오류가 발생했습니다.');
-		                }
-		            });
-		        }
-		    } else {
-		        alert('일정 제목, 시작 시간, 종료 시간을 모두 입력해주세요.');
-		    }
-		});
-		
-		$('#deleteParties').on('click', function() {
-			var eventId = $('#viewEventModal').data('eventId');
-
-			if (eventId) {
-				$.ajax({
-					type: 'POST',
-					url: '/deleteParties',
-					data: { id: eventId },
-					success: function(data) {
-						if (data.success) {
-							$('#viewEventModal').modal('hide');
-							$('#shareEventModal').modal('hide');
-
-						} else {
-							alert('일정 삭제에 실패했습니다.');
-						}
-					},
-					error: function(e) {
-						console.log(e);
-						alert('일정 삭제 중 오류가 발생했습니다.');
-					}
-				});
-			}
-		});
-
-		$('#deleteEventBtn').on('click', function() {
-		    var eventId = $('#viewEventModal').data('eventId');
-			console.log('ddd' + eventId);
-		    if (eventId) {
-		        // 삭제 확인 모달 보이기
-		        $('#confirmDeleteModal').modal('show');
-
-		        // 삭제 확인 버튼 클릭 시 이벤트
-		        $('#confirmDeleteBtn').on('click', function() {
-		            $.ajax({
-		                type: 'POST',
-		                url: '/deleteEvent',
+		                url: '/deleteParties',
 		                data: { id: eventId },
 		                success: function(data) {
 		                    if (data.success) {
-		                        calendar.getEventById(eventId).remove();
 		                        $('#viewEventModal').modal('hide');
+		                        $('#shareEventModal').modal('hide');
 		                    } else {
 		                        alert('일정 삭제에 실패했습니다.');
 		                    }
@@ -973,12 +1080,42 @@
 		                    alert('일정 삭제 중 오류가 발생했습니다.');
 		                }
 		            });
+		        }
+		    });
 
-		            // 삭제 처리 후 모달 닫기
-		            $('#confirmDeleteModal').modal('hide');
-		        });
-		    }
-		});
-	</script>
+		    $('#deleteEventBtn').on('click', function() {
+		        var eventId = $('#viewEventModal').data('eventId');
+		        console.log('삭제할 이벤트 ID:', eventId);
+		        if (eventId) {
+		            // 삭제 확인 모달 보이기
+		            $('#confirmDeleteModal').modal('show');
+
+		            // 삭제 확인 버튼 클릭 시 이벤트
+		            $('#confirmDeleteBtn').on('click', function() {
+		                $.ajax({
+		                    type: 'POST',
+		                    url: '/deleteEvent',
+		                    data: { id: eventId },
+		                    success: function(data) {
+		                        if (data.success) {
+		                            calendar.getEventById(eventId).remove();
+		                            $('#viewEventModal').modal('hide');
+		                        } else {
+		                            alert('일정 삭제에 실패했습니다.');
+		                        }
+		                    },
+		                    error: function(e) {
+		                        console.log(e);
+		                        alert('일정 삭제 중 오류가 발생했습니다.');
+		                    }
+		                });
+
+		                // 삭제 처리 후 모달 닫기
+		                $('#confirmDeleteModal').modal('hide');
+		            });
+		        }
+		    });
+		});		
+</script>
 </body>
 </html>

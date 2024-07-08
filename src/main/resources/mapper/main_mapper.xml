@@ -4,27 +4,45 @@
 >
 
 <mapper namespace="com.connec.tel.dao.MainDAO">
-	
+
+
 
     <select id="getThisWeek" resultType="main">
-        SELECT distinct * FROM calendar c left JOIN calendar_share cs
-        ON cs.cal_no = c.cal_no
-        WHERE DATE(c.cal_start) BETWEEN #{param1} AND #{param2} AND c.emp_no = #{param3} group by c.cal_no desc
+	SELECT c.*
+FROM (
+    SELECT 
+        c.cal_no, c.cal_start, c.cal_end, cal_content,
+        ROW_NUMBER() OVER (PARTITION BY c.cal_no ORDER BY c.cal_no DESC) AS rn
+    FROM calendar c 
+    LEFT JOIN calendar_share cs ON cs.cal_no = c.cal_no
+   	<![CDATA[ WHERE (
+            (DATE(c.cal_start) <= #{param2} AND DATE(c.cal_end) >= #{param1}) 
+         OR (DATE(c.cal_start) <= #{param1} AND DATE(c.cal_end) >= #{param2})  
+         OR (DATE(c.cal_start) >= #{param1} AND DATE(c.cal_start) <= #{param2})
+         OR (DATE(c.cal_end) >= #{param1} AND DATE(c.cal_end) <= #{param2}) 
+       )
+       AND (c.emp_no = #{param3} OR cs.emp_no = #{param3})
+	) AS c
+	WHERE rn = 1
+	ORDER BY cal_no DESC; ]]>
     </select>
 
     <select id="getToday" resultType="main">
 		SELECT DISTINCT * 
 		FROM calendar c 
 		LEFT JOIN calendar_share cs ON cs.cal_no = c.cal_no
-		WHERE DATE(cal_start) = #{param1} 
+		WHERE (DATE(c.cal_start) = #{param1} OR DATE(c.cal_end) = #{param1} OR (DATE(c.cal_start) &lt; #{param1} AND DATE(c.cal_end) &gt; #{param1})) 
 		AND (c.emp_no = #{param2} OR cs.emp_no = #{param2}) 
 		GROUP BY c.cal_no DESC
     </select>
 
     <select id="getTomorrow" resultType="main">
-        SELECT distinct * FROM calendar c left JOIN calendar_share cs
-        ON cs.cal_no = c.cal_no
-        WHERE DATE(cal_start) = #{param1} AND c.emp_no = #{param2} group by c.cal_no desc
+        SELECT DISTINCT * 
+        FROM calendar c 
+        LEFT JOIN calendar_share cs ON cs.cal_no = c.cal_no
+		WHERE (DATE(c.cal_start) = #{param1} OR DATE(c.cal_end) = #{param1} OR (DATE(c.cal_start) &lt; #{param1} AND DATE(c.cal_end) &gt; #{param1})) 
+		AND (c.emp_no = #{param2} OR cs.emp_no = #{param2}) 
+        GROUP BY c.cal_no DESC
     </select>
     
     <select id = "totalReserve" resultType = "int">
@@ -36,7 +54,7 @@
 				DATE_FORMAT(in_date, '%Y-%m-%d') AS date_str,
 		    COUNT(res_no) AS count
 				FROM reservation
-				WHERE in_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND CURDATE()
+				WHERE in_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND CURDATE() AND division = 'A'
 				GROUP BY date_str
 				ORDER BY date_str ASC
     </select>

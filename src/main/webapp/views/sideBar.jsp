@@ -102,82 +102,28 @@
 					<!-- ============================================================== -->
 					<ul class="navbar-nav float-left mr-auto ml-3 pl-1">
 						<!-- Notification -->
-						<li class="nav-item dropdown"><a
-							class="nav-link dropdown-toggle pl-md-3 position-relative"
-							href="javascript:void(0)" id="bell" role="button"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<span><i data-feather="bell" class="svg-icon"></i></span> <span
-								class="badge badge-primary notify-no rounded-circle">5</span>
-						</a>
-							<div
-								class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
-								<ul class="list-style-none">
-									<li>
-										<div class="message-center notifications position-relative">
-											<!-- Message -->
-											<a href="javascript:void(0)"
-												class="message-item d-flex align-items-center border-bottom px-3 py-2">
-												<div class="btn btn-danger rounded-circle btn-circle">
-													<i data-feather="airplay" class="text-white"></i>
-												</div>
-												<div class="w-75 d-inline-block v-middle pl-2">
-													<h6 class="message-title mb-0 mt-1">Luanch Admin</h6>
-													<span class="font-12 text-nowrap d-block text-muted">Just
-														see the my new admin!</span> <span
-														class="font-12 text-nowrap d-block text-muted">9:30
-														AM</span>
-												</div>
-											</a>
-											<!-- Message -->
-											<a href="javascript:void(0)"
-												class="message-item d-flex align-items-center border-bottom px-3 py-2">
-												<span
-												class="btn btn-success text-white rounded-circle btn-circle"><i
-													data-feather="calendar" class="text-white"></i></span>
-												<div class="w-75 d-inline-block v-middle pl-2">
-													<h6 class="message-title mb-0 mt-1">Event today</h6>
-													<span
-														class="font-12 text-nowrap d-block text-muted text-truncate">Just
-														a reminder that you have event</span> <span
-														class="font-12 text-nowrap d-block text-muted">9:10
-														AM</span>
-												</div>
-											</a>
-											<!-- Message -->
-											<a href="javascript:void(0)"
-												class="message-item d-flex align-items-center border-bottom px-3 py-2">
-												<span class="btn btn-info rounded-circle btn-circle"><i
-													data-feather="settings" class="text-white"></i></span>
-												<div class="w-75 d-inline-block v-middle pl-2">
-													<h6 class="message-title mb-0 mt-1">Settings</h6>
-													<span
-														class="font-12 text-nowrap d-block text-muted text-truncate">You
-														can customize this template as you want</span> <span
-														class="font-12 text-nowrap d-block text-muted">9:08
-														AM</span>
-												</div>
-											</a>
-											<!-- Message -->
-											<a href="javascript:void(0)"
-												class="message-item d-flex align-items-center border-bottom px-3 py-2">
-												<span class="btn btn-primary rounded-circle btn-circle"><i
-													data-feather="box" class="text-white"></i></span>
-												<div class="w-75 d-inline-block v-middle pl-2">
-													<h6 class="message-title mb-0 mt-1">Pavan kumar</h6>
-													<span class="font-12 text-nowrap d-block text-muted">Just
-														see the my admin!</span> <span
-														class="font-12 text-nowrap d-block text-muted">9:02
-														AM</span>
-												</div>
-											</a>
-										</div>
-									</li>
-									<li><a class="nav-link pt-3 text-center text-dark"
-										href="javascript:void(0);"> <strong>Check all
-												notifications</strong> <i class="fa fa-angle-right"></i>
-									</a></li>
-								</ul>
-							</div></li>
+						<li class="nav-item dropdown">  <a class="nav-link dropdown-toggle pl-md-3 position-relative"
+       href="javascript:void(0)" id="bell" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span><i data-feather="bell" class="svg-icon"></i></span>
+        <span class="badge badge-primary notify-no rounded-circle">0</span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
+        <ul class="list-style-none">
+            <li>
+                <div class="message-center notifications position-relative" id="notificationList">
+						
+                </div>
+            </li>
+            <li>
+                <a class="nav-link pt-3 text-center text-dark" href="javascript:void(0);">
+                    <strong>Check all notifications</strong>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </div></li>
+    <input type = "hidden" name = "emp_no" value = "${sessionScope.loginInfo.emp_no}">
 						<!-- End Notification -->
 						<!-- ============================================================== -->
 						<!-- create new -->
@@ -355,7 +301,121 @@
 		</aside>
 	</div>
 </body>
-<script>
-	
-</script>
-</html>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+   <script>
+    // 페이지 로드 시 초기 실행
+    var emp_no = document.querySelector('input[name="emp_no"]').value;
+
+    window.addEventListener('load', function() {
+        fetchNotifications(); // 초기 공지사항 데이터 가져오기
+        connectWebSocket(); // 웹 소켓 연결 설정
+    });
+
+    // 공지사항 데이터를 가져오는 함수 (AJAX)
+function fetchNotifications() {
+    $.ajax({
+        type: 'GET',
+        url: '/notifications', // 공지사항 목록을 제공하는 서버 엔드포인트 URL
+        dataType: 'json',
+        data: {
+            emp_no: emp_no // emp_no 값을 쿼리 파라미터로 추가
+        },
+        success: function(data) {
+            data.forEach(notification => {
+                showNotification(notification);
+            });
+        },
+        error: function(error) {
+            console.error('공지사항 목록을 가져오는 중 에러 발생:', error);
+        }
+    });
+}
+
+    // 웹 소켓 연결을 설정하는 함수
+    var stompClient = null;
+    var isWebSocketConnected = false;
+
+    function connectWebSocket() {
+        var socket = new SockJS('/ws_stomp');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            isWebSocketConnected = true;
+
+            // 사용자별 알림 채널 구독
+            var userEmpNo = document.querySelector('input[name="emp_no"]').value;
+            console.log("사원 번호는??? " + userEmpNo);
+            stompClient.subscribe('/user/' + userEmpNo + '/queue/notifications', function(message) {
+                console.log('Received message from topic ' + userEmpNo + ': ' + message.body);
+                showNotification(message.body); // 서버에서 JSON 문자열을 받아 객체로 변환
+                
+                
+            });
+
+            // 웹 소켓 연결 후 초기 메시지 전송 (옵션)
+            sendMessageToServer();
+        }, function(error) {
+            console.error('Error during WebSocket connection: ' + error);
+            // 재연결 로직 추가 가능
+        });
+    }
+
+    // 웹 소켓 연결 해제
+    window.addEventListener('beforeunload', function() {
+        if (stompClient !== null && isWebSocketConnected) {
+            stompClient.disconnect();
+        }
+    });
+
+    // 예제로 메시지 전송하는 함수 (웹 소켓)
+    function sendMessageToServer() {
+        if (stompClient !== null && stompClient.connected) {
+            stompClient.send('/app/chat', {}, JSON.stringify({ 'content': 'Hello, Server!' }));
+        }
+    }
+
+    // 알림을 HTML에 추가하는 함수
+    function showNotification(notification) {
+    	console.log("뭘 받았을까? " +notification);
+        var notificationList = document.getElementById('notificationList');
+
+        var notificationItem = document.createElement('a');
+        notificationItem.className = 'message-item d-flex align-items-center border-bottom px-3 py-2';
+        notificationItem.href = 'javascript:void(0)';
+
+        var iconSpan = document.createElement('span');
+        iconSpan.className = 'btn btn-success text-white rounded-circle btn-circle';
+        iconSpan.innerHTML = '<i data-feather="calendar" class="text-white"></i>';
+
+        var contentDiv = document.createElement('div');
+        contentDiv.className = 'w-75 d-inline-block v-middle pl-2';
+
+        var titleH6 = document.createElement('h6');
+        titleH6.className = 'message-title mb-0 mt-1';
+        titleH6.innerText = 'New Notification';
+
+        var messageSpan = document.createElement('span');
+        messageSpan.className = 'font-12 text-nowrap d-block text-muted text-truncate';
+        messageSpan.innerText = notification.noti_content; // 알림 내용
+
+        var timeSpan = document.createElement('span');
+        timeSpan.className = 'font-12 text-nowrap d-block text-muted';
+        timeSpan.innerText = new Date(notification.noti_date); // 알림 시간
+
+        contentDiv.appendChild(titleH6);
+        contentDiv.appendChild(messageSpan);
+        contentDiv.appendChild(timeSpan);
+
+        notificationItem.appendChild(iconSpan);
+        notificationItem.appendChild(contentDiv);
+
+        notificationList.prepend(notificationItem);
+
+        // 알림 개수 업데이트 (옵션)
+        var notifyNo = document.querySelector('.notify-no');
+        notifyNo.innerText = parseInt(notifyNo.innerText) + 1;
+    }
+    </script>
+    </html>

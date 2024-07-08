@@ -6,4 +6,15 @@
 <mapper namespace="com.connec.tel.dao.NoticeDAO">
 	
 	
+	<insert id = "sendShare">
+		insert into notice(emp_no, noti_content)
+			values(#{param1},#{param2})
+	</insert>
+	
+	<select id = "getNotice" parameterType="notice">
+		SELECT * FROM notice WHERE emp_no = #{emp_no}
+	</select>
+	
+	
+	
 </mapper>

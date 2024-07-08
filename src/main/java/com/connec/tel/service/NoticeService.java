@@ -1,5 +1,7 @@
 package com.connec.tel.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,14 @@ public class NoticeService {
 		MessengerDTO response= new MessengerDTO(message); 
 		
 		messagingTemplate.convertAndSend("/topic/messages", response);
+	}
+
+	public void sendShare(String emp_no, String notificationContent) {
+		noticeDAO.sendShare(emp_no,notificationContent);
+	}
+
+	public List<NoticeDTO> getNotifications(String empNo) {
+		return noticeDAO.getNotice(empNo);
 	}
 
 }
