@@ -269,6 +269,15 @@
 
 </body>
 <script>
+var msg = "${msg}"; // JSP에서 가져온 변수 msg
+
+//msg 변수가 true이면 알림창 표시
+if (msg) {
+ alert(msg); // 알림창에 메시지 표시
+}
+
+
+
     var slideIndex = 1;
     var slideInterval;
    

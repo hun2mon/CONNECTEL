@@ -75,7 +75,7 @@ body {
             <div id="check" style="text-align:left;"><span id="currentDateTime"></span>(숙박시설의 현지시간을 기준)후에 취소 또는 예약을 변경하거 노쇼의 경 첫 1박 요금과 세금 및 수수료에 해당하는 숙박 시설 수수료가 부과됩니다.</div>
             <br>
             <div id="agreecheck" style="text-align:left;">
-                <input type="checkbox" id="allcheck" onclick="checkAllAgreements()">  모든 약관에 동의합니다. <br><br><br>
+                <input type="checkbox" id="allcheck" onclick="checkAllAgreements()" disabled>  모든 약관에 동의합니다. <br><br><br>
                 <input type="checkbox" id="1check" onclick="updateSubmitButtonStatus()" disabled> 예약하는 본인은 만 18세 이상이며 이용약관, 규정 및 제한사항 등의 모든 권고사항을 읽었으며, 모든부분에 동의합니다.<br><br><br>
                 <input type="checkbox" id="2check" onclick="updateSubmitButtonStatus()" disabled> 개인정보수집은 개인정보 보호정책에 따라 사용됨을 동의합니다.<br><br><br>
                 <input type="checkbox" id="3check" onclick="updateSubmitButtonStatus()" disabled> 당사는 개인정보 수집 및 이용 목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다. 단, 관련 법령에 따라 보관해야 하는 경우는 예외로 합니다.<br><br>
@@ -176,6 +176,10 @@ body {
                 if (data === "이메일 인증이 완료되었습니다.") {
                     // 이메일 인증 성공 시 체크박스 활성화
                     var checkboxes = document.querySelectorAll('#agreecheck input[type="checkbox"]');
+                    var allCheck = document.getElementById('allcheck'); 
+                    
+                    allCheck.disabled = false;
+                    
                     for (var i = 1; i < checkboxes.length; i++) {
                         checkboxes[i].disabled = false;
                     }
@@ -283,7 +287,7 @@ body {
 
         $.ajax({
             type: 'POST',
-            url: '/common/ready',
+            url: '/customer/reservation.ajax',
             data: {
                 item_name: item_name,
                 total_amount: total_amount,

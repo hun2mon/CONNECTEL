@@ -11,6 +11,7 @@ public class FaqDTO {
     private String FAQ_category;
     private String updater;
     private String FAQ_date;
+    private String row_num;
 
     public String getFAQ_date() {
 		return FAQ_date;
@@ -67,4 +68,12 @@ public class FaqDTO {
     public void setFAQ_category(String fAQ_category) {
         FAQ_category = fAQ_category;
     }
+
+	public String getRow_num() {
+		return row_num;
+	}
+
+	public void setRow_num(String row_num) {
+		this.row_num = row_num;
+	}
 }
