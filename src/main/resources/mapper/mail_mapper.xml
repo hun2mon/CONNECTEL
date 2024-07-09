@@ -42,11 +42,11 @@
 
 <select id="clentList" resultType="com.connec.tel.dto.MailDTO">
 		<if test="param1 == ''">
-			SELECT res_no,cos_name,cos_phone,cos_email FROM reservation WHERE cos_email != '현장예약' ORDER BY res_no DESC  LIMIT #{param2}, #{param3}
+			SELECT res_no,cos_name,cos_phone,cos_email FROM reservation WHERE cos_email != '현장예약' GROUP by cos_email ORDER BY res_no DESC  LIMIT #{param2}, #{param3}
 		</if>
 		
 		<if test="param1 != null">
-			SELECT res_no,cos_name,cos_phone,cos_email FROM reservation  WHERE (cos_name LIKE #{param1} OR cos_email LIKE #{param1}) AND cos_email != '현장예약' ORDER BY res_no DESC LIMIT #{param2}, #{param3}
+			SELECT res_no,cos_name,cos_phone,cos_email FROM reservation  WHERE (cos_name LIKE #{param1} OR cos_email LIKE #{param1}) AND cos_email != '현장예약' GROUP by cos_email ORDER BY res_no DESC LIMIT #{param2}, #{param3}
 		</if>
 	</select>
 
@@ -129,11 +129,11 @@
 	<select id="clientAddListCall" resultType="com.connec.tel.dto.MailDTO">
 	
 		<if test="param1 == ''">
-			SELECT * FROM reservation WHERE cos_email != '현장예약'
+			SELECT * FROM reservation WHERE cos_email != '현장예약' GROUP by cos_email
 		</if>
 		
 		<if test="param1 != null">
-			SELECT * FROM reservation WHERE cos_email != '현장예약' AND (cos_name LIKE #{param1} OR cos_email LIKE #{param1})
+			SELECT * FROM reservation WHERE cos_email != '현장예약' AND (cos_name LIKE #{param1} OR cos_email LIKE #{param1}) GROUP by cos_email
 		</if>
 		
 	</select>
@@ -144,17 +144,17 @@
 	</insert>
 	
 	<update id="updateFavoriteStatus" parameterType="map">
-		UPDATE address SET add_favorite = #{isFavorite} WHERE add_no = #{addNo}
+		UPDATE address SET add_favorite = #{isFavorite} WHERE add_no = #{addNo} 
 	</update>
 	
 	<select id="myAddList" resultType="com.connec.tel.dto.MailDTO">
 	
 	<if test="param2 == ''">
-			SELECT * FROM address WHERE emp_no = #{param1}
+			SELECT * FROM address WHERE emp_no = #{param1} AND add_favorite = 'false'
 		</if>
 		
 		<if test="param2 != null">
-			SELECT * FROM address WHERE emp_no = #{param1} AND (add_name LIKE #{param2} OR add_email LIKE #{param2})
+			SELECT * FROM address WHERE emp_no = #{param1} AND (add_name LIKE #{param2} OR add_email LIKE #{param2}) AND add_favorite = 'false'
 		</if>
 
 	</select>
@@ -174,5 +174,9 @@
 	<select id="reWrite" resultType="com.connec.tel.dto.MailDTO">
 		SELECT * FROM mail WHERE mail_no = #{mail_no}
 	</select>
+	
+	<delete id="myAddressListdelete">
+		DELETE FROM address WHERE add_no = #{add_no}
+	</delete>
 
 </mapper>

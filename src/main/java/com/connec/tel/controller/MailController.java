@@ -260,5 +260,25 @@ public class MailController {
 		return mailService.deleteMail(mail_no);
 	}
 	
+	@PostMapping(value = "/mail/myAddressListdelete.ajax")
+	@ResponseBody
+	public Map<String, Object> myAddressListdelete(@RequestBody Map<String, Object> param) {
+		logger.info("myAddressListdelete 요청!");
+		logger.info("param : {}", param);
+		
+		return mailService.myAddressListdelete(param);
+	}
+	
+	@PostMapping(value = "/mail/deleteAddr.ajax")
+	@ResponseBody
+	public Map<String, Object> deleteAddr(String add_no) {
+		logger.info("deleteAddr 요청!");
+		logger.info("add_no : " +  add_no);
+		
+		return mailService.deleteAddr(add_no);
+	}
+	
+	
+	
 
 }

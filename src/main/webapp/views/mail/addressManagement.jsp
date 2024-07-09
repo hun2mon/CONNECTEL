@@ -84,6 +84,10 @@ table {
     width: 10%; /* 삭제 열의 너비 */
 }
 
+#allDelete{
+		margin-left: 94%;
+	}
+
 
 </style>
 </head>
@@ -151,6 +155,9 @@ table {
 		                               				  </td>
 		                           					</tr>                                
 	                      					</table>
+	                      					<button id="allDelete" onclick="allDelete()" class="btn btn-danger btn-delete">
+							        <i class="fa fa-trash"></i> 삭제
+							    </button>
 	               					    </div>
                             </div>
                             <div class="tab-pane" id="profile">
@@ -158,7 +165,7 @@ table {
 				                           <table class="table my-table my">
 											    <thead>
 											        <tr>
-											            <th><input type="checkbox" id="select-all-checkouts"></th>
+											            <th><input type="checkbox" id="select-all-check"></th>
 											            <th>즐겨찾기</th>
 											            <th>이름</th>
 											            <th>이메일</th>
@@ -179,6 +186,9 @@ table {
 		                               				  </td>
 		                           					</tr>                                
 	                      					</table>
+	                      					<button id="allDelete" onclick="allDelete()" class="btn btn-danger btn-delete">
+							        <i class="fa fa-trash"></i> 삭제
+							    </button>
 	               					    </div>
                             </div>
                             <div class="tab-pane" id="settings">
@@ -202,7 +212,7 @@ table {
 			                                    			</div>
 		                               				  </td>
 		                           					</tr>                                
-	                      					</table>
+	                      					</table>	                      					
 	               					    </div>
                             </div>
                         </div>
@@ -266,6 +276,14 @@ var clentNum;
 var myFavoriteNum;
 
 	$(document).ready(function(){
+		
+		$('.my-table input[type="checkbox"]').click(function() {
+	        var isChecked = $(this).prop('checked'); // 클릭된 체크박스의 체크 상태
+
+	        // 클릭된 체크박스가 속한 행(tr)을 찾고, 그 행 안의 모든 체크박스의 상태를 설정
+	        $(this).closest('tr').find('input[type="checkbox"]').prop('checked', isChecked);
+	    });
+		
 		listCall(showPage);
 		clentListCall(showPage);
 		myFavoriteListCall(showPage);
@@ -416,6 +434,10 @@ var myFavoriteNum;
         }
         $('#myAddressList').html(content);
         
+        $('#select-all-checkouts').click(function() {
+            $('.checkout-room-checkbox').prop('checked', this.checked);
+        })
+        
     }
 	
 	function myFavoriteDrawList(list) {
@@ -442,6 +464,10 @@ var myFavoriteNum;
                         
         }
         $('#myFavoriteList').html(content);
+        
+        $('#select-all-check').click(function() {
+            $('.checkout-room-checkbox').prop('checked', this.checked);
+        })
 
         
     }
@@ -466,7 +492,7 @@ var myFavoriteNum;
 
         
     }
-	
+		
 	
 	function allDelete() {
   	  var checkedIds = [];
@@ -474,6 +500,11 @@ var myFavoriteNum;
   	        checkedIds.push($(this).val());
   	    });
   	    console.log('checkedIds : ',checkedIds);
+  	    
+  	  if (checkedIds.length === 0) {
+          alert('삭제할 연락처를 체크해주세요!');
+      }
+  	    
   	    $.ajax({
   	    	type:'POST',
   	    	url:'/mail/myAddressListdelete.ajax',
@@ -485,6 +516,7 @@ var myFavoriteNum;
   	    	success:function(data){
   	    		console.log(data);
   	    		listCall(showPage);
+  	    		myFavoriteListCall(showPage);
   	    		
   	    	},
   	    	error:function(e){
@@ -493,6 +525,29 @@ var myFavoriteNum;
   	    });
   	    
   }
+	
+	function deleteAddr(add_no) {
+	  	
+	  	    console.log('add_no : ',add_no);
+	  	    $.ajax({
+	  	    	type:'POST',
+	  	    	url:'/mail/deleteAddr.ajax',  	    	
+	  	    	data:{
+	  	    		add_no: add_no
+	  	    	},
+	  	    	dataType:'JSON',
+	  	    	success:function(data){
+	  	    		console.log(data);
+	  	    		listCall(showPage);
+	  	    		myFavoriteListCall(showPage);
+	  	    		
+	  	    	},
+	  	    	error:function(e){
+	  	    		console.log(e);
+	  	    	}
+	  	    });
+	  	    
+	  }
 	
 	
 	
@@ -528,7 +583,7 @@ var myFavoriteNum;
   	    	success:function(data){
   	    		console.log(data);
   	    		listCall(num);
-  	    		myFavoriteListCall(myFavoriteNum);
+  	    		myFavoriteListCall(showPage);
   	    	},
   	    	error:function(e){
   	    		console.log(e);
@@ -582,6 +637,7 @@ var myFavoriteNum;
         	dataType:'JSON',
         	success:function(res) {
         		$('#addModal').modal('hide');
+        		myFavoriteListCall(showPage);
         		listCall(num);
         		
         	},

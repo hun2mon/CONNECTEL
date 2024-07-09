@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -269,6 +270,27 @@ Map<String, Object> map = new HashMap<String, Object>();
 	public MailDTO reWrite(String mail_no) {
 		
 		return mailDAO.reWrite(mail_no);
+	}
+
+	public Map<String, Object> myAddressListdelete(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<String> add_no_list = (List<String>) param.get("add_no");
+		
+		for (String add_no : add_no_list) {
+			mailDAO.myAddressListdelete(add_no);
+		}
+		
+		return map;
+	}
+
+	public Map<String, Object> deleteAddr(String add_no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		mailDAO.myAddressListdelete(add_no);
+		
+		
+		return map;
 	}
 
 	
