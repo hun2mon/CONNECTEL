@@ -51,6 +51,8 @@ public interface MailDAO {
 
 	MailDTO reWrite(String mail_no);
 
+	void myAddressListdelete(String add_no);
+
 	
 
 }
