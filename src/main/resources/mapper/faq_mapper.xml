@@ -4,7 +4,17 @@
 >
 <mapper namespace="com.connec.tel.dao.FaqDAO">
     <select id="list" resultType="faqDTO" parameterType="map">
-    SELECT * 
+    SELECT 
+    	row_number() over(ORDER BY FAQ_no DESC)as row_num,
+     FAQ_no,
+     register,
+     FAQ_subject,
+     FAQ_content,
+     regist_date,
+     updater,
+     update_date,
+     FAQ_category
+     
     FROM FAQ
     <where>
         <if test="category != null and category != '' and category != '전체'">

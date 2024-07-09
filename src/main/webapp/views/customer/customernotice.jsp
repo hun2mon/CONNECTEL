@@ -288,7 +288,7 @@ display: flex;
                 if (data[i].ann_fixed === 'Y') {
                     content += '<div class="notice-list-no ann-notice">[공지]</div>';
                 } else {
-                    content += '<div class="notice-list-no" style="">' + data[i].ann_no + '</div>';
+                    content += '<div class="notice-list-no" style="">' + data[i].row_num + '</div>';
                 }
                 content += '<div class="notice-list-subject"><a style = "color:#7d3e00"href="/customer/noticeDetail.go?ann_no=' + data[i].ann_no + '">' + data[i].ann_subject + '</a></div>';
                 

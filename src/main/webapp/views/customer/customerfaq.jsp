@@ -289,7 +289,7 @@ $(document).ready(function() {
         for (var i = 0; i < data.length; i++) {
             var faqId = 'collapse' + i; // 고유 ID 생성
             content += '<tr class="faq-item">';
-            content += '<td style= "color:#a9680d;">' + data[i].faq_no + '</td>';
+            content += '<td style= "color:#a9680d;">' + data[i].row_num + '</td>';
             content += '<td><a class="btn-inpo" data-toggle="collapse" href="#' + faqId + '" aria-expanded="false" aria-controls="' + faqId + '">' + data[i].faq_subject + '</a></td>';
             content += '</tr>';
             content += '<tr class="collapse" style="text-align:left" id="' + faqId + '"><td colspan="2" style="text-align:left;">' + data[i].faq_content + '</td></tr>';

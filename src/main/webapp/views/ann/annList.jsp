@@ -308,7 +308,7 @@ $(document).ready(function() {
             if (data[i].ann_fixed === 'Y') {
                 content += '<div class="ann-list-no ann-notice">[공지]</div>';
             } else {
-                content += '<div class="ann-list-no">' + data[i].ann_no + '</div>';
+                content += '<div class="ann-list-no">' + data[i].row_num + '</div>';
             }
             content += '<div class="ann-list-subject"><a href="/annDetail.go?ann_no=' + data[i].ann_no + '&page=' + page +'">' + data[i].ann_subject + '</a></div>';
             content += '<div class="ann-list-name">' + data[i].register + '</div>';

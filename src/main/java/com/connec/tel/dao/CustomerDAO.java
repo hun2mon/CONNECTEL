@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.connec.tel.dto.AnnDTO;
 import com.connec.tel.dto.GuestManageDTO;
+import com.connec.tel.dto.RoomDTO;
 
 @Mapper
 public interface CustomerDAO {
@@ -79,6 +80,23 @@ public interface CustomerDAO {
 	Object delux_roomview();
 
 	Object suite_roomview();
+
+	int todayResSearch(String currDate);
+
+	int todayResNumSearch(String currDate);
+
+	int price(Object object);
+
+	int plus_price(String date, int price, String change_room_type);
+
+
+	void reservation(Map<String, Object> param);
+
+	String getres_no(String successsend);
+
+	RoomDTO checkReservation(String name, String phone, String reservationNo);
+
+	RoomDTO reservedetail(String res_no);
 	
 	
 	

@@ -6,8 +6,17 @@
 <mapper namespace="com.connec.tel.dao.AnnDAO">
 
     <select id="list" resultType="annDTO" parameterType="map">
-        SELECT 
-            a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
+        SELECT
+        	row_number() over(ORDER BY a.ann_fixed DESC, a.ann_no DESC) 
+        		-
+			(SELECT COUNT(a2.ann_no) from announcement a2 where ann_fixed = 'Y' and ann_division = 'E')
+        		 as row_num,
+        	a.ann_no,
+            a.ann_subject,
+            a.ann_content,
+            a.ann_bHit,
+            a.ann_division,
+            a.ann_fixed, 
             e.name AS register, a.ann_date
         FROM 
             announcement a
@@ -15,8 +24,6 @@
             emp e ON a.register = e.emp_no
         WHERE 
             a.ann_division = 'E'
-        ORDER BY 
-            a.ann_fixed DESC, a.ann_no DESC
         LIMIT #{pagePerCnt} OFFSET ${(currPage - 1) * pagePerCnt}
     </select>
 
@@ -108,8 +115,17 @@
         WHERE ref_idx = #{ann_no} AND pho_division = 'A'
     </select>
 
+
+
+
+
+
     <select id="annlist" resultType="annDTO" parameterType="map">
         SELECT 
+       	 row_number() over(ORDER BY a.ann_fixed DESC, a.ann_no DESC) 
+       	 -
+			(SELECT COUNT(a2.ann_no) from announcement a2 where ann_fixed = 'Y' and ann_division = 'C')
+        		 as row_num,
             a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
             e.name AS register, a.ann_date, e.name AS updater, a.update_date
         FROM 

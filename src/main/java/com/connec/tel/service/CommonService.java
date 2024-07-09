@@ -239,6 +239,7 @@ public class CommonService {
 		
 	}
 
+
 	public kakaoPayApproveDTO kakaoPayApprove(String pgToken, HttpSession session) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "KakaoAK "+ "c1217d95033551b5bbf6b58300e28030" );

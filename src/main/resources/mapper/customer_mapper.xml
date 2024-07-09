@@ -7,6 +7,9 @@
 
     <select id="noticelist" resultType="annDTO" parameterType="map">
         SELECT 
+        	row_number() over(ORDER BY a.ann_fixed DESC, a.ann_no DESC) 
+        	- (SELECT COUNT(a2.ann_no) from announcement a2 where ann_fixed = 'Y' and ann_division = 'E')
+        		 as row_num,
             a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
             e.name AS register, a.ann_date
         FROM 
@@ -204,7 +207,42 @@
 
  
  
+ <select id="todayResSearch" resultType="int">
+	SELECT COUNT(*)  as res_no from reservation where SUBSTRING(res_no,1,6) =#{currDate}
+</select>
+
+<select id="todayResNumSearch" resultType="int">
+	SELECT res_no FROM reservation 
+	WHERE SUBSTRING(res_no,1,6) =#{currDate} ORDER BY res_no DESC limit 1
+</select>
  
+ 
+ <select id="price">
+	SELECT res_price FROM reservation WHERE res_no = #{param1}
+</select>
+	
+<select id="plus_price">
+	SELECT ${change_room_type} - ${price} as Plus_Price FROM room_price WHERE date = #{date}
+</select>
+ 
+ 
+ <insert id="reservation" parameterType="map">
+	INSERT INTO reservation(res_no,cos_name,cos_email,cos_phone,in_date,out_date,res_date,res_price,type_code,tid)
+		VALUES(#{res_no},#{cos_name},#{cos_email},#{cos_phone},#{checkIn},#{checkOut},CURRENT_DATE(),#{total_amount},#{type_code},#{tid})
+</insert>
+<select id="getres_no">
+	select res_no FROM reservation WHERE cos_email = #{param1}
+</select>
+
+    <select id="checkReservation" parameterType="map" resultType="com.connec.tel.dto.RoomDTO">
+        SELECT * FROM reservation
+        WHERE cos_name = #{name} AND cos_phone = #{phone} AND res_no = #{reservationNo}AND division = 'A'
+    </select>
+
+<select id="reservedetail" parameterType="String" resultType="com.connec.tel.dto.RoomDTO" >
+	SELECT * FROM reservation
+		WHERE res_no = #{res_no}AND division = 'A'
+</select>
 
 
 
