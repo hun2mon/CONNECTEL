@@ -97,7 +97,7 @@ public class ChatRoomRepository {
 	}
 
 	public Map<String, Object> outRoom(Map<String, Object> param) {
-Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		msgDAO.outRoom(param);
 		

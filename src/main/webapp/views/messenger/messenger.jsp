@@ -208,6 +208,16 @@
  	display: none;
  }
  
+ #newChatCount{
+	border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    padding: 3px;
+    width: 25%;
+    text-align: center;
+ }
+ 
 
 </style>
 </head>
@@ -230,6 +240,16 @@
 										<ul class="mailbox list-style-none">
 											<li>
 												<div class="message-center" id="chat_body">
+													<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2">
+														<div class="user-img">
+															<img src="/assets/images/chat.png" alt="user" class="img-fluid rounded-circle" width="40px">
+															<span class="profile-status online float-right"></span>
+														</div>
+														<div class="w-75 d-inline-block v-middle pl-2">
+															<h6 class="message-title mb-0 mt-1">123123</h6>
+														</div>
+														<div id="newChatCount">99</div>
+													</a>
 												</div>
 											</li>
 										</ul>
@@ -612,7 +632,7 @@
 	findAllRoom();
     
     function findAllRoom() {
-    	$('#chat_body').html('');
+    	 $('#chat_body').html('');
     	 $.ajax({
      		url:'/chat/rooms',
      		method:'get',
@@ -624,7 +644,12 @@
      			var content = '';
      			for (item of data) {
      				content += '<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2"><div class="user-img"><img src="/assets/images/chat.png" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-right"></span></div><div class="w-75 d-inline-block v-middle pl-2">';
-					content += '<h6 class="message-title mb-0 mt-1">'+item.room_name+'</h6></div></a>';
+     				content += '<h6 class="message-title mb-0 mt-1">'+item.room_name+'</h6></div>';
+					if (item.newChat != null) {
+     				content += '<div id="newChatCount">'+item.newChat+'</div></a>';
+					} else {
+					content += '</a>';
+					}
 				}
      			$('#chat_body').append(content);
      		},
@@ -912,7 +937,8 @@
     
 
     function findRoom(roomId) {
-      	 $.ajax({
+    	
+      	$.ajax({
 			url:'/chat/room/' + roomId,
 			method:'get',
 			data:{},
@@ -928,7 +954,13 @@
 					}	
 				}
 		    	room_id.push(roomId);
+
+		    	nowRoom=roomId;
+		    	
+     			findAllRoom();
+     			
 			    connect();
+			    
 			    
 			},
 			error:function(e){
@@ -936,6 +968,16 @@
 			}
 		})
    	}
+    
+    
+    function disconnect(id){
+    	ws.connect({}, function(frame) {
+    		delete this.subscriptions[id];
+    	      return this._transmit("UNSUBSCRIBE", {
+    	        id: id
+    	     });
+        })
+    }
     
     
     function connect() {

@@ -18,7 +18,7 @@ public class ChatRoom {
 	private Timestamp chat_date;
 	private String msg_type;
 	private String profile_img;
-	
+	private String newChat;
 
 	public static ChatRoom create(String name) {
 		ChatRoom chatRoom = new ChatRoom();
@@ -135,5 +135,15 @@ public class ChatRoom {
 
 	public void setRoom_name(String room_name) {
 		this.room_name = room_name;
+	}
+
+
+	public String getNewChat() {
+		return newChat;
+	}
+
+
+	public void setNewChat(String newChat) {
+		this.newChat = newChat;
 	}
 }

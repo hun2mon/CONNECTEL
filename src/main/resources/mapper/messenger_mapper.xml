@@ -20,8 +20,9 @@
 		SELECT 
 			cm.chat_no AS roomId,
 			(SELECT p.pho_name FROM photo p WHERE p.ref_idx = cr.emp_no) AS profile_img,
-			cm.room_name
-		FROM chat_member cm JOIN chat_room cr ON cm.chat_no = cr.chat_no WHERE cm.emp_no = #{param1}
+			cm.room_name,
+			(SELECT COUNT(content_no) FROM chat_detail cd WHERE cd.chat_no = cr.chat_no AND cm.enter_date <![CDATA[<]]> cd.chat_date AND cd.emp_no != #{param1} GROUP BY cd.chat_no) AS newChat
+		FROM chat_member cm JOIN chat_room cr ON cm.chat_no = cr.chat_no WHERE cm.emp_no = #{param1};
 	</select>
 	
 	<insert id="addMsg" parameterType="String">
