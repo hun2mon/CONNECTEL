@@ -204,15 +204,16 @@ button:hover {
     <script>
         var showPage = 1;
         var cnt = 10;
-
-        $(document).ready(function() {
             // 이전 페이지의 page 파라미터 값 가져오기
             var urlParams = new URLSearchParams(window.location.search);
             var pageParam = urlParams.get('page');
             var defaultPage = (pageParam !== null) ? parseInt(pageParam) : 1;
 
+        $(document).ready(function() {
+
             // 기본적으로 첫 번째 페이지를 '전체' 탭으로 호출
             listCall(defaultPage, '전체');
+       	});
 
             $('#freebutton').on('click', function() {
                 $('#pagination').twbsPagination('destroy'); // 기존 페이징 제거
@@ -251,7 +252,7 @@ button:hover {
                 var content = '';
                 for (var i = 0; i < data.length; i++) {
                     content += '<div class="faq-list">';
-                    content += '<div class="faq-list_no">' + data[i].faq_no + '</div>';
+                    content += '<div class="faq-list_no">' + data[i].row_num + '</div>';
                     content += '<div class="faq-list_subject"><a href="/faqDetail.go?faq_no=' + data[i].faq_no + '&page=' + page + '">' + data[i].faq_subject + '</a></div>';
                     content += '<input type="checkbox" class="freecheckbox" id="checkbox_' + data[i].faq_no + '">';
                     content += '</div>';
@@ -316,7 +317,9 @@ button:hover {
             }
             
             // 탭 열기 함수
-            window.openTab = function(evt, tabName) {
+            function openTab(evt, tabName) {
+            	console.log('tset');
+            	defaultPage = 1;
                 var i, tablinks;
                 tablinks = document.getElementsByClassName("tablinks");
                 for (i = 0; i < tablinks.length; i++) {
@@ -326,7 +329,6 @@ button:hover {
                 listCall(1, tabName); // 해당 탭의 첫 번째 페이지 데이터를 호출
                 $('#pagination').twbsPagination('destroy');
             };
-            document.getElementById("defaultOpen").click();
             
             
 
@@ -363,7 +365,6 @@ button:hover {
             $('#writebutton').click(function() {
                 window.location.href = '/faqwrite.go';
             });
-        });
     </script>
 </body>
 </html>

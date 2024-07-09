@@ -16,6 +16,8 @@ public class AnnDTO {
 	private String ann_date;
 	private String updater;
 	private String update_date;
+	private String row_num;
+	
 	public String getAnn_no() {
 		return ann_no;
 	}
@@ -75,6 +77,12 @@ public class AnnDTO {
 	}
 	public void setUpdate_date(String update_date) {
 		this.update_date = update_date;
+	}
+	public String getRow_num() {
+		return row_num;
+	}
+	public void setRow_num(String row_num) {
+		this.row_num = row_num;
 	}
 	
 	
