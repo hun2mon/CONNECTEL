@@ -110,12 +110,30 @@
 </div>    
 </body>
 <script>
+var urlParams = new URLSearchParams(window.location.search);
 
-var receivers = `${receivers}`;
+//mail_receiver, mail_subject, mail_content 파라미터 값 가져오기
+var receivers = urlParams.get('receivers');
+var mail_subject = urlParams.get('mail_subject');
+var mail_content = urlParams.get('mail_content');
+
+//가져온 값 사용 예시
+console.log('receivers:', receivers);
+console.log('Mail Subject:', mail_subject);
+console.log('Mail Content:', mail_content);
 
 if (receivers) {
-    var receiver = receivers.slice(1, -1);
-    $('#email').val(receiver);
+    $('#email').val(receivers);
+}
+
+if (mail_subject) {
+   
+    $('#subject').val(mail_subject);
+}
+
+if (mail_content) {
+   
+    $('#content').html(mail_content);
 }
 
 function back() {
@@ -157,8 +175,22 @@ $(document).ready(function() {
 });
 	
 function openAddressBook() {
+	
+	var email = $('#email').val().trim();
+    var subject = $('#subject').val().trim();
+    var content = $('#content').val().trim();
+    
+    var mail_receiver = $('#email').val();
+	var mail_subject = $('#subject').val();
+	var mail_content = $('#content').val();
+	
+	
     // 팝업 창의 URL 설정 (addressbook.jsp의 실제 경로로 변경)
     var popupUrl = '/mail/addressBook.go';
+    
+    popupUrl += '?mail_receiver=' + encodeURIComponent(mail_receiver) +
+    '&mail_subject=' + encodeURIComponent(mail_subject) +
+    '&mail_content=' + encodeURIComponent(mail_content);
     
     // 팝업 창의 너비와 높이 설정
     var popupWidth = 1200;
@@ -173,7 +205,7 @@ function openAddressBook() {
     var popupTop = 10; // 화면 상단과의 여백 10px
     
     // 팝업 창 열기
-    var popupWindow = window.open(popupUrl, 'addressBookPopup', 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + popupTop + ',left=' + popupLeft);
+    var popupWindow = window.open(popupUrl, 'addressBookPopup', 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + popupTop + ',left=' + popupLeft,);
     
     // 팝업 차단 여부 확인
     if (popupWindow) {

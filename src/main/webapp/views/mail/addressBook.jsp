@@ -28,21 +28,19 @@
     flex: 3; /* 30%의 너비를 차지하도록 설정 */
     padding: 10px;
     margin-left: 20px; /* 두 카드 사이의 간격 조정 */
-    
 }
 
 .card {
     width: 100%;
 }
 
-
 .table-responsive {
     max-height: 400px; /* 원하는 최대 높이 설정 */
     overflow-y: auto; /* 높이를 초과하면 수직 스크롤바 표시 */
 }
 
-#receiverList{
-	max-height: 400px; /* 원하는 최대 높이 설정 */
+#receiverList {
+    max-height: 400px; /* 원하는 최대 높이 설정 */
     overflow-y: auto;
 }
 
@@ -61,8 +59,8 @@
     border-top: 1px solid #dee2e6;
 }
 
-tr{
-	cursor: pointer;
+tr {
+    cursor: pointer;
 }
 
 .table thead th {
@@ -83,11 +81,11 @@ tr{
 }
 
 .tab-content > .tab-pane {
-    display: none;
+    display: none; /* 기본적으로 모든 탭 숨기기 */
 }
 
 .tab-content > .active {
-    display: block;
+    display: block; /* 활성 탭만 표시 */
 }
 
 .form-control {
@@ -123,15 +121,15 @@ tr{
                     <div class="row">
                         <div class="col-sm-3 mb-2 mb-sm-0">
                             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                <a class="nav-link active show"  id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                                <a class="nav-link active show" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
                                     <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block">내주소록</span>
                                 </a>
-                                <a class="nav-link"  id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
                                     <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block" style="font-size: 14px;">고객주소록</span>
                                 </a>
-                                <a class="nav-link"  id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+                                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
                                     <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
                                     <span class="d-none d-lg-block">즐겨찾기</span>
                                 </a>
@@ -142,11 +140,11 @@ tr{
                             <div class="tab-content" id="v-pills-tabContent">
                                 <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                     <!-- 내주소록 -->
+                                    <button class="btn btn-primary mb-2" onclick="toggleSelectAll('myAddList')">전체 선택/해제</button>
                                     <div class="table-responsive">
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col"><input type="checkbox" id="checkAllHome"></th>
                                                     <th scope="col">이름</th>
                                                     <th scope="col">이메일</th>
                                                 </tr>
@@ -159,11 +157,11 @@ tr{
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                                     <!-- 고객주소록 -->
+                                    <button class="btn btn-primary mb-2" onclick="toggleSelectAll('clientAddList')">전체 선택/해제</button>
                                     <div class="table-responsive">
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col"><input type="checkbox" id="checkAllProfile"></th>
                                                     <th scope="col">이름</th>
                                                     <th scope="col">이메일</th>
                                                 </tr>
@@ -176,11 +174,11 @@ tr{
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
                                     <!-- 즐겨찾기 -->
+                                    <button class="btn btn-primary mb-2" onclick="toggleSelectAll('markAddList')">전체 선택/해제</button>
                                     <div class="table-responsive">
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col"><input type="checkbox" id="checkAllSettings"></th>
                                                     <th scope="col">이름</th>
                                                     <th scope="col">이메일</th>
                                                 </tr>
@@ -222,170 +220,189 @@ tr{
 </body>
 
 <script>
-    $(document).ready(() => {
-        $('#checkAllHome').change(function(){
-            $('#v-pills-home input:checkbox').prop('checked', $(this).prop('checked'));
-            updateReceiverList();
-        });
+$(document).ready(() => {
+    listCall();
+    clientListCall();
+    myFavoriteListCall();
+   
+});
 
-        $('#checkAllProfile').change(function(){
-            $('#v-pills-profile input:checkbox').prop('checked', $(this).prop('checked'));
-            updateReceiverList();
-        });
+function search() {
+    listCall();
+    myFavoriteListCall();
+    clientListCall();
+}
 
-        $('#checkAllSettings').change(function(){
-            $('#v-pills-settings input:checkbox').prop('checked', $(this).prop('checked'));
-            updateReceiverList();
-        });
-
-        // 개별 체크박스의 이벤트 핸들러
-         $(document).on('change', '.check', function() {
-	        var type = $(this).closest('.tab-pane').attr('id'); // 현재 탭의 ID 가져오기 (v-pills-home, v-pills-profile, v-pills-settings)
-	        var addNo = $(this).val(); // 현재 체크된 체크박스의 값 (add_no)
-	        
-	        // 현재 탭 이외의 탭에서 동일한 값의 체크박스를 찾아서 상태를 동기화
-	        $('.tab-pane').not('#' + type).find('[value="' + addNo + '"]').prop('checked', $(this).prop('checked'));
-	        
-	        updateReceiverList();
-	    });
-               
-		listCall();
-		clentListCall();
-        myFavoriteListCall();
-    });
-    
-    function search() {
-        listCall();
-        myFavoriteListCall();
-        clentListCall();
-    }
-
-    function clentListCall(){
-    	 var search = $('#search').val();
-    	
-        $.ajax({
-            type: 'POST',
-            url: '/mail/clientAddListCall.ajax',
-            data: {
-            	search : search
-            },
-            dataType: 'JSON',
-            success: function(data){
-                console.log(data);
-
-                var content = '';
-                for(let item of data.list){
-                    content += '<tr>';
-                    content += '<td><input type="checkbox" class="check" value="' + item.res_no + '"></td>';
-                    content += '<td>' + item.cos_name + '</td>';
-                    content += '<td>' + item.cos_email + '</td>';
-                    content += '</tr>';
-                }
-                $('#clientAddList').html(content);
-            },
-            error: function(e){
-                console.log(e);
+function clientListCall() {
+    var search = $('#search').val();
+    $.ajax({
+        type: 'POST',
+        url: '/mail/clientAddListCall.ajax',
+        data: { search: search },
+        dataType: 'JSON',
+        success: function(data) {
+            console.log(data);
+            var content = '';
+            for (let item of data.list) {
+                content += '<tr onclick="selectRow(this, \'clientAddList\')">';
+                content += '<td>' + item.cos_name + '</td>';
+                content += '<td>' + item.cos_email + '</td>';
+                content += '</tr>';
             }
-        });
-    }
-    
-    function listCall(){
-    	
-    	var search = $('#search').val();
-    	
-        $.ajax({
-            type: 'POST',
-            url: '/mail/myAddList.ajax',
-            data: {
-            	search : search
-            },
-            dataType: 'JSON',
-            success: function(data){
-                console.log(data);
-
-                var content = '';
-                for(let item of data.list){
-                    content += '<tr>';
-                    content += '<td><input type="checkbox" class="check" value="' + item.add_no + '"></td>';
-                    content += '<td>' + item.add_name + '</td>';
-                    content += '<td>' + item.add_email + '</td>';
-                    content += '</tr>';
-                }
-                $('#myAddList').html(content);
-            },
-            error: function(e){
-                console.log(e);
-            }
-        });
-    }
-    
-    function myFavoriteListCall(){
-    	
-    	var search = $('#search').val();
-    	
-        $.ajax({
-            type: 'POST',
-            url: '/mail/myFavoriteList.ajax',
-            data: {
-            	search : search
-            },
-            dataType: 'JSON',
-            success: function(data){
-                console.log(data);
-
-                var content = '';
-                for(let item of data.list){
-                    content += '<tr>';
-                    content += '<td><input type="checkbox" class="check" value="' + item.add_no + '"></td>';
-                    content += '<td>' + item.add_name + '</td>';
-                    content += '<td>' + item.add_email + '</td>';
-                    content += '</tr>';
-                }
-                $('#markAddList').html(content);
-            },
-            error: function(e){
-                console.log(e);
-            }
-        });
-    }
-    
-    function updateReceiverList(){
-        var selected = [];
-        var selectedIds = []; // 선택된 항목의 ID를 저장하는 배열
-        
-        $('.check:checked').each(function(){
-            var row = $(this).closest('tr');
-            var id = $(this).val(); // 체크박스의 값 (예: add_no)
-            var name = row.find('td').eq(1).text();
-            var email = row.find('td').eq(2).text();
-            
-            // 이미 선택된 ID가 없는 경우에만 추가
-            if (selectedIds.indexOf(id) === -1) {
-                selectedIds.push(id); // ID 추가
-                selected.push('' + name + ' "' + email + '"'); // 이름과 이메일 추가
-            }
-        });
-        
-        $('#receiverList').empty(); // 기존 내용을 모두 지우고
-        $('#receiverList').html(selected.join('<br>')); // 새로운 선택된 목록을 추가
-    }
-
-    
-    function confirmAction(){
-        var receiverList = $('#receiverList').html();
-        var receivers = receiverList.split('<br>');
-        
-        // 부모 창에서 주소로 이동
-        if (window.opener) {
-            window.opener.location.href = '/mail/sendMail?receivers=' + receivers;
-            window.close(); // 팝업 창 닫기
-        } else {
-            alert('부모 창이 없습니다.');
+            $('#clientAddList').html(content);
+            syncSelectedItems('clientAddList');
+        },
+        error: function(e) {
+            console.log(e);
         }
-    }
+    });
+}
 
-    function cancelAction() {
-        window.close(); // 팝업 창 닫기
-    }
+function listCall() {
+    var search = $('#search').val();
+    $.ajax({
+        type: 'POST',
+        url: '/mail/myAddList.ajax',
+        data: { search: search },
+        dataType: 'JSON',
+        success: function(data) {
+            console.log(data);
+            var content = '';
+            for (let item of data.list) {
+                content += '<tr onclick="selectRow(this, \'myAddList\')">';
+                content += '<td>' + item.add_name + '</td>';
+                content += '<td>' + item.add_email + '</td>';
+                content += '</tr>';
+            }
+            $('#myAddList').html(content);
+            syncSelectedItems('myAddList');
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
+
+function myFavoriteListCall() {
+    var search = $('#search').val();
+    $.ajax({
+        type: 'POST',
+        url: '/mail/myFavoriteList.ajax',
+        data: { search: search },
+        dataType: 'JSON',
+        success: function(data) {
+            console.log(data);
+            var content = '';
+            for (let item of data.list) {
+                content += '<tr onclick="selectRow(this, \'markAddList\')">';
+                content += '<td>' + item.add_name + '</td>';
+                content += '<td>' + item.add_email + '</td>';
+                content += '</tr>';
+            }
+            $('#markAddList').html(content);
+            syncSelectedItems('markAddList');
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
+
+function updateReceiverList() {
+    var selected = [];
+    $('#myAddList tr.selected, #clientAddList tr.selected, #markAddList tr.selected').each(function() {
+        var name = $(this).find('td').eq(0).text();
+        var email = $(this).find('td').eq(1).text();
+        var itemText = name + ' "' + email + '"';
+        if (!isAlreadySelected(itemText)) {
+            selected.push(itemText);
+        }
+    });
+    $('#receiverList').empty();
+    $('#receiverList').html(selected.join('<br>'));
+}
+
+function isAlreadySelected(itemText) {
+    var alreadySelected = false;
+    $('#receiverList li').each(function() {
+        if ($(this).text() === itemText) {
+            alreadySelected = true;
+            return false; // 반복문 종료
+        }
+    });
+    return alreadySelected;
+}
+
+function selectRow(row, tableId) {
+    var selectedTable = $('#' + tableId);
+    $(row).toggleClass('selected');
+    updateReceiverList(); // 선택 변경 후 수신자 목록 업데이트
+    syncSelectedItems(tableId);
+}
+
+function toggleSelectAll(tableId) {
+    var allSelected = $('#' + tableId + ' tr').length === $('#' + tableId + ' tr.selected').length;
+    $('#' + tableId + ' tr').each(function() {
+        $(this).toggleClass('selected', !allSelected);
+    });
+    updateReceiverList();
+    syncSelectedItems(tableId);
+}
+
+function syncSelectedItems(tableId) {
+    // Remove items from receiver list which are not selected anymore
+    var selectedTable = $('#' + tableId);
+    $('#receiverList li').each(function() {
+        var listItemText = $(this).text();
+        var isSelected = false;
+        selectedTable.find('tr.selected').each(function() {
+            var name = $(this).find('td').eq(0).text();
+            var email = $(this).find('td').eq(1).text();
+            if (listItemText === name + ' "' + email + '"') {
+                isSelected = true;
+                return false; // Break the loop
+            }
+        });
+        if (!isSelected) {
+            $(this).remove();
+        }
+    });
+}
+
+function confirmAction() {
+	
+	// 현재 URL에서 파라미터 가져오기
+    var urlParams = new URLSearchParams(window.location.search);
+
+    // mail_receiver, mail_subject, mail_content 파라미터 값 가져오기
+    var mail_receiver = urlParams.get('mail_receiver');
+    var mail_subject = urlParams.get('mail_subject');
+    var mail_content = urlParams.get('mail_content');
+
+    // 가져온 값 사용 예시
+    console.log('Mail Receiver:', mail_receiver);
+    console.log('Mail Subject:', mail_subject);
+    console.log('Mail Content:', mail_content);
+	
+	
+    var receiverList = $('#receiverList').html();
+    var receiver = receiverList.split('<br>');
+    
+    var receivers = mail_receiver+','+receiver;
+    
+    console.log('receivers : ' +receivers + 'M_subject : ' + mail_subject + 'M_content : ' + mail_content);
+     
+    if (window.opener) {
+    	window.opener.location.href = '/mail/sendMail?receivers=' + encodeURIComponent(receivers) + '&mail_subject=' + encodeURIComponent(mail_subject) + '&mail_content=' + encodeURIComponent(mail_content);
+        window.close();
+    } else {
+        alert('부모 창이 없습니다.');
+    } 
+}
+
+function cancelAction() {
+    window.close();
+}
+
 </script>
 </html>
