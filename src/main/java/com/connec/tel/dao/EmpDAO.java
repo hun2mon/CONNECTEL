@@ -38,4 +38,8 @@ public interface EmpDAO {
 
 	List<EmpDTO> excelList();
 
+	void empLeave(String emp_no, String register);
+
+	void empScheduleLeave();
+
 }

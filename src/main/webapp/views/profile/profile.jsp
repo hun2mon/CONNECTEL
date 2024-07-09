@@ -5,15 +5,17 @@
 <meta charset="UTF-8">
 <title>프로필</title>
 <style>
-
-
 #qq{
 	background-color : #FCFAFA;
 }
 .container{
 	margin : 0 auto;
 }
-.employee-card{
+.employee-card {
+    border-collapse: collapse;
+    width: 100%;
+    height: 40%;
+    text-align: center;
 	margin-left:100px;
 }
 .parent {
@@ -138,7 +140,7 @@ h2 {
 }
 
 .content_body{
-	 width: 1280px;
+	 width: 100%;
 }
 
 </style>
@@ -168,22 +170,24 @@ h2 {
                                 </c:otherwise>
                             </c:choose>
                         </td>
-                        <td class="photo" id = "qq">이름</td>
-                        <td class="photo" id = "qq">직책</td>
                         <td class="titles" id = "qq">소속</td>
                         <td class="subContent2" id="dept_display"></td>
                         <td class="titles" id = "qq">사번</td>
                         <td class="subContent2">${sessionScope.loginInfo.emp_no}</td>
                     </tr>
                     <tr>
-                        <td class="photo" rowspan="3">${sessionScope.loginInfo.name}</td>
-                        <td class="photo" rowspan="3" id="rank_display"></td>
                         <td class="titles" id = "qq">이메일</td>
-                        <td class="subContent" colspan="6">${sessionScope.loginInfo.email}</td>
+						<td class="subContent">${sessionScope.loginInfo.email}</td>
+                        <td class="titles" id = "qq">이름</td>
+                        <td class="subContent2">${sessionScope.loginInfo.name}</td>     
                     </tr>
                     <tr>
                         <td class="titles" id = "qq">전화번호</td>
-                        <td class="subContent" colspan="5">${sessionScope.loginInfo.phone}</td>
+                        <td class="subContent" >${sessionScope.loginInfo.phone}</td>
+						<td class="titles" id = "qq">직책</td>
+						<td class="subContent2"id="rank_display"></td>
+						
+                        
                     </tr>
                     <tr>
                         <td class="titles" id = "qq">입사일</td>

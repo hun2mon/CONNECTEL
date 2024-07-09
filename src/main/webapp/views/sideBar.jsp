@@ -110,27 +110,29 @@
 					<!-- ============================================================== -->
 					<ul class="navbar-nav float-left mr-auto ml-3 pl-1">
 						<!-- Notification -->
-						<li class="nav-item dropdown">  <a class="nav-link dropdown-toggle pl-md-3 position-relative"
-       href="javascript:void(0)" id="bell" role="button"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span><i data-feather="bell" class="svg-icon"></i></span>
-        <span class="badge badge-primary notify-no rounded-circle">0</span>
-    </a>
-    <div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
-        <ul class="list-style-none">
-            <li>
-                <div class="message-center notifications position-relative" id="notificationList">
-						
-                </div>
-            </li>
-            <li>
-                <a class="nav-link pt-3 text-center text-dark" href="javascript:void(0);">
-                    <strong>Check all notifications</strong>
-                    <i class="fa fa-angle-right"></i>
-                </a>
-            </li>
-        </ul>
-    </div></li>
+	<li class="nav-item dropdown">
+	    <a class="nav-link dropdown-toggle pl-md-3 position-relative"
+	       href="javascript:void(0)" id="bell" role="button"
+	       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	        <span><i data-feather="bell" class="svg-icon"></i></span>
+	        <span class="badge badge-primary notify-no rounded-circle">0</span>
+	    </a>
+	    <div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
+	        <ul class="list-style-none">
+	            <li>
+	                <div class="message-center notifications position-relative" id="notificationList">
+							
+	                </div>
+	            </li>
+	            <li>
+	                <a class="nav-link pt-3 text-center text-dark" href="javascript:void(0);">
+	                    <strong>Check all notifications</strong>
+	                    <i class="fa fa-angle-right"></i>
+	                </a>
+	            </li>
+	        </ul>
+	    </div>
+	</li>
     <input type = "hidden" name = "emp_no" value = "${sessionScope.loginInfo.emp_no}">
 						<!-- End Notification -->
 						<!-- ============================================================== -->
@@ -357,7 +359,8 @@ function fetchNotifications() {
             console.log("사원 번호는??? " + userEmpNo);
             stompClient.subscribe('/user/' + userEmpNo + '/queue/notifications', function(message) {
                 console.log('Received message from topic ' + userEmpNo + ': ' + message.body);
-                showNotification(message.body); // 서버에서 JSON 문자열을 받아 객체로 변환
+                
+                showNotification(JSON.parse(message.body)); // 서버에서 JSON 문자열을 받아 객체로 변환하여 처리
                 
                 
             });
@@ -383,48 +386,89 @@ function fetchNotifications() {
             stompClient.send('/app/chat', {}, JSON.stringify({ 'content': 'Hello, Server!' }));
         }
     }
-
-    // 알림을 HTML에 추가하는 함수
-    function showNotification(notification) {
-    	console.log("뭘 받았을까? " +notification);
-        var notificationList = document.getElementById('notificationList');
-
-        var notificationItem = document.createElement('a');
-        notificationItem.className = 'message-item d-flex align-items-center border-bottom px-3 py-2';
-        notificationItem.href = 'javascript:void(0)';
-
-        var iconSpan = document.createElement('span');
-        iconSpan.className = 'btn btn-success text-white rounded-circle btn-circle';
-        iconSpan.innerHTML = '<i data-feather="calendar" class="text-white"></i>';
-
-        var contentDiv = document.createElement('div');
-        contentDiv.className = 'w-75 d-inline-block v-middle pl-2';
-
-        var titleH6 = document.createElement('h6');
-        titleH6.className = 'message-title mb-0 mt-1';
-        titleH6.innerText = 'New Notification';
-
-        var messageSpan = document.createElement('span');
-        messageSpan.className = 'font-12 text-nowrap d-block text-muted text-truncate';
-        messageSpan.innerText = notification.noti_content; // 알림 내용
-
-        var timeSpan = document.createElement('span');
-        timeSpan.className = 'font-12 text-nowrap d-block text-muted';
-        timeSpan.innerText = new Date(notification.noti_date); // 알림 시간
-
-        contentDiv.appendChild(titleH6);
-        contentDiv.appendChild(messageSpan);
-        contentDiv.appendChild(timeSpan);
-
-        notificationItem.appendChild(iconSpan);
-        notificationItem.appendChild(contentDiv);
-
-        notificationList.prepend(notificationItem);
-
-        // 알림 개수 업데이트 (옵션)
+    function updateNotificationCount() {
         var notifyNo = document.querySelector('.notify-no');
-        notifyNo.innerText = parseInt(notifyNo.innerText) + 1;
+        notifyNo.innerText = document.querySelectorAll('.message-item').length;
     }
+
+	    // 알림을 HTML에 추가하는 함수
+	function showNotification(notification) {
+	    console.log("뭘 받았을까? " + notification);
+	    var notificationList = document.getElementById('notificationList');
+	
+	    var notificationItem = document.createElement('div');
+	    notificationItem.className = 'message-item d-flex align-items-center border-bottom px-3 py-2';
+	
+	    var iconSpan = document.createElement('span');
+	    iconSpan.className = 'btn btn-success text-white rounded-circle btn-circle';
+	    iconSpan.innerHTML = '<i data-feather="calendar" class="text-white"></i>';
+	
+	    var contentDiv = document.createElement('div');
+	    contentDiv.className = 'w-75 d-inline-block v-middle pl-2';
+	
+	    var titleDiv = document.createElement('div');
+	    titleDiv.className = 'd-flex justify-content-between align-items-center mb-1';
+	
+	    var titleH6 = document.createElement('h6');
+	    titleH6.className = 'message-title mb-0';
+	    titleH6.innerText = 'New Notification';
+	
+	    var deleteButton = document.createElement('button');
+	    deleteButton.className = 'btn btn-sm btn-outline-danger delete-notification';
+	    deleteButton.innerText = 'x';
+	    deleteButton.addEventListener('click', function() {
+	        var noti_idx = notification.noti_idx; // 알림 객체의 noti_idx를 가져옴
+	        // AJAX를 사용하여 서버에 삭제 요청 보내기
+	        deleteNotification(noti_idx);
+	        // UI에서 삭제
+	        notificationList.removeChild(notificationItem);
+	        // 알림 개수 업데이트
+	        updateNotificationCount();
+	    });
+	
+	    titleDiv.appendChild(titleH6);
+	    titleDiv.appendChild(deleteButton);
+	
+	    var messageSpan = document.createElement('span');
+	    messageSpan.className = 'font-12 text-nowrap d-block text-muted text-truncate';
+	    messageSpan.innerText = notification.noti_content; // 알림 내용
+	
+	    var timeSpan = document.createElement('span');
+	    timeSpan.className = 'font-12 text-nowrap d-block text-muted';
+	    timeSpan.innerText = new Date(notification.noti_date); // 알림 시간
+	
+	    contentDiv.appendChild(titleDiv);
+	    contentDiv.appendChild(messageSpan);
+	    contentDiv.appendChild(timeSpan);
+	
+	    // 클릭 시 noti_link로 이동
+	    iconSpan.addEventListener('click', function() {
+	        window.location.href = notification.noti_link;
+	    });
+	
+	    notificationItem.appendChild(iconSpan);
+	    notificationItem.appendChild(contentDiv);
+	
+	    notificationList.prepend(notificationItem);
+	
+	    // 알림 개수 업데이트
+	    updateNotificationCount();
+	}
+	    
+	//알림 삭제 요청을 처리하는 함수 (AJAX)
+function deleteNotification(noti_idx) {
+    $.ajax({
+        type: 'DELETE',
+        url: '/notifications/' + noti_idx, // 알림의 고유 ID를 사용하여 삭제 요청
+        success: function(response) {
+            console.log('알림 삭제 성공:', response);
+        },
+        error: function(error) {
+            console.error('알림 삭제 중 에러 발생:', error);
+            // 실패 시에 대한 처리
+        }
+    });
+}
     
     </script>
     </html>
