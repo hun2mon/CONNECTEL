@@ -30,12 +30,16 @@ public class NoticeService {
 		messagingTemplate.convertAndSend("/topic/messages", response);
 	}
 
-	public void sendShare(String emp_no, String notificationContent) {
-		noticeDAO.sendShare(emp_no,notificationContent);
+	public void sendShare(String emp_no, String notificationContent, String noti_link) {
+		noticeDAO.sendShare(emp_no,notificationContent,noti_link);
 	}
 
 	public List<NoticeDTO> getNotifications(String empNo) {
 		return noticeDAO.getNotice(empNo);
+	}
+
+	public boolean deleteId(String noti_idx) {
+		return noticeDAO.deleteId(noti_idx);
 	}
 
 }

@@ -53,6 +53,10 @@ public class EmpService {
         String join_date = param.get("join_date");
         	
         empDAO.empStatus(emp_no,register,join_date);
+        // 멤버 휴가 하루씩 지급
+        
+        empDAO.empLeave(emp_no,register);
+        logger.info("emp_no" + emp_no + "휴가등록 확인 ㄱㄱㄱㄱ");
         
         if (row>0) {
             String page = "main/main";
@@ -234,6 +238,10 @@ public class EmpService {
 
 	public List<EmpDTO> excelList() {
 		return empDAO.excelList();
+	}
+
+	public void empScheduleLeave() {
+		empDAO.empScheduleLeave();
 	}
 	
 }

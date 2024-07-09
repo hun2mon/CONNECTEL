@@ -20,6 +20,17 @@
 		#{bank_name}, #{account_no},
 		#{join_date}, #{authority},#{register})
 	</insert>
+	
+	<insert id = "empLeave">
+		INSERT INTO leave_history (emp_no, annual, leave_division, register)
+			VALUES(#{param1},1,'+',#{param2})
+	</insert>
+	
+	<insert id = "empScheduleLeave">
+	INSERT INTO leave_history (emp_no, annual, leave_division, register)
+		SELECT emp_no, 1, '+', '월차'
+		FROM emp
+	</insert>
 
 	<insert id="fileWrite">
 		INSERT INTO photo(ref_idx, ori_pho_name, pho_name,
