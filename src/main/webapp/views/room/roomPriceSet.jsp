@@ -48,12 +48,12 @@
             display: flex;
             justify-content: center;
             gap: 30px; /* 두 선택 요소 사이의 간격 */
-            margin-top: 20px;
+            margin-top: 40px;
+  			margin-bottom: 80px;
             
         }
         label {
             font-weight: bold;
-		    color: #0277bd; /* 파란색 글자 */
 		    margin-bottom: 0px;
 		    font-size: x-large;
         }
@@ -67,39 +67,21 @@
 		    width: 100%;
 		    border-collapse: collapse;
 		    text-align: center;
-		    background-color: #ffffff; /* 테이블 배경 흰색 */
 		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 테이블 그림자 */
 		}
 		
 		input{
 			width: 100%;
 		    border: 1px solid;
-		    background-color: #e1f5fe; /* 아주 연한 하늘색 배경 */
 		    text-align: center;
-		    border-radius: 3px;
-		    
+		    border-radius: 3px;		    
 		    padding: 8px;
-		    transition: background-color 0.3s ease; /* 배경색 전환 부드럽게 */
 		}
 		
 		th, td {
 		    padding: 12px;
-    		border: 1px solid #e0e0e0; /* 연한 회색 테두리 */
 		}
-		
-		th {
-		    background-color: #6076E8; /* 진한 파란색 배경 */
-    		color: #ffffff; /* 흰색 글자 */
-		}
-		
-		td {
-		    background-color: #e3f2fd; /* 연한 하늘색 배경 */
-		}
-				
-		input:focus {
-		    background-color: #ffffff;
-		}
-		
+	
 		#yearSelect ,#monthSelect{
 			width:7%;
 		}
@@ -130,7 +112,7 @@
 						            </select>
 						        </div>
 						        <table class="table table-hover">
-                                    <thead>
+                                    <thead class="thead-light">
                                         <tr>
                                             <th scope="col">요일</th>
                                             <th scope="col">스탠다드룸</th>
@@ -248,7 +230,7 @@ function drawList(list) {
     var content = '';
 
     content += '<tr>';
-    content += '<th scope="row" style="background-color:#e3f2fd;"><input type="text" style="border:0px;" name="dd_division" value="Mon ~ Thu" readonly></th>';
+    content += '<th scope="row" ><input type="text" style="border:0px;" name="dd_division" value="Mon ~ Thu" readonly></th>';
     content += '<td><input type="text" class="A standard" id="standardA" value=""></td>';
     content += '<td><input type="text" class="A superior" id="superiorA" value=""></td>';
     content += '<td><input type="text" class="A delux" id="deluxA" value=""></td>';
@@ -257,7 +239,7 @@ function drawList(list) {
 
     // 금~토
     content += '<tr>';
-    content += '<th scope="row" style="background-color:#e3f2fd;"><input type="text" style="border:0px;" name="dd_division" value="Fri ~ Sat" readonly></th>';
+    content += '<th scope="row"><input type="text" style="border:0px;" name="dd_division" value="Fri ~ Sat" readonly></th>';
     content += '<td><input type="text" class="B standard" id="standardB" value=""></td>';
     content += '<td><input type="text" class="B superior" id="superiorB" value=""></td>';
     content += '<td><input type="text" class="B delux" id="deluxB" value=""></td>';
@@ -266,7 +248,7 @@ function drawList(list) {
 
     // 일욜
     content += '<tr>';
-    content += '<th scope="row" style="background-color:#e3f2fd;"><input type="text" style="border:0px;" name="dd_division" value="Sun" readonly></th>';
+    content += '<th scope="row"><input type="text" style="border:0px;" name="dd_division" value="Sun" readonly></th>';
     content += '<td><input type="text" class="C standard" id="standardC" value=""></td>';
     content += '<td><input type="text" class="C superior" id="superiorC" value=""></td>';
     content += '<td><input type="text" class="C delux" id="deluxC" value=""></td>';

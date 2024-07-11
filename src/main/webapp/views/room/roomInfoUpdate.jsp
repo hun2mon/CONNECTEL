@@ -158,11 +158,19 @@
 
     </div>
 </div>
+
+<div id="loadingSpinner" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:1000; text-align:center;">
+    <img src="/assets/images/mailSending.gif" alt="Loading..." style="width: 300px; height: 300px; position:relative; top:50%; transform:translateY(-50%);">
+    <div style="margin-top: 20px; font-size: 24px;">메일을 전송 중입니다...</div>
+</div>
+
+
 </body>
 <script>
 var num;
 
 $(document).ready(function(){
+
     var room_type = "${room_type}";
     
     if (room_type) {
@@ -188,7 +196,12 @@ $(document).ready(function(){
         }
         reader.readAsDataURL(event.target.files[0]);
     });
+
+    
 });
+
+
+
 
 function setActiveTab(room_type) {
     $('.tab').removeClass('active'); // 모든 탭의 활성화 클래스 제거

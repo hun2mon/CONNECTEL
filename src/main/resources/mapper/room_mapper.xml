@@ -13,14 +13,14 @@
 		SELECT r.res_no, r.cos_name, r.cos_phone, r.cos_email, r.in_date, r.out_date, r.res_date, r.res_price
 		FROM reservation r
 		LEFT JOIN stay s ON r.res_no = s.res_no
-		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL AND division = 'A';	
+		WHERE CURRENT_DATE() BETWEEN r.in_date AND r.out_date-1  AND s.res_no IS NULL AND division = 'A';			
 	</select>
 	
 	<select id="reservationSearchList" resultType="com.connec.tel.dto.RoomDTO" parameterType="map">
 		SELECT r.res_no, r.cos_name, r.cos_phone, r.cos_email, r.in_date, r.out_date, r.res_date, r.res_price
 		FROM reservation r
 		LEFT JOIN stay s ON r.res_no = s.res_no
-		WHERE r.in_date = CURRENT_DATE() AND s.res_no IS NULL	AND cos_name = #{name} AND division = 'A'; ;	
+		WHERE CURRENT_DATE() BETWEEN r.in_date AND r.out_date-1 AND s.res_no IS NULL	AND cos_name = #{name} AND division = 'A'; ;	
 	</select>
 	
 	<select id="selectRoomDiv" resultType="String">
