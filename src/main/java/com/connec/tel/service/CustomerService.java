@@ -432,8 +432,9 @@ public class CustomerService {
 	public ModelAndView myresercheckDetail(String res_no) {
 		ModelAndView mav = new ModelAndView();
 		RoomDTO dto = customerDAO.reservedetail(res_no);
-		
+		RoomDTO info = customerDAO.room_detail_infomation(res_no);
 		mav.addObject("dto",dto);
+		mav.addObject("info", info);
 		mav.setViewName("/customer/myreservationdetail");
 		
 		return mav;

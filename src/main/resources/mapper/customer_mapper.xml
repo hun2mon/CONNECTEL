@@ -35,6 +35,9 @@
 
     <select id="noticeSearch" parameterType="string" resultType="annDTO">
         SELECT 
+        row_number() over(ORDER BY a.ann_fixed DESC, a.ann_no DESC) 
+        	- (SELECT COUNT(a2.ann_no) from announcement a2 where ann_fixed = 'Y' and ann_division = 'E')
+        		 as row_num,
             a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
             e.name AS register, a.ann_date 
         FROM 
@@ -43,8 +46,6 @@
             emp e ON a.register = e.emp_no
         WHERE 
             ann_subject LIKE CONCAT('%', #{textval}, '%') and ann_division ='C'
-        ORDER BY 
-            ann_no DESC
     </select>
 
 <select id="noticedetail" resultType="annDTO">
@@ -231,7 +232,7 @@
 		VALUES(#{res_no},#{cos_name},#{cos_email},#{cos_phone},#{checkIn},#{checkOut},CURRENT_DATE(),#{total_amount},#{type_code},#{tid})
 </insert>
 <select id="getres_no">
-	select res_no FROM reservation WHERE cos_email = #{param1}
+	select res_no FROM reservation WHERE cos_email = #{param1} order by res_no desc limit 1
 </select>
 
     <select id="checkReservation" parameterType="map" resultType="com.connec.tel.dto.RoomDTO">
@@ -242,6 +243,16 @@
 <select id="reservedetail" parameterType="String" resultType="com.connec.tel.dto.RoomDTO" >
 	SELECT * FROM reservation
 		WHERE res_no = #{res_no}AND division = 'A'
+</select>
+
+<select id="room_detail_infomation" parameterType="String" resultType="com.connec.tel.dto.RoomDTO" >
+	 SELECT * 
+    FROM room_information
+    WHERE type_code = (
+        SELECT type_code 
+        FROM reservation 
+        WHERE res_no = #{res_no}
+    )
 </select>
 
 

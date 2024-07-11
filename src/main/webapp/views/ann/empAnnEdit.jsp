@@ -36,6 +36,7 @@ table {
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
     border-radius: 8px; /* 모서리 둥글게 */
+        white-space: nowrap;
 }
 
 table th, table td {
@@ -114,7 +115,7 @@ a:hover {
 }
 
 .exit {
-    text-align: right;
+    text-align: left;
     margin-top: 20px;
 }
 
@@ -131,6 +132,10 @@ a:hover {
     background-color: #6076E8;
     color: white;
 }
+.image-container{
+display:flex;
+justify-content: space-between;
+}
 
 </style>
 </head>
@@ -140,30 +145,30 @@ a:hover {
 </div>
 
 <div class="edit-container">
-    <form id="annForm" action="ann/empannupdate.do" method="post" enctype="multipart/form-data">
+    <form id="annForm" action="/ann/empannupdate.do" method="post" enctype="multipart/form-data">
         <table>
             <tr>
-                <th colspan="2">
+                <th colspan="3">
                     공지사항 수정
                 </th>
             </tr>
             <tr>
                 <td>번호</td>
-                <td>
+                <td colspan="2">
                     <input type="hidden" id="ann_no" name="ann_no" value="${dto.ann_no}">
                     ${dto.ann_no}
                 </td>
             </tr>
             <tr>
                 <td>제목</td>
-                <td>
+                <td colspan="2">
                     <input type="text" class="ann_subject" id="ann_subject" name="ann_subject" 
                            placeholder="제목을 입력해주세요." value="${dto.ann_subject}" required>
                 </td>
             </tr>
             <tr>
                 <td>내용</td>
-                <td>
+                <td colspan="2">
                     <input type="text" class="textcontent" id="ann_content" name="ann_content" 
                            placeholder="내용을 입력해 주세요" value="${dto.ann_content}" required>
                 </td>
@@ -172,43 +177,126 @@ a:hover {
                 <td>기존 사진</td>
                 <td>
                     <c:if test="${not empty image}">
-                        <div class="image-container">
-                            <img src="/photo/${image}" alt="첨부 이미지" style="max-width:800px;">
+                        <div class="image-container" id="image-container">
+                            <img src="/photo/${image}" alt="첨부 이미지" style="max-width:800px;" id="existing-photo">
                         </div>
                     </c:if>
+                    <c:if test="${empty image}">
+                        <div class="image-container">
+                            <p>기존 사진 없음</p>
+                        </div>
+                    </c:if>
+                </td>
+                <td style="text-align:right; padding-right:40px;">
+                         <button type="button" style=" background-color: #f8f9fa;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: gray;
+    transition: background-color 0.3s, color 0.3s;" onclick="photodelete('${dto.ann_no}')"> 삭제 </button>                
                 </td>
             </tr>
             <tr>
                 <td>기존 파일</td>
                 <td>
                     <c:if test="${not empty file}">
+                    <div class="file-container" id="file-container">
                         <a href="/download/${file}" target="_blank">${file}</a>
+                    </div>
                     </c:if>
+                    <c:if test="${empty file}">
+                        <p>기존 파일 없음</p>
+                    </c:if>
+                </td>
+                <td style="text-align:right; padding-right:40px;">
+                         <button type="button" style=" background-color: #f8f9fa;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: gray;
+    transition: background-color 0.3s, color 0.3s;" onclick="filedelete('${dto.ann_no}')"> 삭제 </button>                
                 </td>
             </tr>
             <tr>
                 <td>새 사진 업로드</td>
-                <td>
+                <td colspan="2">
                     <input type="file" name="new_photo">
                 </td>
             </tr>
             <tr>
                 <td>새 첨부파일 업로드</td>
-                <td>
+                <td colspan="2">
                     <input type="file" name="new_file">
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td colspan="">
                     <div class="exit">
-                        <a href="/empannDetail.go?ann_no=${dto.ann_no}"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
-	                    <input type="submit" value="저장">
+                          <a href="/empannDetail.go?ann_no=${dto.ann_no}"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
                     </div>
+                </td>
+                <td></td>
+                <td style="text-align:right;">
+                        <input type="submit" value="저장">                
                 </td>
             </tr>
         </table>
     </form>
 </div>
 
+<script>
+    function photodelete(ann_no){
+        $.ajax({
+            type: 'POST',
+            url: '/ann/editdeletephoto.ajax',
+            data: {
+                'ann_no': ann_no
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log('삭제 성공:', response);
+                // 삭제 성공 시 이미지를 DOM에서 제거
+                $('#existing-photo').remove();
+                $('#image-container').append('<p>기존 사진 없음</p>');
+            },
+            error: function(error) {
+                console.log('삭제 실패:', error);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('button[type="button"]').on('click', function(event) {
+            event.preventDefault(); // 기본 동작 방지
+        });
+    });
+    
+    
+    function filedelete(ann_no){
+        $.ajax({
+            type: 'POST',
+            url: '/ann/editdeletefile.ajax',
+            data: {
+                'ann_no': ann_no
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log('삭제 성공:', response);
+                $('#existing-file').remove();
+                $('#file-container').append('<p>기존 사진 없음</p>');
+            },
+            error: function(error) {
+                console.log('삭제 실패:', error);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('button[type="button"]').on('click', function(event) {
+            event.preventDefault(); // 기본 동작 방지
+        });
+    });
+    
+</script>
 </body>
 </html>

@@ -35,7 +35,7 @@
 
     #custom-main1 h2 {
         text-align: center;
-         color: #5d1212;
+        color: #5d1212;
         margin-top: 0px;
         margin-bottom: 15px;
         white-space: nowrap;
@@ -52,7 +52,7 @@
         margin-bottom: -5px;
         font-size: 13px;
         margin-left: -200px;
-         color: #5d1212;
+        color: #5d1212;
         white-space: nowrap;
     }
 
@@ -155,11 +155,53 @@
         font-size: 18px;
         color: #333;
     }
+    
+    #about-us {
+        padding: 40px 20px;
+        background-color: #f8f9fa;
+        font-family: 'Noto Serif KR', serif;
+        color: #333;
+    }
+
+    #about-us h2 {
+        text-align: center;
+        color: #5d1212;
+        font-family: 'Bodoni Moda SC', serif;
+        margin-bottom: 20px;
+    }
+
+    #about-us p {
+        font-size: 16px;
+        line-height: 1.8;
+        text-align: justify;
+        margin-bottom: 20px;
+    }
+
+    #directions {
+        padding: 40px 20px;
+        font-family: 'Noto Serif KR', serif;
+    }
+
+    #directions h2 {
+        text-align: center;
+        color: #5d1212;
+        font-family: 'Bodoni Moda SC', serif;
+        margin-bottom: 20px;
+    }
+
+    #directions p {
+        font-size: 16px;
+        line-height: 1.8;
+        text-align: justify;
+        margin-bottom: 20px;
+    }
+
 </style>
 </head>
 <body id="custom-body">
     <!-- 상단 헤더 -->
     <%@ include file="topheader.jsp" %>  
+    
     <!-- 이미지 부분 -->
     <div id="custom-slideshow-container">
         <div class="Slidesbackground">
@@ -193,20 +235,49 @@
         <h2 style="font-family:Bodoni Moda SC, serif;">The Sheilla Hotel</h2>
     </div>
     
-    <hr id="custom-hr">	
-    <!-- 지도를 표시할 div -->
-    <div id="hotelmap">
-        <p style="font-size: 15px; color: #5d1212;text-align: right; font-family: 'Noto Serif KR', serif; padding-right:330px">오시는 길</p>
-        <div id="custom-map" style="text-align: left;"></div>
-    </div>
-    <hr id="custom-hr" style="margin-top:40px;">
-
-
-</body>
-<script>
-    var slideIndex = 1;
-    var slideInterval;
-    var map = L.map('custom-map').setView([36.072720680387306, 129.54110971926934], 16); //위도 / 경도 / 줌상태
+    <hr id="custom-hr">
+    
+    <!-- 호텔 소개 -->
+    <div style="width:80%; margin-left:10%; margin-right:10%;">
+    
+    <section id="about-us">
+        <h2>호텔 소개</h2>
+        <p>
+            The Sheilla Hotel은 바다에서 주는 맑은공기를 느낄수 있고 넓게 펼쳐진 뷰로 정말 멋진 환경에서 휴식을 즐길 수 있는 최적의 장소입니다. 
+            저희 호텔은 최고급 서비스와 현대적인 편의시설을 갖추고 있으며, 고객님들의 편안한 휴식을 위해 최선을 다하고 있습니다. 
+            넓고 쾌적한 객실, 다양한 미식 요리를 즐길 수 있는 레스토랑, 최신 시설을 갖춘 피트니스 센터와 스파까지, 
+            모든 면에서 최상의 만족을 드리고자 합니다. 비즈니스 여행객을 위한 고속 인터넷과 비즈니스 센터도 준비되어 있으며, 
+            가족 여행객을 위한 다양한 프로그램과 키즈 클럽도 운영하고 있습니다. The Sheilla Hotel에서 특별한 경험을 만들어보세요.
+        </p>
+        <p>
+            또한, 저희 호텔은 자연경관을 즐길 수 있는 최적의 위치에 있습니다. 여러분께 최고의 서비스와 함께, 
+            한적한 공간에서 편안한 휴식을 경험할 수 있도록 최선을 다하겠습니다.
+        </p>
+    </section>
+    
+    <hr id="custom-hr">
+    
+    <!-- 오시는 길 -->
+    <section id="directions">
+        <h2>오시는 길</h2>
+        <p>
+            The Sheilla Hotel은 바다를 바라보는 곳에 위치하며  셔틀 버스가 운행중이기에 이동수단이 매우 편리합니다. 
+           	주변에는 다양한 시설과 지역 특산물 맛집들이 있어 
+            관광객들에게 최적의 위치에 있습니다. 자동차로 오시는 경우, 주변에 주차장이 마련되어 있으며 
+            간단한 차량 지원도 가능합니다. The Sheilla Hotel을 찾으시는 길에 대해 궁금하신 점이나 
+            추가적인 정보가 필요하시면 언제든지 저희에게 문의해 주세요. 
+        </p>
+        <p>
+            호텔의 정확한 위치와 관련된 지도는 아래에서 확인하실 수 있습니다.
+        </p>
+        <!-- 지도 삽입 -->
+        <div id="custom-map"></div>
+        
+        </div>
+        
+        <script>
+            // Leaflet 지도 라이브러리를 이용한 호텔 위치 표시
+            var map = L.map('custom-map').setView([36.072720680387306, 129.54110971926934], 16); //위도 / 경도 / 줌상태
 
     //지도 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -216,31 +287,33 @@
     
     var beachMarker = L.marker([36.072720680387306, 129.54110971926934]).addTo(map); 
     beachMarker.bindPopup("<b>The SheillaHotel</b><br>");
-        
-    showSlides(slideIndex);
-    startSlideShow();
+        </script>
+    </section>
+    
+    <!-- 슬라이드 쇼 자바스크립트 -->
+    <script>
+        var slideIndex = 1;
+        showSlides(slideIndex);
 
-    function startSlideShow() {
-        slideInterval = setInterval(function() {
-            showSlides(slideIndex += 1);
-        }, 5000); //페이지 인터벌 5초
-    }
-
-    function showSlides(n) {
-        var i;
-        var slides = document.getElementsByClassName("custom-mySlides");
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
         }
-        slides[slideIndex - 1].style.display = "block";
-    }
 
-    function plusSlides(n) {
-        clearInterval(slideInterval);
-        showSlides(slideIndex += n);
-        startSlideShow();
-    }
-</script>
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("custom-mySlides");
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";  
+            }
+            slides[slideIndex-1].style.display = "block";  
+        }
+    </script>
+
+</body>
 </html>

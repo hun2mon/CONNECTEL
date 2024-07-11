@@ -225,7 +225,7 @@ public class CustomerController {
 	public String cancel(Model model) {
 		logger.info("취소");
 		model.addAttribute("msg", "예약에 실패하였습니다.");
-		return "/customer/reservation.go";
+		return "/customer/reservation";
 	}
 	
 	

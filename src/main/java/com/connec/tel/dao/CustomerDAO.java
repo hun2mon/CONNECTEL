@@ -97,6 +97,8 @@ public interface CustomerDAO {
 	RoomDTO checkReservation(String name, String phone, String reservationNo);
 
 	RoomDTO reservedetail(String res_no);
+
+	RoomDTO room_detail_infomation(String res_no);
 	
 	
 	

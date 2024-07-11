@@ -189,8 +189,6 @@ public class AnnController {
 	
 	
 	
-	
-	
 
 	
 	
@@ -348,6 +346,26 @@ public class AnnController {
  		
  		return map;
  	}
+ 	
+ 	
+ 	@PostMapping(value="/ann/editdeletephoto.ajax")
+ 	@ResponseBody
+ 	public Map<String, Object> editphotodelete( String ann_no) {
+ 		logger.info("삭제할 사진 게시글번호 :"+ann_no);
+ 		
+ 		
+ 		return annService.editphotodelete(ann_no);
+ 	}
+ 	
+ 	@PostMapping(value="/ann/editdeletefile.ajax")
+ 	@ResponseBody
+ 	public Map<String, Object> editfiledelete( String ann_no) {
+ 		logger.info("삭제할 사진 게시글번호 :"+ann_no);
+ 		
+ 		
+ 		return annService.editfiledelete(ann_no);
+ 	}
+ 	
 	
 }
 
