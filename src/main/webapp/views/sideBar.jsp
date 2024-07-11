@@ -114,6 +114,8 @@
 						</b>
 						</a>
 					</div>
+					<input type = "hidden" id = "authority" value = "${sessionScope.loginInfo.authority}">
+					<input type = "hidden" id = "dept_code" value = "${sessionScope.loginInfo.dept_code}">
 					<!-- ============================================================== -->
 					<!-- End Logo -->
 					<!-- ============================================================== -->
@@ -276,11 +278,11 @@
 							</span></a>
 							<ul aria-expanded="false"
 								class="collapse first-level base-level-line">
-								<li class="sidebar-item"><a href="/emp/empList.go"
+								<li class="sidebar-item" id = "empList"><a href="/emp/empList.go"
 									class="sidebar-link"><span class="hide-menu"> 직원 목록
 									</span></a></li>
 
-								<li class="sidebar-item"><a href="/emp/empRegist.go"
+								<li class="sidebar-item" id = "empRegist"><a href="/emp/empRegist.go"
 									class="sidebar-link"><span class="hide-menu"> 직원 등록
 									</span></a></li>
 							</ul></li>
@@ -326,9 +328,54 @@
 		</aside>
 	</div>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 권한 검사 함수
+    function checkEmpList() {
+        var authority = parseInt($('#authority').val()); // 예시에서는 authority 값이 input 요소에 저장되어 있다고 가정합니다.
+        var deptCode = $('#dept_code').val(); // 예시에서는 dept_code 값이 input 요소에 저장되어 있다고 가정합니다.
+        console.log(deptCode + authority + "ㅁㄴㅇㅁㄴㅇㅁㄴㅇ");
 
+        // 권한 검사
+        if (authority >= 2 || deptCode === '11') {
+            // 권한이 충족되면 해당 URL로 이동
+            window.location.href = '/emp/empList.go';
+        } else {
+            // 권한이 없는 경우 알림창 표시
+            alert('권한이 없습니다.');
+        }
+    }
+    
+    function checkEmpRegist() {
+        var authority = parseInt($('#authority').val()); // authority 값을 정수로 변환
+        var deptCode = $('#dept_code').val(); // dept_code 값을 정수로 변환
+        console.log("dept Code : " +deptCode + "authority : " + +authority + "ㅁㄴㅇㅁㄴㅇㅁㄴㅇ");
 
+        // 권한 검사
+        if (authority >= 2 && deptCode === '11') {
+            // 권한이 충족되면 해당 URL로 이동
+            window.location.href = '/emp/empRegist.go';
+        } else {
+            // 권한이 없는 경우 알림창 표시
+            alert('권한이 없습니다.');
+        }
+    }
+    // 사이드바 링크 클릭 이벤트 처리
+    $('#empRegist').on('click', 'a', function(event) {
+        event.preventDefault(); // 기본 동작 방지
+
+        // 권한 검사 함수 호출
+        checkEmpRegist();
+    });
+    
+
+    // 사이드바 링크 클릭 이벤트 처리
+    $('#empList').on('click', 'a', function(event) {
+        event.preventDefault(); // 기본 동작 방지
+
+        // 권한 검사 함수 호출
+        checkEmpList();
+    });
+})
 </script>
 </html>

@@ -77,7 +77,7 @@ public class CalendarService {
 		return map;
 	}
 
-	public List<String> getParties(long id) {
+	public List<Map<String,Object>> getParties(long id) {
 		logger.info("asdasd"+id);
 		return calendarDAO.getParties(id);
 	}
@@ -88,9 +88,8 @@ public class CalendarService {
 		calendarDAO.deptShare(cal_no);
 	}
 
-	public void editEvent(String cal_no, String cal_content, LocalDateTime cal_start, LocalDateTime cal_end,
-			String emp_no) {
-		calendarDAO.editEvent(cal_no, cal_content, cal_start, cal_end, emp_no);
+	public void editEvent(String cal_no, String cal_content, LocalDateTime cal_start, LocalDateTime cal_end) {
+		calendarDAO.editEvent(cal_no, cal_content, cal_start, cal_end);
 
 		
 	}

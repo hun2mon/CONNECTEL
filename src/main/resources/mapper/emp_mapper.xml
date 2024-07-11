@@ -162,8 +162,11 @@
 	</insert>
 
 	<select id="UserPhotoLoad" resultType="emp">
-		SELECT pho_name FROM photo
-				WHERE pho_division = "P" AND ref_idx = #{param1} LIMIT 1
+			SELECT pho_name 
+			FROM photo
+			WHERE pho_division = "P" AND ref_idx = #{param1} 
+			ORDER BY pho_no DESC 
+			LIMIT 1
 	</select>
 	
 	<update id="resetPw">
@@ -199,14 +202,14 @@
 		        DATE(a.app_date) AS app_date,
 		        a.app_procedure,
 		        a.draft_no,
-		        e.name, -- 추가: emp 테이블에서 이름 필드
+		        e.name,
 		        ROW_NUMBER() OVER (PARTITION BY a.draft_no ORDER BY a.app_date DESC) AS rn
 		    FROM 
 		        leave_management lm
 		    JOIN 
 		        approver a ON lm.draft_no = a.draft_no
 		    JOIN 
-		        emp e ON e.emp_no = a.emp_no -- emp 테이블 조인
+		        emp e ON e.emp_no = a.emp_no
 		    WHERE 
 		        lm.emp_no = #{param3} AND lm.draft_status = 'Y'
 		)
@@ -219,7 +222,7 @@
 		    app_date,
 		    app_procedure,
 		    draft_no,
-		    name as register -- 추가: emp 테이블에서 가져온 이름 필드
+		    name as register 
 		FROM 
 		    RankedData r
 		WHERE 

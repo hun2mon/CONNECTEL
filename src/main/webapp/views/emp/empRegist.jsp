@@ -221,7 +221,6 @@ function validateForm() {
     var joinDate = document.getElementById('join_date').value;
 
     // 정규식 패턴 설정 (010-xxxx-xxxx 형식)
-
     if (name == "" || !gender || dob == "" || email == "" || postcode == "" || phone == "" || address == "" ||
         department == "" || detailAddress == "" || position == "" || bank == "" || permission == "" || account == "" || joinDate == "") {
         alert("모든 필드를 작성해 주세요.");
@@ -236,7 +235,7 @@ function validateForm() {
     
     var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-        alert("유효한 이메일 주소를 입력해 주세요." ex) xxxx@naver.com);
+        alert("유효한 이메일 주소를 입력해 주세요. ex) xxxx@naver.com");
         return false;
     }
 
@@ -310,16 +309,16 @@ function sample6execDaumPostcode() {
 			}).open();
 }
 
-document.getElementById('imgUpload').onchange = function (e) {
+document.getElementById('imgUpload').onchange = function(e) {
     var input = e.target;
     var reader = new FileReader();
-    reader.onload = function () {
+    reader.onload = function() {
         var dataURL = reader.result;
         var output = document.getElementById('imgPreview');
         output.src = dataURL;
     };
     reader.readAsDataURL(input.files[0]);
-};
+}
 
     
 </script>

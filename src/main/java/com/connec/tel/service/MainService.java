@@ -48,7 +48,7 @@ public class MainService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfWeek = now.with(java.time.DayOfWeek.MONDAY);
         LocalDateTime endOfWeek = startOfWeek.plusDays(6);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH-mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return mainDAO.getThisWeek(startOfWeek.format(formatter), endOfWeek.format(formatter),emp_no);
     }
 
@@ -111,7 +111,9 @@ public class MainService {
 
 	public void totalReserve(Model model) {
         LocalDate today = LocalDate.now();
-        int total = mainDAO.totalReserve(today);    
+        int total = mainDAO.totalReserve(today);   
+        logger.info(total + "나는???몇개일까요???");
+
         model.addAttribute("total",total);	
 	}
 
@@ -134,5 +136,6 @@ public class MainService {
 		
 		
 	}
+
 	
 }

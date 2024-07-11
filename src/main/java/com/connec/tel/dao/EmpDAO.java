@@ -26,8 +26,6 @@ public interface EmpDAO {
 
 	void resetPw(String rawPassword, String emp_no);
 
-	void empEdit(String emp_no);
-
 	int empEditDo(Map<String, String> param);
 
 	List<EmpDTO> leaveList(int start, int pagePerCnt, String emp_no);

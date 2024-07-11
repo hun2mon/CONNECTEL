@@ -141,6 +141,7 @@ h2 {
 		<div class="sidebar">
 			<jsp:include page="../sideBar.jsp"></jsp:include>
 		</div>
+		
 		<div class="content-wrapper">
 			<br>
 			<br>
@@ -150,7 +151,8 @@ h2 {
 			<br>
 			<br>
 			<br>
-
+					<input type = "hidden" id = "authority" value = "${sessionScope.loginInfo.authority}">
+					<input type = "hidden" id = "dept_code" value = "${sessionScope.loginInfo.dept_code}">
 			<h2>기본정보</h2>
 			<br>
 			<br>
@@ -172,6 +174,8 @@ h2 {
 										alt="사진" id="photo" style="width: 100%; height: 100%;">
 								</c:otherwise>
 							</c:choose></td>
+						<input type = "hidden" id = "emp_no" value ="${emp.emp_no}">
+							
 						<td class="titles" id="qq">이름</td>
 						<td class="photo" style = "text-align : left;">${emp.name}</td>						
 						<td class="titles" id="qq">직책</td>
@@ -179,7 +183,7 @@ h2 {
 					</tr>
 					<tr>
 						<td class="titles" id="qq">소속</td>
-						<td class="subContent2">${dept}</td>
+						<td class="subContent2" id = "">${dept}</td>
 						<td class="titles" id="qq">사번</td>
 						<td class="subContent2">${emp.emp_no}</td>
 					</tr>
@@ -226,7 +230,7 @@ h2 {
 				<br>
 					<div class="btns">
 					    <button style="margin-right: 30px;" class="btn waves-effect waves-light btn-primary" id="editEmpInfo" onclick="showModal('edit')">사원정보 수정</button>
-					    <button onclick="showModal('reset')" class="btn waves-effect waves-light btn-primary">비밀번호 초기화</button>
+					    <button onclick="showModal('reset')" class="btn waves-effect waves-light btn-primary" id = "reset">비밀번호 초기화</button>
 					
 					    <div id="info-alert-modal" class="modal fade over" tabindex="-1" role="dialog" aria-hidden="true">
 					        <div class="modal-dialog modal-sm">
@@ -294,12 +298,21 @@ h2 {
 <script src="/scss/icons/jquery.twbsPagination.js"
 	type="text/javascript"></script>
 <script>
+var msg ='${msg}';
+
+
+
 	var showPage = 1;
 	var searchRemain = false;
+    var deptCode = ${sessionScope.loginInfo.dept_code};
+  	var deptDisplay = document.getElementById('dept_display');
+
+
 
 	$(document).ready(function() { // html 문서가 모두 읽히면 되면(준비되면) 다음 내용을 실행 해라
 		listCall(showPage);
-	});
+	    showDeptText();
+	})
 
 	
     function showModal(action) {
@@ -317,6 +330,7 @@ h2 {
         $('#modal-message').text(message);
         $('#confirm-btn').attr('onclick', confirmAction);
         $('#info-alert-modal').modal('show');
+
     }
 
 	// dept_code에 해당하는 텍스트를 매핑합니다.
@@ -327,8 +341,14 @@ h2 {
 	};
 
 	// dept_code에 해당하는 텍스트를 찾아서 표시합니다.
-	const deptDisplay = document.getElementById('dept_display');
-	deptDisplay.textContent = deptMap[deptCode] || '대기 상태';
+function showDeptText() {
+    // dept_code에 해당하는 텍스트를 찾아서 표시합니다.
+    if (deptDisplay) {
+        deptDisplay.textContent = deptMap[deptCode] || '대기 상태';
+    } else {
+        console.error("Element with id 'dept_display' not found.");
+    }
+}
 
 	function listCall(page) {
 		$.ajax({

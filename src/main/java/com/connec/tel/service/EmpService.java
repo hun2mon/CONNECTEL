@@ -23,7 +23,8 @@ import com.connec.tel.dto.EmpDTO;
 
 @Service
 public class EmpService {
-	public String file_root = "/Users/jeounghun/upload/connectel/file/";
+	// public String file_root = "/Users/jeounghun/upload/connectel/file/";
+	public String file_root = "C:/upload/";
 	@Autowired EmpDAO empDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -106,7 +107,7 @@ public class EmpService {
 	                byte[] bytes = photo.getBytes(); // MultipartFile 로 부터 바이너리 추출
 	                Path path = Paths.get(file_root + newFileName);//저장경로지정
 	                Files.write(path, bytes);//저장
-	                empDAO.fileWrite(emp_no, fileName, newFileName,  pho_division);
+	                empDAO.fileWrite(emp_no, fileName, newFileName, pho_division);
 	                Thread.sleep(1);//파일명을 위해 강제 휴식 부여
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -148,7 +149,6 @@ public class EmpService {
 
 	    // 직원 상세 정보를 가져오기
 	    EmpDTO dto = empDAO.empDetail(emp_no);
-
 	    // 직급 코드 변환
 	    int rank_code = dto.getRank_code();
 	    String rank = getRankDescription(rank_code);
@@ -200,21 +200,17 @@ public class EmpService {
 	public void empEditDo(MultipartFile[] photos, Map<String, String> param, HttpSession session) {
 		EmpDTO dto = new EmpDTO();
 		dto.setPho_division(param.get("pho_division"));
+    	String empNo = param.get("emp_no");
+    	logger.info(empNo + "넌 누구냐");
 		int row = empDAO.empEditDo(param);
-		
-		
+			
 		String pho_division = dto.getPho_division();
         if (row>0) {
         	String emp_no = param.get("emp_no");
             String page = "main/main";
             fileSave(emp_no,pho_division,photos);
 		}
-		
-		
-		
-		
-		
-	
+
 	}
 
 	public Map<String, Object> leaveList(int currPage, String emp_no) {

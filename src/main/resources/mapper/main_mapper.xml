@@ -46,8 +46,11 @@ FROM (
     </select>
     
     <select id = "totalReserve" resultType = "int">
-    	SELECT COUNT(res_no) as count FROM reservation WHERE in_date = #{param1} AND division = 'A'
+      SELECT COUNT(*) as count FROM reservation WHERE (in_date <![CDATA[ <= ]]> #{out_date} AND out_date <![CDATA[ > ]]> #{in_date}) 
+      	AND division = 'A' AND (type_code ='1001' OR type_code ='1002 'OR type_code ='1003')
+      	
     </select>
+    
     
     <select id = "nowaReserve" resultType = "main">
 		SELECT
