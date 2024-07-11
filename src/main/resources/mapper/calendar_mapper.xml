@@ -39,7 +39,7 @@
 		        emp_no = #{param2}
 		</insert>
 
-	<select id="getParties" resultType="String">
+	<select id="getParties" resultType="map">
 		SELECT e.name, cs.emp_no
 		FROM calendar_share cs
 		JOIN emp e ON e.emp_no = cs.emp_no

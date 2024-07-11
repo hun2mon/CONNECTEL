@@ -668,7 +668,7 @@
 			event.preventDefault();
 			var participantName = event.target.innerText;
 			var empNo = $(event.target).data('emp_no');
-			if (!isSelected(empNo)) {
+			if (!isSelected(empNo) && !isShared(empNo)) {
 				selectedParticipants.push({ emp_no: empNo, name: participantName });
 				var listItem = '<li>' + participantName + '</li>';
 				$('#selectedParticipantsList').append(listItem);
@@ -687,9 +687,9 @@
 		    return selected;
 		}
 		
-		function isShared(name) {
+		function isShared(empNo) {
 		    var shared = sharedParticipants.some(function(participant) {
-		        return participant.name === name;
+		        return participant.emp_no === empNo;
 		    });
 		    if (shared) {
 		        $('#alreadySelectedModal').modal('show');
@@ -886,8 +886,9 @@
                             success: function(data) {
 
                                 data.forEach(function(name) {
-                                    var listItem = '<li>' + '<input type = "hidden" value = "'+name.emp_no+'" name = "emp_no">'+name + ' <button type="button" style="background-color: white; border: white; color:red;" class="btn btn-danger btn-sm removeParticipantBtn">x</button></li>';
+                                    var listItem = '<li>' + '<input type = "hidden" value = "'+name.emp_no+'" name = "emp_no">'+name.name + ' <button type="button" style="background-color: white; border: white; color:red;" class="btn btn-danger btn-sm removeParticipantBtn">x</button></li>';
                                     $('#sharedParticipantsList').append(listItem);
+                                    sharedParticipants.push(name);
                                     console.log(listItem);
                                 });
 

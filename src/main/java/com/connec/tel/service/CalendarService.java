@@ -77,7 +77,7 @@ public class CalendarService {
 		return map;
 	}
 
-	public List<String> getParties(long id) {
+	public List<Map<String,Object>> getParties(long id) {
 		logger.info("asdasd"+id);
 		return calendarDAO.getParties(id);
 	}

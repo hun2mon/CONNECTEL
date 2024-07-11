@@ -21,7 +21,7 @@ public interface CalendarDAO {
 
 	void updateParty(int cal_no, String emp_no);
 
-	List<String> getParties(long id);
+	List<Map<String,Object>> getParties(long id);
 
 	void deptInsert(String cal_no, String dept_code);
 

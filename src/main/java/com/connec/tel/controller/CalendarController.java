@@ -2,6 +2,7 @@ package com.connec.tel.controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -103,16 +104,10 @@ public class CalendarController {
 	
 	
 	@RequestMapping(value = "/getEventParticipants")
-	public ResponseEntity<List<String>> getEventParticipants(@RequestParam("id") int id) {
-	    try {
-	        List<String> participants = calService.getParties(id);
-	        
-	        return ResponseEntity.ok(participants);
-	    } catch (Exception e) {
-	        logger.error("Error occurred while fetching event participants", e);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                             .body(Collections.singletonList("Error occurred while fetching event participants"));
-	    }
+	@ResponseBody
+	public List<Map<String, Object>> getEventParticipants(@RequestParam("id") int id) {
+		List<Map<String, Object>> participants = calService.getParties(id);
+	    return participants;
 	}
 	
 	@RequestMapping(value = "/updateParticipants.ajax", method = RequestMethod.POST)
