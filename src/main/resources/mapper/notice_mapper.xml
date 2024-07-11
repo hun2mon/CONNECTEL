@@ -19,6 +19,11 @@
 		delete from notice WHERE noti_idx = #{param1}
 	</delete>
 	
+	<select id="countMsg">
+		SELECT SUM(a.cntNewChat) 
+			FROM 
+		(SELECT COUNT(content_no) AS cntNewChat FROM chat_detail cd JOIN chat_member cm ON cd.chat_no = cm.chat_no WHERE cd.chat_date > cm.enter_date AND cm.emp_no != #{param1} GROUP BY cd.chat_no) a;
+	</select>
 	
 	
 </mapper>

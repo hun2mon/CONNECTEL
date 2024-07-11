@@ -1,5 +1,8 @@
 package com.connec.tel.service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.connec.tel.controller.NoticeController;
 import com.connec.tel.dao.MessengerDAO;
 import com.connec.tel.dto.ChatRoom;
 import com.connec.tel.dto.EmpDTO;
@@ -20,6 +24,8 @@ public class ChatRoomRepository {
 	
 	@Autowired MessengerDAO msgDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired NoticeController notiController;
 
 	 public List<ChatRoom> findAllRoom(String emp_no) {
 	     List<ChatRoom> chatRooms = msgDAO.chatRoomList(emp_no);
@@ -54,7 +60,13 @@ public class ChatRoomRepository {
 	 }
 	
 	public void addMsg(String roomId, String emp_no, String sendMessage, String msg_type) {
+		
+		Date today = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		int compare = 0;
+		
 		msgDAO.addMsg(roomId, emp_no, sendMessage, msg_type);
+		
 	}
 
 	public Map<String, Object> contentsCall(String roomId) {

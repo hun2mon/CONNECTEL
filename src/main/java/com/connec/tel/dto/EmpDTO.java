@@ -1,6 +1,8 @@
 package com.connec.tel.dto;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -56,6 +58,7 @@ public class EmpDTO {
 	
 	private String room_name;
 	private String chat_no;
+	private Timestamp enter_date;
 	
 	
 	public Date getApp_date() {
@@ -322,6 +325,12 @@ public class EmpDTO {
 	}
 	public void setChat_no(String chat_no) {
 		this.chat_no = chat_no;
+	}
+	public Timestamp getEnter_date() {
+		return enter_date;
+	}
+	public void setEnter_date(Timestamp enter_date) {
+		this.enter_date = enter_date;
 	}
 
 }

@@ -358,6 +358,7 @@ form {
 		    var daysDiff = timeDiff / (1000 * 3600 * 24) + 1;
 	
 		    if (daysDiff > '${leftOver}') {
+		    	console.log('werwer');
 		    	$('.noti').html('보유 연차가 부족합니다.');
 				$('.appNoti').modal('show');
 				$('.endDate').val('');
@@ -702,6 +703,7 @@ form {
 		console.log(params);
 	
 		var content = editor.getHTMLCode();
+		var leftOver = '${leftOver}';
 		
 		if ($('.validation').next().length <= 0) {
 			$('.noti').html('결재자를 선택해 주세요.');
@@ -719,7 +721,8 @@ form {
 		}else if (content.length > (5 * 1024 * 1024)) {
 			$('.noti').html('파일 용량이 초과되었습니다.');
 			$('.appNoti').modal('show');
-		} else if($('input[name="totalDay"]').val() > '${leftOver}'){
+		} else if(param.leave_use > leftOver){
+			console.log($('input[name="totalDay"]').val() - '${leftOver}');
 			$('.noti').html('잔여 연차 일수가 부족합니다.');
 			$('.appNoti').modal('show');	
 		}else{
@@ -735,8 +738,7 @@ form {
 	    				$('.appNoti').modal('show');
 	    				$('.appNoti').on("click",function(){
 							$('#draft_no').val(data.draft_no);
-							$('#form').submit();						
-				    		location.href="/approval/myApproval.go";								
+							$('#form').submit();													
 						})		
 					} else {
 						$('.noti').html('기안서가 임시저장 되었습니다.');

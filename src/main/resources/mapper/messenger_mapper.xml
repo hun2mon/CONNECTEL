@@ -21,7 +21,8 @@
 			cm.chat_no AS roomId,
 			(SELECT p.pho_name FROM photo p WHERE p.ref_idx = cr.emp_no) AS profile_img,
 			cm.room_name,
-			(SELECT COUNT(content_no) FROM chat_detail cd WHERE cd.chat_no = cr.chat_no AND cm.enter_date <![CDATA[<]]> cd.chat_date AND cd.emp_no != #{param1} GROUP BY cd.chat_no) AS newChat
+			(SELECT COUNT(content_no) FROM chat_detail cd WHERE cd.chat_no = cr.chat_no AND cm.enter_date <![CDATA[<]]> cd.chat_date AND cd.emp_no != #{param1} GROUP BY cd.chat_no) AS newChat,
+			(select cd2.chat_content from chat_detail cd2 where cd2.chat_no = cr.chat_no order by cd2.chat_date desc limit 1) as chat_content
 		FROM chat_member cm JOIN chat_room cr ON cm.chat_no = cr.chat_no WHERE cm.emp_no = #{param1};
 	</select>
 	
@@ -42,14 +43,15 @@
 	</select>
 	
 	<insert id="addMember">
-		INSERT INTO chat_member(chat_no, emp_no, room_name)	
-			VALUES (#{param1}, #{param2}, #{param3})
+		INSERT INTO chat_member(chat_no, emp_no, room_name, enter_date)	
+			VALUES (#{param1}, #{param2}, #{param3}, now())
 	</insert>
 	
 	<select id="chatMemberList" resultType="emp">
 		SELECT 
 			e.emp_no,
 			cm.room_name,
+			cm.enter_date,
 			cm.chat_no,
 			e.name,
 			cc.code_name AS rank_name,

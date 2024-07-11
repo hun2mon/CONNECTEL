@@ -309,5 +309,16 @@
 		DELETE FROM draft WHERE draft_no = #{param1}
 	</delete>
 	
+	<select id="deadLineCheck">
+		SELECT draft_no FROM draft WHERE draft_end <![CDATA[ < ]]> #{param1} AND draft_status != 'W';
+	</select>
+	
+	<update id="rejectDraft">
+		UPDATE draft SET draft_status = 'N', reason = '마감기한으로 인한 반려' WHERE draft_no = #{param1}
+	</update>
+	
+	<update id="rejectLeave">
+		UPDATE leave_management SET draft_status = 'N' WHERE draft_no = #{param1}
+	</update>
 	
 </mapper>

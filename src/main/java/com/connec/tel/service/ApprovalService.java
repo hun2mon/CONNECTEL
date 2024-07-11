@@ -1,5 +1,6 @@
 package com.connec.tel.service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -304,6 +305,20 @@ public class ApprovalService {
 		}
 		
 		return map;
+	}
+
+	public void deadLineCheck() {
+		
+		LocalDate now = LocalDate.now();
+		
+		List<String> draft_no_list = appDAO.deadLineCheck(now);
+		
+		if (draft_no_list.size() > 0) {
+			for (String draft_no : draft_no_list) {
+				appDAO.rejectDraft(draft_no);
+				appDAO.rejectLeave(draft_no);
+			}
+		}
 	}
 	
 }

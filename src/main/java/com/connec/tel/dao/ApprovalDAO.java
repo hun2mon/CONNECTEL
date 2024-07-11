@@ -1,5 +1,6 @@
 package com.connec.tel.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -79,5 +80,11 @@ public interface ApprovalDAO {
 	List<ApprovalDTO> views(String draft_no);
 
 	int delDraft(String draft_no);
+
+	List<String> deadLineCheck(LocalDate now);
+
+	void rejectDraft(String draft_no);
+
+	void rejectLeave(String draft_no);
 
 }

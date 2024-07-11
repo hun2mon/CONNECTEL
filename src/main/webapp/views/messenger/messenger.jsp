@@ -214,10 +214,19 @@
     color: white;
     font-size: 10px;
     padding: 3px;
-    width: 25%;
+    width: 1px;
     text-align: center;
  }
  
+ #modal_left{
+	height: 500px;
+    overflow: auto;
+ }
+ 
+ #last_content{
+	margin: 0px;
+    font-size: 10px;
+ }
 
 </style>
 </head>
@@ -642,11 +651,19 @@
      		dataType:'JSON',
      		success:function(data){
      			var content = '';
+     			var last_content = '';
      			for (item of data) {
      				content += '<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2"><div class="user-img"><img src="/assets/images/chat.png" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-right"></span></div><div class="w-75 d-inline-block v-middle pl-2">';
-     				content += '<h6 class="message-title mb-0 mt-1">'+item.room_name+'</h6></div>';
+     				if (item.chat_content != null) {						
+	     				if (item.chat_content.length > 8) {
+	     					last_content = item.chat_content.substr(0,  10) + '...';
+						} else {
+							last_content = item.chat_content;
+						}
+					}
+     				content += '<h6 class="message-title mb-0 mt-1">'+item.room_name+'</h6><p id="last_content">'+last_content+'</p></div>';
 					if (item.newChat != null) {
-     				content += '<div id="newChatCount">'+item.newChat+'</div></a>';
+     				content += '<div id="newChatCount"></div></a>';
 					} else {
 					content += '</a>';
 					}
@@ -666,7 +683,7 @@
     	var emp_no = '${loginInfo.emp_no}';
     	$('#chatMemberList').html('');
     	
-    	
+    	$('#chatBody').scrollTop(0);
     	
     	
     	$('#textarea1').prop('readonly', false);
@@ -933,6 +950,7 @@
 			$('#textarea1').val('');
 		}
 		content = '';
+		$('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
 	}
     
 
@@ -947,12 +965,16 @@
 				sock = new SockJS("/ws_stomp");
 			    ws = Stomp.over(sock);
 			    reconnect = 0;
+			    $('#chatBody').scrollTop(0);
 			    drawChatContent(roomId);
 			    for (item of room_id) {
 			    	if (item == roomId) {
 						return;
 					}	
 				}
+			    
+			    console.log(ws);
+			    
 		    	room_id.push(roomId);
 
 		    	nowRoom=roomId;
@@ -961,6 +983,7 @@
      			
 			    connect();
 			    
+			    $('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
 			    
 			},
 			error:function(e){
@@ -968,20 +991,11 @@
 			}
 		})
    	}
-    
-    
-    function disconnect(id){
-    	ws.connect({}, function(frame) {
-    		delete this.subscriptions[id];
-    	      return this._transmit("UNSUBSCRIBE", {
-    	        id: id
-    	     });
-        })
-    }
+    console.log(ws);
+  
     
     
     function connect() {
-	    $('#chatBody').prop('scrollTop',$('#chatBody').prop('scrollHeight'));
     	var roomId = localStorage.getItem('wschat.roomId');
         var sender = localStorage.getItem('wschat.sender');
         var emp_no = localStorage.getItem('wschat.emp_no');

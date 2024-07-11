@@ -569,7 +569,7 @@ function appLineSave() {
 }
 
 function sendData() {
-	if ($('.validation').next().length <= 0) {
+	if (appVal.length < 2) {
 		$('.appNoti').modal('show');
 	} else {
 		 window.opener.drawAppList(appVal);
@@ -581,9 +581,9 @@ function upNum() {
 	 var checkedRows = $('.check:checked').closest('tr');
      if (checkedRows.length === 1) {
          var checkedRow = checkedRows.first();
-         if (checkedRow.index() > 0 && checkedRow.index() > 1 && checkedRow.prev().length) {
+         if (checkedRow.index() > 0 && checkedRow.index() >= 1 && checkedRow.prev().length) {
              var currentIndex = checkedRow.index();
-             var prevIndex = currentIndex - 1;
+             var prevIndex = currentIndex+1;
              
              checkedRow.insertBefore(checkedRow.prev());
              
@@ -602,15 +602,17 @@ function downNum() {
 	 var checkedRows = $('.check:checked').closest('tr');
      if (checkedRows.length === 1) {
          var checkedRow = checkedRows.first();
-         if (checkedRow.index() > 0 && checkedRow.next().length) {
+         if (checkedRow.index() >= 0 && checkedRow.next().length) {
              var currentIndex = checkedRow.index();
-             var nextIndex = currentIndex + 1;
+             var nextIndex = currentIndex;
              
              checkedRow.insertAfter(checkedRow.next());
 
              moveInArray(appVal, currentIndex, nextIndex);
              
              updateIndex();
+         }else {
+        	 $('.moveNoti').modal('show');
          }
      } else {
     	 $('.bothNoti').modal('show');

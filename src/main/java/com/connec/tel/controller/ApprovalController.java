@@ -68,7 +68,7 @@ public class ApprovalController {
 	}	
 	
 	// 기안서 첨부파일 저장
-	@PostMapping(value = "approval/fileSave")
+	@PostMapping(value = "/approval/fileSave")
 	public String fileSave(MultipartFile[] app_file, String draft_no) {
 		logger.info("app_file : {}", app_file.length);
 		logger.info("draft_no : {}", draft_no);

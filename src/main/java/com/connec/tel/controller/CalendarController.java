@@ -118,32 +118,6 @@ public class CalendarController {
 	@RequestMapping(value = "/updateParticipants.ajax", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> updateParty(@RequestBody Map<String, Object> param) {
-        String notificationContent = "일정이 공유 되었습니다.";
-        @SuppressWarnings("unchecked")
-		List<Map<String, String>> participants = (List<Map<String, String>>) param.get("participants");
-
-        if (participants != null) {
-            for (Map<String, String> participant : participants) {
-                // 각 participant에서 `emp_no` 추출
-                String emp_no = participant.get("emp_no");
-                String name = participant.get("name");
-
-                // `emp_no`가 null이 아닌지 확인 후 처리
-                if (emp_no != null) {
-                    // 필요한 로직 수행 (예: 알림 전송)
-                    System.out.println("Emp No: " + emp_no + ", Name: " + name);
-
-                    noticeController.sendShare(emp_no, notificationContent);
-
-                }
-            }
-        } else {
-            // participants가 null일 때의 처리 로직
-            System.out.println("Participants list is null.");
-        }
-        
-
-
 		return calService.updateParty(param);
     }
 

@@ -15,6 +15,7 @@ public class ChatController {
 	
 	private final SimpMessageSendingOperations messagingTemplate;
 	
+	
 	public ChatController(SimpMessageSendingOperations messagingTemplate){
 		this.messagingTemplate = messagingTemplate;
 	}

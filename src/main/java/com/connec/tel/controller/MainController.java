@@ -77,7 +77,6 @@ public class MainController {
         String content = "테스트야야야~~";
         switch (category) {
             case "금주":
-                noticeController.sendTest(emp_no, content);
                 return mainService.getThisWeek(emp_no); // 금주 일정
             case "오늘":
                 return mainService.getToday(emp_no); // 오늘 일정
