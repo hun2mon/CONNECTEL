@@ -58,18 +58,50 @@
         padding-bottom: 2px;
         margin-right: 10px;
     }
+    
+    
+    #main-body{
+    	margin-top:50px;
+    	margin-left:35%;
+    	margin-right:35%;
+    	text-align:left;
+    	font-size:20px;
+    	color:gray;
+    	border:1px solid black;
+    	padding: 20px;
+    	
+    }
+    
+    
+    #checkingdo{
+     background-color: #813b0f;
+    Color: white;
+    padding: 8px 20px;
+    border: 1px solid #ccc;
+    transition: background-color 0.5s ease;
+    
+    }
 </style>
 </head>
 <body>
      <%@ include file="topheader.jsp" %>
-     <h2 style="margin-top:10px;">예약조회</h2>
+     <h2 style="margin-top:40px;">예약조회</h2>
      <hr style="width:50%;">
-     <div id="reservationview">
-         예약자 성명: <input type="text" id="name"/>
-         전화번호: <input type="text" id="phone"/>
-         예약번호: <input type="text" id="reservationNo"/>
+     
+     <div id= main-body>
+     <div id="info-1" style="margin-bottom:20px; width: 100%;">
+         예약자 성명 <br><input style=" padding-left:5px; width:100%;"type="text" id="name"/>
      </div>
-     <input type="button" value="조회" onclick="sendReservationData()"/>
+     <div id="info-2" style="margin-bottom:20px;">
+         전화번호<br> <input style="padding-left:5px; width:100%;" type="text" id="phone"/>
+     </div> 
+  	 <div id="info-3" style="margin-bottom:20px;">
+         예약번호<br> <input style="padding-left:5px; width:100%;" type="text" id="reservationNo"/>  	
+  	 </div>
+     </div>
+     <div style="text-align:center; margin-top:30px;">
+     <input type="button" value="확인" id ="checkingdo" onclick="sendReservationData()"/>
+     </div>
 
     <script>
         function sendReservationData() {
@@ -90,7 +122,6 @@
                 },
                 success: function(response) {
                 	if(response.success){
-                	alert("조회 성공 ");
                     window.location.href = '/customer/myreservationdetail.go';
                 	}else{  alert('예약 정보를 찾을 수 없습니다.');   
                	 window.location.href = '/customer/myreservation.go';}

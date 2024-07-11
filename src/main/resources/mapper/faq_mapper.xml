@@ -49,9 +49,19 @@
     </select>
     
 <select id="faqsearch" parameterType="string" resultType="FaqDTO">
-    SELECT * FROM FAQ
+    SELECT
+    row_number() over(ORDER BY FAQ_no DESC)as row_num,
+     FAQ_no,
+     register,
+     FAQ_subject,
+     FAQ_content,
+     regist_date,
+     updater,
+     update_date,
+     FAQ_category
+     FROM FAQ
     WHERE FAQ_subject LIKE CONCAT('%', #{textval}, '%')
-    ORDER BY FAQ_no DESC
+  
 </select>
    
     

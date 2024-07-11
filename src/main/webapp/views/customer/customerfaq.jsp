@@ -191,7 +191,7 @@ button:hover {
 <body>
     <%@ include file="topheader.jsp" %>
 
-    <h2 style="margin-top:10px;">FAQ</h2>
+    <h2 style="margin-top:40px;">FAQ</h2>
     <hr width="50%">
 
     <!-- 검색 -->

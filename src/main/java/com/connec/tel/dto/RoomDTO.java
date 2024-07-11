@@ -39,7 +39,7 @@ public class RoomDTO {
 	private String room_bed;
 	private String room_capacity;
 	private String room_amenities;
-	
+	private String room_view;
 	
 	
 	public String getRoom_detail() {
@@ -252,6 +252,12 @@ public class RoomDTO {
 	}
 	public void setStay_check_in(Timestamp stay_check_in) {
 		this.stay_check_in = stay_check_in;
+	}
+	public String getRoom_view() {
+		return room_view;
+	}
+	public void setRoom_view(String room_view) {
+		this.room_view = room_view;
 	}
 	
 }
