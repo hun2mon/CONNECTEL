@@ -10,24 +10,11 @@
 <style>
 .row {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap; /* 줄 바꿈을 하도록 설정 */
 }
 
 .col-xl-6 {
     padding: 10px;
-    display: flex;
-    flex-direction: column;
-}
-
-#card1 {
-    flex: 7; /* 70%의 너비를 차지하도록 설정 */
-    padding: 10px;
-}
-
-#card2 {
-    flex: 3; /* 30%의 너비를 차지하도록 설정 */
-    padding: 10px;
-    margin-left: 20px; /* 두 카드 사이의 간격 조정 */
 }
 
 .card {
@@ -35,12 +22,7 @@
 }
 
 .table-responsive {
-    max-height: 400px; /* 원하는 최대 높이 설정 */
-    overflow-y: auto; /* 높이를 초과하면 수직 스크롤바 표시 */
-}
-
-#receiverList {
-    max-height: 400px; /* 원하는 최대 높이 설정 */
+    max-height: 400px;
     overflow-y: auto;
 }
 
@@ -81,11 +63,11 @@ tr {
 }
 
 .tab-content > .tab-pane {
-    display: none; /* 기본적으로 모든 탭 숨기기 */
+    display: none;
 }
 
 .tab-content > .active {
-    display: block; /* 활성 탭만 표시 */
+    display: block;
 }
 
 .form-control {
@@ -104,6 +86,14 @@ tr {
 
 .bg-transparent {
     background-color: transparent;
+}
+
+/* 취소 및 확인 버튼을 가운데 정렬 */
+.col.text-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* 버튼과의 간격을 조정 */
 }
 </style>
 
@@ -197,7 +187,8 @@ tr {
             </div> <!-- end card-->
         </div> <!-- end col -->
 
-        <div class="col-xl-6" id="card2">
+         <div class="col-xl-6">
+            <!-- 받는사람 목록은 그대로 유지 -->
             <div class="card">
                 <div class="card-body">
                     <h3>받는사람</h3>
@@ -224,6 +215,27 @@ $(document).ready(() => {
     listCall();
     clientListCall();
     myFavoriteListCall();
+    
+    
+    var urlParams = new URLSearchParams(window.location.search);
+    var mail_receiver = urlParams.get('mail_receiver');
+    var mail_subject = urlParams.get('mail_subject');
+    var mail_content = urlParams.get('mail_content');
+
+    console.log('mail_receiver : ' + mail_receiver);
+
+    if (mail_receiver) {
+        // 쉼표(,)로 구분된 이메일들을 배열로 변환
+        var emails = mail_receiver.split(',');
+
+        // 각 이메일을 <li> 태그로 변환하여 #receiverList에 추가
+        emails.forEach(function(email) {
+            var trimmedEmail = email.trim(); // 앞뒤 공백 제거
+            if (trimmedEmail !== '') {
+                $('#receiverList').append('<li>' + trimmedEmail + '</li>');
+            }
+        });
+    }
    
 });
 
@@ -250,7 +262,6 @@ function clientListCall() {
                 content += '</tr>';
             }
             $('#clientAddList').html(content);
-            syncSelectedItems('clientAddList');
         },
         error: function(e) {
             console.log(e);
@@ -275,7 +286,6 @@ function listCall() {
                 content += '</tr>';
             }
             $('#myAddList').html(content);
-            syncSelectedItems('myAddList');
         },
         error: function(e) {
             console.log(e);
@@ -300,7 +310,6 @@ function myFavoriteListCall() {
                 content += '</tr>';
             }
             $('#markAddList').html(content);
-            syncSelectedItems('markAddList');
         },
         error: function(e) {
             console.log(e);
@@ -308,70 +317,33 @@ function myFavoriteListCall() {
     });
 }
 
-function updateReceiverList() {
-    var selected = [];
-    $('#myAddList tr.selected, #clientAddList tr.selected, #markAddList tr.selected').each(function() {
-        var name = $(this).find('td').eq(0).text();
-        var email = $(this).find('td').eq(1).text();
-        var itemText = name + ' "' + email + '"';
-        if (!isAlreadySelected(itemText)) {
-            selected.push(itemText);
-        }
-    });
-    $('#receiverList').empty();
-    $('#receiverList').html(selected.join('<br>'));
-}
+function selectRow(row, listId) {
+    var name = $(row).find('td:eq(0)').text(); // 첫 번째 셀에서 이름 가져오기
+    var email = $(row).find('td:eq(1)').text(); // 두 번째 셀에서 이메일 가져오기
 
-function isAlreadySelected(itemText) {
-    var alreadySelected = false;
-    $('#receiverList li').each(function() {
-        if ($(this).text() === itemText) {
-            alreadySelected = true;
+    var recipient = name + ' "' + email + '"';
+    var $receiverList = $('#receiverList');
+
+    // 받는사람 목록에서 수신자가 이미 존재하는지 확인
+    var exists = false;
+    $receiverList.find('li').each(function() {
+        if ($(this).text().trim() === recipient) {
+            exists = true;
+            $(this).remove(); // 이미 존재하면 제거
             return false; // 반복문 종료
         }
     });
-    return alreadySelected;
+
+    // 수신자가 목록에 존재하지 않으면 추가
+    if (!exists) {
+        $receiverList.append('<li>' + recipient + '</li>');
+    }
 }
 
-function selectRow(row, tableId) {
-    var selectedTable = $('#' + tableId);
-    $(row).toggleClass('selected');
-    updateReceiverList(); // 선택 변경 후 수신자 목록 업데이트
-    syncSelectedItems(tableId);
-}
 
-function toggleSelectAll(tableId) {
-    var allSelected = $('#' + tableId + ' tr').length === $('#' + tableId + ' tr.selected').length;
-    $('#' + tableId + ' tr').each(function() {
-        $(this).toggleClass('selected', !allSelected);
-    });
-    updateReceiverList();
-    syncSelectedItems(tableId);
-}
-
-function syncSelectedItems(tableId) {
-    // Remove items from receiver list which are not selected anymore
-    var selectedTable = $('#' + tableId);
-    $('#receiverList li').each(function() {
-        var listItemText = $(this).text();
-        var isSelected = false;
-        selectedTable.find('tr.selected').each(function() {
-            var name = $(this).find('td').eq(0).text();
-            var email = $(this).find('td').eq(1).text();
-            if (listItemText === name + ' "' + email + '"') {
-                isSelected = true;
-                return false; // Break the loop
-            }
-        });
-        if (!isSelected) {
-            $(this).remove();
-        }
-    });
-}
 
 function confirmAction() {
-	
-	// 현재 URL에서 파라미터 가져오기
+    // 현재 URL에서 파라미터 가져오기
     var urlParams = new URLSearchParams(window.location.search);
 
     // mail_receiver, mail_subject, mail_content 파라미터 값 가져오기
@@ -383,22 +355,32 @@ function confirmAction() {
     console.log('Mail Receiver:', mail_receiver);
     console.log('Mail Subject:', mail_subject);
     console.log('Mail Content:', mail_content);
-	
-	
-    var receiverList = $('#receiverList').html();
-    var receiver = receiverList.split('<br>');
+
+    // receiverList에서 <li> 태그를 포함한 모든 내용을 가져오기
+    var receiverListHTML = $('#receiverList').html();
     
-    var receivers = mail_receiver+','+receiver;
+    // <li> 태그로 나누어진 배열 생성
+    var receiversHTMLArray = receiverListHTML.split('</li>');
     
-    console.log('receivers : ' +receivers + 'M_subject : ' + mail_subject + 'M_content : ' + mail_content);
-     
-    if (window.opener) {
-    	window.opener.location.href = '/mail/sendMail?receivers=' + encodeURIComponent(receivers) + '&mail_subject=' + encodeURIComponent(mail_subject) + '&mail_content=' + encodeURIComponent(mail_content);
+    // 배열의 각 항목에서 이름과 이메일 추출
+    var receivers = [];
+    receiversHTMLArray.forEach(function(item) {
+        if (item.trim() !== '') { // 빈 항목은 무시
+            var nameAndEmail = item.substring(item.lastIndexOf('>') + 1).trim();
+            receivers.push(nameAndEmail);
+        }
+    });
+    
+    console.log('Receivers:', receivers);
+
+    if (window.opener && window.opener.receiveMailData) {
+        window.opener.receiveMailData(receivers.join(','), mail_subject, mail_content);
         window.close();
     } else {
         alert('부모 창이 없습니다.');
-    } 
+    }
 }
+
 
 function cancelAction() {
     window.close();

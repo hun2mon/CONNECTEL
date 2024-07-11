@@ -90,9 +90,10 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <div class="customize-input">
-                                <input class="form-control custom-shadow custom-radius bg-white" type="search" placeholder="검색할 호수를 입력하세요." aria-label="Search" onkeyup="search()" id="search">
-                            	<!-- <button id="test">버튼 텍스트</button>  -->
-                            </div>
+							    <p style="float: left; margin-right: 10px; margin-left:10px; font-size: 30px;">객실 리스트</p>
+							    <input class="form-control custom-shadow custom-radius bg-white" type="search" placeholder="검색할 호수를 입력하세요." aria-label="Search" onkeyup="search()" id="search">
+							    <!-- <button id="test">버튼 텍스트</button> -->
+							</div>
                             <hr>
                             <table class="table">
                                 <thead class="bg-info text-white">

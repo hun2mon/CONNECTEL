@@ -255,7 +255,7 @@ table {
                 <div class="form-group">
                     <label for="star-checkbox">즐겨찾기</label>
                     <div class="star-checkbox" onclick="toggleStar(this)">
-                        <i id="star-icon" class="far fa-star"></i>
+                        <i id="star-iconic" class="far fa-star"></i>
                     </div>
                 </div>
 
@@ -552,9 +552,16 @@ var myFavoriteNum;
 	
 	
 
-    function openAddModal() {
-        $('#addModal').modal('show');
-    }
+	function openAddModal() {
+	    $('#add_name').val('');
+	    $('#add_email').val('');
+	    $('#belong').val('');
+	    $('#add_phone').val('');
+	    
+	    $('#star-iconic i').removeClass('fas').addClass('far'); // solid -> regular
+	    
+	    $('#addModal').modal('show');
+	}
 
     var isFavorite = false;
     

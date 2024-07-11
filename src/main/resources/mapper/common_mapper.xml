@@ -50,7 +50,7 @@
 </select>
 
 <select id="price">
-	SELECT res_price FROM reservation WHERE res_no = #{param1}
+	SELECT ${room_type} FROM room_price WHERE date = #{date}
 </select>
 	
 <select id="plus_price">

@@ -32,7 +32,8 @@ public class MailController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@PostMapping(value = "/mail/mail.do")
-	public String mail(@ModelAttribute MailDTO mailDTO,
+	@ResponseBody
+	public Map<String, Object> mail(@ModelAttribute MailDTO mailDTO,
 	                   @RequestParam("multipartFiles") List<MultipartFile> files, HttpSession session) {
 
 	    logger.info("mail 전송 요청");
@@ -57,9 +58,9 @@ public class MailController {
 	    EmpDTO emp = (EmpDTO) session.getAttribute("loginInfo");
 	    String emp_no = emp.getEmp_no();
 	    mailDTO.setEmp_no(emp_no);
-	    mailService.mail(mailDTO, emailList, files);
+	    
 
-	    return "/mail/mailSuccess";
+	    return mailService.mail(mailDTO, emailList, files);
 	}
 
 

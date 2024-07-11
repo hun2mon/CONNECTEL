@@ -212,6 +212,7 @@
 	                                      <th scope="col">예약자명</th>
 	                                      <th scope="col">전화번호</th>
 	                                      <th scope="col">체크인날짜</th>
+	                                      <th scope="col">체크아웃날짜</th>
 	                                  </tr>
 	                              </thead>
 	                              <tbody id="resList">
@@ -332,11 +333,157 @@
    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- 서비스, 추가결제 선택 모달 -->
+ <div id="serviceOrPay" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="warning-header-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-warning">
+                <h4 class="modal-title" id="warning-header-modalLabel">객실 변경 선택</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>예약번호</th>
+                            <th>현재 체크인 객실</th>
+                            <th>변경할 체크인 객실</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="rres_no"></td>
+                            <td id="current_room"></td>
+                            <td id="after_room"></td>
+                        </tr>
+                        <!-- 추가할 예약 정보가 있으면 여기에 추가 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="/guest/reserveManage.go" class="btn btn-light" >취소 후 결제</a>
+                <button type="button" class="btn btn-warning" onclick="freeUp()">무료 업그레이드</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <script>
 $(document).ready(function(){
     listCall();   
 });
+
+function freeUp(){
+	var room_no =	$('#current_room').text()
+	var res_no =	$('#rres_no').text()
+	var changeRoom_no =	$('#after_room').text()
+	
+	console.log(room_no);
+	console.log(res_no);
+	console.log(changeRoom_no);
+	
+	$.ajax({
+        type: 'POST',
+        url: '/room/changeCheckIn.ajax',
+        data: {
+            room_no: room_no,
+            res_no: res_no,
+            changeRoom_no:changeRoom_no
+        },
+        dataType: 'JSON',
+        success: function(data) {
+	               console.log(data);
+	               if (data.status === 'success') {
+	                  $('#changeCheckIn').modal('hide');
+	                  $('#danger-header-modal').modal('hide');
+	                  $('#serviceOrPay').modal('hide');
+	                  listCall();
+            
+	            }else{
+	               alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');
+	               $('#changeCheckIn').modal('hide');
+	                  $('#danger-header-modal').modal('hide');
+	                  listCall();
+	            }
+            
+            
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+	
+}
+
+function changeCheckIn(){
+	
+    var room_no = $('#checkOutHeader').text().replace('Room ', '');
+    var res_no = $('#res_no').text().replace('예약번호 : ', '');
+	var changeRoom_no = $('#availableRooms').val();
+
+	
+	if (!changeRoom_no) {
+		alert('변경할 객실을 선택해주세요!!');
+		return
+	}
+	
+	
+	console.log(room_no);
+	console.log(res_no);
+	console.log(changeRoom_no);
+	
+	var curr_no = room_no.toString().substring(0,1);
+	var after_no = changeRoom_no.toString().substring(0,1);
+	
+	console.log('curr_no',curr_no);
+	console.log('after_no',after_no);
+	
+	if (((curr_no === '3' || curr_no === '4') && (after_no === '3' || after_no === '4')) || after_no === curr_no) {
+	    // 같은 스탠다드 룸인 경우
+		$.ajax({
+	           type: 'POST',
+	           url: '/room/changeCheckIn.ajax',
+	           data: {
+	               room_no: room_no,
+	               res_no: res_no,
+	               changeRoom_no:changeRoom_no
+	           },
+	           dataType: 'JSON',
+	           success: function(data) {
+		               console.log(data);
+		               if (data.status === 'success') {
+		                  $('#changeCheckIn').modal('hide');
+		                  $('#danger-header-modal').modal('hide');
+		                  listCall();
+	               
+		            }else{
+		               alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');
+		               $('#changeCheckIn').modal('hide');
+		                  $('#danger-header-modal').modal('hide');
+		                  listCall();
+		            }
+	               
+	               
+	           },
+	           error: function(e) {
+	               console.log(e);
+	           }
+	       });
+	} else if (parseInt(curr_no) < parseInt(after_no)) {
+		console.log('업그레이드');	
+		$('#rres_no').html(res_no);
+		$('#current_room').html(room_no);
+		$('#after_room').html(changeRoom_no);
+
+		
+		$('#serviceOrPay').modal('show');
+		
+	   
+	} else {
+	    alert("다운그레이드는 결제 전액 환불 후 다시 예약!!");
+	}
+		
+}
 
 function listCall() {
     $.ajax({
@@ -620,6 +767,7 @@ function drawReservationList(list){
 			content += '<td>'+item.cos_name+'</td>';
 			content += '<td>'+item.cos_phone+'</td>';
 			content += '<td>'+item.in_date+'</td>';
+			content += '<td>'+item.out_date+'</td>';
 			content += '</tr>';
 		}
 	}
@@ -731,97 +879,7 @@ function changeCheckInModalOpen() {
     $('#currentRoomNo').text(room_no);
 }
 
-function changeCheckIn(){
-		
-	    var room_no = $('#checkOutHeader').text().replace('Room ', '');
-	    var res_no = $('#res_no').text().replace('예약번호 : ', '');
-		var changeRoom_no = $('#availableRooms').val();
 
-		
-		if (!changeRoom_no) {
-			alert('변경할 객실을 선택해주세요!!');
-			return
-		}
-		
-		
-		console.log(room_no);
-		console.log(res_no);
-		console.log(changeRoom_no);
-		
-		var curr_no = room_no.toString().substring(0,1);
-		var after_no = changeRoom_no.toString().substring(0,1);
-		
-		console.log('curr_no',curr_no);
-		console.log('after_no',after_no);
-		
-		if (((curr_no === '3' || curr_no === '4') && (after_no === '3' || after_no === '4')) || after_no === curr_no) {
-		    // 같은 스탠다드 룸인 경우
-			$.ajax({
-		           type: 'POST',
-		           url: '/room/changeCheckIn.ajax',
-		           data: {
-		               room_no: room_no,
-		               res_no: res_no,
-		               changeRoom_no:changeRoom_no
-		           },
-		           dataType: 'JSON',
-		           success: function(data) {
-			               console.log(data);
-			               if (data.status === 'success') {
-			                  $('#changeCheckIn').modal('hide');
-			                  $('#danger-header-modal').modal('hide');
-			                  listCall();
-		               
-			            }else{
-			               alert('이미 체크인 되었거나, 사용불가인 객실입니다. 다시 시도 해 주세요');
-			               $('#changeCheckIn').modal('hide');
-			                  $('#danger-header-modal').modal('hide');
-			                  listCall();
-			            }
-		               
-		               
-		           },
-		           error: function(e) {
-		               console.log(e);
-		           }
-		       });
-		} else if (parseInt(curr_no) < parseInt(after_no)) {
-			console.log('업그레이드');	
-
-			var currentDate = getCurrentDateFormatted();
-			
-			
-			 $.ajax({
-			    	type:'POST',
-			    	url:'/common/ready',
-			    	data:{
-			    		item_name: 'Hotel The Sheilla',
-			    		quantity: 1, 
-			    		tax_free_amount: 0,
-			    		current_date: currentDate,
-			    		room_no:room_no,
-			    		res_no: res_no,
-			            changeRoom_no:changeRoom_no,
-			            curr_no:curr_no,
-			            after_no:after_no
-			    	},
-			    	dataType:'JSON',
-			    	success:function(res) {
-			    		location.href = res.next_redirect_pc_url;      
-			    	},
-			    	error: function(e) {
-			            console.error("Error occurred:", e);
-			            alert("결제 준비 중 오류가 발생했습니다. 다시 시도해주세요.");
-			        }
-			    })
-			
-		    
-		   
-		} else {
-		    alert("다운그레이드는 결제 전액 환불 후 다시 예약!!");
-		}
-			
-}
 
 function getCurrentDateFormatted() {
     var date = new Date();

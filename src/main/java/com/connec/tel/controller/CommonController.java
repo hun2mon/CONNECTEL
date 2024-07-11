@@ -68,7 +68,17 @@ public class CommonController {
 
 		return res;
 	}
-		
+	
+		@PostMapping(value = "/common/PlusReady")
+		@ResponseBody
+		public kakaoPayReadyDTO PlusReady(@RequestParam Map<String, Object> params,HttpSession session) {
+			logger.info("결제요청");
+			logger.info("params : {}",params);
+			kakaoPayReadyDTO res = commonService.PlusReady(params,session);
+
+			return res;
+		}
+	
 	
 	//결제 성공시
 	@RequestMapping(value ="/common/success" )

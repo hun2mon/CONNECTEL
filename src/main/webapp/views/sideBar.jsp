@@ -237,6 +237,11 @@
 								<li class="sidebar-item"><a href="/mail/sendMail.go"
 									class="sidebar-link"><span class="hide-menu"> 메일 보내기
 									</span></a></li>
+									
+								<li class="sidebar-item"><a
+									href="/mail/addressManagement.go" class="sidebar-link"><span
+										class="hide-menu"> 주소록 </span></a></li>
+									
 
 								<li class="sidebar-item"><a
 									href="/mail/sendMailList.go" class="sidebar-link"><span

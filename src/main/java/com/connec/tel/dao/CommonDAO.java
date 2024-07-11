@@ -22,7 +22,7 @@ public interface CommonDAO {
 
 	int todayResNumSearch(String currDate);
 
-	int price(Object object);
+	int price(String date, String room_type);
 
 	int plus_price(String date, int price, String change_room_type);
 

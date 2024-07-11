@@ -37,7 +37,8 @@ public class MailService {
 	
 	public String file_root = "C:/upload/";
 
-	public void mail(MailDTO mailDTO, List<String> emailList, List<MultipartFile> files) {
+	public Map<String, Object> mail(MailDTO mailDTO, List<String> emailList, List<MultipartFile> files) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		for (String email : emailList) {
             sendEmail(mailDTO, email.trim(), files);
         }	
@@ -68,6 +69,10 @@ public class MailService {
  	   
  	         }
         }
+        
+        map.put("url", "/mail/mailSuccess.go");
+        
+        return map;
 	}
 
 	private void sendEmail(MailDTO mailDTO, String email, List<MultipartFile> files) {

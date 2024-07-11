@@ -67,7 +67,7 @@
                             <form id="emailForm" action="/mail/mail.do" method="post" enctype="multipart/form-data">
                                 <div class="form-group row">
 						            <div class="col">
-						                <input type="text" id="email" class="form-control bg-transparent" name="mail_receiver" placeholder="받는사람" value="${info.mail_receiver}">
+						                <input type="text" id="email" class="form-control bg-transparent" name="mail_receiver" placeholder="받는사람" value="">
 						            </div>
 						            <div class="col-auto">
 						                <button type="button" class="btn btn-success btn-sl-sm" onclick="openAddressBook()"><i class="fas fa-address-book"></i> 주소록</button>
@@ -91,7 +91,7 @@
 											        <span class="mr-1"><i class="fas fa-arrow-alt-circle-left"></i></span>취소
 											    </button>
 											</c:if>
-								            <button class="btn btn-primary btn-sl-sm mr-3" type="submit">
+								            <button class="btn btn-primary btn-sl-sm mr-3" type="button" onclick="submitEmailForm()">
 								                <span class="mr-2"><i class="fa fa-paper-plane"></i></span> 전송
 								            </button>
 								            <button class="btn btn-dark btn-sl-sm" onclick="temp_save()" type="button">
@@ -108,33 +108,74 @@
         </div>
     </div>
 </div>    
+
+<div id="loadingSpinner" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:1000; text-align:center;">
+    <img src="/assets/images/mailSending.gif" alt="Loading..." style="width: 300px; height: 300px; position:relative; top:50%; transform:translateY(-50%);">
+    <div style="margin-top: 20px; font-size: 24px;">메일을 전송 중입니다...</div>
+</div>
+
+
+
 </body>
 <script>
-var urlParams = new URLSearchParams(window.location.search);
-
-//mail_receiver, mail_subject, mail_content 파라미터 값 가져오기
-var receivers = urlParams.get('receivers');
-var mail_subject = urlParams.get('mail_subject');
-var mail_content = urlParams.get('mail_content');
-
-//가져온 값 사용 예시
-console.log('receivers:', receivers);
-console.log('Mail Subject:', mail_subject);
-console.log('Mail Content:', mail_content);
-
-if (receivers) {
-    $('#email').val(receivers);
+function showLoadingSpinner() {
+    document.getElementById('loadingSpinner').style.display = 'block';
 }
 
-if (mail_subject) {
-   
-    $('#subject').val(mail_subject);
+function hideLoadingSpinner() {
+    document.getElementById('loadingSpinner').style.display = 'none';
 }
 
-if (mail_content) {
-   
-    $('#content').html(mail_content);
+function submitEmailForm() {
+    showLoadingSpinner();
+
+    var formData = new FormData(document.getElementById('emailForm'));
+
+    $.ajax({
+        url: '/mail/mail.do',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            // 성공 시 로직
+            console.log('data : ' + data);
+            hideLoadingSpinner();
+            location.href= data.url;
+            // 필요한 경우 폼을 초기화하거나 다른 동작 수행
+        },
+        error: function(xhr, status, error) {
+            // 실패 시 로직
+            hideLoadingSpinner();
+            alert('메일 전송에 실패했습니다. 다시 시도해 주세요.');
+        }
+    });
 }
+
+
+function receiveMailData(receivers, subject, content) {
+    console.log('Receivers:', receivers);
+    console.log('Subject:', subject);
+    console.log('Content:', content);
+    
+    
+    if (receivers) {
+        $('#email').val(receivers);
+    }
+
+    if (subject) {
+       
+        $('#subject').val(subject);
+    }
+
+    if (content) {
+       
+        $('#content').html(content);
+    }
+    // 원하는 작업 수행
+}
+
+
 
 function back() {
 	location.href='/mail/tempMailList.go';
@@ -142,6 +183,12 @@ function back() {
 
 
 $(document).ready(function() {
+	
+	var rec = '${info.mail_receiver}';
+	console.log('rec : ' + rec);
+	
+	$('#email').val(rec);
+	
     $('#emailForm').on('submit', function(event) {
         var email = $('#email').val().trim();
         var subject = $('#subject').val().trim();
