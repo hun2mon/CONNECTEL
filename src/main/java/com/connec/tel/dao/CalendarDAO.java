@@ -25,7 +25,7 @@ public interface CalendarDAO {
 
 	void deptInsert(String cal_no, String dept_code);
 
-	void editEvent(String cal_no, String cal_content, LocalDateTime cal_start, LocalDateTime cal_end, String emp_no);
+	void editEvent(String cal_no, String cal_content, LocalDateTime cal_start, LocalDateTime cal_end);
 
 	void deleteParties(Long id);
 

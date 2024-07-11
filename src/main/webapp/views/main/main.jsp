@@ -273,27 +273,27 @@ th {
 			<div id="content-wrapper">
 				<section id="left">
 					<div id="mySchedule">				
-						    <ul clabss="nav nav-tabs justify-content-center mb-3">
-						        <li class="nav-item" onclick="setDays('금주')">
-						            <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active">
-						                <input type="hidden" value="T">
-						                <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-						                <span class="d-none d-lg-block">금주</span>
-						            </a>
-						        </li>
-						        <li class="nav-item" onclick="setDays('오늘')">
-						            <a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link">
-						                <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
-						                <span class="d-none d-lg-block">오늘</span>
-						            </a>
-						        </li>
-						        <li class="nav-item" onclick="setDays('내일')">
-						            <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
-						                <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
-						                <span class="d-none d-lg-block">내일</span>
-						            </a>
-						        </li>
-						    </ul>
+							<ul class="nav nav-tabs justify-content-center mb-3">
+							    <li class="nav-item" onclick="setDays('오늘')">
+							        <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link active">
+							            <input type="hidden" value="T">
+							            <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+							            <span class="d-none d-lg-block">오늘</span>
+							        </a>
+							    </li>
+							    <li class="nav-item" onclick="setDays('내일')">
+							        <a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link">
+							            <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+							            <span class="d-none d-lg-block">내일</span>
+							        </a>
+							    </li>
+							    <li class="nav-item" onclick="setDays('금주')">
+							        <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
+							            <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+							            <span class="d-none d-lg-block">금주</span>
+							        </a>
+							    </li>
+							</ul>
 						<table>
 							<thead class="bg-info text-white">
 								<tr>
@@ -351,7 +351,7 @@ th {
 							<br>
 							<br>
 						</div>
-						<span>오늘의 예약자수 ${total}명</span><br>
+						<span>금일 이용자수 ${total}명</span><br>
 						<br>
 					</div>
 					<br>
@@ -576,47 +576,46 @@ th {
 	    });
 	}
 
-	
-
-	
 
 	function formatDateTime(dateTimeString) {
 	    // T를 공백 두 개로 변경
 	    const dateTimeFormatted = dateTimeString.replace('T', '  ');
 	    return dateTimeFormatted;
 	}
-        document.addEventListener('DOMContentLoaded', function() {
-            const maxCapacity = 100;
-            const reservedGuests = ${total}; // 예약된 손님 수 (예시로 75명을 사용)     
-            const data = {
-                labels: ['이용중', '예약가능'],
-                datasets: [{
-                    label: 'Reservations',
-                    data: [reservedGuests, maxCapacity - reservedGuests],
-                    backgroundColor: ['#FF6384', '#36A2EB'],
-                    hoverBackgroundColor: ['#FF6384', '#36A2EB']
-                }]
-            };
-            const config = {
-                type: 'doughnut',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw;
-                                    const percentage = (value / maxCapacity * 100).toFixed(2);
-                                    return `${label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+	document.addEventListener('DOMContentLoaded', function() {
+	    const maxCapacity = 100;
+	    const reservedGuests =${total}; 
+		console.log(reservedGuests,reservedGuests + 'asdasdasadd');
+	    const data = {
+	        labels: ['이용중', '이용가능'], 
+	        datasets: [{
+	            label: 'Reservations',
+	            data: [reservedGuests, maxCapacity - reservedGuests],
+	            backgroundColor: ['#FF6384', '#36A2EB'], // 각 데이터의 색상을 적절히 변경해야 함
+	            hoverBackgroundColor: ['#FF6384', '#36A2EB'] // 각 데이터의 호버 색상을 적절히 변경해야 함
+	        }]
+	    };
+
+	    const config = {
+	        type: 'doughnut',
+	        data: data,
+	        options: {
+	            responsive: true,
+	            maintainAspectRatio: false,
+	            plugins: {
+	                tooltip: {
+	                    callbacks: {
+	                        label: function(context) {
+	                            const label = context.label || '';
+	                            const value = context.raw;
+	                            const percentage = (value / maxCapacity * 100).toFixed(2);
+	                            return `${label}: ${value} (${percentage}%)`;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    };
 
             const reservationChart = new Chart(
                 document.getElementById('reservationChart'),

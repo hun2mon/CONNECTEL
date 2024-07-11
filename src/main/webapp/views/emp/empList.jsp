@@ -161,6 +161,27 @@
 	</div>
 <script src="/scss/icons/jquery.twbsPagination.js" type="text/javascript"></script>	
 	<script>
+	
+	$('.empDetail').on('click', 'a', function(event) {
+	    event.preventDefault(); // 기본 동작 방지
+
+	    var href = $(this).attr('href'); // 클릭된 링크의 href 속성을 가져옴
+	    var emp_no = href.split('emp_no=')[1]; // emp_no= 다음의 값, 즉 emp_no의 값 부분을 추출
+
+	    // 권한 검사
+	    var authority = parseInt($('#authority').val()); // authority 값을 정수로 변환
+	    var deptCode = parseInt($('#dept_code').val()); // dept_code 값을 정수로 변환
+
+	    // 권한이 충족되는지 검사
+	    if (authority >= 2 && deptCode === 11) {
+	        // 권한이 충족되면 해당 URL로 이동
+	        window.location.href = '/empDetail.go?emp_no=' + emp_no;
+	    } else {
+	        // 권한이 없는 경우 알림창 표시
+	        alert('권한이 없습니다.');
+	    }
+	});
+	
 	var category = 1;
 	var showPage =1;
 	var searchRemain = false;
@@ -256,7 +277,7 @@
 
             content += '<tr style="border-bottom: 1px solid #ddd; height: 50px;">';
             content += '<td style="text-align: center;">' + emp.emp_no + '</td>';
-            content += '<td style="text-align: center;"><a href="/empDetail.go?emp_no=' + emp.emp_no + '">' + emp.name + '</a></td>';
+            content += '<td class = "empDetail" style="text-align: center;"><a href="/empDetail.go?emp_no=' + emp.emp_no + '">' + emp.name + '</a></td>';
             content += '<td style="text-align: center;">' + dept + '</td>';
             content += '<td style="text-align: center;">' + rank + '</td>';
             content += '<td style="text-align: center;">' + emp.status_division + '</td>';

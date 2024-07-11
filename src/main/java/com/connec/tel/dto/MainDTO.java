@@ -13,8 +13,17 @@ public class MainDTO {
 	private LocalDateTime cal_start;
 	private LocalDateTime cal_end;
 	private String emp_no;
+	private int totalReserve; // 예약 총 수를 나타내는 변수
 	
 	
+
+    public int getTotalReserve() {
+        return totalReserve;
+    }
+
+    public void setTotalReserve(int totalReserve) {
+        this.totalReserve = totalReserve;
+    }
 	public Date getDate_str() {
 		return date_str;
 	}

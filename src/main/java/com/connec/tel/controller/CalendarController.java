@@ -225,15 +225,14 @@ public class CalendarController {
 	    String cal_no = (String) requestBody.get("cal_no");
 	    String cal_start = (String) requestBody.get("cal_start");
 	    String cal_end = (String) requestBody.get("cal_end");
-	    String emp_no = (String) requestBody.get("epm_no");
 	    String cal_content = (String) requestBody.get("cal_content");
-	    
+	    logger.info(cal_no,cal_start, cal_end + "ㅇㅇㅇㅇㅇㅇㅇㅇㅇ");
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 			try {
 		        LocalDateTime startDateTime = LocalDateTime.parse(cal_start, formatter);
 		        LocalDateTime endDateTime = LocalDateTime.parse(cal_end, formatter);
 	           // DB에 일정 정보 저장
-		        calService.editEvent(cal_no, cal_content, startDateTime, endDateTime, emp_no);
+		        calService.editEvent(cal_no, cal_content, startDateTime, endDateTime);
 	           result.put("success", true);
 	       } catch (Exception e) {
 	           e.printStackTrace();

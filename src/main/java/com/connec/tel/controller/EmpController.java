@@ -37,6 +37,32 @@ public class EmpController {
 	@Autowired EmpService empService;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
+	@GetMapping(value = "/emp/empList.go")
+	public String empListGo(HttpSession session) {
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+		String auth= empDTO.getAuthority();
+		int dept= empDTO.getDept_code();
+		String page = "redirect:/main";
+		
+		if(auth.equals("2") || auth.equals("3") || dept == 11) {
+			 page = "emp/empList";
+		}
+		return page;
+	}
+	@GetMapping(value = "/emp/empRegist.go")
+	public String empRegistGo(HttpSession session) {
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+		String auth= empDTO.getAuthority();
+		int dept= empDTO.getDept_code();
+		String page = "redirect:/main";
+		
+		if((auth.equals("2") || auth.equals("3")) && dept == 11) {
+			 page = "emp/empRegist";
+		}
+		return page;
+	}
+	
+	
 	@RequestMapping(value = "/empRegist.do")
 	public String empRegist(MultipartFile[] photos,  @RequestParam Map<String, String> param, HttpSession session) {
 		String page = "emp/empList";
@@ -67,40 +93,65 @@ public class EmpController {
 	}
 	
 	@RequestMapping(value = "/empDetail.go")
-	public String empDetail(String emp_no, Model model) {
+	public String empDetail(String emp_no, Model model, HttpSession session) {
 		logger.info("emp_no : " + emp_no);
-		String page = "emp/empDetail";
-		
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+		String auth= empDTO.getAuthority();
+		int dept= empDTO.getDept_code();
 		EmpDTO dto = empService.empDetail(emp_no,model);
+		String page = "emp/empList";
+		if(auth.equals("2") || auth.equals("3")) {
+			empService.resetPw(emp_no);
+			page = "emp/empDetail";
+		}
 		
-		
+				
+
 		model.addAttribute("emp", dto);
-		
-		
 		return page;
 	}
 	
 	@RequestMapping(value = "/resetPw.do")
-	public String resetPw(String emp_no) {
+	public String resetPw(String emp_no, HttpSession session, Model model) {
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+		String auth= empDTO.getAuthority();
+		int dept= empDTO.getDept_code();
 		String page = "redirect:/empDetail.go?emp_no="+emp_no;
+				
+		if(auth.equals("2") || auth.equals("3")) {
+			empService.resetPw(emp_no);
+			 page = "redirect:/empDetail.go?emp_no="+emp_no;
+				model.addAttribute("msg","비밀번호 초기화 되었습니다.");
+
+		}
+		
 		logger.info("비밀번호 초기화 요청");
 		
-		empService.resetPw(emp_no);
 		return page;
 	}
 	
 	
 	@RequestMapping(value = "/empEdit.go")
-	public String empEdit(String emp_no, Model model) {
-		logger.info("emp_no  : " + emp_no);
-		String page = "emp/empEdit";
+	public String empEdit(String emp_no, Model model,HttpSession session) {
+		logger.info("여긴 emp Edit.go emp_no  : " + emp_no);
+		EmpDTO empDTO = (EmpDTO) session.getAttribute("loginInfo");
+		String auth= empDTO.getAuthority();
+		int dept= empDTO.getDept_code();
+		String page = "emp/empList";
+		String msg = "권한이 없습니다.";
 		
-		EmpDTO dto = empService.empDetail(emp_no,model);
-	
-		model.addAttribute("emp",dto);
+		if(auth.equals("2") || auth.equals("3")) {
+			page = "emp/empEdit";
+		}
+		
 
-	
+		logger.info("auto : " +auth + "dept " + dept + "asadasdadsasdasd");
+
+		EmpDTO dto = empService.empDetail(emp_no,model);
 		
+		model.addAttribute("emp",dto);
+		
+
 		return page;
 	}
 	@RequestMapping(value = "/empEdit.do")
@@ -109,10 +160,8 @@ public class EmpController {
 		
 		logger.info("param :{}",param);
 		 empService.empEditDo(photos,param, session);
-		
-		
+	
 		 return page;
-
 	}
 	
 	@RequestMapping(value = "/leaveList.ajax")

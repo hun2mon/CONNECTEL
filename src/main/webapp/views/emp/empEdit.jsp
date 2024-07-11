@@ -107,7 +107,7 @@
 </head>
 <body>
 	<form action="/empEdit.do" method="post"
-		onsubmit="return validateForm()" enctype="multipart/form-data">
+		onsubmit="return validateForm(event)" enctype="multipart/form-data">
 		<div class="parent">
 			<div class="sidebar">
 				<jsp:include page="../sideBar.jsp"></jsp:include>
@@ -133,7 +133,7 @@
 					
 				</div>
 				<br>
-				<br> <input type="hidden" name="emp_no" value="${emp.emp_no}">
+				<br> <input type="hidden" id = "emp_no" name="emp_no" value="${emp.emp_no}">
 				<div class="form-group" >
 					<span class="subject">이름</span> <input type="text"
 						class="form-control" id="name" name="name" value="${emp.name}"
@@ -195,12 +195,13 @@
 							<c:if test="${emp.bank_name == '농협은행'}">selected</c:if>>농협은행</option>
 						<option value="기업은행"
 							<c:if test="${emp.bank_name == '기업은행'}">selected</c:if>>기업은행</option>
-					</select> <span class="subject">권한</span> <select class="form-control"
-						id="authority" name="authority" value="${emp.authority}" required>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
 					</select>
+					<span class="subject">권한</span>
+						<select class="form-control" id="authority" name="authority" required>
+						    <option value="1" ${emp.authority == 1 ? 'selected' : ''}>1</option>
+						    <option value="2" ${emp.authority == 2 ? 'selected' : ''}>2</option>
+						    <option value="3" ${emp.authority == 3 ? 'selected' : ''}>3</option>
+						</select>
 				</div>
 				<div class="form-group">
 					<span class="subject">계좌번호</span> <input type="text"
@@ -219,6 +220,9 @@
 		</div>
 	</form>
 	<script>
+	
+	var isFormSubmitted = false;
+
 	document.addEventListener('DOMContentLoaded', function() {
 	    // 전화번호 입력 필드에 입력되는 값을 xxx-xxxx-xxxx 형식으로 제한하기
 	    var phoneInput = document.getElementById('phone');
@@ -349,6 +353,14 @@
 				});
 
 		function validateForm() {
+	        event.preventDefault();
+
+	        if (isFormSubmitted) {
+	            // 이미 제출된 폼인 경우 제출 중지
+	            return false;
+	        }
+
+		    var name = document.getElementById('emp_no').value;
 		    var name = document.getElementById('name').value;
 		    var email = document.getElementById('email').value;
 		    var postcode = document.getElementById('sample6_postcode').value;
@@ -359,29 +371,35 @@
 		    var position = document.getElementById('rank_code').value;
 		    var bank = document.getElementById('bank_name').value;
 		    var permission = document.getElementById('authority').value;
-		    var account = document.getElementById('account_no').value;
+		    var accountNo = document.getElementById('account_no').value;
 
 		    if (name == "" || email == "" || postcode == "" || phone == "" || address == ""
 		        || department == "" || detailAddress == "" || position == "" || bank == "" || permission == ""
-		        || account == "") {
+		        || accountNo == "" || emp_no == "") {
 		        alert("모든 필드를 작성해 주세요.");
 		        return false;
 		    }
-
-		    var phonePattern = /^\d{3}-\d{3,4}-\d{4}$/;
-		    if (!phonePattern.test(phone)) {
-		        alert("유효한 전화번호를 입력해주세요 (ex: xxx-xxxx-xxxx).");
+		    if (accountNo.length < 8 || accountNo.length > 14 || !/^\d+$/.test(accountNo)) {
+		        alert("계좌번호는 8자에서 14자 사이의 숫자여야 합니다.");
 		        return false;
 		    }
+		    
+	        var phonePattern = /^\d{3}-\d{3,4}-\d{4}$/;
+	        if (!phonePattern.test(phone)) {
+	            alert("유효한 전화번호를 입력해주세요 (ex: xxx-xxxx-xxxx).");
+	            return false;
+	        }
 
-		    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		    if (!emailPattern.test(email)) {
-		        alert("유효한 이메일 주소를 입력해 주세요 (ex: xxxx@naver.com).");
-		        return false;
-		    }
+	        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	        if (!emailPattern.test(email)) {
+	            alert("유효한 이메일 주소를 입력해 주세요 (ex: xxxx@naver.com).");
+	            return false;
+	        }
 
-		    return true;
-		}
+	        // 폼 검증이 성공하면 폼 제출 플래그 설정
+	        isFormSubmitted = true;
+		    document.querySelector('form').submit();
+	    }
 	</script>
 </body>
 </html>
