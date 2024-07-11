@@ -161,7 +161,7 @@ display: flex;
      <%@ include file="topheader.jsp" %>
 
     <!-- 메인부분 -->
-    <h2 style="margin-top:10px;">공지사항</h2>
+    <h2 style="margin-top:40px;">공지사항</h2>
     <hr width="50%">
     <!-- 검색 -->
     <div class="search">

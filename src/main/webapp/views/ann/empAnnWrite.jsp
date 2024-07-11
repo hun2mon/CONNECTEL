@@ -143,7 +143,7 @@ a:hover {
 </div>
 
 <div class="write-container">
-    <form id="empannForm" action="/empannwrite.do" method="post" enctype="multipart/form-data">
+    <form id="annForm" action="/empannwrite.do" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <th colspan="3" style="background-color:#6076E8; color:white;">
@@ -176,7 +176,8 @@ a:hover {
             </tr>
             <tr>
                 <td colspan="2">
-                    첨부파일 : <input type="file" name="photos"/>
+                    사진파일 : <input type="file" name="photos"/>
+                    첨부파일 : <input type="file" name="file"/>
                 </td>    
                 <td style="text-align:right; padding-right:30px;">작성자:${name}</td>
             </tr>            
@@ -197,6 +198,7 @@ a:hover {
         alert("${error}");
     </script>
 </c:if>
+
 </body>
 <script>
 </script>

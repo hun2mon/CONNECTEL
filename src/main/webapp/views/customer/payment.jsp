@@ -27,6 +27,60 @@ body {
 .info-section:not(:last-child) {
     margin-right: 20px;
 }
+
+
+#reqEmail{
+	background-color: #0f4081;
+    Color: white;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+
+
+#req:hover{
+
+background-color: #0a2d5b;
+
+}
+
+
+#conEmail{
+	background-color: #0f4081;
+    Color: white;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+
+#conEmail:hover{
+	background-color: #0a2d5b;
+}
+
+#lastconfirm{
+	background-color: #2a620c;
+    Color: white;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    font-size:15px;
+   
+    
+}
+
+
+#lastconfirm:hover{
+background-color: #1a3e07;
+}
+
+
+
 </style>
 </head>
 <body>
@@ -38,98 +92,58 @@ body {
 
     <div class="pay-container">
         <!-- 왼쪽 섹션 -->
-        <div class="info-section" >
-            <div style="text-align:center; font-size:20px;">방 예약 정보</div>
+        <div class="info-section">
+            <div style="text-align:center; font-size:20px; color:midnightblue;">방 예약 정보</div>
             <hr>
-            <div class="info-value"><img id="image" style="width:100%; height: auto;" alt="객실 이미지"></div>
-            <hr>            
-            <div class="info-value" id="roomType" style= "text-align:center; font-size:20px; color: midnightblue "></div><br>
+            <div class="info-value"><img id="image" style="width:100%; box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5); height: auto;" alt="객실 이미지"></div>
+            <hr>
+            <div class="info-value" id="roomType" style="text-align:center; font-size:20px; color: midnightblue;"></div><br>
             <div class="info-label" style="text-align:center;"><span class="info-value" id="room_view"></span> | <span class="info-value" id="room_bed"></span> | 최대인원: <span class="info-value" id="capacity"></span></div><br>
-            
         </div>
 
         <!-- 중앙 섹션 -->
         <div class="info-section text-center">
-            <div style="text-align:center">결제 예약 정보</div>
+            <div style="text-align:center; font-size:20px; color:midnightblue;">결제 예약 정보</div>
             <hr>
-            <div class="info-label">체크인 날짜: <span class="info-value" id="checkinDate"></span></div>
-            <div class="info-label">체크아웃 날짜: <span class="info-value" id="checkoutDate"></span></div>
-            <div class="info-label" style="text-align:right;">총 결제가격: <span class="info-value" id="price"></span></div>
+            <div class="info-label" style="margin:10px;">[ 체크인 날짜 ] <div class="info-value" style="margin-top:3px; margin-bottom:3px;" id="checkinDate"></div></div>
+            <div class="info-label"style="margin:10px;">[ 체크아웃 날짜 ] <div class="info-value" style="margin-top:3px; margin-bottom:3px;" id="checkoutDate"></div></div>
+            <div class="info-label" style="margin:10px;">[ 총 숙박일 ] <div><span class="info-value" id="stayDuration"></span>일</div></div>
+            <div class="info-label" style="margin:10px;">[ 평균가격 ] <div class="info-value" id="averagePrice"></div></div><br>
+            <hr>
+            <div class="info-label" style="margin:10px; text-align:right; font-weight:bold;">총 결제가격: <span class="info-value" id="price"></span></div>
             <br><br><br><br><br>
-            <div style="text-align:center;">체크인 고객정보</div>
+            <div style="text-align:center; font-size:20px; color:midnightblue;">체크인 고객정보</div>
             <hr>
             <form id="reservationForm">
                 <div style="text-align:left;">
-                    예약자 성명<br><input style="width:250px;" type="text" id="reserve_name"><br>
-                    전화번호<br><input type="text" style="width:250px;" id="reserve_phone"><br>
-                    이메일<br><input type="text" style="width:250px;" id="reserve_email"> <button type="button" onclick="requestEmail()">이메일 인증</button><br>
-                    인증코드<br><input type="text" style="width:250px;" id="reserve_confirm"> <button type="button" onclick="confirmEmail()">확인</button>
+                    예약자 성명<br><input style="width:250px; padding: 7px; margin-top:5px;margin-bottom:5px;" type="text" id="reserve_name" placeholder="이름을 입력해 주세요."><br>
+                    전화번호<br><input type="text" style="width:250px; padding: 7px; margin-top:5px;margin-bottom:5px;" id="reserve_phone" placeholder="번호를 입력해 주세요."><br>
+                    이메일<br><input type="text" style="width:250px; padding: 7px; margin-top:5px;margin-bottom:5px;" id="reserve_email" placeholder="이메일을 입력해 주세요."> <button type="button" id="reqEmail" onclick="requestEmail()">인증코드전송</button><br>
+                    인증코드<br><input type="text" style="width:250px; padding: 7px; margin-top:5px; margin-bottom:5px;" id="reserve_confirm" placeholder="인증코드"> <button type="button" id="conEmail" onclick="confirmEmail()">인증코드확인</button>
                 </div>
             </form>
         </div>
 
         <!-- 오른쪽 섹션 -->
         <div class="info-section text-right">
-            <div class="info-label" style="text-align:center;">개인정보 이용약관</div>
+            <div class="info-label" style="text-align:center; font-size:20px; color:midnightblue;">개인정보 이용약관</div>
             <hr>
-            <div id="check" style="text-align:left;"><span id="currentDateTime"></span>(숙박시설의 현지시간을 기준)후에 취소 또는 예약을 변경하거 노쇼의 경 첫 1박 요금과 세금 및 수수료에 해당하는 숙박 시설 수수료가 부과됩니다.</div>
+            <div id="check" style="text-align:left;"><span id="currentDateTime"></span>(숙박시설의 현지시간을 기준) 후에 취소 또는 예약을 변경하거 노쇼의 경 첫 1박 요금과 세금 및 수수료에 해당하는 숙박 시설 수수료가 부과됩니다.</div>
             <br>
             <div id="agreecheck" style="text-align:left;">
-                <input type="checkbox" id="allcheck" onclick="checkAllAgreements()" disabled>  모든 약관에 동의합니다. <br><br><br>
-                <input type="checkbox" id="1check" onclick="updateSubmitButtonStatus()" disabled> 예약하는 본인은 만 18세 이상이며 이용약관, 규정 및 제한사항 등의 모든 권고사항을 읽었으며, 모든부분에 동의합니다.<br><br><br>
+                <input type="checkbox" id="allcheck" onclick="checkAllAgreements()" disabled> 모든 약관에 동의합니다. <br><br><br>
+                <input type="checkbox" id="1check" onclick="updateSubmitButtonStatus()" disabled> 예약하는 본인은 만 18세 이상이며 이용약관, 규정 및 제한사항 등의 모든 권고사항을 읽었으며, 모든 부분에 동의합니다.<br><br><br>
                 <input type="checkbox" id="2check" onclick="updateSubmitButtonStatus()" disabled> 개인정보수집은 개인정보 보호정책에 따라 사용됨을 동의합니다.<br><br><br>
                 <input type="checkbox" id="3check" onclick="updateSubmitButtonStatus()" disabled> 당사는 개인정보 수집 및 이용 목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다. 단, 관련 법령에 따라 보관해야 하는 경우는 예외로 합니다.<br><br>
-                
-                <button type="button" class="btn btn-primary" onclick="submitReservation()" disabled>최종결제</button>
+                <div style="text-align:center; margin-top:10px;">
+                    <button type="button" class="btn btn-primary" id="lastconfirm" onclick="submitReservation()" disabled>최종결제</button>
+                </div>
             </div>
         </div>
     </div>
+</body>
 
     <script>
-    // 페이지 로드 시 예약 정보와 현재 날짜 및 시간 표시
-    window.onload = function() {
-        // 예약 정보 표시
-        var roomType = sessionStorage.getItem('roomType');
-        var checkinDate = sessionStorage.getItem('checkinDate');
-        var checkoutDate = sessionStorage.getItem('checkoutDate');
-        var price = sessionStorage.getItem('price');
-        var room_view = sessionStorage.getItem('roomview');
-        var image = sessionStorage.getItem('image');
-        var capacity = sessionStorage.getItem('capacity');
-        var room_bed = sessionStorage.getItem('room_bed');
-
-		
-        document.getElementById('roomType').innerText = roomType;
-        document.getElementById('checkinDate').innerText = checkinDate;
-        document.getElementById('checkoutDate').innerText = checkoutDate;
-        document.getElementById('price').innerText = price + ' KRW';
-        document.getElementById('room_view').innerText = room_view;
-        document.getElementById('image').src = '/photo/' + image; // 이미지 경로 설정
-        document.getElementById('capacity').innerText = capacity + '명';
-        document.getElementById('room_bed').innerText = room_bed;
-
-        // 현재 날짜 및 시간 표시
-        displayCurrentDateTime();
-    }
-
-    // 현재 날짜 및 시간 표시 함수
-    function displayCurrentDateTime() {
-        var now = new Date();
-        var year = now.getFullYear();
-        var month = now.getMonth() + 1; // 월은 0부터 시작하므로 +1 필요
-        var day = now.getDate();
-        var hours = now.getHours();
-        var minutes = now.getMinutes();
-        var seconds = now.getSeconds();
-
-        // 두 자릿수로 만들기 위해 padStart 사용
-        var formattedDate = year + '년' + String(month).padStart(2, '0') + ' 월 ' + String(day).padStart(2, '0')+' 일 ';
-        var formattedTime = String(hours).padStart(2, '0') + '시' + String(minutes).padStart(2, '0')+'분';
-        var formattedDateTime = formattedDate + ' ' + formattedTime;
-
-        document.getElementById('currentDateTime').innerText = formattedDateTime;
-    }
-
     // 이메일 인증 요청
     function requestEmail() {
         var email = document.getElementById('reserve_email').value;
@@ -142,10 +156,8 @@ body {
         $.ajax({
             url: '/customer/emailsend.ajax',
             method: 'POST',
-            data: { 
-                email: email,          	
-            },
-            dataType:'text',
+            data: { email: email },
+            dataType: 'text',
             success: function(data) {
                 alert(data);
                 console.log('email +', email);
@@ -169,17 +181,17 @@ body {
         $.ajax({
             url: '/customer/codeconfirm.ajax',
             method: 'POST',
-            data: { confirm : confirm },
-            dataType:'text',
+            data: { confirm: confirm },
+            dataType: 'text',
             success: function(data) {
                 alert(data);
                 if (data === "이메일 인증이 완료되었습니다.") {
                     // 이메일 인증 성공 시 체크박스 활성화
                     var checkboxes = document.querySelectorAll('#agreecheck input[type="checkbox"]');
-                    var allCheck = document.getElementById('allcheck'); 
-                    
+                    var allCheck = document.getElementById('allcheck');
+
                     allCheck.disabled = false;
-                    
+
                     for (var i = 1; i < checkboxes.length; i++) {
                         checkboxes[i].disabled = false;
                     }
@@ -191,12 +203,45 @@ body {
             }
         });
     }
-    
+    // 금액 포맷팅 함수
+    function formatCurrency(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // 날짜 차이 계산 함수
+    function calculateStayDuration(checkinDate, checkoutDate) {
+        var checkin = new Date(checkinDate);
+        var checkout = new Date(checkoutDate);
+        var timeDiff = checkout - checkin;
+        var dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 밀리초를 일 수로 변환
+        return dayDiff;
+    }
+
+    // 현재 날짜 및 시간 표시 함수
+    function displayCurrentDateTime() {
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1; // 월은 0부터 시작하므로 +1 필요
+        var day = now.getDate();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+
+        // 두 자릿수로 만들기 위해 padStart 사용
+        var formattedDate = year + '년 ' + String(month).padStart(2, '0') + '월 ' + String(day).padStart(2, '0') + '일 ';
+        var formattedTime = String(hours).padStart(2, '0') + '시' + String(minutes).padStart(2, '0') + '분';
+        var formattedDateTime = formattedDate + ' ' + formattedTime;
+
+        document.getElementById('currentDateTime').innerText = formattedDateTime;
+    }
+
+
+
     // 모든 약관에 동의 체크박스 클릭 시 하위 체크박스 전체 선택
     function checkAllAgreements() {
         var allCheck = document.getElementById('allcheck');
         var checkboxes = document.querySelectorAll('#agreecheck input[type="checkbox"]');
-        
+
         for (var i = 0; i < checkboxes.length; i++) {
             if (!checkboxes[i].disabled) {
                 checkboxes[i].checked = allCheck.checked;
@@ -209,19 +254,19 @@ body {
 
     // 하위 체크박스들이 모두 체크되었는지 확인하고, 필요 시 allcheck 체크
     function updateAllCheck() {
-        var allCheck = document.getElementById('allcheck'); 
+        var allCheck = document.getElementById('allcheck');
         var checkboxes = document.querySelectorAll('#agreecheck input[type="checkbox"]');
         var allChecked = true;
-        
+
         for (var i = 1; i < checkboxes.length; i++) {
             if (!checkboxes[i].checked) {
                 allChecked = false;
                 break;
             }
         }
-        
+
         allCheck.checked = allChecked;
-        
+
         // 전체 선택 후에도 버튼 상태 업데이트
         updateSubmitButtonStatus();
     }
@@ -252,7 +297,7 @@ body {
         var submitButton = document.querySelector('.btn-primary');
         var email = document.getElementById('reserve_email').value;
         var confirm = document.getElementById('reserve_confirm').value;
-        
+
         // 예약자 성명 유효성 검사 (빈 값인 경우)
         if (cos_name.trim() === '') {
             alert('예약자 성명을 입력하세요.');
@@ -262,24 +307,24 @@ body {
 
         // 전화번호 유효성 검사 (정규 표현식 사용)
         var phonePattern = /^\d{3}-\d{3,4}-\d{4}$/; // 예시: 010-1234-5678
-		 if(cos_phone.trim() ===''){
-        	alert('전화번호를 입력해주세요.(예시: 010-1234-5678) ');
-        	return;        
-		 }else if (!phonePattern.test(cos_phone)) {
+        if (cos_phone.trim() === '') {
+            alert('전화번호를 입력해주세요. (예시: 010-1234-5678)');
+            return;
+        } else if (!phonePattern.test(cos_phone)) {
             alert('전화번호 형식이 올바르지 않습니다. (예시: 010-1234-5678)');
             return;
-        }      
-        
-		 if (email.trim() === '') {
-	            alert('이메일을 입력하세요.');
-	            return;
-	        }
-		 
-		 if(confirm.trim() ===''){
-			alert('인증코드를 입력해주세요.');	
-			return;
-		 }
-		
+        }
+
+        if (email.trim() === '') {
+            alert('이메일을 입력하세요.');
+            return;
+        }
+
+        if (confirm.trim() === '') {
+            alert('인증코드를 입력해주세요.');
+            return;
+        }
+
         if (!document.getElementById('allcheck').checked) {
             alert('모든 약관에 동의해야 합니다.');
             return;
@@ -310,6 +355,37 @@ body {
             }
         });
     }
+
+    // 페이지 로드 시 예약 정보와 현재 날짜 및 시간 표시
+    
+        // 예약 정보 표시
+        var roomType = sessionStorage.getItem('roomType');
+        var checkinDate = sessionStorage.getItem('checkinDate');
+        var checkoutDate = sessionStorage.getItem('checkoutDate');
+        var price = sessionStorage.getItem('price');
+        var room_view = sessionStorage.getItem('roomview');
+        var image = sessionStorage.getItem('image');
+        var capacity = sessionStorage.getItem('capacity');
+        var room_bed = sessionStorage.getItem('room_bed');
+        
+        document.getElementById('roomType').innerText = roomType;
+        document.getElementById('checkinDate').innerText = checkinDate;
+        document.getElementById('checkoutDate').innerText = checkoutDate;
+        document.getElementById('price').innerText = formatCurrency(price) + ' KRW';
+        document.getElementById('room_view').innerText = room_view;
+        document.getElementById('image').src = '/photo/' + image; // 이미지 경로 설정
+        document.getElementById('capacity').innerText = capacity + '명';
+        document.getElementById('room_bed').innerText = room_bed;
+
+        // 숙박일수 계산
+        var stayDuration = calculateStayDuration(checkinDate, checkoutDate);
+        document.getElementById('stayDuration').innerText = stayDuration;
+
+        var averagePrice = price / stayDuration;
+        var flooredAveragePrice = Math.floor(averagePrice); // 소수점 이하 버림
+        document.getElementById('averagePrice').innerText = formatCurrency(flooredAveragePrice) + ' KRW';
+        // 현재 날짜 및 시간 표시
+        displayCurrentDateTime();
+
     </script>
-</body>
 </html>

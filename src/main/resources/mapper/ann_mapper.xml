@@ -87,6 +87,10 @@
 
     <select id="search" parameterType="string" resultType="annDTO">
         SELECT 
+        row_number() over(ORDER BY a.ann_fixed DESC, a.ann_no DESC) 
+        		-
+			(SELECT COUNT(a2.ann_no) from announcement a2 where ann_fixed = 'Y' and ann_division = 'E')
+        		 as row_num,
             a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
             e.name AS register, a.ann_date 
         FROM 
@@ -95,8 +99,7 @@
             emp e ON a.register = e.emp_no
         WHERE 
             ann_subject LIKE CONCAT('%', #{textval}, '%') and ann_division ='E'
-        ORDER BY 
-            ann_no DESC
+      
     </select>
 
     <select id="photo" parameterType="string" resultType="string">
@@ -141,6 +144,10 @@
 
     <select id="annsearch" parameterType="string" resultType="annDTO">
         SELECT 
+        row_number() over(ORDER BY a.ann_fixed DESC, a.ann_no DESC) 
+        		-
+			(SELECT COUNT(a2.ann_no) from announcement a2 where ann_fixed = 'Y' and ann_division = 'C')
+        		 as row_num,
             a.ann_no, a.ann_subject, a.ann_content, a.ann_bHit, a.ann_division, a.ann_fixed, 
             e.name AS register, a.ann_date 
         FROM 
@@ -149,8 +156,7 @@
             emp e ON a.register = e.emp_no
         WHERE 
             ann_subject LIKE CONCAT('%', #{textval}, '%') and ann_division ='C'
-        ORDER BY 
-            ann_no DESC
+    
     </select>
 
   <select id="anndetail" resultType="annDTO">

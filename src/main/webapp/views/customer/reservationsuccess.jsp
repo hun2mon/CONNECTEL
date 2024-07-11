@@ -38,6 +38,14 @@
 	box-shadow: 0 0 2px rgba(0, 0, 0, 1);
 }
 
+#reservecheck{
+	background-color:#813b0f;
+	Color:white;
+	padding:10px 20px;
+	border:1px solid #ccc;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 1);	
+}
+
 </style>
 
 </head>
@@ -47,20 +55,15 @@
     <!-- 이미지 부분 -->
     
     <!-- 메인부분 -->
-    <div id="custom-main1" style="text-align:center; font-family: 'Noto Serif KR', serif; font-size:35px; margin-left:35%; margin-right:35%; margin-top:100px; white-space: nowrap;">
+    <div id="custom-main1" style="text-align:center; font-family: 'Noto Serif KR', serif; font-size:30px; margin-left:35%; margin-right:35%; margin-top:100px; white-space: nowrap;">
        호텔 예약이 완료되었습니다.
     </div>
-    <div style="text-align:left; margin-top:20px; font-family: 'Noto Serif KR', serif; margin-left:30%; margin-right:30%; white-space: nowrap; font-size:18px;">
+    <div style="text-align:left; margin-top:20px; font-family: 'Noto Serif KR', serif; margin-left:33%; margin-right:33%; white-space: nowrap; font-size:18px;">
                 <hr style="width:100%;">
-        <div style="margin-bottom:15px;">
-        저희 The Sheilla Hotel 의 예약을 진심으로 감사드립니다!
-        고객님의 편안한 숙박을 위해 최선을 다하겠습니다.고객님의 예약정보는 아래 예약조회를 통해 조회 하실수 있습니다. 예약 변경이 필요하신 경우
+        <div id = "text" style="margin-bottom:15px; width:100%; white-space:normal;">
+        저희 The Sheilla Hotel 의 예약을 진심으로 감사드립니다!<br>
+        고객님의 편안한 숙박을 위해 최선을 다하겠습니다.<br>고객님의 예약정보는 아래 예약조회를 통해 조회 하실수 있으며, 고객님의 편안한 숙박을 위해 최선을 다할 것을 약속드리겠습니다.<br>문의가 필요하신 경우는 FAQ 및 공지사항을 통하여 정보를 얻으실 수 있으며 그 외 다른 문의사항의 경우 고객센터로 전화를 주시면 신속히 처리해드리겠습니다.<br>저희 호텔에서 즐거운 시간 되시길 바랍니다.
         </div>
-        <div style="margin-bottom:15px;">고객님의 편안한 숙박을 위해 최선을 다하겠습니다.</div>
-        <div style="margin-bottom:15px;">고객님의 예약정보는 아래 예약조회를 통해 조회 하실수 있으며 예약취소도</div>
-        <div style="margin-bottom:15px;">있으며 예약취소도 가능합니다. 예약 변경이 필요하신 경우</div>
-        <div style="margin-bottom:15px;">특별한 요청 사항이 있으면 언제든지 말씀해 주세요.</div>
-        <div style="margin-bottom:15px;" >저희 호텔에서 즐거운 시간 되시길 바랍니다.</div>
         <div style="text-align:right;font-family: Bodoni Moda SC, serif; ">- The Sheilla Hotel -</div>
         <hr style="width:100%;">
     </div>

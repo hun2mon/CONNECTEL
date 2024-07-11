@@ -60,18 +60,16 @@ body {
     box-sizing: border-box;
 }
 .reserve1 input[type="submit"] {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #9d6314;
-    color: white;
-    border: none;
-    border-radius: 5px;
+   background-color: #813b0f;
+    Color: white;
+    padding: 8px 20px;
+    border: 1px solid #ccc;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s ease;
+    border-radius: 5px;
 }
 .reserve1 input[type="submit"]:hover {
-    background-color: #673d05;
+    background-color: #56190a;
 }
 .booking-info {
     white-space: nowrap; /* 텍스트가 너무 길어지면 줄 바꿈 방지 */
@@ -93,7 +91,7 @@ body {
     border-bottom: 1px solid #ddd; /* 테이블 선 추가 */
 }
 .resTable th {
-    color: #7d3e00; /* 테이블 머리글 배경색 */
+    color: #813b0f; /* 테이블 머리글 배경색 */
     font-weight: bold;
 
 }
@@ -113,20 +111,16 @@ body {
 }
 
 .reservation-button-cell button {
-        padding: 8px 16px; /* 버튼 내부 여백 조정 */
-        font-size: 14px; /* 버튼 텍스트 사이즈 */
-        border-radius: 5px; /* 버튼 모서리 둥글게 */
-        background-color: #9d6314; /* 버튼 배경색 */
-        color: white; /* 버튼 텍스트 색상 */
-        border: none; /* 테두리 없음 */
-        cursor: pointer; /* 포인터 형태 커서 설정 */
-        transition: background-color 0.3s ease; /* 배경색 변화 시 부드러운 전환 효과 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
-           white-space: nowrap;
+    background-color: #813b0f;
+    Color: white;
+    padding: 8px 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+    transition: background-color 0.5s ease;
 }
 
 .reservation-button-cell button:hover {
-        background-color: #673d05; /* 호버 시 배경색 변경 */
+        background-color: #56190a; /* 호버 시 배경색 변경 */
 }
 
 .modal-body{
@@ -293,73 +287,72 @@ body {
 
 <script>
         //체크인 날짜
-        function setMinCheckinDate() {
-            var today = new Date();
-            var yyyy = today.getFullYear();
-            var mm = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-            var dd = String(today.getDate()).padStart(2, '0');
-            var todayStr = yyyy + '-' + mm + '-' + dd;
+function setMinCheckinDate() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    var dd = String(today.getDate()).padStart(2, '0');
+    var todayStr = yyyy + '-' + mm + '-' + dd;
 
-            document.getElementById('checkin').setAttribute('min', todayStr);
-            document.getElementById('checkin').value = todayStr; // 오늘 날짜로 기본 설정
+    document.getElementById('checkin').setAttribute('min', todayStr);
+    document.getElementById('checkin').value = todayStr; // 오늘 날짜로 기본 설정
 
-            setMinCheckoutDate(); // 체크인 날짜 설정 후 체크아웃 날짜도 설정
-        }
+    setMinCheckoutDate(); // 체크인 날짜 설정 후 체크아웃 날짜도 설정
+}
 
-        // 체크아웃날짜
-        function setMinCheckoutDate() {
-            var checkinDate = new Date(document.getElementById('checkin').value);
-            var nextDay = new Date(checkinDate);
-            nextDay.setDate(checkinDate.getDate() + 1);
+function setMinCheckoutDate() {
+    var checkinDate = new Date(document.getElementById('checkin').value);
+    var nextDay = new Date(checkinDate);
+    nextDay.setDate(checkinDate.getDate() + 1);
 
-            var yyyy = nextDay.getFullYear();
-            var mm = String(nextDay.getMonth() + 1).padStart(2, '0');
-            var dd = String(nextDay.getDate()).padStart(2, '0');
-            var nextDayStr = yyyy + '-' + mm + '-' + dd;
-			console.log(nextDayStr);
-            document.getElementById('checkout').value = nextDayStr; // 체크아웃 날짜를 체크인 다음 날짜로 설정
+    var yyyy = nextDay.getFullYear();
+    var mm = String(nextDay.getMonth() + 1).padStart(2, '0');
+    var dd = String(nextDay.getDate()).padStart(2, '0');
+    var nextDayStr = yyyy + '-' + mm + '-' + dd;
+    console.log(nextDayStr);
+    
+    document.getElementById('checkout').setAttribute('min', nextDayStr);
+    document.getElementById('checkout').value = nextDayStr; // 체크아웃 날짜를 체크인 다음 날짜로 설정
 
-            calculateNights(); // 박수 계산
-        }
+    calculateNights(); // 박수 계산
+}
 
-        //박수계산
-        function calculateNights() {
-            var checkinDate = new Date(document.getElementById('checkin').value);
-            var checkoutDate = new Date(document.getElementById('checkout').value);
+function calculateNights() {
+    var checkinDate = new Date(document.getElementById('checkin').value);
+    var checkoutDate = new Date(document.getElementById('checkout').value);
 
-            var timeDiff = checkoutDate.getTime() - checkinDate.getTime();
-            var nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    var timeDiff = checkoutDate.getTime() - checkinDate.getTime();
+    var nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-            document.getElementById('nights').innerHTML = nights + '박 '; // 박수 표시
-        }
+    document.getElementById('nights').innerHTML = nights + '박 '; // 박수 표시
+}
 
-        function reservationCheck() {
-            $('#selectDateMessage').addClass('hidden');
-            var checkInDate = document.getElementById('checkin').value;
-            var checkOutDate = document.getElementById('checkout').value;
+function reservationCheck() {
+    $('#selectDateMessage').addClass('hidden');
+    var checkInDate = document.getElementById('checkin').value;
+    var checkOutDate = document.getElementById('checkout').value;
 
-            // 체크인, 체크아웃 날짜가 유효한지 확인
-            if (!checkInDate || !checkOutDate) {
-                alert("체크인 및 체크아웃 날짜를 선택해주세요.");
-                return false;
-            }
+    // 체크인, 체크아웃 날짜가 유효한지 확인
+    if (!checkInDate || !checkOutDate) {
+        alert("체크인 및 체크아웃 날짜를 선택해주세요.");
+        return false;
+    }
 
-            // 체크아웃 날짜가 체크인 날짜보다 이전인지 확인
-            var checkinDateObj = new Date(checkInDate);
-            var checkoutDateObj = new Date(checkOutDate);
+    // 체크아웃 날짜가 체크인 날짜보다 이전인지 확인
+    var checkinDateObj = new Date(checkInDate);
+    var checkoutDateObj = new Date(checkOutDate);
 
-            if (checkoutDateObj <= checkinDateObj) {
-                alert("체크아웃 날짜는 체크인 날짜보다 늦어야 합니다.");
-                return false;
-            }
-            
-         
+    if (checkoutDateObj <= checkinDateObj) {
+        alert("체크아웃 날짜는 체크인 날짜보다 늦어야 합니다.");
+        return false;
+    }
+    
+    listCall(checkInDate, checkOutDate);
+    return false; // 폼 제출 방지
+}
 
-            listCall(checkInDate, checkOutDate);
-            return false; // 폼 제출 방지
-        }
+window.onload = setMinCheckinDate;
 
-        window.onload = setMinCheckinDate;
 
         function listCall(checkInDate, checkOutDate) {
             $.ajax({
@@ -451,7 +444,7 @@ body {
                     if (data.superior_num >= 20) {
                         content += '<td style="color:red;">현재 남은 객실이 없습니다</td>';
                     } else {
-                        content += '<td class="reservation-button-cell"><button onclick="reserve(\'슈페리어룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.minSuperiorPrice + ', \'' + item.room_view + '\', \'' + data.superior_image + '\', ' + item.room_capacity + ', \'' + item.room_bed + '\')">예약</button></td>';
+                        content += '<td class="reservation-button-cell"><button onclick="reserve(\'슈페리어룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.superior + ', \'' + item.room_view + '\', \'' + data.superior_image + '\', ' + item.room_capacity + ', \'' + item.room_bed + '\')">예약</button></td>';
                     }
                 } else if (item.type_code === 1003) {
                     content += '<th> <img src="/photo/' + data.delux_image + '" data-toggle="modal" data-target="#deluxmodal" style="width:300px; height:200px; max-width:300px; max-height:200px;"></th>';
@@ -462,7 +455,7 @@ body {
                     if (data.delux_num >= 20) {
                         content += '<td style="color:red;">현재 남은 객실이 없습니다</td>';
                     } else {
-                        content += '<td class="reservation-button-cell"><button onclick="reserve(\'디럭스룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.minDeluxePrice + ', \'' + item.room_view + '\', \'' + data.delux_image + '\', ' + item.room_capacity + ', \'' + item.room_bed + '\')">예약</button></td>';
+                        content += '<td class="reservation-button-cell"><button onclick="reserve(\'디럭스룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.delux + ', \'' + item.room_view + '\', \'' + data.delux_image + '\', ' + item.room_capacity + ', \'' + item.room_bed + '\')">예약</button></td>';
                     }
                 } else {
                     content += '<th> <img src="/photo/' + data.suite_image + '" data-toggle="modal" data-target="#suitemodal" style="width:300px; height:200px; max-width:300px; max-height:200px;"></th>';
@@ -473,7 +466,7 @@ body {
                     if (data.suite_num >= 20) {
                         content += '<td style="color:red;">현재 남은 객실이 없습니다</td>';
                     } else {
-                        content += '<td class="reservation-button-cell"><button onclick="reserve(\'스위트룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.minSuitePrice + ', \'' + item.room_view + '\', \'' + data.suite_image + '\', ' + item.room_capacity + ', \'' + item.room_bed + '\')">예약</button></td>';
+                        content += '<td class="reservation-button-cell"><button onclick="reserve(\'스위트룸\', \'' + checkin + '\', \'' + checkout + '\', ' + data.suite + ', \'' + item.room_view + '\', \'' + data.suite_image + '\', ' + item.room_capacity + ', \'' + item.room_bed + '\')">예약</button></td>';
                     }
                 }
 
