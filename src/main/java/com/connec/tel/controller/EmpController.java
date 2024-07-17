@@ -44,7 +44,7 @@ public class EmpController {
 		int dept= empDTO.getDept_code();
 		String page = "redirect:/main";
 		
-		if(auth.equals("2") || auth.equals("3") || dept == 11) {
+		if(auth.equals("3")) {
 			 page = "emp/empList";
 		}
 		return page;
@@ -56,12 +56,11 @@ public class EmpController {
 		int dept= empDTO.getDept_code();
 		String page = "redirect:/main";
 		
-		if((auth.equals("2") || auth.equals("3")) && dept == 11) {
+		if(auth.equals("3")) {
 			 page = "emp/empRegist";
 		}
 		return page;
 	}
-	
 	
 	@RequestMapping(value = "/empRegist.do")
 	public String empRegist(MultipartFile[] photos,  @RequestParam Map<String, String> param, HttpSession session) {

@@ -134,6 +134,13 @@ h2 {
 .titless {
 	text-align: center;
 }
+
+#photo{
+	width: 100%;
+	height: 100%;
+	object-fit:cover;
+}
+
 </style>
 </head>
 <body>
@@ -171,7 +178,7 @@ h2 {
 								<c:otherwise>
 									<img
 										src="${pageContext.request.contextPath}/photo/${P.pho_name}"
-										alt="사진" id="photo" style="width: 100%; height: 100%;">
+										alt="사진" id="photo">
 								</c:otherwise>
 							</c:choose></td>
 						<input type = "hidden" id = "emp_no" value ="${emp.emp_no}">

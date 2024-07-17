@@ -64,7 +64,7 @@
 }
 
 .upBtn {
-	margin-left: 410px;
+	margin-left: 370px;
 }
 
 .form-control {
@@ -77,7 +77,7 @@
 }
 
 .btn_submit {
-	margin-left: 254px;
+	margin-left: 230px;
 }
 
 .btn_cancel {

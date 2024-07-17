@@ -255,9 +255,33 @@ th {
 	height : 840px;
 }
 
+#load {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: block;
+    opacity: 0.8;
+    background: white;
+    z-index: 99;
+    text-align: center;
+}
+
+#load > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+}
+
+
 </style>
 </head>
 <body>
+	<div id="load">
+	  <img src="/assets/images/loading.gif" alt="loading">
+	</div>
 	<header>
 		<div id="wrapper">
 			<div id="sidebar">
@@ -351,7 +375,7 @@ th {
 							<br>
 							<br>
 						</div>
-						<span>금일 이용자수 ${total}명</span><br>
+						<span>금일 ${using}객실 이용중</span><br>
 						<br>
 					</div>
 					<br>
@@ -411,7 +435,12 @@ th {
 		crossorigin="anonymous"></script>
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 	<script src="/js/jquery-explr-1.4.js"></script>
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>	<script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script>
+	const loading_page = document.getElementById("load");
+	window.onload = function(){
+	  loading_page.style.display = 'none';
+	}
 	$.noConflict();
 	
 	function formatDateTime(dateTimeString) {
@@ -584,7 +613,7 @@ th {
 	}
 	document.addEventListener('DOMContentLoaded', function() {
 	    const maxCapacity = 100;
-	    const reservedGuests =${total}; 
+	    const reservedGuests ='${using}'; 
 		console.log(reservedGuests,reservedGuests + 'asdasdasadd');
 	    const data = {
 	        labels: ['이용중', '이용가능'], 

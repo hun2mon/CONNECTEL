@@ -113,7 +113,7 @@
         <div class="content">
 		    <input type="hidden" name="pho_division" value="P">
 		    <div class="photo">
-		        <img id="imgPreview" src="#" alt="이미지를 업로드하세요">
+		        <img id="imgPreview" src="/assets/images/photoexp.jpg" alt="이미지를 업로드하세요">
 		    </div>
 		    <br>
 		    <div class="upload">
@@ -138,8 +138,7 @@
 				<div class="form-group">
 					<span class="subject">우편번호</span>
 					 <input type="text" name="post_no" class="form-control" id="sample6_postcode"
-               			placeholder="우편번호" value="${emp.post_no}"  required>
-        			<img src="/scss/icons/search.png" onclick="sample6execDaumPostcode()" style="width: 35px;  height: 33px;">
+               			placeholder="우편번호" value="${emp.post_no}"  required onclick="sample6execDaumPostcode()" readonly="readonly">
 					
 					<span class="subject">전화번호</span> <input type="text"
 						class="form-control" id="phone" name="phone" value="${emp.phone}"
@@ -147,7 +146,7 @@
 				</div>
             <div class="form-group">
                 <span class="subject">주소</span>
-                <input class="form-control" name = "address" type="text" id="sample6_address" placeholder="주소" required>
+                <input class="form-control" name = "address" type="text" id="sample6_address" placeholder="주소" required onclick="sample6execDaumPostcode()" readonly="readonly">
                 <span class="subject">부서</span>
                 <select class="form-control" id="dept_code" name="dept_code" required>
                     <option value="">대기상태</option>            

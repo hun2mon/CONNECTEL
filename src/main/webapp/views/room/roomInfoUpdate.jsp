@@ -30,7 +30,7 @@
         flex-grow: 1;
         padding: 20px;
         overflow-y: auto;
-        margin-top: 50px;
+        margin-top: 70px;
     }
 
     .card {

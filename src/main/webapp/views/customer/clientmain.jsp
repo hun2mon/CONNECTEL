@@ -242,8 +242,8 @@
         <hr id="custom-hr" style="width: 60%;margin-top:50px;">
         <div style="font-size: 30px; text-align:center; color: #5d1212; font-family: 'Noto Serif KR', serif;">멤버쉽별 등급 혜택을 누려보세요.</div>
         <div style="font-size: 18px; text-align:center; margin-top:-5px; color: #5d1212; font-family: 'Noto Serif KR', serif;">Enjoy the rating benefits for each member.</div>
-        <div onclick="showAlert()" style="cursor:pointer;">
-            <img src="/client_image/membership.png" style="width:900px; height: auto; margin-left:23%;">
+        <div onclick="showAlert()" style="cursor:pointer; width:100%; text-align:center;">
+            <img src="/client_image/membership.png" style="width:900px; height: auto;">
         </div>
         
         

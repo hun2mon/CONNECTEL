@@ -113,7 +113,8 @@ public class MainService {
         LocalDate today = LocalDate.now();
         int total = mainDAO.totalReserve(today);   
         logger.info(total + "나는???몇개일까요???");
-
+        
+        model.addAttribute("using", mainDAO.getUsing());
         model.addAttribute("total",total);	
 	}
 

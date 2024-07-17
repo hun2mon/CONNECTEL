@@ -41,7 +41,7 @@ public class CommonService {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired CommonDAO commonDAO;
-	static String root = "/Users/jeounghun/upload/connectel/file/";
+	static String root = "/usr/local/tomcat/webapps/files/";
 	
 	public Map<String, Object> treeCall(String word) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -79,7 +79,7 @@ public class CommonService {
 	public static void upload(MultipartFile uploadFile, String newFileName) {
 		try {
 			byte[] bytes = uploadFile.getBytes();
-			Path path = Paths.get(root + "/" + newFileName);
+			Path path = Paths.get(CommonService.root + "/" + newFileName);
 			Files.write(path, bytes);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -88,7 +88,7 @@ public class CommonService {
 	
 	public ResponseEntity<Resource> download(String fileName) {
 		
-		Resource resource = new FileSystemResource(root + "/" + fileName);
+		Resource resource = new FileSystemResource(CommonService.root + "/" + fileName);
 		HttpHeaders header = new HttpHeaders();
 			
 		try {
@@ -131,10 +131,10 @@ public class CommonService {
 			payParmas.add("quantity", params.get("quantity")); // 개수 그냥 1개 고정값(몇박 주기 귀찮음ㅋ)
 			payParmas.add("total_amount", params.get("total_amount")); //결제금액
 			payParmas.add("tax_free_amount", params.get("tax_free_amount")); // 상품 비과세 금액 우리는 0
-			payParmas.add("approval_url", "http://localhost:8080/common/success"); // 성공할 경우 요청할 주소
-			payParmas.add("cancel_url", "http://localhost:8080/common/cancel"); // 취소할 경우 요청할 주소
+			payParmas.add("approval_url", "http://3.36.56.171:8080/common/success"); // 성공할 경우 요청할 주소
+			payParmas.add("cancel_url", "http://3.36.56.171:8080/common/cancel"); // 취소할 경우 요청할 주소
 			payParmas.add("payment_method_type","MONEY"); // 현금과 카드 중 현금만 가능
-			payParmas.add("fail_url", "http://localhost:8080/common/fail"); //실패할 경우 주소
+			payParmas.add("fail_url", "http://3.36.56.171:8080/common/fail"); //실패할 경우 주소
 			
 
 			HttpEntity<Map> request = new HttpEntity<Map>(payParmas, headers);
@@ -286,10 +286,10 @@ public class CommonService {
 		payParmas.add("quantity", params.get("quantity")); // 개수 그냥 1개 고정값(몇박 주기 귀찮음ㅋ)
 		payParmas.add("total_amount",total_price); //결제금액
 		payParmas.add("tax_free_amount", params.get("tax_free_amount")); // 상품 비과세 금액 우리는 0
-		payParmas.add("approval_url", "http://localhost:8080/common/plusSuccess"); // 성공할 경우 요청할 주소
-		payParmas.add("cancel_url", "http://localhost:8080/common/cancel"); // 취소할 경우 요청할 주소
+		payParmas.add("approval_url", "http://3.36.56.171:8080/common/plusSuccess"); // 성공할 경우 요청할 주소
+		payParmas.add("cancel_url", "http://3.36.56.171:8080/common/cancel"); // 취소할 경우 요청할 주소
 		payParmas.add("payment_method_type","MONEY"); // 현금과 카드 중 현금만 가능
-		payParmas.add("fail_url", "http://localhost:8080/common/fail"); //실패할 경우 주소
+		payParmas.add("fail_url", "http://3.36.56.171:8080/common/fail"); //실패할 경우 주소
 		
 		logger.info("payParmas : {}",payParmas);
 		

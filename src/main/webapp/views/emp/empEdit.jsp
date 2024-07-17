@@ -103,6 +103,12 @@
 	transform: translateY(-50%);
 	cursor: pointer;
 }
+
+#photo{
+	width: 100%;
+    height: 100%;
+    object-fit: cover
+}
 </style>
 </head>
 <body>
@@ -123,7 +129,7 @@
 						</c:when>
 						<c:otherwise>
 							<img src="${pageContext.request.contextPath}/photo/${P.pho_name}"
-								alt="사진" id="photo" style="width: 310px; height: 370px; margin-right:40px;" >
+								alt="사진" id="photo" >
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -144,9 +150,7 @@
 				<div class="form-group">
 					<span class="subject">우편번호</span>
 					 <input type="text" name="post_no" class="form-control" id="sample6_postcode"
-               			placeholder="우편번호" value="${emp.post_no}"  required>
-        			<img src="/scss/icons/search.png" onclick="sample6_execDaumPostcode()" style="width: 35px;  height: 33px;">
-					
+               			placeholder="우편번호" value="${emp.post_no}"  required readonly="readonly" onclick="sample6_execDaumPostcode()">
 					<span class="subject">전화번호</span> <input type="text"
 						class="form-control" id="phone" name="phone" value="${emp.phone}"
 						required>
@@ -154,7 +158,7 @@
 				<div class="form-group">
 					<span class="subject">주소</span> <input class="form-control"
 						name="address" type="text" id="sample6_address"
-						value="${emp.address}" placeholder="주소" required> <span
+						value="${emp.address}" placeholder="주소" required onclick="sample6_execDaumPostcode()" readonly="readonly"> <span
 						class="subject">부서</span> <select class="form-control"
 						id="dept_code" name="dept_code" required>
 						<option value="" ${emp.dept_code == "" ? 'selected' : ''}>대기상태</option>

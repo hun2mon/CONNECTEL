@@ -33,7 +33,7 @@ public class RoomService {
 	@Autowired RoomDAO roomDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
-	public String file_root = "C:/upload/";
+	public String file_root = "/Users/jeounghun/upload/connectel/file/";
 	
 	public Map<String, Object> liveRoomManageAjax() {
 		
@@ -67,7 +67,32 @@ public class RoomService {
 		String checkIn = (String) param.get("check_in");		
 		logger.info("checkIn : " +checkIn);
 		
-		String check_in = formatCheckDate(checkIn);	
+		// 공백과 "."을 기준으로 문자열을 분리합니다.
+	    String[] parts = checkIn.split("[. ]+");
+	    
+	    String year = parts[0];
+	    String month = parts[1].length() == 1 ? "0" + parts[1] : parts[1];
+	    String day = parts[2].length() == 1 ? "0" + parts[2] : parts[2];
+	    String period = parts[3];
+	    String hour = parts[4].split(":")[0];
+	    String minute = parts[4].split(":")[1];
+	    String second = parts[4].split(":")[2];
+	    
+	    int hourInt = Integer.parseInt(hour);
+	    
+	    // "오후"이면 시간을 12 더합니다.
+	    if (period.equals("오후") && hourInt != 12) {
+	      hourInt += 12;
+	    }
+	    // "오전" 12시는 0시로 변환합니다.
+	    if (period.equals("오전") && hourInt == 12) {
+	      hourInt = 0;
+	    }
+	    
+	    // 시간, 분, 초를 두 자리 형식으로 맞춥니다.
+	    String hourFormatted = String.format("%02d", hourInt);
+	    
+	    String check_in = year + "-" + month + "-" + day + " " + hourFormatted + ":" + minute + ":" + second;
 		logger.info("[service]check_in : "+check_in);
 		
 		String regist_date = check_in.substring(0, 10);
@@ -418,7 +443,7 @@ public class RoomService {
 	            
 	            try {
 	               byte[] bytes = photo.getBytes();
-	               Path path = Paths.get(file_root+newFileName);
+	               Path path = Paths.get(CommonService.root+newFileName);
 	               Files.write(path, bytes);
 	               //mypageDAO.introFileCreate(newFileName,userId);
 	               roomDAO.photoUpload(newFileName,oriName,room_manage_no);
@@ -451,7 +476,7 @@ public class RoomService {
 	            
 	            try {
 	               byte[] bytes = photo.getBytes();
-	               Path path = Paths.get(file_root+newFileName);
+	               Path path = Paths.get(CommonService.root+newFileName);
 	               Files.write(path, bytes);
 	               //mypageDAO.introFileCreate(newFileName,userId);
 	               roomDAO.room_img_photoUpdate(newFileName,oriName,type_code);
@@ -479,7 +504,7 @@ public class RoomService {
 	            
 	            try {
 	               byte[] bytes = photo.getBytes();
-	               Path path = Paths.get(file_root+newFileName);
+	               Path path = Paths.get(CommonService.root+newFileName);
 	               Files.write(path, bytes);
 	               //mypageDAO.introFileCreate(newFileName,userId);
 	               roomDAO.photoUpload(newFileName,oriName,room_manage_no);

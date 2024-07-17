@@ -35,7 +35,7 @@ public class MailService {
 	@Value("${spring.mail.username}")
     private String senderEmail;
 	
-	public String file_root = "C:/upload/";
+	public String file_root = "/Users/jeounghun/upload/connectel/file/";
 
 	public Map<String, Object> mail(MailDTO mailDTO, List<String> emailList, List<MultipartFile> files) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -57,7 +57,7 @@ public class MailService {
  	            
  	            try {
  	               byte[] bytes = file.getBytes();
- 	               Path path = Paths.get(file_root+newFileName);
+ 	               Path path = Paths.get(CommonService.root+newFileName);
  	               Files.write(path, bytes);
  	               //mypageDAO.introFileCreate(newFileName,userId);
  	               mailDAO.fileUpload(newFileName,oriName,mailDTO.getMail_no());

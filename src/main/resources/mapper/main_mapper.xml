@@ -78,6 +78,10 @@ FROM (
     	SELECT COUNT(draft_no) FROM draft d
     		 WHERE register = #{param1} AND draft_status = 'W'
     </select>
+    
+    <select id="getUsing" resultType="int">
+    	select COUNT(room_no) from room where room_status != 'A';
+    </select>
 
 
 	

@@ -28,7 +28,7 @@ public class AnnService {
 	
 	@Autowired AnnDAO annDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
-	private String file_root = "/Users/junmo/Desktop/photo/";
+	private String file_root = "/usr/local/tomcat/webapps/files/";
 	
 	public Map<String, Object> list(int currPage, int pagePerCnt, String ann_division, String ann_fixed, String ann_date) {
 		Map<String, Object>result = new HashMap<String, Object>();
@@ -84,7 +84,7 @@ public void fileSave(String ann_no, MultipartFile[] photos) {
 				//3. 파일 저장
 				try {
 					byte[] bytes = photo.getBytes(); // MultipartFile 로 부터 바이너리 추출
-					Path path = Paths.get(file_root+newFileName);//저장경로지정
+					Path path = Paths.get(CommonService.root+newFileName);//저장경로지정
 					Files.write(path, bytes);//저장
 					annDAO.fileWrite(fileName,newFileName,ann_no);
 					Thread.sleep(1);//파일명을 위해 강제 휴식 부여
@@ -182,7 +182,7 @@ public void empupdatefileSave(String ann_no, MultipartFile[] newphoto) {
             logger.info(fileName + " -> " + newFileName);
             try {
                 byte[] bytes = photo.getBytes();
-                Path path = Paths.get(file_root + newFileName);
+                Path path = Paths.get(CommonService.root + newFileName);
                 Files.write(path, bytes);
                 Map<String, String> paramMap = new HashMap<>();
                 paramMap.put("ori_pho_name", fileName);
@@ -214,7 +214,7 @@ public void empupdateannfile(MultipartFile[] newfile, String ann_no) {
             logger.info(fileName + " -> " + newFileName);
             try {
                 byte[] bytes = files.getBytes();
-                Path path = Paths.get(file_root + newFileName);
+                Path path = Paths.get(CommonService.root + newFileName);
                 Files.write(path, bytes);
                 Map<String, String> paramMap = new HashMap<>();
                 paramMap.put("ori_file_name", fileName);
@@ -274,7 +274,7 @@ public void annfileSave(String ann_no, MultipartFile[] photos) {
 			//3. 파일 저장
 			try {
 				byte[] bytes = photo.getBytes(); // MultipartFile 로 부터 바이너리 추출
-				Path path = Paths.get(file_root+newFileName);//저장경로지정
+				Path path = Paths.get(CommonService.root+newFileName);//저장경로지정
 				Files.write(path, bytes);//저장
 				annDAO.annfileWrite(fileName,newFileName,ann_no);
 				Thread.sleep(1);//파일명을 위해 강제 휴식 부여
@@ -299,7 +299,7 @@ public void annfilewrite(MultipartFile[] file, String ann_no) {
 			//3. 파일 저장
 			try {
 				byte[] bytes = files.getBytes(); // MultipartFile 로 부터 바이너리 추출
-				Path path = Paths.get(file_root+newFileName);//저장경로지정
+				Path path = Paths.get(CommonService.root+newFileName);//저장경로지정
 				Files.write(path, bytes);//저장
 				annDAO.annnewfileWrite(fileName,newFileName,ann_no);
 				Thread.sleep(1);//파일명을 위해 강제 휴식 부여
@@ -428,7 +428,7 @@ public void updatefileSave(String ann_no, MultipartFile[] newphoto) {
             logger.info(fileName + " -> " + newFileName);
             try {
                 byte[] bytes = photo.getBytes();
-                Path path = Paths.get(file_root + newFileName);
+                Path path = Paths.get(CommonService.root + newFileName);
                 Files.write(path, bytes);
                 Map<String, String> paramMap = new HashMap<>();
                 paramMap.put("ori_pho_name", fileName);
@@ -464,7 +464,7 @@ public void updateAnnFile(MultipartFile[] newfile, String ann_no) {
             logger.info(fileName + " -> " + newFileName);
             try {
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get(file_root + newFileName);
+                Path path = Paths.get(CommonService.root + newFileName);
                 Files.write(path, bytes);
                 Map<String, String> paramMap = new HashMap<>();
                 paramMap.put("ori_file_name", fileName);

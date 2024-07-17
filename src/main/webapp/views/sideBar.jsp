@@ -78,17 +78,37 @@
 	display: flex;
 }
 
+.imgCover{
+	height: 50px;
+    object-fit: cover;
+}
+
+#load {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: block;
+    opacity: 0.8;
+    background: white;
+    z-index: 99;
+    text-align: center;
+}
+
+#load > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+}
+
 
 </style>
 </head>
 <body>
 
-	<div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
-        </div>
-    </div>
+	
 
 	<div id="main-wrapper" data-theme="light" data-layout="vertical"
 		data-navbarbg="skin6" data-sidebartype="full"
@@ -163,8 +183,8 @@
 						<li class="nav-item dropdown"><a
 							class="nav-link dropdown-toggle" href="javascript:void(0)"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<img src="/assets/images/users/profile-pic.jpg" alt="user"
-								class="rounded-circle" width="40"> <span
+								<img src="/photo/${loginInfo.profile_img}" alt="user"
+								class="rounded-circle imgCover" width="40"> <span
 								class="ml-2 d-none d-lg-inline-block"><span>Hello,</span>
 									<span class="text-dark">${sessionScope.loginInfo.name}</span> <i data-feather="chevron-down" class="svg-icon"></i></span>
 						</a>
@@ -357,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("dept Code : " +deptCode + "authority : " + +authority + "ㅁㄴㅇㅁㄴㅇㅁㄴㅇ");
 
         // 권한 검사
-        if (authority >= 2 && deptCode === '11') {
+        if (authority >= 2 || deptCode === '11') {
             // 권한이 충족되면 해당 URL로 이동
             window.location.href = '/emp/empRegist.go';
         } else {

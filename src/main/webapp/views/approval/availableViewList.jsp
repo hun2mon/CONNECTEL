@@ -71,7 +71,7 @@ form {
 					<div class="card">
 						<div class="card-body">
 
-							<h4 class="card-title mb-3">결재 요청 문서</h4>
+							<h4 class="card-title mb-3">열람 가능 문서</h4>
 
 							<ul class="nav nav-tabs mb-3">
 								<li class="nav-item" onclick="cateListCall('R')">

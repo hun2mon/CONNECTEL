@@ -653,6 +653,7 @@
      			var content = '';
      			var last_content = '';
      			for (item of data) {
+     				last_content = '';
      				content += '<a href="javascript:enterRoom(\''+item.roomId+'\')" class="message-item d-flex align-items-center border-bottom px-3 py-2"><div class="user-img"><img src="/assets/images/chat.png" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-right"></span></div><div class="w-75 d-inline-block v-middle pl-2">';
      				if (item.chat_content != null) {						
 	     				if (item.chat_content.length > 8) {
@@ -922,7 +923,7 @@
     	console.log(recv);
     	var content = '';
     	if (recv.emp_no != emp_no) {
-			content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/photo/'+recv.profile_img+'" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
+			content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/photo/'+recv.profile_img+'" alt="user" class="rounded-circle imgCover" width="45"></div><div class="chat-content d-inline-block pl-3">';
 			content += '<h6 class="font-weight-medium">'+recv.sender+'</h6>';
 			if (recv.msg_type == 'file') {
 				content += '<div class="msg p-2 d-inline-block mb-1"><a href="/download/'+recv.message+'"><i class="fa-solid fa-download"></i>&nbsp'+recv.message+'</a></div></div>';				
@@ -1034,7 +1035,7 @@
     			for (item of data.list) {
     				if (item.emp_no != emp_no) {
     					date = new Date(item.chat_date);
-    					content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/photo/'+item.profile_img+'" alt="user" class="rounded-circle" width="45"></div><div class="chat-content d-inline-block pl-3">';
+    					content += '<li class="chat-item list-style-none mt-3"><div class="chat-img d-inline-block"><img src="/photo/'+item.profile_img+'" alt="user" class="rounded-circle imgCover" width="45"></div><div class="chat-content d-inline-block pl-3">';
     					content += '<h6 class="font-weight-medium">'+item.name+'</h6>';
     					console.log('123 : ',item.msg_type);
     					if (item.msg_type == 'file') {

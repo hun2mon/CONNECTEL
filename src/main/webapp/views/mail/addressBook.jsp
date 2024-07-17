@@ -129,8 +129,6 @@ tr {
                         <div class="col-sm-9">
                             <div class="tab-content" id="v-pills-tabContent">
                                 <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                                    <!-- 내주소록 -->
-                                    <button class="btn btn-primary mb-2" onclick="toggleSelectAll('myAddList')">전체 선택/해제</button>
                                     <div class="table-responsive">
                                         <table class="table">
                                             <thead>
@@ -146,8 +144,6 @@ tr {
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                                    <!-- 고객주소록 -->
-                                    <button class="btn btn-primary mb-2" onclick="toggleSelectAll('clientAddList')">전체 선택/해제</button>
                                     <div class="table-responsive">
                                         <table class="table">
                                             <thead>
@@ -163,8 +159,6 @@ tr {
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                                    <!-- 즐겨찾기 -->
-                                    <button class="btn btn-primary mb-2" onclick="toggleSelectAll('markAddList')">전체 선택/해제</button>
                                     <div class="table-responsive">
                                         <table class="table">
                                             <thead>

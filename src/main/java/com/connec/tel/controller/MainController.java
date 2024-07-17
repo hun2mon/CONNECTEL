@@ -54,7 +54,6 @@ public class MainController {
 	    
 	    mainService.totalApproval(empDTO.getEmp_no(),model);
 	    
-	    
 	    return "main/main";
 	}
 	

@@ -13,9 +13,6 @@
 	src='/richtexteditor/plugins/all_plugins.js'></script>
 <link href="/css/jquery-explr-1.4.css" rel="stylesheet" type="text/css">	
 <style>
-.draftTitle {
-	width: 10%;
-}
 
 .form-control {
 	margin-bottom: 0px;
@@ -705,7 +702,7 @@ form {
 		var content = editor.getHTMLCode();
 		var leftOver = '${leftOver}';
 		
-		if ($('.validation').next().length <= 0) {
+		if (approvers.length <= 0) {
 			$('.noti').html('결재자를 선택해 주세요.');
 			$('.appNoti').modal('show');
 		}else if ($('input[name="deadline"]').val() == '') {

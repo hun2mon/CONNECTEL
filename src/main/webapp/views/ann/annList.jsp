@@ -311,8 +311,6 @@ $(document).ready(function() {
                 content += '<div class="ann-list-no">' + data[i].row_num + '</div>';
             }
             content += '<div class="ann-list-subject"><a href="/annDetail.go?ann_no=' + data[i].ann_no + '&page=' + page +'">' + data[i].ann_subject + '</a></div>';
-            content += '<div class="ann-list-name">' + data[i].register + '</div>';
-            content += '<div class="ann-list-date">' + data[i].ann_date + '</div>';
             
             // updater가 존재할 경우 updater 표시, 그렇지 않으면 register 표시
             var nameToShow = data[i].updater ? data[i].updater : data[i].register;

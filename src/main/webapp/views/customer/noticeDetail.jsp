@@ -36,7 +36,6 @@
         color: gray;
     }
     .detail-table td:first-child {
-        width: 50px;
         font-weight: bold;
     }
     .detail-table .content {
@@ -54,6 +53,7 @@
         display: flex;
         justify-content: space-between;
         white-space: nowrap;
+        width: 50px;
     }
     .buttons {
         margin-top: 20px;
@@ -96,7 +96,7 @@
                 <td>${dto.ann_bHit}</td>
             </tr>
             <tr style="border-top: 1px solid #f0f0f0;">
-                <td colspan="2" class="content" style="height:600px;">
+                <td colspan="2" class="content" style="height:600px;text-align:center;">
                     ${dto.ann_content}<br>
                     <c:if test="${not empty image}">
                         <img src="/photo/${image}" alt="첨부 이미지">

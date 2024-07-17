@@ -27,5 +27,7 @@ public interface MainDAO {
 
 	int draft(String emp_no);
 
+	int getUsing();
+
 
 }

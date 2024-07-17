@@ -23,8 +23,8 @@ import com.connec.tel.dto.EmpDTO;
 
 @Service
 public class EmpService {
-	// public String file_root = "/Users/jeounghun/upload/connectel/file/";
-	public String file_root = "C:/upload/";
+	 public String file_root = "/Users/jeounghun/upload/connectel/file/";
+	//public String file_root = "C:/upload/";
 	@Autowired EmpDAO empDAO;
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -105,7 +105,7 @@ public class EmpService {
 	            //3. 파일 저장
 	            try {
 	                byte[] bytes = photo.getBytes(); // MultipartFile 로 부터 바이너리 추출
-	                Path path = Paths.get(file_root + newFileName);//저장경로지정
+	                Path path = Paths.get(CommonService.root + newFileName);//저장경로지정
 	                Files.write(path, bytes);//저장
 	                empDAO.fileWrite(emp_no, fileName, newFileName, pho_division);
 	                Thread.sleep(1);//파일명을 위해 강제 휴식 부여

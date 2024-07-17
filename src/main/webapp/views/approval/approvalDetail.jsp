@@ -59,10 +59,6 @@
 	color: black;
 }
 
-.draftTitle {
-	width: 10%;
-}
-
 .draftSecond {
 	width: 20%;
 }
@@ -186,7 +182,7 @@ th {
 											<td class="draftTitle">제목</td>
 											<td class="draftSecond">${dto.draft_subject}</td>
 											<td>마감기한</td>
-											<td>2024-07-01</td>
+											<td>${dto.draft_end}</td>
 										</tr>
 										<tr>
 											<td class="draftTitle">휴가종류</td>
@@ -579,14 +575,13 @@ th {
 	    html2canvas(element).then((canvas) => {
 	    	let imgData = canvas.toDataURL('image/png');
 
-	        let imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
-	        let pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+	        let imgWidth = 200; // 이미지 가로 길이(mm) A4 기준
+	        let pageHeight = 300;  // 출력 페이지 세로 길이 계산 A4 기준
 	        let imgHeight = canvas.height * imgWidth / canvas.width;
-	        let heightLeft = imgHeight;
+	        let heightLeft = 0;
 
 	        let doc = new jspdf.jsPDF('p', 'mm');
 	        let position = 0;
-
 
 	        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
 	        doc.save('${dto.draft_no}' + '_' +'${dto.draft_subject}' + '.pdf');

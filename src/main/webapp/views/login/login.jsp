@@ -49,7 +49,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="text-dark" for="pwd" >비밀번호</label>
-                                        <input class="form-control" id="pwd" type="password" name="pw" placeholder="비밀번호를 입력해 주세요." value="1111" onkeypress="loginCheckEnter(event)">
+                                        <input class="form-control" id="pwd" type="password" name="pw" placeholder="비밀번호를 입력해 주세요." onkeypress="loginCheckEnter(event)">
                                     </div>
                                 </div>
                                 <div class="custom-control custom-checkbox mr-sm-2">

@@ -160,14 +160,13 @@ h2 {
                     <tr>
                         <td class="photo" rowspan="5" style="width:15%;">
                             <c:choose>
-                                <c:when test="${empty sessionScope.loginInfo.pho_name}">
+                                <c:when test="${sessionScope.loginInfo.profile_img == ''}">
 									<img
 										src="/scss/icons/account_box.png"
 										id="photo" style="width: 100%; height: 100%;">
-	                                 
                                 </c:when>
                                 <c:otherwise>
-                                    <img src="${pageContext.request.contextPath}/photo/${sessionScope.loginInfo.pho_name}" alt="사진" id="photo" style="width: 100%; height: auto;">
+                                    <img src="/photo/${sessionScope.loginInfo.profile_img}" alt="사진" id="photo" style="width: 100%; height: auto;">
                                 </c:otherwise>
                             </c:choose>
                         </td>
